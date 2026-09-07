@@ -1,0 +1,39 @@
+{
+  "common": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "dashboard": "Dashboard",
+    "loading": "Loading..."
+  },
+  "landing": {
+    "title": "Your App",
+    "subtitle": "Built with the Golden Stack",
+    "cta": "Get Started"
+  },
+  "features": {
+    "title": "Features",
+    "item1": "Feature One",
+    "item1desc": "Description of feature one",
+    "item2": "Feature Two",
+    "item2desc": "Description of feature two",
+    "item3": "Feature Three",
+    "item3desc": "Description of feature three"
+  },
+  "pricing": {
+    "title": "Pricing",
+    "free": "Free",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "faq": {
+    "title": "FAQ",
+    "q1": "How does it work?",
+    "a1": "It just works."
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send"
+  }
+}
