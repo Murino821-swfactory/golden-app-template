@@ -1,9 +1,16 @@
 {
   "common": {
+    "appName": "Golden App",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "dashboard": "Dashboard",
     "loading": "Loading..."
+  },
+  "auth": {
+    "signInTitle": "Sign in",
+    "signInDescription": "Continue with your Google account to get started.",
+    "signInButton": "Sign in with Google",
+    "signInError": "Sign-in failed. Please try again."
   },
   "landing": {
     "title": "Your App",
@@ -25,6 +32,13 @@
     "pro": "Pro",
     "enterprise": "Enterprise"
   },
+  "testimonials": {
+    "title": "What people say",
+    "quote1": "This template saved us weeks of setup.",
+    "author1": "Alex Kim",
+    "quote2": "Clean, fast, and easy to customize.",
+    "author2": "Jordan Lee"
+  },
   "faq": {
     "title": "FAQ",
     "q1": "How does it work?",
@@ -35,5 +49,10 @@
     "email": "Email",
     "message": "Message",
     "send": "Send"
+  },
+  "cta": {
+    "title": "Ready to get started?",
+    "subtitle": "Spin up your own version in minutes.",
+    "action": "Get Started"
   }
 }
