@@ -55,14 +55,24 @@ npm run deploy:production  # Deploy to Firebase (set --only hosting:site-name)
 - Auth operations must call `ensureAuthPersistence()` first (MUST pattern)
 - Demo Firestore paths via `getCollectionPath(collection)` from `lib/firebase.ts`
 
-## Known gaps (as of Task 4 — Playwright/CI/docs scaffold)
+## Landing sections + auth pages (Task 4b, 2026-09-08)
 
-- No `/login` route yet — `AuthGuard` (`components/auth/auth-guard.tsx`) already
-  redirects unauthenticated users to `/login`, but the page itself does not exist.
-- The landing page (`app/page.tsx`) has no `[data-section='...']` markers yet —
-  `parsePlaygroundParams()`/`listenForPlaygroundUpdates()` (`lib/playground.ts`)
-  are wired but unused until real sections are built.
-- `tests/smoke.spec.ts` already covers both of the above (login page, playground
-  section markers) as a forward-looking gate: those two tests are EXPECTED to
-  fail until the corresponding pages/sections land. Keep the tests as-is —
-  fix the app, not the test, when doing that follow-up work.
+- `/login` (`app/login/page.tsx`) renders a Google sign-in button wired to
+  `signInWithGoogle()` from `useAuth()`; routes to `/dashboard` on success,
+  shows an error message on failure. `AuthGuard` (`components/auth/auth-guard.tsx`)
+  redirects unauthenticated users here.
+- The landing page lives at `app/(public)/page.tsx` (route group, URL still `/`),
+  wrapped by `app/(public)/layout.tsx` with `components/layout/header.tsx` +
+  `footer.tsx`. Seven section components in `components/sections/` (`hero`,
+  `features`, `pricing`, `testimonials`, `faq`, `contact`, `cta`) each render a
+  wrapper with `data-section="<id>"`.
+- The landing page reads playground config (URL params + live `postMessage`
+  from the wizard) via `useSyncExternalStore` over `parsePlaygroundParams()` /
+  `listenForPlaygroundUpdates()` (`lib/playground.ts`) — deliberately NOT
+  `useEffect` + `setState`, to avoid the cascading-render anti-pattern and to
+  keep `window` access out of the render path during static export
+  (`getServerSnapshot` returns the default section set for SSR/prerender).
+  Only the sections named in `config.sections`, in that order, are rendered.
+- `tests/smoke.spec.ts` (8/8 passing: 4 tests × chromium/mobile) is the gate
+  this closed — keep app changes satisfying the tests as written, not the
+  other way around.
