@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+// PROTOTYPE: Uncomment to use pre-built feature components:
+// import { CheckinToggle, StreakCounter, CalendarGrid } from "@/components/features";
 
 export function HeroSection() {
   const t = useTranslations("landing");
@@ -21,6 +23,19 @@ export function HeroSection() {
       <Button asChild size="lg">
         <Link href="#contact">{t("cta")}</Link>
       </Button>
+
+      {/* PROTOTYPE: Add your interactive feature UI here. Examples:
+
+      <CheckinToggle
+        pillars={["work", "health", "relationships"]}
+        onCheckin={(pillar) => console.log(`Checked in: ${pillar}`)}
+      />
+
+      <StreakCounter currentStreak={7} />
+
+      <CalendarGrid checkedDates={[new Date()]} />
+
+      */}
     </section>
   );
 }

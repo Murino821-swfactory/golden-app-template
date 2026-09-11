@@ -1,78 +1,232 @@
-# CLAUDE.md — [PROJECT_NAME]
+# CLAUDE.md — Golden App Template
 
-Context file for AI agents. Replace [PROJECT_NAME] with actual name after adoption.
+Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EXPLORE.**
 
-See also: `@AGENTS.md` (Next.js 16 breaking-change notice, auto-maintained by `next dev`).
+## Critical Rules for Fast Implementation
 
-## What this project is
+1. **DO NOT read files for context** — everything you need is in this CLAUDE.md
+2. **DO NOT run `find`, `grep`, or `ls`** — the structure is documented below
+3. **Read a file ONLY when you're about to edit it** — one read, one edit
+4. **Batch all changes to a file in ONE Edit call** — no read-edit-read-edit loops
 
-[1-2 sentence description of the project purpose and target users]
-
-This repo (`golden-app-template`) is itself the Golden Stack starter template —
-until a concrete project adopts it, treat every page/component as scaffolding
-meant to be replaced, not a finished product.
-
-## Tech stack (Golden Stack compliant)
+## Tech Stack (Golden Stack)
 
 - **Framework:** Next.js 16, App Router, static export (`output: 'export'`)
 - **Language:** TypeScript strict
 - **Styling:** Tailwind CSS 4 + shadcn/ui + Radix primitives
-- **Auth:** Firebase Authentication (Google Sign-In)
-- **Database:** Cloud Firestore
-- **i18n:** next-intl
-- **Hosting:** Firebase Hosting
-- **Testing:** Playwright E2E
+- **Auth:** Firebase Authentication (Google Sign-In) — already implemented
+- **Database:** Cloud Firestore — use `getCollectionPath()` for demo namespacing
+- **i18n:** next-intl — all user text in `messages/en.json`
 
-See SW Factory `docs/GOLDEN_STACK.md` for full standard.
+## Project Structure (MEMORIZE — DO NOT EXPLORE)
 
-## Demo mode
+```
+app/
+  (public)/page.tsx      # Landing page — renders sections from SECTION_REGISTRY
+  login/page.tsx         # Login page (already implemented)
+components/
+  sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
+  features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
+  ui/                    # shadcn components (button, card, input, skeleton)
+  auth/auth-guard.tsx    # Protects routes, redirects to /login
+  layout/                # header.tsx, footer.tsx
+hooks/
+  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
+lib/
+  firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  playground.ts          # DEFAULT_CONFIG, parsePlaygroundParams()
+  utils.ts               # cn() for className merging
+messages/
+  en.json                # All user-facing text (translate by copying to sk.json etc.)
+types/
+  index.ts               # User, DemoConfig interfaces
+```
 
-When `NEXT_PUBLIC_DEMO_SLUG` is set, all Firestore paths are namespaced under
-`demos/{slug}/...`. This enables multiple demo instances to share one Firebase
-project without data collision.
+## Implementation Recipes
 
-## Playground mode
+### Recipe 1: Add Interactive Feature to Hero Section
 
-The landing page reads URL params (`?pattern=&palette=&style=&sections=&locale=`)
-and adjusts rendering. The wizard's iframe preview uses this to show live changes.
+**Files to modify:** `components/sections/hero.tsx`, `messages/en.json`
+
+```tsx
+// In hero.tsx — add imports at top:
+import { CheckinToggle } from "@/components/features/checkin-toggle";
+import { StreakCounter } from "@/components/features/streak-counter";
+
+// In hero.tsx — add JSX after the Button:
+{/* PROTOTYPE: Your feature UI here */}
+<CheckinToggle
+  pillars={["work", "health", "relationships"]}
+  onCheckin={(pillar) => console.log(`Checked in: ${pillar}`)}
+/>
+<StreakCounter currentStreak={7} />
+```
+
+### Recipe 2: Add Firestore Data (e.g., Check-ins)
+
+**Files to modify:** `lib/firebase.ts` (add functions), `hooks/use-checkin.ts` (create)
+
+```tsx
+// In lib/firebase.ts — add at bottom:
+import { doc, setDoc, getDoc, collection, query, where, getDocs, serverTimestamp } from "firebase/firestore";
+
+export async function saveCheckin(userId: string, pillar: string): Promise<void> {
+  const path = getCollectionPath("checkins");
+  const docId = `${userId}_${pillar}_${new Date().toISOString().slice(0, 10)}`;
+  await setDoc(doc(getFirestoreInstance(), path, docId), {
+    userId,
+    pillar,
+    timestamp: serverTimestamp(),
+  });
+}
+
+export async function getCheckins(userId: string, since: Date): Promise<unknown[]> {
+  const path = getCollectionPath("checkins");
+  const q = query(
+    collection(getFirestoreInstance(), path),
+    where("userId", "==", userId),
+    where("timestamp", ">=", since)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+```
+
+```tsx
+// Create hooks/use-checkin.ts:
+"use client";
+import { useState, useEffect } from "react";
+import { useAuth } from "./use-auth";
+import { saveCheckin, getCheckins } from "@/lib/firebase";
+
+export function useCheckin() {
+  const { user } = useAuth();
+  const [checkins, setCheckins] = useState<unknown[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) { setLoading(false); return; }
+    const since = new Date();
+    since.setDate(since.getDate() - 30);
+    getCheckins(user.uid, since).then(setCheckins).finally(() => setLoading(false));
+  }, [user]);
+
+  const checkin = async (pillar: string) => {
+    if (!user) return;
+    await saveCheckin(user.uid, pillar);
+    setCheckins((prev) => [...prev, { pillar, timestamp: new Date() }]);
+  };
+
+  return { checkins, checkin, loading };
+}
+```
+
+### Recipe 3: Add New Section
+
+**Files to modify:** `components/sections/new-section.tsx` (create), `app/(public)/page.tsx`, `lib/playground.ts`, `messages/en.json`
+
+1. Create component in `components/sections/`:
+```tsx
+"use client";
+import { useTranslations } from "next-intl";
+
+export function NewSection() {
+  const t = useTranslations("newSection");
+  return (
+    <section data-section="newSection" className="mx-auto max-w-5xl px-4 py-16">
+      <h2 className="text-3xl font-semibold">{t("title")}</h2>
+    </section>
+  );
+}
+```
+
+2. In `app/(public)/page.tsx` — add to SECTION_REGISTRY:
+```tsx
+import { NewSection } from "@/components/sections/new-section";
+// In SECTION_REGISTRY:
+newSection: NewSection,
+```
+
+3. In `lib/playground.ts` — add to DEFAULT_SECTIONS:
+```tsx
+const DEFAULT_SECTIONS = ["hero", "features", "newSection", "cta"];
+```
+
+4. In `messages/en.json` — add translations:
+```json
+"newSection": {
+  "title": "New Section Title"
+}
+```
+
+### Recipe 4: Protect a Page with Auth
+
+**Files to modify:** target page only
+
+```tsx
+// Wrap page content with AuthGuard:
+import { AuthGuard } from "@/components/auth/auth-guard";
+
+export default function ProtectedPage() {
+  return (
+    <AuthGuard>
+      {/* Your protected content */}
+    </AuthGuard>
+  );
+}
+```
+
+### Recipe 5: Update Landing Copy
+
+**Files to modify:** `messages/en.json` ONLY
+
+Just edit the JSON values. The components already read from it via `useTranslations()`.
+
+## Pre-built Feature Components
+
+These are ready to use — just import and render:
+
+| Component | Import | Props |
+|-----------|--------|-------|
+| `CheckinToggle` | `@/components/features/checkin-toggle` | `pillars: string[]`, `onCheckin: (pillar) => void` |
+| `StreakCounter` | `@/components/features/streak-counter` | `currentStreak: number`, `label?: string` |
+| `CalendarGrid` | `@/components/features/calendar-grid` | `checkedDates: Date[]`, `month?: Date` |
+
+## Available UI Components (shadcn)
+
+Import from `@/components/ui/`:
+- `Button` — `<Button variant="default|outline|ghost" size="sm|default|lg">`
+- `Card`, `CardHeader`, `CardTitle`, `CardContent`
+- `Input` — `<Input placeholder="..." />`
+- `Skeleton` — loading placeholder
+
+## Demo Mode
+
+`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
+Always use `getCollectionPath(collection)` — never hardcode collection names.
+
+## Tailwind Colors (DO NOT HARDCODE)
+
+Use semantic tokens — they adapt to the customer's palette:
+- `bg-background`, `text-foreground` — main surface
+- `bg-primary`, `text-primary-foreground` — accent
+- `bg-card`, `text-card-foreground` — cards
+- `bg-muted`, `text-muted-foreground` — secondary text
+- `border`, `ring` — borders and focus rings
 
 ## Commands
 
 ```bash
-npm run dev          # Start dev server
-npm run build        # Production build
-npm run typecheck    # Type check
-npm run lint         # ESLint
-npm run test:e2e     # Playwright tests
-npm run deploy:production  # Deploy to Firebase (set --only hosting:site-name)
+npm run dev              # Dev server
+npm run build            # Production build (must pass)
+npm run typecheck        # Type check
+npm run test:e2e         # Playwright smoke tests (must pass)
 ```
 
-## Conventions
+## Summary: Fastest Path
 
-- Components in `components/ui/` are shadcn — regenerate via `npx shadcn@latest add`
-- Use `cn()` from `lib/utils.ts` for conditional Tailwind classes
-- All user-facing text via next-intl (`messages/*.json`)
-- Auth operations must call `ensureAuthPersistence()` first (MUST pattern)
-- Demo Firestore paths via `getCollectionPath(collection)` from `lib/firebase.ts`
-
-## Landing sections + auth pages (Task 4b, 2026-09-08)
-
-- `/login` (`app/login/page.tsx`) renders a Google sign-in button wired to
-  `signInWithGoogle()` from `useAuth()`; routes to `/dashboard` on success,
-  shows an error message on failure. `AuthGuard` (`components/auth/auth-guard.tsx`)
-  redirects unauthenticated users here.
-- The landing page lives at `app/(public)/page.tsx` (route group, URL still `/`),
-  wrapped by `app/(public)/layout.tsx` with `components/layout/header.tsx` +
-  `footer.tsx`. Seven section components in `components/sections/` (`hero`,
-  `features`, `pricing`, `testimonials`, `faq`, `contact`, `cta`) each render a
-  wrapper with `data-section="<id>"`.
-- The landing page reads playground config (URL params + live `postMessage`
-  from the wizard) via `useSyncExternalStore` over `parsePlaygroundParams()` /
-  `listenForPlaygroundUpdates()` (`lib/playground.ts`) — deliberately NOT
-  `useEffect` + `setState`, to avoid the cascading-render anti-pattern and to
-  keep `window` access out of the render path during static export
-  (`getServerSnapshot` returns the default section set for SSR/prerender).
-  Only the sections named in `config.sections`, in that order, are rendered.
-- `tests/smoke.spec.ts` (8/8 passing: 4 tests × chromium/mobile) is the gate
-  this closed — keep app changes satisfying the tests as written, not the
-  other way around.
+1. Read this CLAUDE.md completely
+2. Identify which 2-3 files need changes based on the spec
+3. For each file: read → make ALL changes → move to next file
+4. Run `npm run build` once at the end
+5. Done — no exploration, no extra reads, no refactoring
