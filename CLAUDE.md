@@ -2,6 +2,16 @@
 
 Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EXPLORE.**
 
+## Quick Reference — Which Files to Edit
+
+| Feature Type | Files to Change |
+|-------------|-----------------|
+| Landing copy | `messages/en.json` only |
+| Add dashboard | Create `app/dashboard/page.tsx` (see Recipe 6) |
+| Add checkins | Use `hooks/use-checkins.ts` + pre-built components |
+| Add/remove sections | `lib/playground.ts` + `app/(public)/page.tsx` |
+| Custom section | Create in `components/sections/` |
+
 ## Critical Rules for Fast Implementation
 
 1. **DO NOT read files for context** — everything you need is in this CLAUDE.md
@@ -188,9 +198,60 @@ These are ready to use — just import and render:
 
 | Component | Import | Props |
 |-----------|--------|-------|
-| `CheckinToggle` | `@/components/features/checkin-toggle` | `pillars: string[]`, `onCheckin: (pillar) => void` |
-| `StreakCounter` | `@/components/features/streak-counter` | `currentStreak: number`, `label?: string` |
-| `CalendarGrid` | `@/components/features/calendar-grid` | `checkedDates: Date[]`, `month?: Date` |
+| `CheckinToggle` | `@/components/features` | `pillars: string[]`, `checkedToday: string[]`, `onCheckin: (pillar) => void` |
+| `StreakCounter` | `@/components/features` | `currentStreak: number`, `label?: string` |
+| `CalendarGrid` | `@/components/features` | `checkedDates: Date[]`, `month?: Date` |
+| `ProgressRing` | `@/components/features` | `progress: number (0-100)`, `label?: string` |
+| `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` |
+
+## Pre-built Hook: use-checkins.ts (READY TO USE)
+
+Complete working hook with streak calculation and Firestore persistence:
+
+```tsx
+import { useCheckins } from "@/hooks/use-checkins";
+
+const { checkins, todayCheckins, currentStreak, loading, doCheckin } = useCheckins();
+```
+
+### Recipe 6: Add Dashboard Page (MOST COMMON)
+
+**Create:** `app/dashboard/page.tsx`
+
+```tsx
+"use client";
+
+import { AuthGuard } from "@/components/auth/auth-guard";
+import { useCheckins } from "@/hooks/use-checkins";
+import { CheckinToggle, StreakCounter, CalendarGrid } from "@/components/features";
+
+const PILLARS = ["Sleep", "Exercise", "Nutrition", "Mindfulness", "Hydration"];
+
+function DashboardContent() {
+  const { todayCheckins, currentStreak, checkins, doCheckin, loading } = useCheckins();
+  
+  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  
+  return (
+    <div className="mx-auto max-w-2xl space-y-8 p-6">
+      <h1 className="text-2xl font-bold text-center">Your Dashboard</h1>
+      <StreakCounter currentStreak={currentStreak} />
+      <CheckinToggle pillars={PILLARS} checkedToday={todayCheckins} onCheckin={doCheckin} />
+      <CalendarGrid checkedDates={checkins.map(c => c.date)} />
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <AuthGuard>
+      <DashboardContent />
+    </AuthGuard>
+  );
+}
+```
+
+This is the FASTEST path for a 5-pillar wellness app: create this ONE file, update `messages/en.json` with app-specific copy. Done.
 
 ## Available UI Components (shadcn)
 
