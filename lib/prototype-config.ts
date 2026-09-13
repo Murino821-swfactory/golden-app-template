@@ -72,9 +72,25 @@ export type EntityField = z.infer<typeof entityFieldSchema>;
  * Firestore. Adding a pattern means adding a slice here AND the entry in the registry —
  * CI checks that neither exists without the other.
  */
+const featureSchema = z.object({
+  icon: z.string().min(1).max(4).optional(),
+  title: z.string().min(1),
+  description: z.string().min(1),
+});
+
+export type Feature = z.infer<typeof featureSchema>;
+
 export const PATTERN_SCHEMAS = {
   landing: z.object({
     sections: z.array(z.enum(SECTION_IDS)).min(1),
+    /** Override the hero headline. Sonnet writes this; the translation fallback is just
+     * a placeholder for local dev. */
+    headline: z.string().min(1).optional(),
+    subheadline: z.string().min(1).optional(),
+    /** Feature cards shown in the features section. 1-6 items, each with an optional
+     * emoji icon, a title, and a description. When absent, the section falls back to
+     * translations (placeholder text). */
+    features: z.array(featureSchema).min(1).max(6).optional(),
   }),
   dashboard: z.object({
     title: z.string().min(1),

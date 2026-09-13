@@ -3,11 +3,23 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-// PROTOTYPE: Uncomment to use pre-built feature components:
-// import { CheckinToggle, StreakCounter, CalendarGrid } from "@/components/features";
+import { config } from "@/lib/prototype-config";
+
+/**
+ * Hero section — the first thing a visitor sees.
+ *
+ * Headline and subheadline come from `prototype.config.json` when present, with
+ * translations as a fallback. Sonnet writes the config values; the translations are just
+ * placeholders for local dev and to keep the template buildable before any content agent
+ * has touched it.
+ */
+
+const landing = config.patterns.landing;
 
 export function HeroSection() {
   const t = useTranslations("landing");
+  const headline = landing?.headline ?? t("title");
+  const subheadline = landing?.subheadline ?? t("subtitle");
 
   return (
     <section
@@ -15,27 +27,14 @@ export function HeroSection() {
       className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-4 py-20 text-center sm:py-28"
     >
       <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
-        {t("title")}
+        {headline}
       </h1>
       <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
-        {t("subtitle")}
+        {subheadline}
       </p>
       <Button asChild size="lg">
         <Link href="#contact">{t("cta")}</Link>
       </Button>
-
-      {/* PROTOTYPE: Add your interactive feature UI here. Examples:
-
-      <CheckinToggle
-        pillars={["work", "health", "relationships"]}
-        onCheckin={(pillar) => console.log(`Checked in: ${pillar}`)}
-      />
-
-      <StreakCounter currentStreak={7} />
-
-      <CalendarGrid checkedDates={[new Date()]} />
-
-      */}
     </section>
   );
 }

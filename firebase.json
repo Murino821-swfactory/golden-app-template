@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "golden-app-template",
     "public": "out",
     "ignore": [
       "firebase.json",

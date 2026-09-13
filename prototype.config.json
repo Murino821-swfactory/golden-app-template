@@ -7,7 +7,26 @@
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"]
+      "sections": ["hero", "features", "faq", "contact", "cta"],
+      "headline": "Ship your prototype in days, not months",
+      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+      "features": [
+        {
+          "icon": "🎨",
+          "title": "Four color palettes",
+          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+        },
+        {
+          "icon": "🔧",
+          "title": "Config-driven patterns",
+          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+        },
+        {
+          "icon": "🚀",
+          "title": "Static export",
+          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+        }
+      ]
     },
     "dashboard": {
       "title": "Dashboard"
