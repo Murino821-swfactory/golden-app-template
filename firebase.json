@@ -1,7 +1,13 @@
 {
   "hosting": {
     "public": "out",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "_comment_cleanUrls": "Next static export emits login.html, not login/index.html. Without cleanUrls, Hosting fails to resolve /login, falls through to the ** rewrite below and serves the LANDING page at the sign-in route — on every prototype. No 'site' key here on purpose: deployPrototype patches it per slug at deploy time.",
+    "cleanUrls": true,
     "rewrites": [
       {
         "source": "**",
@@ -12,10 +18,22 @@
       {
         "source": "**",
         "headers": [
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-          { "key": "X-XSS-Protection", "value": "1; mode=block" },
-          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "X-Frame-Options",
+            "value": "SAMEORIGIN"
+          },
+          {
+            "key": "X-XSS-Protection",
+            "value": "1; mode=block"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
         ]
       }
     ]
