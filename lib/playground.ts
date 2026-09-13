@@ -10,6 +10,8 @@
  * - locale: en | sk | ...
  */
 
+import { config as prototypeConfig } from "./prototype-config";
+
 export interface PlaygroundConfig {
   pattern: string;
   palette: string;
@@ -19,11 +21,14 @@ export interface PlaygroundConfig {
   isPlayground: boolean;
 }
 
+// Defaults are DERIVED from prototype.config.json, never restated (P5). The playground
+// overrides rendering at runtime via URL/postMessage; it must not carry a second opinion
+// about what the build actually contains.
 const DEFAULT_CONFIG: PlaygroundConfig = {
   pattern: "saas-landing",
-  palette: "ocean",
-  style: "minimal",
-  sections: ["hero", "features", "faq", "contact", "cta"],
+  palette: prototypeConfig.theme.colorScheme,
+  style: prototypeConfig.theme.style,
+  sections: prototypeConfig.patterns.landing?.sections ?? [],
   locale: "en",
   isPlayground: false,
 };

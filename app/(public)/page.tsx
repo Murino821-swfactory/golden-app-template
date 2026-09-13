@@ -12,11 +12,16 @@ import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FaqSection } from "@/components/sections/faq";
 import { ContactSection } from "@/components/sections/contact";
 import { CtaSection } from "@/components/sections/cta";
+import { config } from "@/lib/prototype-config";
 
-// Mirrors lib/playground.ts DEFAULT_CONFIG.sections — this is what renders
-// server-side / at static-export time, and on first client paint before
-// hydration reconciles with the real external state (URL + postMessage).
-const DEFAULT_SECTIONS = ["hero", "features", "faq", "contact", "cta"];
+// ONE source of truth for sections: prototype.config.json (P5). This used to be a literal
+// array here AND a second literal in lib/playground.ts, kept in sync by hand — which meant
+// an agent editing one and not the other produced a build that rendered something different
+// from what the wizard previewed. Now both read this.
+//
+// It is also what renders server-side / at static-export time, and on first client paint
+// before hydration reconciles with the real external state (URL + postMessage).
+const DEFAULT_SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 
 const SECTION_REGISTRY: Record<string, ComponentType> = {
   hero: HeroSection,

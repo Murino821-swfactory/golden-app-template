@@ -1,0 +1,46 @@
+{
+  "appName": "Golden App Template",
+  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "theme": {
+    "colorScheme": "green",
+    "style": "minimal"
+  },
+  "patterns": {
+    "landing": {
+      "sections": ["hero", "features", "faq", "contact", "cta"]
+    },
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "authGoogle": {},
+    "cta": {
+      "label": "Get started",
+      "href": "/login"
+    },
+    "contactForm": {
+      "heading": "Get in touch",
+      "submitLabel": "Send message"
+    },
+    "dataGrid": {
+      "entity": {
+        "key": "location",
+        "label": "Location",
+        "fields": [
+          { "key": "name", "label": "Name", "type": "text", "required": true },
+          {
+            "key": "category",
+            "label": "Category",
+            "type": "select",
+            "options": ["Office", "Warehouse", "Depot"]
+          },
+          { "key": "opened", "label": "Opened", "type": "date" },
+          { "key": "active", "label": "Active", "type": "boolean" }
+        ]
+      }
+    },
+    "mapBase": {
+      "center": { "lat": 48.669, "lng": 19.699 },
+      "zoom": 7
+    }
+  }
+}
