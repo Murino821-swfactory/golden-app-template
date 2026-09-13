@@ -22,6 +22,9 @@ import type { User } from "@/types";
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  /** False when Firebase could not be initialised in this environment (no
+   * `NEXT_PUBLIC_FIREBASE_*`). The app still renders; sign-in is what stops working. */
+  authAvailable: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -45,9 +48,27 @@ const googleProvider = new GoogleAuthProvider();
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authAvailable, setAuthAvailable] = useState(true);
 
   useEffect(() => {
-    const auth = getAuthInstance();
+    let auth: ReturnType<typeof getAuthInstance>;
+    try {
+      auth = getAuthInstance();
+    } catch (err) {
+      // Firebase is not configured here (CI, local dev without .env.local). Degrade to
+      // "signed out, sign-in unavailable" instead of taking the page down: this throw is
+      // synchronous inside an effect, so React unmounts the whole tree and the visitor
+      // gets a blank screen — measured on the static export, where a /login with the
+      // button present in the HTML rendered zero buttons after hydration.
+      //
+      // This is runtime resilience, NOT a relaxed gate. Missing `NEXT_PUBLIC_FIREBASE_*`
+      // in the pipeline must still be a hard BUILD failure (P10) — a demo whose login is
+      // dead is not a demo.
+      console.error("[auth] Firebase unavailable — sign-in disabled:", err);
+      setAuthAvailable(false);
+      setLoading(false);
+      return;
+    }
 
     // Check for redirect result (in-app browser fallback)
     getRedirectResult(auth).catch(() => {});
@@ -65,6 +86,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = async () => {
+    if (!authAvailable) {
+      throw new Error("Sign-in is unavailable: Firebase is not configured.");
+    }
     await ensureAuthPersistence();
     const auth = getAuthInstance();
 
@@ -91,7 +115,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider
+      value={{ user, loading, authAvailable, signInWithGoogle, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

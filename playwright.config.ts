@@ -26,11 +26,18 @@ export default defineConfig({
       use: { ...devices["iPhone 14"], browserName: "chromium" },
     },
   ],
+  // The gate must test WHAT SHIPS. A prototype is deployed as a Next static export
+  // (`output: "export"`), so the suite runs against `out/`, not against `npm run dev`.
+  // Testing the dev server meant two things: a whole class of export-only bugs — the ones
+  // that produce a white screen on Firebase Hosting — could pass the gate, and the first
+  // hit to a route paid for an on-demand compile, which under parallel load exceeded the
+  // expect timeout and made the suite flaky.
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
-        command: "npm run dev",
+        command: "npm run build && npm run preview",
         url: "http://localhost:3000",
         reuseExistingServer: !process.env.CI,
+        timeout: 180_000,
       },
 });

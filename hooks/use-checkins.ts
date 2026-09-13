@@ -77,42 +77,67 @@ export function useCheckins(): UseCheckinsReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchCheckins = useCallback(async () => {
-    if (!user) {
-      setCheckins([]);
-      setLoading(false);
-      return;
-    }
+  /**
+   * Pure fetch: returns data, touches no state. Keeping the query separate from the
+   * setState lets the mount effect below apply results only AFTER an await — React 19
+   * rejects setState called synchronously in an effect body (cascading renders), which is
+   * what made `npm run lint` fail on this file and turned the template's CI red.
+   */
+  const loadCheckins = useCallback(async (): Promise<Checkin[]> => {
+    if (!user) return [];
 
+    const db = getFirestoreInstance();
+    const collPath = getCollectionPath("checkins");
+    const q = query(
+      collection(db, collPath),
+      where("userId", "==", user.uid),
+      orderBy("date", "desc"),
+      limit(100)
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map((doc) => ({
+      id: doc.id,
+      pillar: doc.data().pillar,
+      date: (doc.data().date as Timestamp).toDate(),
+      userId: doc.data().userId,
+    }));
+  }, [user]);
+
+  /** Manual refetch — runs from an event handler or after a write, never from an effect
+   * body, so setting `loading` synchronously here is fine. */
+  const fetchCheckins = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const db = getFirestoreInstance();
-      const collPath = getCollectionPath("checkins");
-      const q = query(
-        collection(db, collPath),
-        where("userId", "==", user.uid),
-        orderBy("date", "desc"),
-        limit(100)
-      );
-      const snap = await getDocs(q);
-      const items: Checkin[] = snap.docs.map((doc) => ({
-        id: doc.id,
-        pillar: doc.data().pillar,
-        date: (doc.data().date as Timestamp).toDate(),
-        userId: doc.data().userId,
-      }));
-      setCheckins(items);
+      setCheckins(await loadCheckins());
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err : new Error("Failed to fetch checkins"));
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [loadCheckins]);
 
   useEffect(() => {
-    fetchCheckins();
-  }, [fetchCheckins]);
+    let cancelled = false;
+
+    loadCheckins()
+      .then((items) => {
+        if (cancelled) return;
+        setCheckins(items);
+        setError(null);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setError(err instanceof Error ? err : new Error("Failed to fetch checkins"));
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadCheckins]);
 
   const doCheckin = useCallback(
     async (pillar: string) => {

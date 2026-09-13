@@ -1,0 +1,15 @@
+import { chromium } from '@playwright/test';
+const b = await chromium.launch();
+const p = await b.newPage();
+const errs = [];
+p.on('pageerror', e => errs.push('PAGEERROR: ' + e.message));
+p.on('console', m => { if (m.type()==='error') errs.push('CONSOLE: ' + m.text().slice(0,120)); });
+await p.goto('http://localhost:3111/login', { waitUntil: 'load' });
+const before = (await p.content()).length;
+await p.waitForTimeout(2500);
+const after = await p.evaluate(() => document.body.innerHTML.length);
+const btn = await p.getByRole('button', { name: /sign in/i }).count();
+console.log('body HTML po hydratacii:', after, 'znakov');
+console.log('sign-in buttonov:', btn);
+console.log('chyby:'); errs.slice(0,4).forEach(e=>console.log('  ', e));
+await b.close();
