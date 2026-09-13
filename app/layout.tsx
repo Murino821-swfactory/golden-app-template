@@ -6,6 +6,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/contexts/auth-context';
 import { config } from '@/lib/prototype-config';
+import { cssVariablesFor } from '@/lib/color-schemes';
 
 const geist = Geist({ subsets: ['latin', 'latin-ext'], variable: '--font-sans' });
 
@@ -26,7 +27,15 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={cn("font-sans", geist.variable, "dark")}>
+    // The chosen palette is applied as inline custom properties, computed at build time by
+    // the deterministic rule in lib/color-schemes.ts. No per-palette CSS block exists, and
+    // the harness never rewrites globals.css — adding a fifth palette is a data change.
+    <html
+      lang={locale}
+      className={cn("font-sans", geist.variable, "dark")}
+      data-scheme={config.theme.colorScheme}
+      style={cssVariablesFor(config.theme.colorScheme) as React.CSSProperties}
+    >
       <body className="min-h-screen bg-background font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>{children}</AuthProvider>

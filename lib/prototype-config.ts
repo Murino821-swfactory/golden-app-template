@@ -18,9 +18,11 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
+import { COLOR_SCHEME_IDS } from "./color-schemes";
 
-/** Ids from the `colorSchemes` table. Keep in sync with sw-factory `docs/COLOR_SCHEMES.md`. */
-export const COLOR_SCHEMES = ["red", "blue", "yellow", "green"] as const;
+/** Re-exported, not restated: `color-schemes.ts` owns both the ids and their ramps, so a
+ * fifth palette is one edit. A second literal here is how P5 happened. */
+export const COLOR_SCHEMES = COLOR_SCHEME_IDS;
 
 /** Landing sections that exist in `components/sections/`. A closed enum on purpose: an
  * unknown id must fail the build, not render nothing. */
