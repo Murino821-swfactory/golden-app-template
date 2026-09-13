@@ -1,0 +1,25 @@
+{
+  "appName": "Fleet Register",
+  "description": "Every pattern at once: landing, Google sign-in, dashboard, records grid and an interactive map.",
+  "theme": { "colorScheme": "blue", "style": "bold" },
+  "patterns": {
+    "landing": { "sections": ["hero", "features", "pricing", "testimonials", "faq", "contact", "cta"] },
+    "dashboard": { "title": "Fleet overview" },
+    "authGoogle": {},
+    "cta": { "label": "Start tracking", "href": "/login" },
+    "contactForm": { "heading": "Talk to us", "submitLabel": "Send" },
+    "dataGrid": {
+      "entity": {
+        "key": "route",
+        "label": "Route",
+        "fields": [
+          { "key": "name", "label": "Route name", "type": "text", "required": true },
+          { "key": "mode", "label": "Mode", "type": "select", "options": ["Bus", "Rail", "Truck"] },
+          { "key": "lengthKm", "label": "Length (km)", "type": "number" },
+          { "key": "active", "label": "Active", "type": "boolean" }
+        ]
+      }
+    },
+    "mapBase": { "center": { "lat": 48.669, "lng": 19.699 }, "zoom": 7 }
+  }
+}
