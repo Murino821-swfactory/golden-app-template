@@ -5,25 +5,27 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef,
   type ReactNode,
 } from "react";
-import {
-  onAuthStateChanged,
-  signInWithPopup,
-  signInWithRedirect,
-  getRedirectResult,
-  GoogleAuthProvider,
-  signOut as firebaseSignOut,
-  type User as FirebaseUser,
-} from "firebase/auth";
-import { getAuthInstance, ensureAuthPersistence } from "@/lib/firebase";
+import type { User as FirebaseUser, AuthError } from "firebase/auth";
+import { isInAppBrowser, escapeInAppBrowser } from "@/lib/auth-browser";
 import type { User } from "@/types";
+
+/**
+ * Error codes that trigger redirect fallback instead of failing.
+ * These happen when popup is blocked, closed, or not supported.
+ */
+const REDIRECT_FALLBACK_CODES = new Set([
+  "auth/popup-blocked",
+  "auth/popup-closed-by-user",
+  "auth/cancelled-popup-request",
+  "auth/operation-not-supported-in-this-environment",
+]);
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  /** False when Firebase could not be initialised in this environment (no
-   * `NEXT_PUBLIC_FIREBASE_*`). The app still renders; sign-in is what stops working. */
   authAvailable: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -43,83 +45,247 @@ function mapFirebaseUser(firebaseUser: FirebaseUser): User {
   };
 }
 
-const googleProvider = new GoogleAuthProvider();
+/**
+ * Synchronous probe for an existing Firebase Auth session.
+ * Firebase Auth writes `firebase:authUser:<apiKey>:<authDomain>` to localStorage.
+ */
+function hasExistingFirebaseSession(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("firebase:authUser:")) {
+        const value = localStorage.getItem(key);
+        if (value && value !== "null" && value.length > 4) return true;
+      }
+    }
+  } catch {
+    // localStorage might be blocked (private mode etc.)
+  }
+  return false;
+}
+
+/**
+ * Check if current page load is a redirect return from OAuth provider.
+ */
+function isPendingRedirect(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (
+        key &&
+        (key.includes("firebase:pendingRedirect") ||
+          key.includes("firebase:redirectUser"))
+      ) {
+        return true;
+      }
+    }
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("mode") || url.hash.includes("state=")) {
+      return true;
+    }
+  } catch {
+    // sessionStorage might be blocked
+  }
+  return false;
+}
+
+// Lazy-loaded Firebase modules (cached after first load).
+type FirebaseModule = typeof import("@/lib/firebase");
+type FirebaseAuthModule = typeof import("firebase/auth");
+
+let firebaseModulePromise: Promise<FirebaseModule> | null = null;
+let firebaseAuthPromise: Promise<FirebaseAuthModule> | null = null;
+
+function loadFirebase(): Promise<FirebaseModule> {
+  if (!firebaseModulePromise) {
+    firebaseModulePromise = import("@/lib/firebase");
+  }
+  return firebaseModulePromise;
+}
+
+function loadFirebaseAuth(): Promise<FirebaseAuthModule> {
+  if (!firebaseAuthPromise) {
+    firebaseAuthPromise = import("firebase/auth");
+  }
+  return firebaseAuthPromise;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [authAvailable, setAuthAvailable] = useState(true);
+  const isSigningIn = useRef(false);
+  const initStarted = useRef(false);
 
   useEffect(() => {
-    // Firebase init runs inside a promise chain for two reasons.
-    //
-    // 1. Resilience. `getAuthInstance()` THROWS when `NEXT_PUBLIC_FIREBASE_*` is missing or
-    //    invalid (CI, local dev without .env.local). Thrown synchronously from an effect,
-    //    React unmounts the whole tree and the visitor gets a blank screen — measured on
-    //    the static export: /login shipped the sign-in button in its HTML and rendered
-    //    ZERO buttons after hydration ("Firebase: Error (auth/invalid-api-key)").
-    //    Degrading to `authAvailable: false` keeps the demo usable.
-    //    This is runtime resilience, NOT a relaxed gate: missing Firebase env in the
-    //    pipeline must still be a hard BUILD failure (P10) — a demo whose login is dead is
-    //    not a demo.
-    // 2. React 19 rejects setState called synchronously in an effect body (cascading
-    //    renders). Every setState below therefore happens after a `.then`/`.catch`.
-    let unsubscribe: () => void = () => {};
+    // Prevent double initialization in React StrictMode
+    if (initStarted.current) return;
+    initStarted.current = true;
+
+    // Determine if we need to load Firebase Auth:
+    // 1. User has existing session in localStorage
+    // 2. This is a redirect return from OAuth provider
+    const hasSession = hasExistingFirebaseSession();
+    const isRedirectReturn = isPendingRedirect();
+    const needsFirebaseAuth = hasSession || isRedirectReturn;
+
+    // Anonymous visitor with no session and no pending redirect:
+    // Skip Firebase Auth entirely (~250 KB of JS saved)
+    if (!needsFirebaseAuth) {
+      setLoading(false);
+      return;
+    }
+
+    let unsubscribe: (() => void) | null = null;
     let cancelled = false;
 
-    Promise.resolve()
-      .then(() => getAuthInstance())
-      .then((auth) => {
+    const init = async () => {
+      try {
+        const [firebaseMod, authSdk] = await Promise.all([
+          loadFirebase(),
+          loadFirebaseAuth(),
+        ]);
+
         if (cancelled) return;
 
-        // Check for redirect result (in-app browser fallback)
-        getRedirectResult(auth).catch(() => {});
+        const { getAuthInstance, ensureAuthPersistence } = firebaseMod;
+        const { onAuthStateChanged, getRedirectResult } = authSdk;
 
+        const auth = getAuthInstance();
+        await ensureAuthPersistence();
+
+        // Complete redirect-based sign-in flow if returning from OAuth
+        if (isRedirectReturn) {
+          try {
+            const result = await getRedirectResult(auth);
+            if (result?.user) {
+              setUser(mapFirebaseUser(result.user));
+            }
+          } catch (error) {
+            const authError = error as AuthError;
+            if (authError?.code !== "auth/popup-closed-by-user") {
+              console.error(
+                "getRedirectResult error:",
+                authError?.code,
+                authError?.message
+              );
+            }
+          }
+        }
+
+        if (cancelled) return;
+
+        // Subscribe to auth state changes
         unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
           setUser(firebaseUser ? mapFirebaseUser(firebaseUser) : null);
           setLoading(false);
         });
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return;
-        console.error("[auth] Firebase unavailable — sign-in disabled:", err);
-        setAuthAvailable(false);
+      } catch (err) {
+        console.error("[auth] Firebase unavailable:", err);
+        if (!cancelled) {
+          setAuthAvailable(false);
+          setLoading(false);
+        }
+      }
+    };
+
+    // Safety net: if Firebase init never resolves, stop loading after 5s
+    const loadingTimeout = setTimeout(() => {
+      if (!cancelled && loading) {
+        console.warn("Firebase Auth init timeout — forcing loading=false");
         setLoading(false);
-      });
+      }
+    }, 5000);
+
+    init();
 
     return () => {
       cancelled = true;
-      unsubscribe();
+      clearTimeout(loadingTimeout);
+      if (unsubscribe) unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const signInWithGoogle = async () => {
     if (!authAvailable) {
       throw new Error("Sign-in is unavailable: Firebase is not configured.");
     }
-    await ensureAuthPersistence();
-    const auth = getAuthInstance();
+    if (isSigningIn.current) return;
+    isSigningIn.current = true;
 
     try {
-      // Try popup first
-      await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-      // Fallback to redirect for in-app browsers
-      if (
-        err instanceof Error &&
-        (err.message.includes("popup") ||
-          err.message.includes("blocked") ||
-          err.message.includes("cross-origin"))
-      ) {
+      const [firebaseMod, authSdk] = await Promise.all([
+        loadFirebase(),
+        loadFirebaseAuth(),
+      ]);
+      const { getAuthInstance, ensureAuthPersistence, googleProvider } =
+        firebaseMod;
+      const { signInWithPopup, signInWithRedirect } = authSdk;
+
+      const auth = getAuthInstance();
+      await ensureAuthPersistence();
+
+      // Check for in-app browser — these don't support popup auth
+      if (isInAppBrowser()) {
+        const escaped = escapeInAppBrowser();
+        if (escaped) {
+          isSigningIn.current = false;
+          return;
+        }
+        // If escape failed, try redirect flow
         await signInWithRedirect(auth, googleProvider);
-      } else {
-        throw err;
+        return;
       }
+
+      // Try popup first, fall back to redirect on specific errors
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        if (result.user) {
+          setUser(mapFirebaseUser(result.user));
+        }
+      } catch (error) {
+        const authError = error as AuthError;
+
+        // User closed popup — not an error, just cancelled
+        if (authError?.code === "auth/popup-closed-by-user") {
+          return;
+        }
+
+        // Fallback to redirect for popup-related errors
+        if (authError?.code && REDIRECT_FALLBACK_CODES.has(authError.code)) {
+          try {
+            await signInWithRedirect(auth, googleProvider);
+            return;
+          } catch (redirectError) {
+            console.error("signInWithRedirect failed:", redirectError);
+            throw redirectError;
+          }
+        }
+
+        console.error(
+          "signInWithPopup error:",
+          authError?.code,
+          authError?.message
+        );
+        throw error;
+      }
+    } finally {
+      isSigningIn.current = false;
     }
   };
 
   const signOut = async () => {
+    const [firebaseMod, authSdk] = await Promise.all([
+      loadFirebase(),
+      loadFirebaseAuth(),
+    ]);
+    const { getAuthInstance } = firebaseMod;
+    const { signOut: firebaseSignOut } = authSdk;
     await firebaseSignOut(getAuthInstance());
+    setUser(null);
   };
 
   return (

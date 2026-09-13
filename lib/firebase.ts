@@ -3,6 +3,7 @@ import {
   getAuth,
   setPersistence,
   browserLocalPersistence,
+  GoogleAuthProvider,
   type Auth,
 } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
@@ -66,3 +67,6 @@ export function getCollectionPath(collection: string): string {
   const slug = getDemoSlug();
   return slug ? `demos/${slug}/${collection}` : collection;
 }
+
+/** Shared Google Auth provider instance. */
+export const googleProvider = new GoogleAuthProvider();
