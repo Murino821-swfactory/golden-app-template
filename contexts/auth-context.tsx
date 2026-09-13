@@ -51,38 +51,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authAvailable, setAuthAvailable] = useState(true);
 
   useEffect(() => {
-    let auth: ReturnType<typeof getAuthInstance>;
-    try {
-      auth = getAuthInstance();
-    } catch (err) {
-      // Firebase is not configured here (CI, local dev without .env.local). Degrade to
-      // "signed out, sign-in unavailable" instead of taking the page down: this throw is
-      // synchronous inside an effect, so React unmounts the whole tree and the visitor
-      // gets a blank screen — measured on the static export, where a /login with the
-      // button present in the HTML rendered zero buttons after hydration.
-      //
-      // This is runtime resilience, NOT a relaxed gate. Missing `NEXT_PUBLIC_FIREBASE_*`
-      // in the pipeline must still be a hard BUILD failure (P10) — a demo whose login is
-      // dead is not a demo.
-      console.error("[auth] Firebase unavailable — sign-in disabled:", err);
-      setAuthAvailable(false);
-      setLoading(false);
-      return;
-    }
+    // Firebase init runs inside a promise chain for two reasons.
+    //
+    // 1. Resilience. `getAuthInstance()` THROWS when `NEXT_PUBLIC_FIREBASE_*` is missing or
+    //    invalid (CI, local dev without .env.local). Thrown synchronously from an effect,
+    //    React unmounts the whole tree and the visitor gets a blank screen — measured on
+    //    the static export: /login shipped the sign-in button in its HTML and rendered
+    //    ZERO buttons after hydration ("Firebase: Error (auth/invalid-api-key)").
+    //    Degrading to `authAvailable: false` keeps the demo usable.
+    //    This is runtime resilience, NOT a relaxed gate: missing Firebase env in the
+    //    pipeline must still be a hard BUILD failure (P10) — a demo whose login is dead is
+    //    not a demo.
+    // 2. React 19 rejects setState called synchronously in an effect body (cascading
+    //    renders). Every setState below therefore happens after a `.then`/`.catch`.
+    let unsubscribe: () => void = () => {};
+    let cancelled = false;
 
-    // Check for redirect result (in-app browser fallback)
-    getRedirectResult(auth).catch(() => {});
+    Promise.resolve()
+      .then(() => getAuthInstance())
+      .then((auth) => {
+        if (cancelled) return;
 
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(mapFirebaseUser(firebaseUser));
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    });
+        // Check for redirect result (in-app browser fallback)
+        getRedirectResult(auth).catch(() => {});
 
-    return () => unsubscribe();
+        unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+          setUser(firebaseUser ? mapFirebaseUser(firebaseUser) : null);
+          setLoading(false);
+        });
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        console.error("[auth] Firebase unavailable — sign-in disabled:", err);
+        setAuthAvailable(false);
+        setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, []);
 
   const signInWithGoogle = async () => {
