@@ -124,24 +124,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (initStarted.current) return;
     initStarted.current = true;
 
-    // Determine if we need to load Firebase Auth:
-    // 1. User has existing session in localStorage
-    // 2. This is a redirect return from OAuth provider
-    const hasSession = hasExistingFirebaseSession();
-    const isRedirectReturn = isPendingRedirect();
-    const needsFirebaseAuth = hasSession || isRedirectReturn;
-
-    // Anonymous visitor with no session and no pending redirect:
-    // Skip Firebase Auth entirely (~250 KB of JS saved)
-    if (!needsFirebaseAuth) {
-      setLoading(false);
-      return;
-    }
-
     let unsubscribe: (() => void) | null = null;
     let cancelled = false;
 
     const init = async () => {
+      // Whether Firebase Auth is needed at all is a question only localStorage can
+      // answer, so it is asked here rather than in the effect body: `init` owns every
+      // state transition in this bootstrap — anonymous exit, redirect result, auth
+      // subscription and failure — instead of one of the four sitting apart from the
+      // rest as a synchronous setState (react-hooks/set-state-in-effect).
+      //
+      // 1. an existing session in localStorage, or
+      // 2. a return trip from the OAuth provider.
+      // Neither: skip Firebase Auth entirely, ~250 KB of JS the visitor never downloads.
+      const isRedirectReturn = isPendingRedirect();
+      if (!hasExistingFirebaseSession() && !isRedirectReturn) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+
       try {
         const [firebaseMod, authSdk] = await Promise.all([
           loadFirebase(),
