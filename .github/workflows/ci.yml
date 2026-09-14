@@ -27,6 +27,13 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # The committed schema is the harness's copy of this repo's contract. A stale one
+      # would have the assembly line ask for a shape this repo no longer accepts.
+      - name: Schema is in sync with the code
+        run: |
+          npm run schema
+          git diff --exit-code prototype.schema.json
+
   # A prototype differs from this repo ONLY by prototype.config.json. Building just the
   # shipped config would prove nothing about the configs a customer can actually pick, so
   # every one of them is built and tested here. This job IS the promise the assembly line
