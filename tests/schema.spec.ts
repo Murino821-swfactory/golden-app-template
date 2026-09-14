@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync, writeFileSync, copyFileSync, unlinkSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdtempSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 /**
  * The committed schema is what the harness sends to the content agent; the zod in
@@ -32,30 +34,30 @@ test("the schema describes the closed enums, not free strings", () => {
 });
 
 test("validate:config accepts the shipped config and rejects a broken one", () => {
-  copyFileSync("prototype.config.json", "prototype.config.json.bak");
+  // Valid: the config this repo ships. Validated in place — no copying, nothing written
+  // under the repo. `fullyParallel` runs this test twice concurrently (chromium + mobile
+  // projects); a shared-file fixture would race those two runs against each other and
+  // risked leaving the SHIPPED prototype.config.json corrupted in the working tree.
+  execFileSync("npx", ["tsx", "scripts/validate-config.ts"], { encoding: "utf-8" });
+
+  // Invalid: a section id that does not exist as a component. Written to a fresh temp
+  // file per test run, so concurrent workers never see each other's writes.
+  const broken = JSON.parse(readFileSync("prototype.config.json", "utf-8"));
+  broken.patterns.landing.sections = ["hero", "gallery"];
+  const scratchDir = mkdtempSync(join(tmpdir(), "validate-config-test-"));
+  const scratchFile = join(scratchDir, "prototype.config.json");
+  writeFileSync(scratchFile, JSON.stringify(broken, null, 2));
+
+  let failed = false;
+  let output = "";
   try {
-    // Valid: the config this repo ships.
-    execFileSync("npx", ["tsx", "scripts/validate-config.ts"], { encoding: "utf-8" });
-
-    // Invalid: a section id that does not exist as a component.
-    const broken = JSON.parse(readFileSync("prototype.config.json.bak", "utf-8"));
-    broken.patterns.landing.sections = ["hero", "gallery"];
-    writeFileSync("prototype.config.json", JSON.stringify(broken, null, 2));
-
-    let failed = false;
-    let output = "";
-    try {
-      execFileSync("npx", ["tsx", "scripts/validate-config.ts"], { encoding: "utf-8" });
-    } catch (err) {
-      failed = true;
-      const e = err as { stdout?: string; stderr?: string };
-      output = String(e.stdout ?? "") + String(e.stderr ?? "");
-    }
-    expect(failed).toBe(true);
-    expect(output).toContain("patterns.landing.sections");
-    expect(output).toContain("Invalid option");
-  } finally {
-    copyFileSync("prototype.config.json.bak", "prototype.config.json");
-    unlinkSync("prototype.config.json.bak");
+    execFileSync("npx", ["tsx", "scripts/validate-config.ts", scratchFile], { encoding: "utf-8" });
+  } catch (err) {
+    failed = true;
+    const e = err as { stdout?: string; stderr?: string };
+    output = String(e.stdout ?? "") + String(e.stderr ?? "");
   }
+  expect(failed).toBe(true);
+  expect(output).toContain("patterns.landing.sections");
+  expect(output).toContain("Invalid option");
 });

@@ -16,15 +16,17 @@
  * module-load-time `rawConfig` import at line 178, so a STATIC import of that module would
  * throw before this script's try block was ever entered, printing a raw stack trace
  * instead of the formatted zod issue list.
+ *
+ * Takes an optional path argument (`process.argv[2]`) so a test can assert a rejection
+ * against a scratch file without touching the repo's shipped prototype.config.json.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 async function main() {
   try {
-    const rawConfig = JSON.parse(
-      readFileSync(resolve(__dirname, "../prototype.config.json"), "utf-8")
-    );
+    const target = process.argv[2] ?? resolve(__dirname, "../prototype.config.json");
+    const rawConfig = JSON.parse(readFileSync(target, "utf-8"));
     const { parsePrototypeConfig } = await import("../lib/prototype-config");
     const config = parsePrototypeConfig(rawConfig);
     const enabled = (Object.keys(config.patterns) as Array<keyof typeof config.patterns>).filter(
