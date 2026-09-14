@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync, copyFileSync, unlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 
 /**
@@ -29,4 +29,33 @@ test("the schema describes the closed enums, not free strings", () => {
   expect(sections).not.toContain("gallery");
   const types = schema.patterns.dataGrid.properties.entity.properties.fields.items.properties.type.enum;
   expect(types).toEqual(["text", "longtext", "number", "date", "boolean", "select"]);
+});
+
+test("validate:config accepts the shipped config and rejects a broken one", () => {
+  copyFileSync("prototype.config.json", "prototype.config.json.bak");
+  try {
+    // Valid: the config this repo ships.
+    execFileSync("npx", ["tsx", "scripts/validate-config.ts"], { encoding: "utf-8" });
+
+    // Invalid: a section id that does not exist as a component.
+    const broken = JSON.parse(readFileSync("prototype.config.json.bak", "utf-8"));
+    broken.patterns.landing.sections = ["hero", "gallery"];
+    writeFileSync("prototype.config.json", JSON.stringify(broken, null, 2));
+
+    let failed = false;
+    let output = "";
+    try {
+      execFileSync("npx", ["tsx", "scripts/validate-config.ts"], { encoding: "utf-8" });
+    } catch (err) {
+      failed = true;
+      const e = err as { stdout?: string; stderr?: string };
+      output = String(e.stdout ?? "") + String(e.stderr ?? "");
+    }
+    expect(failed).toBe(true);
+    expect(output).toContain("patterns.landing.sections");
+    expect(output).toContain("Invalid option");
+  } finally {
+    copyFileSync("prototype.config.json.bak", "prototype.config.json");
+    unlinkSync("prototype.config.json.bak");
+  }
 });

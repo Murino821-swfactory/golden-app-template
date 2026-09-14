@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "schema": "tsx scripts/emit-schema.ts",
+    "validate:config": "tsx scripts/validate-config.ts",
     "test:e2e": "playwright test",
     "deploy:production": "npm run build && firebase deploy --only hosting",
     "preview": "serve out -l 3000"
