@@ -39,7 +39,7 @@
               "icon": {
                 "type": "string",
                 "minLength": 1,
-                "maxLength": 4
+                "maxLength": 16
               },
               "title": {
                 "type": "string",
@@ -300,7 +300,7 @@
                     "icon": {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 4
+                      "maxLength": 16
                     },
                     "title": {
                       "type": "string",

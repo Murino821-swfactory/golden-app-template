@@ -73,7 +73,8 @@ export type EntityField = z.infer<typeof entityFieldSchema>;
  * CI checks that neither exists without the other.
  */
 const featureSchema = z.object({
-  icon: z.string().min(1).max(4).optional(),
+  /** Modern emoji (flags, skin tones, ZWJ sequences) can be 8+ JS string chars. */
+  icon: z.string().min(1).max(16).optional(),
   title: z.string().min(1),
   description: z.string().min(1),
 });
