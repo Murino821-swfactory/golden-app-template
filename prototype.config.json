@@ -1,65 +1,117 @@
 {
-  "appName": "Golden App Template",
-  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "appName": "TripBook",
+  "description": "A family trip journal that keeps every adventure alive — log destinations, memories, and moments before they fade.",
   "theme": {
     "colorScheme": "green",
     "style": "minimal"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"],
-      "headline": "Ship your prototype in days, not months",
-      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+      "sections": [
+        "hero",
+        "features",
+        "cta"
+      ],
+      "headline": "Every family trip remembered forever",
+      "subheadline": "For families with kids who want to capture adventures, stories, and photos before the memories slip away — start logging your first trip in minutes.",
       "features": [
         {
-          "icon": "🎨",
-          "title": "Four color palettes",
-          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+          "icon": "🗺️",
+          "title": "Log every destination",
+          "description": "Record where you went, when you went, and how long you stayed so no trip ever goes undocumented."
         },
         {
-          "icon": "🔧",
-          "title": "Config-driven patterns",
-          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+          "icon": "📝",
+          "title": "Capture the moments",
+          "description": "Add notes, funny stories, and highlights from each trip so your kids can read them years later."
         },
         {
-          "icon": "🚀",
-          "title": "Static export",
-          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+          "icon": "📍",
+          "title": "See trips on a map",
+          "description": "View all your family destinations pinned on an interactive map to see how far you've explored together."
+        },
+        {
+          "icon": "⭐",
+          "title": "Rate the experience",
+          "description": "Let every family member mark how much they loved a trip so you remember which places are worth returning to."
+        },
+        {
+          "icon": "📅",
+          "title": "Browse by year",
+          "description": "Filter your trip history by year to relive each summer, holiday, or long weekend at a glance."
         }
       ]
     },
     "dashboard": {
-      "title": "Dashboard"
+      "title": "Our Family Trips"
     },
     "authGoogle": {},
     "cta": {
-      "label": "Get started",
-      "href": "/login"
-    },
-    "contactForm": {
-      "heading": "Get in touch",
-      "submitLabel": "Send message"
+      "label": "Start your trip journal",
+      "href": "/signup"
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
-        "label": "Location",
+        "key": "trip",
+        "label": "Trip",
         "fields": [
-          { "key": "name", "label": "Name", "type": "text", "required": true },
           {
-            "key": "category",
-            "label": "Category",
-            "type": "select",
-            "options": ["Office", "Warehouse", "Depot"]
+            "key": "destination",
+            "label": "Destination",
+            "type": "text",
+            "required": true
           },
-          { "key": "opened", "label": "Opened", "type": "date" },
-          { "key": "active", "label": "Active", "type": "boolean" }
+          {
+            "key": "start_date",
+            "label": "Date of trip",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "duration_days",
+            "label": "Duration (days)",
+            "type": "number",
+            "required": false
+          },
+          {
+            "key": "rating",
+            "label": "Family rating",
+            "type": "select",
+            "options": [
+              "⭐ Could be better",
+              "⭐⭐ It was nice",
+              "⭐⭐⭐ Really enjoyed it",
+              "⭐⭐⭐⭐ Loved it!",
+              "⭐⭐⭐⭐⭐ Unforgettable"
+            ],
+            "required": false
+          },
+          {
+            "key": "highlights",
+            "label": "Highlights & memories",
+            "type": "longtext",
+            "required": false
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "type": "select",
+            "options": [
+              "Planning",
+              "Completed",
+              "Want to return"
+            ],
+            "required": false
+          }
         ]
       }
     },
     "mapBase": {
-      "center": { "lat": 48.669, "lng": 19.699 },
-      "zoom": 7
+      "center": {
+        "lat": 48.5,
+        "lng": 15.5
+      },
+      "zoom": 4
     }
   }
 }
