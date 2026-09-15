@@ -1,64 +1,106 @@
 {
-  "appName": "Golden App Template",
-  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "appName": "Výletník",
+  "description": "Evidujte rodinné výlety — kam ste šli, s kým a čo stálo za to. Žiadny výlet viac nezabudnete.",
   "theme": {
     "colorScheme": "green",
     "style": "minimal"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"],
-      "headline": "Ship your prototype in days, not months",
-      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+      "sections": [
+        "hero",
+        "features",
+        "cta"
+      ],
+      "headline": "Každý výlet si pamätáte navždy",
+      "subheadline": "Pre rodiny s deťmi, ktoré chcú zaznamenať, kde boli, s kým a čo skutočne stálo za to — skôr ako to všetci zabudnú.",
       "features": [
         {
-          "icon": "🎨",
-          "title": "Four color palettes",
-          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+          "icon": "🗺️",
+          "title": "Výlety na mape",
+          "description": "Každé navštívené miesto si môžete pozrieť na mape a sledovať, kam všade ste sa ako rodina dostali."
         },
         {
-          "icon": "🔧",
-          "title": "Config-driven patterns",
-          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+          "icon": "⭐",
+          "title": "Čo stálo za to",
+          "description": "Ku každému výletu si zapíšete, čo vás nadchlo, takže pri ďalšom plánovaní viete, kam sa oplatí vrátiť."
         },
         {
-          "icon": "🚀",
-          "title": "Static export",
-          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+          "icon": "👨‍👩‍👧",
+          "title": "S kým sme šli",
+          "description": "Zaznamenajte, kto sa výletu zúčastnil, a neskôr ľahko zistíte, čo ste zažili spolu s prarodičmi, kamarátmi či triedou."
+        },
+        {
+          "icon": "📅",
+          "title": "História výletov",
+          "description": "Všetky výlety uložíte na jednom mieste a kedykoľvek si môžete listovať rodinnou históriou zoradenú podľa dátumu."
         }
       ]
     },
     "dashboard": {
-      "title": "Dashboard"
+      "title": "Naše výlety"
     },
     "authGoogle": {},
     "cta": {
-      "label": "Get started",
-      "href": "/login"
-    },
-    "contactForm": {
-      "heading": "Get in touch",
-      "submitLabel": "Send message"
+      "label": "Začať evidovať výlety",
+      "href": "/signup"
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
-        "label": "Location",
+        "key": "vylet",
+        "label": "Výlet",
         "fields": [
-          { "key": "name", "label": "Name", "type": "text", "required": true },
           {
-            "key": "category",
-            "label": "Category",
-            "type": "select",
-            "options": ["Office", "Warehouse", "Depot"]
+            "key": "ciel",
+            "label": "Cieľ výletu",
+            "type": "text",
+            "required": true
           },
-          { "key": "opened", "label": "Opened", "type": "date" },
-          { "key": "active", "label": "Active", "type": "boolean" }
+          {
+            "key": "datum",
+            "label": "Dátum",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "s_kym",
+            "label": "S kým sme šli",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "hodnotenie",
+            "label": "Hodnotenie",
+            "type": "select",
+            "options": [
+              "⭐ Sklamanie",
+              "⭐⭐ Ujde",
+              "⭐⭐⭐ Dobré",
+              "⭐⭐⭐⭐ Výborné",
+              "⭐⭐⭐⭐⭐ Musíme sa vrátiť"
+            ],
+            "required": false
+          },
+          {
+            "key": "co_stalo_za_to",
+            "label": "Čo stálo za to",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "poznamky",
+            "label": "Poznámky",
+            "type": "longtext",
+            "required": false
+          }
         ]
       }
     },
     "mapBase": {
-      "center": { "lat": 48.669, "lng": 19.699 },
+      "center": {
+        "lat": 48.7,
+        "lng": 19.5
+      },
       "zoom": 7
     }
   }
