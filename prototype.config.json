@@ -1,64 +1,115 @@
 {
-  "appName": "Golden App Template",
-  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "appName": "Výletník",
+  "description": "Evidujte rodinné výlety — kde ste boli, s kým a čo stálo za to, aby ste na dobré miesta nikdy nezabudli.",
   "theme": {
     "colorScheme": "green",
     "style": "minimal"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"],
-      "headline": "Ship your prototype in days, not months",
-      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+      "sections": [
+        "hero",
+        "features",
+        "cta"
+      ],
+      "headline": "Každý rodinný výlet zostane v pamäti",
+      "subheadline": "Pre rodiny s deťmi, ktoré chcú vedieť, kde všade boli a kam sa oplatí vrátiť — začnite pridaním prvého výletu.",
       "features": [
         {
-          "icon": "🎨",
-          "title": "Four color palettes",
-          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+          "icon": "📍",
+          "title": "Výlet na mape",
+          "description": "Každé navštívené miesto si označte na mape, aby ste videli, kde všade ste ako rodina boli."
         },
         {
-          "icon": "🔧",
-          "title": "Config-driven patterns",
-          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+          "icon": "👨‍👩‍👧",
+          "title": "Kto bol s vami",
+          "description": "Zaznamenajte, kto sa každého výletu zúčastnil, a nikdy nevynecháte žiadnu spomienku."
         },
         {
-          "icon": "🚀",
-          "title": "Static export",
-          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+          "icon": "⭐",
+          "title": "Ohodnoťte zážitok",
+          "description": "Ku každému výletu pridajte hodnotenie, aby ste hneď vedeli, kam sa oplatí vrátiť."
+        },
+        {
+          "icon": "📝",
+          "title": "Poznámky zo cesty",
+          "description": "Napíšte si, čo vás zaujalo, čo deti obľúbili alebo na čo si dať pozor pri ďalšej návšteve."
+        },
+        {
+          "icon": "📅",
+          "title": "História podľa dátumu",
+          "description": "Prelistujte si všetky výlety zoradené podľa dátumu a sledujte, ako vaša mapa zažitých miest rastie."
+        },
+        {
+          "icon": "🔍",
+          "title": "Rýchle vyhľadanie",
+          "description": "Nájdite konkrétny výlet podľa názvu alebo miesta za pár sekúnd, aj keď máte záznamy z rokov dozadu."
         }
       ]
     },
     "dashboard": {
-      "title": "Dashboard"
+      "title": "Naše výlety"
     },
     "authGoogle": {},
     "cta": {
-      "label": "Get started",
-      "href": "/login"
-    },
-    "contactForm": {
-      "heading": "Get in touch",
-      "submitLabel": "Send message"
+      "label": "Pridať prvý výlet",
+      "href": "/dashboard"
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
-        "label": "Location",
+        "key": "vylet",
+        "label": "Výlet",
         "fields": [
-          { "key": "name", "label": "Name", "type": "text", "required": true },
           {
-            "key": "category",
-            "label": "Category",
-            "type": "select",
-            "options": ["Office", "Warehouse", "Depot"]
+            "key": "nazov",
+            "label": "Názov výletu",
+            "type": "text",
+            "required": true
           },
-          { "key": "opened", "label": "Opened", "type": "date" },
-          { "key": "active", "label": "Active", "type": "boolean" }
+          {
+            "key": "datum",
+            "label": "Dátum výletu",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "miesto",
+            "label": "Miesto",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "ucastnici",
+            "label": "Účastníci",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "hodnotenie",
+            "label": "Hodnotenie",
+            "type": "select",
+            "options": [
+              "Výborné",
+              "Dobré",
+              "Priemerné",
+              "Neoplatilo sa"
+            ],
+            "required": false
+          },
+          {
+            "key": "poznamka",
+            "label": "Poznámky",
+            "type": "longtext",
+            "required": false
+          }
         ]
       }
     },
     "mapBase": {
-      "center": { "lat": 48.669, "lng": 19.699 },
+      "center": {
+        "lat": 48.7,
+        "lng": 19.5
+      },
       "zoom": 7
     }
   }
