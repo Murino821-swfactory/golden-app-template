@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/hooks/use-content";
@@ -32,7 +31,7 @@ export function HeroSection() {
         {subheadline}
       </p>
       <Button asChild size="lg">
-        <Link href="#contact">{t("cta")}</Link>
+        <a href="#contact">{t("cta")}</a>
       </Button>
     </section>
   );

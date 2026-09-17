@@ -54,6 +54,25 @@ test.describe("routing", () => {
     }
   });
 
+  /**
+   * Regression guard. `components/sections/cta.tsx` used a plain `next/link`, so Next
+   * prefetched `/login` — a path that does not exist under locale routing — and put a 404
+   * in every visitor's console. Only the minimal config caught it, because there the CTA
+   * is in view on load and the prefetch actually fires.
+   */
+  test("every in-app link carries a language prefix", async ({ page }) => {
+    await page.goto(`./${config.defaultLocale}/`);
+    const hrefs = await page
+      .locator("a[href^='/']")
+      .evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")!));
+
+    expect(hrefs.length, "the page should have in-app links at all").toBeGreaterThan(0);
+    for (const href of hrefs) {
+      const prefixed = config.locales.some((l) => href.includes(`/${l}/`) || href.endsWith(`/${l}`));
+      expect(prefixed, `"${href}" has no language prefix — it will 404`).toBe(true);
+    }
+  });
+
   test("search engines are told which language is which", async ({ page }) => {
     await page.goto(`./${config.defaultLocale}/`);
     for (const locale of config.locales) {
