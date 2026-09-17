@@ -11,7 +11,12 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { z } from "zod";
-import { CONTENT_SCHEMAS, PATTERN_SCHEMAS, prototypeConfigSchema } from "../lib/prototype-config";
+import {
+  CONTENT_SCHEMAS,
+  LOCALE_DESCRIPTION_SCHEMA,
+  PATTERN_SCHEMAS,
+  prototypeConfigSchema,
+} from "../lib/prototype-config";
 
 // `io: "input"` describes what a producer must SEND. Without it, fields carrying a zod
 // default (entityField.required) are emitted as required output fields, and the content
@@ -27,9 +32,12 @@ const document = {
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
   ),
-  content: Object.fromEntries(
-    Object.entries(CONTENT_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
-  ),
+  content: {
+    description: toJson(LOCALE_DESCRIPTION_SCHEMA),
+    ...Object.fromEntries(
+      Object.entries(CONTENT_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
+    ),
+  },
   root: toJson(prototypeConfigSchema),
 };
 

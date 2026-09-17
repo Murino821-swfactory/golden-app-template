@@ -152,6 +152,11 @@
     }
   },
   "content": {
+    "description": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "string",
+      "minLength": 1
+    },
     "landing": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",

@@ -178,11 +178,16 @@ const CONTENT_REQUIRED_FOR: readonly ContentPatternId[] = [
   "dataGrid",
 ];
 
+/** Meta description, per language. Required, not optional: golden rule 3 (SEO+GEO) makes
+ * findability a precondition of monetization, and a prototype inheriting the template's own
+ * blurb is a silent regression the build would never catch. Exported so `npm run schema`
+ * publishes it beside the pattern slices — the harness asks for a locale block as
+ * `description` plus one slice per copy-bearing pattern, and a shape it is not told about
+ * is a shape it will not ask a model for. */
+export const LOCALE_DESCRIPTION_SCHEMA = z.string().min(1);
+
 const localeContentSchema = z.object({
-  /** Meta description. Required, not optional: golden rule 3 (SEO+GEO) makes findability a
-   * precondition of monetization, and a prototype inheriting the template's own blurb is a
-   * silent regression the build would never catch. */
-  description: z.string().min(1),
+  description: LOCALE_DESCRIPTION_SCHEMA,
   landing: CONTENT_SCHEMAS.landing.optional(),
   dashboard: CONTENT_SCHEMAS.dashboard.optional(),
   cta: CONTENT_SCHEMAS.cta.optional(),
