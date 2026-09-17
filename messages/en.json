@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "Golden App",
     "signIn": "Sign in",
     "signOut": "Sign out",
+    "account": "Account",
     "dashboard": "Dashboard",
     "loading": "Loading..."
   },

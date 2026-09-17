@@ -34,7 +34,9 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-4">
+    // Not `min-h-screen`: the root layout now puts a header above and a footer below, so a
+    // full-viewport box here would push the card off-centre and make the page scroll.
+    <div className="flex min-h-[calc(100svh-8rem)] flex-col items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle>{t("signInTitle")}</CardTitle>
@@ -51,6 +53,6 @@ export default function LoginPage() {
           )}
         </CardContent>
       </Card>
-    </main>
+    </div>
   );
 }
