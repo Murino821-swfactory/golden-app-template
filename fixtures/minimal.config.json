@@ -1,9 +1,16 @@
 {
   "appName": "Minimal Demo",
-  "description": "The smallest config that still makes a usable prototype: a landing page and one call to action.",
-  "theme": { "colorScheme": "red", "style": "minimal" },
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "theme": { "colorScheme": "red" },
   "patterns": {
     "landing": { "sections": ["hero", "cta"] },
-    "cta": { "label": "Request a demo", "href": "/login" }
+    "cta": { "href": "/login" }
+  },
+  "content": {
+    "en": {
+      "description": "The smallest config that still makes a usable prototype: a landing page and one call to action.",
+      "cta": { "label": "Request a demo" }
+    }
   }
 }

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { AuthProvider } from '@/contexts/auth-context';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { config } from '@/lib/prototype-config';
+import { config, contentFor } from '@/lib/prototype-config';
 import { COLOR_SCHEME_IDS, cssBlocksForAll } from '@/lib/color-schemes';
 
 // Applied before the first paint, so a visitor who already picked a palette never sees the
@@ -26,7 +26,9 @@ const geist = Geist({ subsets: ['latin', 'latin-ext'], variable: '--font-sans' }
 // itself, `toHaveTitle(/Golden App/)` failed on an otherwise perfect build.
 export const metadata: Metadata = {
   title: config.appName,
-  description: config.description,
+  // Per-locale: the meta description is copy. Until locale routing lands there is one
+  // document, so it carries the default locale's.
+  description: contentFor(config).description,
 };
 
 export default async function RootLayout({

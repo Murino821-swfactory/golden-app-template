@@ -3,9 +3,11 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useContent } from "@/hooks/use-content";
 
 export function ContactSection() {
   const t = useTranslations("contact");
+  const copy = useContent().contactForm;
 
   return (
     <section
@@ -13,7 +15,7 @@ export function ContactSection() {
       className="mx-auto w-full max-w-xl px-4 py-16 sm:py-24"
     >
       <h2 className="text-center text-3xl font-semibold tracking-tight">
-        {t("title")}
+        {copy?.heading ?? t("title")}
       </h2>
       <form
         className="mt-8 flex flex-col gap-4"
@@ -38,7 +40,7 @@ export function ContactSection() {
           />
         </div>
         <Button type="submit" className="w-full">
-          {t("send")}
+          {copy?.submitLabel ?? t("send")}
         </Button>
       </form>
     </section>
