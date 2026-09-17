@@ -15,6 +15,7 @@ import {
 import { getFirestoreInstance, getCollectionPath } from "@/lib/firebase";
 import { useAuth } from "./use-auth";
 import { config, type EntityField } from "@/lib/prototype-config";
+import { useContent, useEntityFields } from "./use-content";
 
 /**
  * use-records.ts — generic CRUD over whatever entity `prototype.config.json` declares.
@@ -79,10 +80,14 @@ export function useRecords(): UseRecordsReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Stable identity: `fields` feeds useCallback deps below, and a fresh [] every render
-  // would rebuild addRecord on every render.
-  const fields = useMemo(() => gridConfig?.entity.fields ?? [], []);
-  const entityLabel = gridConfig?.entity.label ?? "Record";
+  // Labels come from the language on screen, shapes from the config. `useEntityFields`
+  // returns a fresh array each render, so it is memoised on the locale-stable JSON of the
+  // labels — `fields` feeds the useCallback deps below and a new array every render would
+  // rebuild addRecord every render.
+  const localisedFields = useEntityFields();
+  const fieldsKey = JSON.stringify(localisedFields);
+  const fields = useMemo<EntityField[]>(() => localisedFields, [fieldsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const entityLabel = useContent().dataGrid?.entityLabel ?? "Record";
   const collectionName = gridConfig?.entity.key ?? "records";
 
   /**

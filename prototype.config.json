@@ -1,65 +1,83 @@
 {
   "appName": "Golden App Template",
-  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "locales": ["en"],
+  "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green",
-    "style": "minimal"
+    "colorScheme": "green"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"],
-      "headline": "Ship your prototype in days, not months",
-      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
-      "features": [
-        {
-          "icon": "🎨",
-          "title": "Four color palettes",
-          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
-        },
-        {
-          "icon": "🔧",
-          "title": "Config-driven patterns",
-          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
-        },
-        {
-          "icon": "🚀",
-          "title": "Static export",
-          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
-        }
-      ]
+      "sections": ["hero", "features", "faq", "contact", "cta"]
     },
-    "dashboard": {
-      "title": "Dashboard"
-    },
+    "dashboard": {},
     "authGoogle": {},
     "cta": {
-      "label": "Get started",
       "href": "/login"
     },
-    "contactForm": {
-      "heading": "Get in touch",
-      "submitLabel": "Send message"
-    },
+    "contactForm": {},
     "dataGrid": {
       "entity": {
         "key": "location",
-        "label": "Location",
         "fields": [
-          { "key": "name", "label": "Name", "type": "text", "required": true },
+          { "key": "name", "type": "text", "required": true },
           {
             "key": "category",
-            "label": "Category",
             "type": "select",
             "options": ["Office", "Warehouse", "Depot"]
           },
-          { "key": "opened", "label": "Opened", "type": "date" },
-          { "key": "active", "label": "Active", "type": "boolean" }
+          { "key": "opened", "type": "date" },
+          { "key": "active", "type": "boolean" }
         ]
       }
     },
     "mapBase": {
       "center": { "lat": 48.669, "lng": 19.699 },
       "zoom": 7
+    }
+  },
+  "content": {
+    "en": {
+      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "landing": {
+        "headline": "Ship your prototype in days, not months",
+        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "features": [
+          {
+            "icon": "🎨",
+            "title": "Four color palettes",
+            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+          },
+          {
+            "icon": "🔧",
+            "title": "Config-driven patterns",
+            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+          },
+          {
+            "icon": "🚀",
+            "title": "Static export",
+            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Dashboard"
+      },
+      "cta": {
+        "label": "Get started"
+      },
+      "contactForm": {
+        "heading": "Get in touch",
+        "submitLabel": "Send message"
+      },
+      "dataGrid": {
+        "entityLabel": "Location",
+        "fieldLabels": {
+          "name": "Name",
+          "category": "Category",
+          "opened": "Opened",
+          "active": "Active"
+        }
+      }
     }
   }
 }

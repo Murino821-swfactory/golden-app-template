@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { config } from "../lib/prototype-config";
+import { config, contentFor } from "../lib/prototype-config";
 
 /**
  * Smoke suite asserts the CUSTOMER'S app, not this template's identity.
@@ -12,6 +12,8 @@ import { config } from "../lib/prototype-config";
 
 const landing = config.patterns.landing;
 const cta = config.patterns.cta;
+// Copy is per-locale now; one build still ships one document, in the default locale.
+const copy = contentFor(config);
 
 test.describe("Smoke tests", () => {
   test("landing page carries the configured identity", async ({ page }) => {
@@ -19,7 +21,7 @@ test.describe("Smoke tests", () => {
     await expect(page).toHaveTitle(config.appName);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       "content",
-      config.description
+      copy.description
     );
   });
 
@@ -36,7 +38,7 @@ test.describe("Smoke tests", () => {
   test("CTA shows the configured label", async ({ page }) => {
     test.skip(!cta, "cta pattern not enabled in this config");
     await page.goto("./");
-    await expect(page.getByRole("link", { name: cta!.label }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: copy.cta!.label }).first()).toBeVisible();
   });
 
   test("landing page has no console errors", async ({ page }) => {
