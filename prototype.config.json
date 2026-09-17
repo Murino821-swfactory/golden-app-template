@@ -1,40 +1,50 @@
 {
-  "appName": "Golden App Template",
-  "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+  "appName": "Unbroken",
+  "description": "Unbroken helps busy professionals track five daily life pillars with five taps, turning consistency into a habit even after a missed day.",
   "theme": {
-    "colorScheme": "green",
-    "style": "minimal"
+    "colorScheme": "yellow",
+    "style": "bold"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"],
-      "headline": "Ship your prototype in days, not months",
-      "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+      "sections": [
+        "hero",
+        "features",
+        "cta",
+        "contact"
+      ],
+      "headline": "One missed day won't break you.",
+      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Nutrition, Sleep, and Health in under ten seconds a day.",
       "features": [
         {
-          "icon": "🎨",
-          "title": "Four color palettes",
-          "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+          "icon": "✓",
+          "title": "Five-Pillar Check-In",
+          "description": "Tap yes or no for each of your five pillars and your whole day is logged before your coffee goes cold."
         },
         {
-          "icon": "🔧",
-          "title": "Config-driven patterns",
-          "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+          "icon": "🔥",
+          "title": "Streak Per Pillar",
+          "description": "See your current run for each pillar separately, so a rough sleep night never wipes out your fitness streak."
         },
         {
-          "icon": "🚀",
-          "title": "Static export",
-          "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+          "icon": "📅",
+          "title": "30-Day Calendar Grid",
+          "description": "Scan a colour-coded monthly grid to see the full picture of your consistency rather than fixating on a single missed day."
+        },
+        {
+          "icon": "🏅",
+          "title": "Longest-Streak Badge",
+          "description": "Your personal best for each pillar stays on display even after a reset, reminding you what you are capable of."
         }
       ]
     },
     "dashboard": {
-      "title": "Dashboard"
+      "title": "Today's Check-In"
     },
     "authGoogle": {},
     "cta": {
-      "label": "Get started",
-      "href": "/login"
+      "label": "Start your first check-in",
+      "href": "/signup"
     },
     "contactForm": {
       "heading": "Get in touch",
@@ -42,24 +52,54 @@
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
-        "label": "Location",
+        "key": "checkin",
+        "label": "Daily Check-In",
         "fields": [
-          { "key": "name", "label": "Name", "type": "text", "required": true },
           {
-            "key": "category",
-            "label": "Category",
-            "type": "select",
-            "options": ["Office", "Warehouse", "Depot"]
+            "key": "date",
+            "label": "Date",
+            "type": "date",
+            "required": true
           },
-          { "key": "opened", "label": "Opened", "type": "date" },
-          { "key": "active", "label": "Active", "type": "boolean" }
+          {
+            "key": "work",
+            "label": "Work",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "key": "fitness",
+            "label": "Fitness",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "key": "nutrition",
+            "label": "Nutrition",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "key": "sleep",
+            "label": "Sleep",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "key": "health",
+            "label": "Health",
+            "type": "boolean",
+            "required": false
+          }
         ]
       }
     },
     "mapBase": {
-      "center": { "lat": 48.669, "lng": 19.699 },
-      "zoom": 7
+      "center": {
+        "lat": 40.7128,
+        "lng": -74.006
+      },
+      "zoom": 3
     }
   }
 }
