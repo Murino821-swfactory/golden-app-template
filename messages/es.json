@@ -1,0 +1,58 @@
+{
+  "common": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "account": "Cuenta",
+    "dashboard": "Panel",
+    "loading": "Cargando…"
+  },
+  "auth": {
+    "signInTitle": "Iniciar sesión",
+    "signInDescription": "Continúa con tu cuenta de Google.",
+    "signInButton": "Entrar con Google",
+    "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo."
+  },
+  "landing": {
+    "title": "Tu aplicación",
+    "subtitle": "Construido sobre el Golden Stack",
+    "cta": "Empezar"
+  },
+  "features": {
+    "title": "Funciones",
+    "item1": "Primera función",
+    "item1desc": "Descripción de la primera función",
+    "item2": "Segunda función",
+    "item2desc": "Descripción de la segunda función",
+    "item3": "Tercera función",
+    "item3desc": "Descripción de la tercera función"
+  },
+  "pricing": {
+    "title": "Precios",
+    "free": "Gratis",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "testimonials": {
+    "title": "Lo que dicen",
+    "quote1": "Nos ahorró semanas de configuración.",
+    "author1": "Alex Kim",
+    "quote2": "Limpio, rápido y fácil de personalizar.",
+    "author2": "Jordan Lee"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "q1": "¿Cómo funciona?",
+    "a1": "Simplemente funciona."
+  },
+  "contact": {
+    "title": "Contacto",
+    "email": "Correo",
+    "message": "Mensaje",
+    "send": "Enviar"
+  },
+  "cta": {
+    "title": "¿Listo para empezar?",
+    "subtitle": "Pon en marcha tu propia versión en minutos.",
+    "action": "Empezar"
+  }
+}

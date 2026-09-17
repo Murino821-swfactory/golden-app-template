@@ -3,8 +3,11 @@ name: CI
 on:
   push:
     branches: [main]
+  # Every pull request, not only those targeting main. A stacked PR (one whose base is
+  # another feature branch) used to report no checks at all, which reads as "nothing to
+  # see" rather than "never tested" — the reviewer gets a green-looking page for code no
+  # job ever built.
   pull_request:
-    branches: [main]
 
 jobs:
   # Static checks run once — they do not depend on which config is in place.

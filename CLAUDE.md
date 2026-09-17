@@ -15,8 +15,9 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 |-------------|-----------------|
 | App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
-| Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
+| Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` — **all 8 bundles, same keys**, a test enforces it |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
+| Which languages are published | `prototype.config.json` → `locales` / `defaultLocale` |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
 | Custom section | Create in `components/sections/`, register in `app/(public)/page.tsx` |
 
@@ -51,6 +52,20 @@ still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter
 only for the window before the harness is deployed — do not write new configs in the old
 shape.
 
+## Routing is per language — every route lives under `app/[locale]/`
+
+`output: "export"` has no middleware, and next-intl's "default locale without a prefix"
+mode is implemented BY middleware. So `localePrefix` is `"always"`: every language has a
+prefix (`/sk/login`), and `app/page.tsx` is a small document that redirects the bare root
+to the primary language.
+
+- **never** import `Link` or `useRouter` from `next/*` — use `@/i18n/navigation`. A plain
+  `next/link` drops the prefix and a Slovak visitor lands on a 404.
+- `generateStaticParams` + `setRequestLocale` in `app/[locale]/layout.tsx` are both
+  load-bearing: without `setRequestLocale` the subtree goes dynamic and the export FAILS.
+- `messages/<locale>.json` exists for all 8 languages with identical keys. A missing key
+  does not fail a build; next-intl renders the key path into the page.
+
 ## Tech Stack (Golden Stack)
 
 - **Framework:** Next.js 16, App Router, static export (`output: 'export'`)
@@ -67,8 +82,12 @@ shape.
 
 ```
 app/
-  (public)/page.tsx      # Landing page — renders sections from SECTION_REGISTRY
-  login/page.tsx         # Login page (already implemented)
+  page.tsx               # Redirect document: bare root -> /<defaultLocale>/
+  layout.tsx             # Pass-through; the real <html> is in [locale]/layout.tsx
+  [locale]/
+    layout.tsx           # <html lang>, palette CSS, header/footer, hreflang
+    (public)/page.tsx    # Landing page — renders sections from SECTION_REGISTRY
+    login/page.tsx       # Login page (already implemented)
 components/
   sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)

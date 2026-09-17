@@ -14,16 +14,16 @@ import type { PatternId } from "./prototype-config";
  */
 export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
   landing: [
-    "app/(public)/page.tsx",
+    "app/[locale]/(public)/page.tsx",
     "components/sections/hero.tsx",
     "components/sections/features.tsx",
     "components/sections/faq.tsx",
   ],
-  dashboard: ["app/dashboard/page.tsx"],
+  dashboard: ["app/[locale]/dashboard/page.tsx"],
   authGoogle: [
     "contexts/auth-context.tsx",
     "components/auth/auth-guard.tsx",
-    "app/login/page.tsx",
+    "app/[locale]/login/page.tsx",
   ],
   cta: ["components/sections/cta.tsx"],
   contactForm: ["components/sections/contact.tsx"],

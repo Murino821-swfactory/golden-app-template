@@ -1,0 +1,58 @@
+{
+  "common": {
+    "signIn": "Přihlásit se",
+    "signOut": "Odhlásit se",
+    "account": "Účet",
+    "dashboard": "Přehled",
+    "loading": "Načítá se…"
+  },
+  "auth": {
+    "signInTitle": "Přihlášení",
+    "signInDescription": "Pokračujte přes svůj účet Google.",
+    "signInButton": "Přihlásit se přes Google",
+    "signInError": "Přihlášení selhalo. Zkuste to znovu."
+  },
+  "landing": {
+    "title": "Vaše aplikace",
+    "subtitle": "Postaveno na Golden Stacku",
+    "cta": "Začít"
+  },
+  "features": {
+    "title": "Funkce",
+    "item1": "První funkce",
+    "item1desc": "Popis první funkce",
+    "item2": "Druhá funkce",
+    "item2desc": "Popis druhé funkce",
+    "item3": "Třetí funkce",
+    "item3desc": "Popis třetí funkce"
+  },
+  "pricing": {
+    "title": "Ceník",
+    "free": "Zdarma",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "testimonials": {
+    "title": "Co říkají lidé",
+    "quote1": "Ušetřilo nám to týdny nastavování.",
+    "author1": "Alex Kim",
+    "quote2": "Čisté, rychlé a snadno upravitelné.",
+    "author2": "Jordan Lee"
+  },
+  "faq": {
+    "title": "Časté dotazy",
+    "q1": "Jak to funguje?",
+    "a1": "Prostě to funguje."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-mail",
+    "message": "Zpráva",
+    "send": "Odeslat"
+  },
+  "cta": {
+    "title": "Připraveni začít?",
+    "subtitle": "Spusťte si vlastní verzi během pár minut.",
+    "action": "Začít"
+  }
+}

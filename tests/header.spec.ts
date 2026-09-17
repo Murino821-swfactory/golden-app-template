@@ -2,6 +2,10 @@ import { test, expect } from "@playwright/test";
 import { config } from "../lib/prototype-config";
 import { COLOR_SCHEME_IDS, rolesFor } from "../lib/color-schemes";
 
+// "/" is a redirect document now — `localePrefix: "always"` means no page is generated
+// at the root. Every page test starts inside a language.
+const HOME = `./${config.defaultLocale}/`;
+
 /**
  * The header is the only chrome every prototype shows on every page, so it is also the
  * only place where "the template forgot whose app this is" is visible to the customer.
@@ -31,14 +35,14 @@ function readBackground(page: import("@playwright/test").Page): Promise<string> 
 
 test.describe("header identity", () => {
   test("the header names the customer's app, not the template", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(
       page.getByRole("banner").getByRole("link", { name: config.appName })
     ).toBeVisible();
   });
 
   test("the footer names the customer's app, not the template", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(page.getByRole("contentinfo")).toContainText(config.appName);
   });
 
@@ -47,7 +51,7 @@ test.describe("header identity", () => {
   // in the (public) route group, which meant exactly that on /login and /dashboard.
   test("the sign-in page carries the same header", async ({ page }) => {
     test.skip(!config.patterns.authGoogle, "authGoogle not enabled in this config");
-    await page.goto("./login");
+    await page.goto(`${HOME}login`);
     await expect(
       page.getByRole("banner").getByRole("link", { name: config.appName })
     ).toBeVisible();
@@ -59,14 +63,14 @@ test.describe("header identity", () => {
 
 test.describe("colour scheme switcher", () => {
   test("offers every scheme the template ships", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     const group = page.getByRole("radiogroup", { name: /colour scheme/i });
     await expect(group).toBeVisible();
     await expect(group.getByRole("radio")).toHaveCount(COLOR_SCHEME_IDS.length);
   });
 
   test("picking a scheme repaints the page", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     expect((await readBackground(page)).toLowerCase()).toBe(
       rolesFor(config.theme.colorScheme).background.toLowerCase()
     );
@@ -82,7 +86,7 @@ test.describe("colour scheme switcher", () => {
   });
 
   test("the choice survives a reload", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     await page.getByRole("radio", { name: SCHEME_LABELS[OTHER_SCHEME]! }).click();
     await expect(page.locator("html")).toHaveAttribute("data-scheme", OTHER_SCHEME);
 
@@ -95,7 +99,7 @@ test.describe("colour scheme switcher", () => {
   });
 
   test("a visitor who never chose sees the scheme the customer picked", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(page.locator("html")).toHaveAttribute(
       "data-scheme",
       config.theme.colorScheme
@@ -107,7 +111,7 @@ test.describe("sign-in control", () => {
   test("keeps an accessible name when its label is hidden on a phone", async ({ page }) => {
     test.skip(!config.patterns.authGoogle, "authGoogle not enabled in this config");
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("./");
+    await page.goto(HOME);
 
     const signIn = page.getByRole("banner").getByRole("link", { name: "Sign in" });
     await expect(signIn).toHaveAttribute("aria-label", "Sign in");
@@ -116,7 +120,7 @@ test.describe("sign-in control", () => {
 
   test("is absent when the prototype has no sign-in", async ({ page }) => {
     test.skip(Boolean(config.patterns.authGoogle), "authGoogle enabled in this config");
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(
       page.getByRole("banner").getByRole("link", { name: /sign in/i })
     ).toHaveCount(0);

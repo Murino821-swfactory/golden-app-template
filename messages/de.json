@@ -1,0 +1,58 @@
+{
+  "common": {
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "account": "Konto",
+    "dashboard": "Übersicht",
+    "loading": "Wird geladen…"
+  },
+  "auth": {
+    "signInTitle": "Anmelden",
+    "signInDescription": "Mit Ihrem Google-Konto fortfahren.",
+    "signInButton": "Mit Google anmelden",
+    "signInError": "Anmeldung fehlgeschlagen. Bitte erneut versuchen."
+  },
+  "landing": {
+    "title": "Ihre App",
+    "subtitle": "Gebaut auf dem Golden Stack",
+    "cta": "Loslegen"
+  },
+  "features": {
+    "title": "Funktionen",
+    "item1": "Erste Funktion",
+    "item1desc": "Beschreibung der ersten Funktion",
+    "item2": "Zweite Funktion",
+    "item2desc": "Beschreibung der zweiten Funktion",
+    "item3": "Dritte Funktion",
+    "item3desc": "Beschreibung der dritten Funktion"
+  },
+  "pricing": {
+    "title": "Preise",
+    "free": "Kostenlos",
+    "pro": "Pro",
+    "enterprise": "Enterprise"
+  },
+  "testimonials": {
+    "title": "Was andere sagen",
+    "quote1": "Das hat uns Wochen an Einrichtung erspart.",
+    "author1": "Alex Kim",
+    "quote2": "Sauber, schnell und leicht anzupassen.",
+    "author2": "Jordan Lee"
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "q1": "Wie funktioniert das?",
+    "a1": "Es funktioniert einfach."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-Mail",
+    "message": "Nachricht",
+    "send": "Senden"
+  },
+  "cta": {
+    "title": "Bereit loszulegen?",
+    "subtitle": "Richten Sie Ihre eigene Version in Minuten ein.",
+    "action": "Loslegen"
+  }
+}

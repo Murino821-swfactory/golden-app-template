@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
 
+
+// "/" is a redirect document now — `localePrefix: "always"` means no page is generated
+// at the root. Every page test starts inside a language.
+const HOME = `./${config.defaultLocale}/`;
 /**
  * Smoke suite asserts the CUSTOMER'S app, not this template's identity.
  *
@@ -17,7 +21,7 @@ const copy = contentFor(config);
 
 test.describe("Smoke tests", () => {
   test("landing page carries the configured identity", async ({ page }) => {
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(page).toHaveTitle(config.appName);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       "content",
@@ -27,7 +31,7 @@ test.describe("Smoke tests", () => {
 
   test("landing renders exactly the configured sections, in order", async ({ page }) => {
     test.skip(!landing, "landing pattern not enabled in this config");
-    await page.goto("./");
+    await page.goto(HOME);
 
     const rendered = await page.locator("[data-section]").evaluateAll((nodes) =>
       nodes.map((n) => n.getAttribute("data-section"))
@@ -37,7 +41,7 @@ test.describe("Smoke tests", () => {
 
   test("CTA shows the configured label", async ({ page }) => {
     test.skip(!cta, "cta pattern not enabled in this config");
-    await page.goto("./");
+    await page.goto(HOME);
     await expect(page.getByRole("link", { name: copy.cta!.label }).first()).toBeVisible();
   });
 
@@ -49,7 +53,7 @@ test.describe("Smoke tests", () => {
       }
     });
 
-    await page.goto("./");
+    await page.goto(HOME);
     await page.waitForLoadState("networkidle");
 
     // Firebase warnings are expected when the demo has no live project wired up.
@@ -61,12 +65,12 @@ test.describe("Smoke tests", () => {
 
   test("login page accessible", async ({ page }) => {
     test.skip(!config.patterns.authGoogle, "authGoogle pattern not enabled in this config");
-    await page.goto("./login");
+    await page.goto(`${HOME}login`);
     await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
   });
 
   test("playground params apply", async ({ page }) => {
-    await page.goto(`./?sections=hero,features&palette=${config.theme.colorScheme}`);
+    await page.goto(`${HOME}?sections=hero,features&palette=${config.theme.colorScheme}`);
     await expect(page.locator("[data-section='hero']")).toBeVisible();
     await expect(page.locator("[data-section='features']")).toBeVisible();
   });
