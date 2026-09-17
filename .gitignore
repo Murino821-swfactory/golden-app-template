@@ -47,3 +47,6 @@ next-env.d.ts
 
 # firebase deploy cache (local artifact, never shared)
 .firebase/
+
+# preview staging for basePath builds
+/.preview/

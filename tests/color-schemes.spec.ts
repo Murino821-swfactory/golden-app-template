@@ -62,7 +62,7 @@ test.describe("colour schemes", () => {
 
 test.describe("colour scheme reaches the page", () => {
   test("html carries the configured scheme and its background", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("./");
 
     await expect(page.locator("html")).toHaveAttribute(
       "data-scheme",

@@ -1,5 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const withTrailingSlash = (url: string) => (url.endsWith("/") ? url : `${url}/`);
+
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
@@ -8,7 +10,20 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000",
+    // A prototype is built with NEXT_PUBLIC_BASE_PATH and served under it, so the suite
+    // has to ask for the same paths the deployed site will. Reading the same variable the
+    // build read keeps `preview` and this config from drifting into a suite that tests a
+    // URL nothing serves. Unset (the template's own CI), this is the bare localhost root.
+    //
+    // The TRAILING SLASH is load-bearing, and so is every `page.goto("./…")` in tests/.
+    // Playwright resolves with `new URL(path, baseURL)`, where a leading-slash path
+    // replaces the base's whole path: `new URL("/", ".../newapp/unbroken")` is
+    // `http://localhost:3000/`, which under a base path is a 404. Relative paths against
+    // a slash-terminated base are the only combination that works for both.
+    baseURL: withTrailingSlash(
+      process.env.PLAYWRIGHT_BASE_URL ||
+        `http://localhost:3000${process.env.NEXT_PUBLIC_BASE_PATH || ""}`
+    ),
     trace: "on-first-retry",
   },
   projects: [
@@ -36,7 +51,10 @@ export default defineConfig({
     ? undefined
     : {
         command: "npm run build && npm run preview",
-        url: "http://localhost:3000",
+        // Must be the path that is actually served: under a base path the site root is
+        // a 404, so waiting on it would either hang or declare readiness against the
+        // wrong thing.
+        url: `http://localhost:3000${process.env.NEXT_PUBLIC_BASE_PATH || ""}`,
         reuseExistingServer: !process.env.CI,
         timeout: 180_000,
       },

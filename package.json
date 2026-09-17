@@ -12,7 +12,7 @@
     "validate:config": "tsx scripts/validate-config.ts",
     "test:e2e": "playwright test",
     "deploy:production": "npm run build && firebase deploy --only hosting",
-    "preview": "serve out -l 3000"
+    "preview": "node scripts/preview.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
