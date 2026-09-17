@@ -48,6 +48,11 @@
 }
 
 :root {
+  /* Page gutter — the one horizontal inset the header, and anything that must line up
+     with it, reads from. Mirrors tokenwise.sk, which uses the same token for the same
+     reason: a header padded with ad-hoc utilities drifts out of alignment with the
+     content below it the first time either one is edited. */
+  --gutter: 1rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -114,6 +119,12 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: 1.5rem;
+  }
 }
 
 @layer base {

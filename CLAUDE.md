@@ -2,15 +2,23 @@
 
 Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EXPLORE.**
 
+> **Staleness warning (2026-09-17).** Most of the recipes below were written for the era
+> when a Developer agent wrote code into this template per customer. That agent was
+> removed in Wave 2 (2026-09-14): a prototype is now **assembled** from
+> `prototype.config.json`, and no model writes code here at all. Treat the recipes as
+> history until they are rewritten. What is current: the structure table, the config
+> contract, the theming section and the commands.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
 |-------------|-----------------|
-| Landing copy | `messages/en.json` only |
-| Add dashboard | Create `app/dashboard/page.tsx` (see Recipe 6) |
-| Add checkins | Use `hooks/use-checkins.ts` + pre-built components |
-| Add/remove sections | `lib/playground.ts` + `app/(public)/page.tsx` |
-| Custom section | Create in `components/sections/` |
+| App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
+| Landing copy (headline, features) | `prototype.config.json` → `patterns.landing` |
+| Chrome text (Sign in, Dashboard…) | `messages/en.json` |
+| Which sections render | `prototype.config.json` → `patterns.landing.sections` |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
+| Custom section | Create in `components/sections/`, register in `app/(public)/page.tsx` |
 
 ## Critical Rules for Fast Implementation
 
@@ -26,7 +34,10 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 - **Styling:** Tailwind CSS 4 + shadcn/ui + Radix primitives
 - **Auth:** Firebase Authentication (Google Sign-In) — already implemented
 - **Database:** Cloud Firestore — use `getCollectionPath()` for demo namespacing
-- **i18n:** next-intl — all user text in `messages/en.json`
+- **i18n:** next-intl — **chrome only** (`messages/en.json`: Sign in, Dashboard, Loading).
+  The customer's own words — app name, headline, features, CTA label — live in
+  `prototype.config.json`. Mixing the two is how every prototype ended up with "Golden App"
+  in its header while its `<title>` was correct.
 
 ## Project Structure (MEMORIZE — DO NOT EXPLORE)
 
@@ -39,7 +50,7 @@ components/
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
-  layout/                # header.tsx, footer.tsx
+  layout/                # header.tsx, footer.tsx, palette-switcher.tsx, user-menu.tsx
 hooks/
   use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
 lib/
@@ -157,10 +168,9 @@ import { NewSection } from "@/components/sections/new-section";
 newSection: NewSection,
 ```
 
-3. In `lib/playground.ts` — add to DEFAULT_SECTIONS:
-```tsx
-const DEFAULT_SECTIONS = ["hero", "features", "newSection", "cta"];
-```
+3. In `lib/prototype-config.ts` — add the id to `SECTION_IDS`. It is a closed enum on
+   purpose: a section id nothing renders must fail the build, not render nothing. Then run
+   `npm run schema` so the harness asks for the same set (CI fails if you forget).
 
 4. In `messages/en.json` — add translations:
 ```json
@@ -188,9 +198,12 @@ export default function ProtectedPage() {
 
 ### Recipe 5: Update Landing Copy
 
-**Files to modify:** `messages/en.json` ONLY
+**Files to modify:** `prototype.config.json` ONLY
 
-Just edit the JSON values. The components already read from it via `useTranslations()`.
+`patterns.landing.headline`, `.subheadline`, `.features[]`, `patterns.cta.label` and
+`appName`. The components read the config and fall back to `messages/en.json` only when a
+value is absent — that fallback is placeholder text for local dev, never something a
+customer should see.
 
 ## Pre-built Feature Components
 
@@ -267,6 +280,13 @@ Import from `@/components/ui/`:
 Always use `getCollectionPath(collection)` — never hardcode collection names.
 
 ## Tailwind Colors (DO NOT HARDCODE)
+
+All four palettes ship in every build as `html[data-scheme="<id>"]` rules
+(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's switcher changes the
+palette by writing that attribute — so a hardcoded colour is not merely off-brand, it is
+the one thing on the page that will not repaint when the visitor switches. The choice
+persists in `localStorage`; `prototype.config.json` still decides what a first-time
+visitor sees.
 
 Use semantic tokens — they adapt to the customer's palette:
 - `bg-background`, `text-foreground` — main surface
