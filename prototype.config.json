@@ -1,13 +1,20 @@
 {
   "appName": "Golden App Template",
-  "locales": ["en"],
+  "locales": [
+    "en"
+  ],
   "defaultLocale": "en",
   "theme": {
     "colorScheme": "green"
   },
   "patterns": {
     "landing": {
-      "sections": ["hero", "features", "faq", "contact", "cta"]
+      "sections": [
+        "hero",
+        "features",
+        "contact",
+        "cta"
+      ]
     },
     "dashboard": {},
     "authGoogle": {},
@@ -19,19 +26,36 @@
       "entity": {
         "key": "location",
         "fields": [
-          { "key": "name", "type": "text", "required": true },
+          {
+            "key": "name",
+            "type": "text",
+            "required": true
+          },
           {
             "key": "category",
             "type": "select",
-            "options": ["Office", "Warehouse", "Depot"]
+            "options": [
+              "Office",
+              "Warehouse",
+              "Depot"
+            ]
           },
-          { "key": "opened", "type": "date" },
-          { "key": "active", "type": "boolean" }
+          {
+            "key": "opened",
+            "type": "date"
+          },
+          {
+            "key": "active",
+            "type": "boolean"
+          }
         ]
       }
     },
     "mapBase": {
-      "center": { "lat": 48.669, "lng": 19.699 },
+      "center": {
+        "lat": 48.669,
+        "lng": 19.699
+      },
       "zoom": 7
     }
   },
