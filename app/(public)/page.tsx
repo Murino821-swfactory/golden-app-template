@@ -1,10 +1,4 @@
-"use client";
-
-import { useSyncExternalStore, type ComponentType } from "react";
-import {
-  listenForPlaygroundUpdates,
-  parsePlaygroundParams,
-} from "@/lib/playground";
+import { type ComponentType } from "react";
 import { HeroSection } from "@/components/sections/hero";
 import { FeaturesSection } from "@/components/sections/features";
 import { PricingSection } from "@/components/sections/pricing";
@@ -14,14 +8,14 @@ import { ContactSection } from "@/components/sections/contact";
 import { CtaSection } from "@/components/sections/cta";
 import { config } from "@/lib/prototype-config";
 
-// ONE source of truth for sections: prototype.config.json (P5). This used to be a literal
-// array here AND a second literal in lib/playground.ts, kept in sync by hand — which meant
-// an agent editing one and not the other produced a build that rendered something different
-// from what the wizard previewed. Now both read this.
-//
-// It is also what renders server-side / at static-export time, and on first client paint
-// before hydration reconciles with the real external state (URL + postMessage).
-const DEFAULT_SECTIONS: string[] = config.patterns.landing?.sections ?? [];
+// ONE source of truth for sections: prototype.config.json (P5). This used to also be
+// readable from a `?sections=` URL param, wired for a wizard iframe preview that stopped
+// existing in factory-web `c7f5d2e` — that path let anyone rewrite a live prototype's
+// landing page from the URL bar, including into sections the build's config never
+// provisioned content for (fabricated testimonials, an invented price list, on a real
+// prospect's page). Removed 2026-09-18: the config the harness validated is now the only
+// thing that decides what renders here.
+const SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 
 const SECTION_REGISTRY: Record<string, ComponentType> = {
   hero: HeroSection,
@@ -33,55 +27,10 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   cta: CtaSection,
 };
 
-// Playground config comes from two external sources: the URL (read once,
-// cached by raw query string) and postMessage from the wizard (an explicit
-// override that wins once received). useSyncExternalStore is the React
-// primitive for subscribing to state living outside React without the
-// "derive state via useEffect + setState" anti-pattern — it also keeps
-// window access out of the render path during SSR/static export via
-// getServerSnapshot.
-let cachedSearch: string | null = null;
-let cachedSections: string[] = DEFAULT_SECTIONS;
-let overrideSections: string[] | null = null;
-
-function subscribe(onStoreChange: () => void): () => void {
-  return listenForPlaygroundUpdates((update) => {
-    if (update.sections) {
-      overrideSections = update.sections;
-      onStoreChange();
-    }
-  });
-}
-
-function getSnapshot(): string[] {
-  if (overrideSections) {
-    return overrideSections;
-  }
-
-  const search = window.location.search;
-  if (search !== cachedSearch) {
-    cachedSearch = search;
-    cachedSections = parsePlaygroundParams(
-      new URLSearchParams(search)
-    ).sections;
-  }
-  return cachedSections;
-}
-
-function getServerSnapshot(): string[] {
-  return DEFAULT_SECTIONS;
-}
-
 export default function LandingPage() {
-  const sections = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
-  );
-
   return (
     <>
-      {sections.map((id) => {
+      {SECTIONS.map((id) => {
         const Section = SECTION_REGISTRY[id];
         return Section ? <Section key={id} /> : null;
       })}

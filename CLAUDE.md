@@ -79,7 +79,6 @@ hooks/
   use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
-  playground.ts          # DEFAULT_CONFIG, parsePlaygroundParams()
   utils.ts               # cn() for className merging
 messages/
   en.json                # All user-facing text (translate by copying to sk.json etc.)
@@ -168,7 +167,7 @@ export function useCheckin() {
 
 ### Recipe 3: Add New Section
 
-**Files to modify:** `components/sections/new-section.tsx` (create), `app/(public)/page.tsx`, `lib/playground.ts`, `messages/en.json`
+**Files to modify:** `components/sections/new-section.tsx` (create), `app/(public)/page.tsx`, `messages/en.json`
 
 1. Create component in `components/sections/`:
 ```tsx
