@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
+import { FirestoreError } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -92,6 +94,7 @@ function formatValue(field: EntityField, value: unknown): string {
 export function DataGrid() {
   const { records, fields, entityLabel, loading, error, addRecord, removeRecord } =
     useRecords();
+  const t = useTranslations("dataGrid");
   const [values, setValues] = useState<Record<string, unknown>>(() =>
     emptyValues(fields)
   );
@@ -99,6 +102,13 @@ export function DataGrid() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const missing = missingRequired(fields, values);
+
+  // The raw Firestore error (e.g. the composite-index URL a permission-denied response
+  // carries) is never shown to a visitor — see the rendered message below — but it still
+  // goes to the console so debugging keeps the detail.
+  useEffect(() => {
+    if (error) console.error("[data-grid] failed to load records:", error);
+  }, [error]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -163,7 +173,9 @@ export function DataGrid() {
 
         {error && (
           <p className="text-sm text-destructive" role="alert">
-            Could not load records: {error.message}
+            {error instanceof FirestoreError && error.code === "permission-denied"
+              ? t("permissionDenied")
+              : t("loadError")}
           </p>
         )}
 

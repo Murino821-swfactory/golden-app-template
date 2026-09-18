@@ -9,7 +9,6 @@ import {
   addDoc,
   deleteDoc,
   doc,
-  orderBy,
   Timestamp,
 } from "firebase/firestore";
 import { getFirestoreInstance, getCollectionPath } from "@/lib/firebase";
@@ -24,9 +23,15 @@ import { useContent, useEntityFields } from "./use-content";
  * record is data (`patterns.dataGrid.entity.fields`), so one tested hook serves every
  * prototype instead of one untested hook per customer.
  *
- * Records are per-user (`where userId == uid`) and, in demo mode, additionally namespaced
- * under `demos/{slug}/` by `getCollectionPath` — a prototype can never read another
- * prototype's data.
+ * Records are per-user (`where userId == uid`) within one prototype's own collection, and
+ * in demo mode namespaced under `demos/{slug}/` by `getCollectionPath`. That does NOT by
+ * itself stop one prototype from reading another's data: this repo's own `firestore.rules`
+ * (`match /demos/{slug}/{document=**}`) only requires `request.auth != null` — any signed-in
+ * visitor, of any prototype, can read or write any slug's documents. Cross-prototype
+ * isolation is real, but it is enforced upstream by the DEPLOYED rules at
+ * `factory-web/firestore.rules`, which bind `demos/{slug}/**` to the prototype's requester
+ * email (`demoOwnerEmail`) plus the founder — not by anything in this file or in this
+ * repo's `firestore.rules`.
  */
 
 /** A record's own fields are dynamic; these four are always present. */
@@ -74,6 +79,22 @@ export function missingRequired(
     .map((f) => f.key);
 }
 
+/**
+ * Sorts mapped records by `createdAt`, newest first. Pure — unit-testable without Firestore.
+ *
+ * This sort happens in JS, not in the query, on purpose: the collection name is
+ * `patterns.dataGrid.entity.key`, chosen by the model per prototype (this template ships
+ * with `checkin`; the next prototype declares `trips`, `invoices`, whatever the customer's
+ * entity is). A server-side `orderBy("createdAt", "desc")` combined with the existing
+ * `where("userId", ...)` needs a composite index PER collection name, so the set of
+ * required indexes is unbounded and none of them can be pre-declared. Do not move this sort
+ * back into the query — a prototype's per-user record count is small enough that sorting
+ * client-side is not a real cost, and putting it back reintroduces the missing-index crash.
+ */
+export function sortByCreatedAtDesc(records: EntityRecord[]): EntityRecord[] {
+  return [...records].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+}
+
 export function useRecords(): UseRecordsReturn {
   const { user } = useAuth();
   const [records, setRecords] = useState<EntityRecord[]>([]);
@@ -99,11 +120,9 @@ export function useRecords(): UseRecordsReturn {
 
     const db = getFirestoreInstance();
     const ref = collection(db, getCollectionPath(collectionName));
-    const snap = await getDocs(
-      query(ref, where("userId", "==", user.uid), orderBy("createdAt", "desc"))
-    );
+    const snap = await getDocs(query(ref, where("userId", "==", user.uid)));
 
-    return snap.docs.map((d) => {
+    const mapped = snap.docs.map((d) => {
       const data = d.data() as {
         userId: string;
         createdAt?: Timestamp;
@@ -116,6 +135,8 @@ export function useRecords(): UseRecordsReturn {
         values: data.values ?? {},
       };
     });
+
+    return sortByCreatedAtDesc(mapped);
   }, [user, collectionName]);
 
   /** Manual refetch — called from handlers and after writes, never from an effect body. */

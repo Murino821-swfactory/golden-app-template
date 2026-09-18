@@ -54,5 +54,14 @@
     "title": "Ready to get started?",
     "subtitle": "Spin up your own version in minutes.",
     "action": "Get Started"
+  },
+  "dataGrid": {
+    "permissionDenied": "Only the person who requested this prototype can see these records.",
+    "loadError": "Something went wrong loading your records. Please try again shortly."
+  },
+  "dashboard": {
+    "recordsLabel": "{entity} records",
+    "addedThisMonth": "Added this month",
+    "trackedFields": "Tracked fields"
   }
 }
