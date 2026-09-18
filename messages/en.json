@@ -34,10 +34,10 @@
   },
   "testimonials": {
     "title": "What people say",
-    "quote1": "This template saved us weeks of setup.",
-    "author1": "Alex Kim",
-    "quote2": "Clean, fast, and easy to customize.",
-    "author2": "Jordan Lee"
+    "quote1": "Placeholder quote — a prototype puts its customer's own words here.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Placeholder quote — this section has no content schema yet.",
+    "author2": "Example Name, Example Company"
   },
   "faq": {
     "title": "FAQ",

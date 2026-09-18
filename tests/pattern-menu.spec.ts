@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
   CONTENT_SCHEMAS,
@@ -69,6 +69,43 @@ test.describe("section copy source", () => {
         .not.toContain(locked);
     }
   });
+});
+
+/**
+ * This repo's placeholder copy must never read as somebody's actual endorsement.
+ *
+ * `messages/en.json` shipped two named people — "Alex Kim" and "Jordan Lee" — praising the
+ * template. A locked section keeps them off a model-composed prototype, but a hand-written
+ * config (the CI fixtures, the demo) can still render them, and an invented person
+ * recommending a product is a false claim however the config got there. Labelling them
+ * makes the placeholder obvious to anyone who sees it and fails the build if a real-looking
+ * name comes back.
+ */
+test.describe("placeholder copy is visibly placeholder", () => {
+  const bundles = readdirSync(resolve(__dirname, "../messages")).filter((f) =>
+    f.endsWith(".json")
+  );
+
+  test("there is at least one message bundle to check", () => {
+    expect(bundles.length).toBeGreaterThan(0);
+  });
+
+  for (const file of bundles) {
+    test(`${file}: testimonial authors are labelled as examples`, () => {
+      const messages = JSON.parse(
+        readFileSync(resolve(__dirname, "../messages", file), "utf-8")
+      ) as { testimonials?: Record<string, string> };
+
+      const authors = Object.entries(messages.testimonials ?? {})
+        .filter(([key]) => key.startsWith("author"))
+        .map(([, value]) => value);
+
+      for (const author of authors) {
+        expect(author, `"${author}" reads as a real person endorsing the product`)
+          .toMatch(/^Example\b/);
+      }
+    });
+  }
 });
 
 /**

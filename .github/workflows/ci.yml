@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [default, minimal, full]
+        config: [default, minimal, full, demo]
     steps:
       - uses: actions/checkout@v4
 
