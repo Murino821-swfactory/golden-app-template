@@ -1,5 +1,47 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "menu": {
+    "patterns": {
+      "landing": {
+        "purpose": "The public page every visitor lands on. Always enabled — every other pattern sits behind auth or below the fold, so a prototype without it opens on nothing."
+      },
+      "dashboard": {
+        "purpose": "A signed-in home screen summarising the user's own data. Pick it when the idea describes something people return to and track over time, rather than read once."
+      },
+      "authGoogle": {
+        "purpose": "Google sign-in plus a route guard. Pick it whenever the idea implies personal data, saved work or anything described as 'my' — accounts, history, preferences."
+      },
+      "cta": {
+        "purpose": "A closing call-to-action band on the landing page. Pick it when the idea has one obvious next step for a visitor: book, request, subscribe, start a trial."
+      },
+      "contactForm": {
+        "purpose": "A contact form that captures a message and an email address. Pick it for services, consultancies and anything sold through a conversation rather than a signup."
+      },
+      "dataGrid": {
+        "purpose": "A table of records the user adds, edits and filters. Pick it when the idea is about keeping track of things — an inventory, a catalogue, a register, a log of entries."
+      },
+      "mapBase": {
+        "purpose": "A map with points the user can place and inspect. Pick it only when location is part of the idea itself, not merely mentioned — routes, venues, coverage, territory."
+      }
+    },
+    "sections": {
+      "selectable": [
+        "hero",
+        "features",
+        "contact",
+        "cta"
+      ],
+      "copySource": {
+        "hero": "landing",
+        "features": "landing",
+        "contact": "contactForm",
+        "cta": "cta",
+        "faq": null,
+        "pricing": null,
+        "testimonials": null
+      }
+    }
+  },
   "patterns": {
     "landing": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",

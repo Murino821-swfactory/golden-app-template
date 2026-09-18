@@ -1,0 +1,63 @@
+{
+  "appName": "Golden Template",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "theme": { "colorScheme": "green" },
+  "patterns": {
+    "landing": { "sections": ["hero", "features", "contact", "cta"] },
+    "dashboard": {},
+    "authGoogle": {},
+    "cta": { "href": "/login" },
+    "contactForm": {},
+    "dataGrid": {
+      "entity": {
+        "key": "pattern",
+        "fields": [
+          { "key": "name", "type": "text", "required": true },
+          { "key": "kind", "type": "select", "options": ["Page", "Control", "Data"] },
+          { "key": "addedOn", "type": "date" },
+          { "key": "selectable", "type": "boolean" }
+        ]
+      }
+    },
+    "mapBase": { "center": { "lat": 48.669, "lng": 19.699 }, "zoom": 7 }
+  },
+  "content": {
+    "en": {
+      "description": "Every pattern the factory can assemble a prototype from, running on one page: landing, Google sign-in, dashboard, records grid and a map.",
+      "landing": {
+        "headline": "Every pattern, running",
+        "subheadline": "This is the template a prototype is assembled from. Each pattern below is real code, not a mockup — sign in and the dashboard, grid and map are all live.",
+        "features": [
+          {
+            "icon": "🧩",
+            "title": "Patterns, not templates",
+            "description": "A prototype enables the patterns its idea needs. Nothing is deleted or generated — the config switches them on."
+          },
+          {
+            "icon": "🎨",
+            "title": "Four palettes, one build",
+            "description": "Every scheme ships in every build. Switch it in the header and the whole page repaints."
+          },
+          {
+            "icon": "🔐",
+            "title": "Sign-in that works",
+            "description": "Google authentication and a route guard are part of the template, so a prototype has real accounts on day one."
+          }
+        ]
+      },
+      "dashboard": { "title": "Pattern overview" },
+      "cta": { "label": "Sign in to see it" },
+      "contactForm": { "heading": "Ask about a prototype", "submitLabel": "Send" },
+      "dataGrid": {
+        "entityLabel": "Pattern",
+        "fieldLabels": {
+          "name": "Pattern",
+          "kind": "Kind",
+          "addedOn": "Added",
+          "selectable": "Model may pick"
+        }
+      }
+    }
+  }
+}
