@@ -14,8 +14,8 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Feature Type | Files to Change |
 |-------------|-----------------|
 | App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
-| Landing copy (headline, features) | `prototype.config.json` → `patterns.landing` |
-| Chrome text (Sign in, Dashboard…) | `messages/en.json` |
+| Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
+| Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
 | Custom section | Create in `components/sections/`, register in `app/(public)/page.tsx` |
@@ -26,6 +26,30 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 2. **DO NOT run `find`, `grep`, or `ls`** — the structure is documented below
 3. **Read a file ONLY when you're about to edit it** — one read, one edit
 4. **Batch all changes to a file in ONE Edit call** — no read-edit-read-edit loops
+
+## The config splits in two — learn this before editing anything
+
+`prototype.config.json` has two halves, divided by ONE question: *does this value change
+when the language changes?*
+
+| | What | Written |
+|---|---|---|
+| `patterns` | what the prototype **is** — which patterns, which sections, entity field keys and types, map centre | once, whatever the language |
+| `content.<locale>` | what it **says** — headline, labels, meta description | once per language |
+
+So an entity's `fields[].key` and `.type` are in `patterns`, and that field's human label
+is in `content.<locale>.dataGrid.fieldLabels`. Components get copy from `useContent()` and
+merged grid fields from `useEntityFields()` (`hooks/use-content.ts`), both of which read
+`useLocale()` — so nothing needs editing when a build ships more than one language.
+
+A pattern is enabled iff its **`patterns`** slice exists. zod then requires the matching
+content slice in **every** declared locale, so a language can never be offered and then
+render blank.
+
+Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
+still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
+only for the window before the harness is deployed — do not write new configs in the old
+shape.
 
 ## Tech Stack (Golden Stack)
 
@@ -200,10 +224,11 @@ export default function ProtectedPage() {
 
 **Files to modify:** `prototype.config.json` ONLY
 
-`patterns.landing.headline`, `.subheadline`, `.features[]`, `patterns.cta.label` and
-`appName`. The components read the config and fall back to `messages/en.json` only when a
-value is absent — that fallback is placeholder text for local dev, never something a
-customer should see.
+`content.<locale>.landing.headline`, `.subheadline`, `.features[]`,
+`content.<locale>.cta.label`, and `appName` at the root. The components read the config
+through `useContent()` and fall back to `messages/<locale>.json` only when a value is
+absent — that fallback is placeholder text for local dev, never something a customer
+should see.
 
 ## Pre-built Feature Components
 

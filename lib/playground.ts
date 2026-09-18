@@ -5,7 +5,6 @@
  * URL params:
  * - pattern: landing pattern id
  * - palette: color palette id
- * - style: minimal | bold | playful
  * - sections: comma-separated section ids (order matters)
  * - locale: en | sk | ...
  */
@@ -15,7 +14,6 @@ import { config as prototypeConfig } from "./prototype-config";
 export interface PlaygroundConfig {
   pattern: string;
   palette: string;
-  style: "minimal" | "bold" | "playful";
   sections: string[];
   locale: string;
   isPlayground: boolean;
@@ -27,9 +25,8 @@ export interface PlaygroundConfig {
 const DEFAULT_CONFIG: PlaygroundConfig = {
   pattern: "saas-landing",
   palette: prototypeConfig.theme.colorScheme,
-  style: prototypeConfig.theme.style,
   sections: prototypeConfig.patterns.landing?.sections ?? [],
-  locale: "en",
+  locale: prototypeConfig.defaultLocale,
   isPlayground: false,
 };
 
@@ -39,7 +36,6 @@ export function parsePlaygroundParams(
   const hasAnyParam =
     searchParams.has("pattern") ||
     searchParams.has("palette") ||
-    searchParams.has("style") ||
     searchParams.has("sections") ||
     searchParams.has("locale");
 
@@ -52,16 +48,9 @@ export function parsePlaygroundParams(
     ? sectionsParam.split(",").filter(Boolean)
     : DEFAULT_CONFIG.sections;
 
-  const styleParam = searchParams.get("style");
-  const style =
-    styleParam === "minimal" || styleParam === "bold" || styleParam === "playful"
-      ? styleParam
-      : DEFAULT_CONFIG.style;
-
   return {
     pattern: searchParams.get("pattern") || DEFAULT_CONFIG.pattern,
     palette: searchParams.get("palette") || DEFAULT_CONFIG.palette,
-    style,
     sections,
     locale: searchParams.get("locale") || DEFAULT_CONFIG.locale,
     isPlayground: true,

@@ -11,18 +11,33 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { z } from "zod";
-import { PATTERN_SCHEMAS, prototypeConfigSchema } from "../lib/prototype-config";
+import {
+  CONTENT_SCHEMAS,
+  LOCALE_DESCRIPTION_SCHEMA,
+  PATTERN_SCHEMAS,
+  prototypeConfigSchema,
+} from "../lib/prototype-config";
 
 // `io: "input"` describes what a producer must SEND. Without it, fields carrying a zod
 // default (entityField.required) are emitted as required output fields, and the content
 // agent would be told to supply something it is allowed to omit.
 const toJson = (schema: z.ZodType) => z.toJSONSchema(schema, { io: "input" });
 
+// Two sections because a config has two halves. `patterns` is what a prototype IS and is
+// written once; `content` is what it SAYS and is written per locale. The harness embeds
+// both in the content prompt, so asking for one shape and enforcing another is impossible
+// by construction.
 const document = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
   ),
+  content: {
+    description: toJson(LOCALE_DESCRIPTION_SCHEMA),
+    ...Object.fromEntries(
+      Object.entries(CONTENT_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
+    ),
+  },
   root: toJson(prototypeConfigSchema),
 };
 

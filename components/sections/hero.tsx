@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { config } from "@/lib/prototype-config";
+import { useContent } from "@/hooks/use-content";
 
 /**
  * Hero section — the first thing a visitor sees.
@@ -14,10 +14,9 @@ import { config } from "@/lib/prototype-config";
  * has touched it.
  */
 
-const landing = config.patterns.landing;
-
 export function HeroSection() {
   const t = useTranslations("landing");
+  const landing = useContent().landing;
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
 
