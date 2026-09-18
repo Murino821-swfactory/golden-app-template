@@ -48,7 +48,11 @@
     "title": "Contact",
     "email": "Email",
     "message": "Message",
-    "send": "Send"
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Thanks — your message is on its way. We'll get back to you soon.",
+    "error": "Something went wrong sending that. Please try again.",
+    "notConfigured": "The contact form isn't configured in this preview."
   },
   "cta": {
     "title": "Ready to get started?",
