@@ -25,13 +25,11 @@ import { useContent, useEntityFields } from "./use-content";
  *
  * Records are per-user (`where userId == uid`) within one prototype's own collection, and
  * in demo mode namespaced under `demos/{slug}/` by `getCollectionPath`. That does NOT by
- * itself stop one prototype from reading another's data: this repo's own `firestore.rules`
- * (`match /demos/{slug}/{document=**}`) only requires `request.auth != null` — any signed-in
- * visitor, of any prototype, can read or write any slug's documents. Cross-prototype
- * isolation is real, but it is enforced upstream by the DEPLOYED rules at
+ * itself stop one prototype from reading another's data — this repo ships no Firestore
+ * rules of its own at all (see CLAUDE.md → "Firestore rules — owned by factory-web, not
+ * here"). Cross-prototype isolation is enforced entirely by the DEPLOYED rules at
  * `factory-web/firestore.rules`, which bind `demos/{slug}/**` to the prototype's requester
- * email (`demoOwnerEmail`) plus the founder — not by anything in this file or in this
- * repo's `firestore.rules`.
+ * email (`demoOwnerEmail`) plus the founder — not by anything in this file or this repo.
  */
 
 /** A record's own fields are dynamic; these four are always present. */

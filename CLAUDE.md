@@ -303,6 +303,16 @@ Import from `@/components/ui/`:
 `NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
 Always use `getCollectionPath(collection)` — never hardcode collection names.
 
+## Firestore rules — owned by factory-web, not here
+
+This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
+for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`,
+which binds each slug to the prototype's requester email (`demoOwnerEmail`) plus the
+founder — never re-add a copy here. A second copy of the same rule can only drift, and the
+weaker one is the one that eventually deploys: this repo previously shipped one that
+granted read/write on every prototype's data to any signed-in user of any prototype,
+latent only because `deploy:production` is hosting-only here.
+
 ## Tailwind Colors (DO NOT HARDCODE)
 
 All four palettes ship in every build as `html[data-scheme="<id>"]` rules
