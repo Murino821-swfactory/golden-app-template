@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -59,8 +60,19 @@ test.describe("composed config", () => {
 });
 
 test("the shipped config puts no placeholder copy on the public demo", () => {
+  // Read from HEAD, not from the working tree: CI's matrix runs `use-config.mjs` first,
+  // which overwrites prototype.config.json with a fixture. This rule is about what SHIPS
+  // to /demo/golden, and what ships is what is committed — reading the file on disk made
+  // this assertion fail on the `full` job for a config nobody publishes.
+  const committed = JSON.parse(
+    execFileSync("git", ["show", "HEAD:prototype.config.json"], {
+      cwd: resolve(__dirname, ".."),
+      encoding: "utf-8",
+    })
+  ) as Record<string, unknown>;
+
   const selectable = modelSelectableSections() as string[];
-  for (const section of sectionsOf(configAt("prototype.config.json"))) {
+  for (const section of sectionsOf(committed)) {
     expect(
       selectable,
       `/demo/golden would render "${section}" from messages/*.json — placeholder copy on a public page`
