@@ -19,7 +19,7 @@ test.describe("contact form — no demo slug", () => {
     await page.goto("./");
     const section = page.locator('[data-section="contact"]');
 
-    await expect(section.getByRole("status")).toContainText(/not configured/i);
+    await expect(section.getByRole("status")).toContainText(/isn't configured/i);
     await expect(section.locator("#contact-email")).toBeDisabled();
     await expect(section.locator("#contact-message")).toBeDisabled();
     await expect(section.getByRole("button", { name: /send/i })).toBeDisabled();
@@ -52,6 +52,6 @@ test.describe("contact form — no demo slug", () => {
     await page.waitForLoadState("networkidle");
 
     expect(requested).toBe(false);
-    await expect(section.getByRole("status")).toContainText(/not configured/i);
+    await expect(section.getByRole("status")).toContainText(/isn't configured/i);
   });
 });

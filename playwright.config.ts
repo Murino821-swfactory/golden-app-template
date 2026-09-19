@@ -20,6 +20,11 @@ export default defineConfig({
     // replaces the base's whole path: `new URL("/", ".../newapp/unbroken")` is
     // `http://localhost:3000/`, which under a base path is a 404. Relative paths against
     // a slash-terminated base are the only combination that works for both.
+    //
+    // Locale routing does not change this. The default locale is served at the bare path
+    // (`./`, `./login`), so every suite written before locale routing still addresses the
+    // document it meant; only the other languages carry a segment, and `tests/locale.spec.ts`
+    // reaches those the same relative way (`./sk`).
     baseURL: withTrailingSlash(
       process.env.PLAYWRIGHT_BASE_URL ||
         `http://localhost:3000${process.env.NEXT_PUBLIC_BASE_PATH || ""}`

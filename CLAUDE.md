@@ -18,7 +18,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
-| Custom section | Create in `components/sections/`, register in `app/(public)/page.tsx` |
+| Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 
 ## Critical Rules for Fast Implementation
 
@@ -58,17 +58,25 @@ shape.
 - **Styling:** Tailwind CSS 4 + shadcn/ui + Radix primitives
 - **Auth:** Firebase Authentication (Google Sign-In) — already implemented
 - **Database:** Cloud Firestore — use `getCollectionPath()` for demo namespacing
-- **i18n:** next-intl — **chrome only** (`messages/en.json`: Sign in, Dashboard, Loading).
-  The customer's own words — app name, headline, features, CTA label — live in
-  `prototype.config.json`. Mixing the two is how every prototype ended up with "Golden App"
-  in its header while its `<title>` was correct.
+- **i18n:** next-intl, **routed** — one document per declared language. The bundles in
+  `messages/<locale>.json` are chrome only (Sign in, Dashboard, Loading); the customer's
+  own words — app name, headline, features, CTA label — live in `prototype.config.json`.
+  Mixing the two is how every prototype ended up with "Golden App" in its header while its
+  `<title>` was correct. See "Languages and routing" below for which URL serves which.
 
 ## Project Structure (MEMORIZE — DO NOT EXPLORE)
 
 ```
 app/
-  (public)/page.tsx      # Landing page — renders sections from SECTION_REGISTRY
-  login/page.tsx         # Login page (already implemented)
+  shell.tsx              # The <html> document, in one language — both root layouts render it
+  (default)/             # The BARE path: /, /login, /dashboard — the default locale
+    layout.tsx           #   root layout #1
+    page.tsx             #   one-line re-exports of the [locale] modules
+  [locale]/              # The prefixed languages: /sk, /sk/login, /sk/dashboard
+    layout.tsx           #   root layout #2 + generateStaticParams
+    page.tsx             # Landing page — renders sections from SECTION_REGISTRY
+    login/page.tsx       # Login page (already implemented)
+    dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
 components/
   sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
@@ -81,7 +89,7 @@ lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
   utils.ts               # cn() for className merging
 messages/
-  en.json                # All user-facing text (translate by copying to sk.json etc.)
+  en.json + 7 more       # Chrome text, one bundle per id in LOCALES (en sk cs de pl hu fr es)
 types/
   index.ts               # User, DemoConfig interfaces
 ```
@@ -167,7 +175,7 @@ export function useCheckin() {
 
 ### Recipe 3: Add New Section
 
-**Files to modify:** `components/sections/new-section.tsx` (create), `app/(public)/page.tsx`, `messages/en.json`
+**Files to modify:** `components/sections/new-section.tsx` (create), `app/[locale]/page.tsx`, every `messages/*.json`
 
 1. Create component in `components/sections/`:
 ```tsx
@@ -184,7 +192,7 @@ export function NewSection() {
 }
 ```
 
-2. In `app/(public)/page.tsx` — add to SECTION_REGISTRY:
+2. In `app/[locale]/page.tsx` — add to SECTION_REGISTRY:
 ```tsx
 import { NewSection } from "@/components/sections/new-section";
 // In SECTION_REGISTRY:
@@ -195,7 +203,9 @@ newSection: NewSection,
    purpose: a section id nothing renders must fail the build, not render nothing. Then run
    `npm run schema` so the harness asks for the same set (CI fails if you forget).
 
-4. In `messages/en.json` — add translations:
+4. In **every** `messages/*.json` — add the key. `tests/locale.spec.ts` fails if one
+   bundle carries a key another does not; a missing key renders the raw key path on a
+   customer's page.
 ```json
 "newSection": {
   "title": "New Section Title"
@@ -253,7 +263,7 @@ const { checkins, todayCheckins, currentStreak, loading, doCheckin } = useChecki
 
 ### Recipe 6: Add Dashboard Page (MOST COMMON)
 
-**Create:** `app/dashboard/page.tsx`
+**Create:** `app/[locale]/dashboard/page.tsx`
 
 ```tsx
 "use client";
@@ -302,6 +312,34 @@ Import from `@/components/ui/`:
 
 `NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
 Always use `getCollectionPath(collection)` — never hardcode collection names.
+
+## Languages and routing
+
+A prototype declares `locales` and `defaultLocale` in `prototype.config.json`, and the
+build emits one document per language.
+
+| Language | URL |
+|---|---|
+| `defaultLocale` | the **bare** path — `/`, `/login`, `/dashboard` |
+| every other declared locale | prefixed — `/sk`, `/sk/login`, `/sk/dashboard` |
+
+The default locale stays at the bare path because that is the URL the customer is given
+(`tokenwise.sk/newapp/<slug>/`), and because the harness reads `out/index.html` and refuses
+to publish a build where it is not a real document with this build's `basePath` assets
+(`verifyExportBasePath`). A redirect stub at the root would fail that gate. The full
+reasoning, including why there are two root layouts and no `app/layout.tsx`, is in
+`lib/locale-routing.ts`.
+
+Consequences when editing:
+
+- **Never write a bare `/login` or `/dashboard` href.** Use `localePath(locale, route)`
+  from `lib/locale-routing.ts`, or a Slovak visitor silently lands in English.
+- `LOCALES` in `lib/prototype-config.ts` may only name ids that have a `messages/*.json`
+  bundle. `npm run schema` publishes the list as `menu.locales` and the harness reads it
+  from there — the wizard and the harness keep no copy.
+- One declared language means no language switcher at all, and no hreflang alternates.
+- `fixtures/multilingual.config.json` is the CI job that builds more than one language.
+  Without it nothing exercises this.
 
 ## Firestore rules — owned by factory-web, not here
 
