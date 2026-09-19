@@ -43,7 +43,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config: [default, minimal, full, composed]
+        # `full` and `multilingual` both declare two locales, so both exercise locale routing.
+        config: [default, minimal, full, composed, multilingual]
     steps:
       - uses: actions/checkout@v4
 

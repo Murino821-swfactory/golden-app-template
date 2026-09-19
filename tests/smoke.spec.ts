@@ -65,9 +65,16 @@ test.describe("Smoke tests", () => {
     await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
   });
 
-  test("playground params apply", async ({ page }) => {
-    await page.goto(`./?sections=hero,features&palette=${config.theme.colorScheme}`);
-    await expect(page.locator("[data-section='hero']")).toBeVisible();
-    await expect(page.locator("[data-section='features']")).toBeVisible();
+  test("URL section params cannot override the section lock", async ({ page }) => {
+    test.skip(!landing, "landing pattern not enabled in this config");
+    // testimonials/pricing/faq are locked out of the model's choice (validateComposition)
+    // because they have no content slice and would render this repo's placeholder copy.
+    // The renderer must honour that lock too, not just the harness that assigned sections.
+    await page.goto("./?sections=testimonials,pricing,faq");
+
+    const rendered = await page.locator("[data-section]").evaluateAll((nodes) =>
+      nodes.map((n) => n.getAttribute("data-section"))
+    );
+    expect(rendered).toEqual(landing!.sections);
   });
 });

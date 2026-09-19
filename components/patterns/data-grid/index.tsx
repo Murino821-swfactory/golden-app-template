@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
+import { FirestoreError } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -83,15 +85,16 @@ function FieldInput({
   );
 }
 
-function formatValue(field: EntityField, value: unknown): string {
+function formatValue(field: EntityField, value: unknown, t: (key: string) => string): string {
   if (value === undefined || value === null || value === "") return "—";
-  if (field.type === "boolean") return value ? "Yes" : "No";
+  if (field.type === "boolean") return value ? t("yes") : t("no");
   return String(value);
 }
 
 export function DataGrid() {
   const { records, fields, entityLabel, loading, error, addRecord, removeRecord } =
     useRecords();
+  const t = useTranslations("dataGrid");
   const [values, setValues] = useState<Record<string, unknown>>(() =>
     emptyValues(fields)
   );
@@ -99,6 +102,13 @@ export function DataGrid() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const missing = missingRequired(fields, values);
+
+  // The raw Firestore error (e.g. the composite-index URL a permission-denied response
+  // carries) is never shown to a visitor — see the rendered message below — but it still
+  // goes to the console so debugging keeps the detail.
+  useEffect(() => {
+    if (error) console.error("[data-grid] failed to load records:", error);
+  }, [error]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -108,7 +118,16 @@ export function DataGrid() {
       await addRecord(values);
       setValues(emptyValues(fields));
     } catch (err) {
-      setFormError((err as Error).message);
+      // Same treatment as the load path: a Firestore error (e.g. the permission-denied a
+      // non-owner visitor gets, since the deployed rules only let the requester write) never
+      // reaches the visitor verbatim — only the validation error use-records.ts throws for a
+      // missing required field is our own message and safe to show as-is.
+      console.error("[data-grid] failed to add record:", err);
+      if (err instanceof FirestoreError) {
+        setFormError(err.code === "permission-denied" ? t("permissionDenied") : t("loadError"));
+      } else {
+        setFormError((err as Error).message);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -120,7 +139,9 @@ export function DataGrid() {
         onSubmit={handleSubmit}
         className="rounded-lg border border-border bg-card p-4 sm:p-6"
       >
-        <h3 className="mb-4 text-lg font-medium">Add {entityLabel.toLowerCase()}</h3>
+        <h3 className="mb-4 text-lg font-medium">
+          {t("addAction", { entity: entityLabel.toLowerCase() })}
+        </h3>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {fields.map((field) => (
@@ -144,13 +165,13 @@ export function DataGrid() {
           className="mt-5 w-full sm:w-auto"
           disabled={submitting || missing.length > 0}
         >
-          {submitting ? "Saving…" : `Add ${entityLabel.toLowerCase()}`}
+          {submitting ? t("saving") : t("addAction", { entity: entityLabel.toLowerCase() })}
         </Button>
       </form>
 
       <div>
         <h3 className="mb-3 text-lg font-medium">
-          {entityLabel} records{" "}
+          {t("listHeading", { entity: entityLabel })}{" "}
           <span className="text-muted-foreground">({records.length})</span>
         </h3>
 
@@ -163,13 +184,15 @@ export function DataGrid() {
 
         {error && (
           <p className="text-sm text-destructive" role="alert">
-            Could not load records: {error.message}
+            {error instanceof FirestoreError && error.code === "permission-denied"
+              ? t("permissionDenied")
+              : t("loadError")}
           </p>
         )}
 
         {!loading && !error && records.length === 0 && (
           <p className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-            No {entityLabel.toLowerCase()} records yet — add the first one above.
+            {t("empty", { entity: entityLabel.toLowerCase() })}
           </p>
         )}
 
@@ -185,7 +208,7 @@ export function DataGrid() {
                   {fields.map((field) => (
                     <div key={field.key} className="flex justify-between gap-4 text-sm">
                       <dt className="text-muted-foreground">{field.label}</dt>
-                      <dd className="text-right">{formatValue(field, rec.values[field.key])}</dd>
+                      <dd className="text-right">{formatValue(field, rec.values[field.key], t)}</dd>
                     </div>
                   ))}
                 </dl>
@@ -195,7 +218,7 @@ export function DataGrid() {
                   className="mt-3"
                   onClick={() => void removeRecord(rec.id)}
                 >
-                  Remove
+                  {t("remove")}
                 </Button>
               </li>
             ))}
@@ -221,7 +244,7 @@ export function DataGrid() {
                   <tr key={rec.id} className="border-b border-border last:border-0">
                     {fields.map((field) => (
                       <td key={field.key} className="px-4 py-3">
-                        {formatValue(field, rec.values[field.key])}
+                        {formatValue(field, rec.values[field.key], t)}
                       </td>
                     ))}
                     <td className="px-4 py-3 text-right">
@@ -230,7 +253,7 @@ export function DataGrid() {
                         size="sm"
                         onClick={() => void removeRecord(rec.id)}
                       >
-                        Remove
+                        {t("remove")}
                       </Button>
                     </td>
                   </tr>

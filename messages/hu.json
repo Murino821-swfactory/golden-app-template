@@ -1,0 +1,79 @@
+{
+  "common": {
+    "signIn": "Bejelentkezés",
+    "signOut": "Kijelentkezés",
+    "account": "Fiók",
+    "dashboard": "Áttekintés",
+    "loading": "Betöltés...",
+    "language": "Nyelv"
+  },
+  "auth": {
+    "signInTitle": "Bejelentkezés",
+    "signInDescription": "Folytassa a Google-fiókjával.",
+    "signInButton": "Bejelentkezés Google-fiókkal",
+    "signInError": "A bejelentkezés nem sikerült. Kérjük, próbálja újra."
+  },
+  "landing": {
+    "title": "Az Ön alkalmazása",
+    "subtitle": "A Golden Stackre építve",
+    "cta": "Kezdés"
+  },
+  "features": {
+    "title": "Funkciók",
+    "item1": "Első funkció",
+    "item1desc": "Az első funkció leírása",
+    "item2": "Második funkció",
+    "item2desc": "A második funkció leírása",
+    "item3": "Harmadik funkció",
+    "item3desc": "A harmadik funkció leírása"
+  },
+  "pricing": {
+    "title": "Árak",
+    "free": "Példaszint egy",
+    "pro": "Példaszint kettő",
+    "enterprise": "Példaszint három"
+  },
+  "testimonials": {
+    "title": "Mit mondanak mások",
+    "quote1": "Helykitöltő szöveg — a prototípus ide az ügyfél saját szavait teszi.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Helykitöltő szöveg — ennek a szakasznak még nincs tartalomsémája.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Gyakori kérdések",
+    "q1": "Helykitöltő kérdés — ennek a szakasznak még nincs tartalomsémája.",
+    "a1": "Helykitöltő válasz. A prototípus saját szavai a prototype.config.json fájlból származnak."
+  },
+  "contact": {
+    "title": "Kapcsolat",
+    "email": "E-mail",
+    "message": "Üzenet",
+    "send": "Küldés",
+    "sending": "Küldés folyamatban…",
+    "success": "Köszönjük — az üzenete úton van. Hamarosan jelentkezünk.",
+    "error": "Az üzenet küldése nem sikerült. Kérjük, próbálja újra.",
+    "notConfigured": "A kapcsolatfelvételi űrlap nincs beállítva ebben az előnézetben."
+  },
+  "cta": {
+    "title": "Készen áll a kezdésre?",
+    "subtitle": "A saját változata percek alatt elindul.",
+    "action": "Kezdés"
+  },
+  "dataGrid": {
+    "permissionDenied": "Ezeket a rekordokat csak a prototípust kérő személy látja.",
+    "loadError": "A rekordok betöltése nem sikerült. Kérjük, próbálja újra hamarosan.",
+    "addAction": "{entity} hozzáadása",
+    "saving": "Mentés folyamatban…",
+    "listHeading": "Rekordok: {entity}",
+    "empty": "Még nincs rekord: {entity} — adja hozzá az elsőt fent.",
+    "remove": "Eltávolítás",
+    "yes": "Igen",
+    "no": "Nem"
+  },
+  "dashboard": {
+    "recordsLabel": "Rekordok: {entity}",
+    "addedThisMonth": "Ebben a hónapban hozzáadva",
+    "trackedFields": "Nyomon követett mezők"
+  }
+}

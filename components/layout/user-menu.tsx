@@ -3,8 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
+import { localePath } from "@/lib/locale-routing";
 
 /**
  * The sign-in control, ported from tokenwise.sk's `user-menu.tsx` so a prototype's header
@@ -16,6 +17,9 @@ import { useAuth } from "@/hooks/use-auth";
  */
 export function UserMenu() {
   const t = useTranslations("common");
+  // Both destinations exist once per language, so the links have to carry the one on
+  // screen — a Slovak visitor sent to the default locale's /login loses their language.
+  const locale = useLocale();
   const { user, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -49,7 +53,7 @@ export function UserMenu() {
   if (!user) {
     return (
       <Link
-        href="/login"
+        href={localePath(locale, "/login")}
         aria-label={t("signIn")}
         className="flex min-h-11 items-center gap-2 rounded px-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
       >
@@ -113,7 +117,7 @@ export function UserMenu() {
             )}
           </div>
           <Link
-            href="/dashboard"
+            href={localePath(locale, "/dashboard")}
             role="menuitem"
             onClick={() => setOpen(false)}
             className="flex min-h-11 items-center px-3 text-sm text-card-foreground transition-colors hover:bg-foreground/5"
