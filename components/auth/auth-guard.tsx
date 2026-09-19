@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { Skeleton } from "@/components/ui/skeleton";
+import { localePath } from "@/lib/locale-routing";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -12,12 +14,15 @@ interface AuthGuardProps {
 export function AuthGuard({ children }: AuthGuardProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  // Sign-in exists once per language; bouncing a Slovak visitor to the default locale's
+  // /login would silently change the language of the session they came from.
+  const locale = useLocale();
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      router.push(localePath(locale, "/login"));
     }
-  }, [user, loading, router]);
+  }, [user, loading, locale, router]);
 
   if (loading) {
     return (
