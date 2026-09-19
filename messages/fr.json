@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Seule la personne qui a demandé ce prototype voit ces enregistrements.",
-    "loadError": "Le chargement de vos enregistrements a échoué. Veuillez réessayer dans un instant."
+    "loadError": "Le chargement de vos enregistrements a échoué. Veuillez réessayer dans un instant.",
+    "addAction": "Ajouter {entity}",
+    "saving": "Enregistrement…",
+    "listHeading": "Enregistrements : {entity}",
+    "empty": "Aucun enregistrement pour l'instant : {entity} — ajoutez le premier ci-dessus.",
+    "remove": "Supprimer",
+    "yes": "Oui",
+    "no": "Non"
   },
   "dashboard": {
     "recordsLabel": "Enregistrements : {entity}",

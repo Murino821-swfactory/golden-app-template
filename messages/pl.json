@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Te rekordy widzi tylko osoba, która zamówiła prototyp.",
-    "loadError": "Nie udało się wczytać rekordów. Spróbuj ponownie za chwilę."
+    "loadError": "Nie udało się wczytać rekordów. Spróbuj ponownie za chwilę.",
+    "addAction": "Dodaj {entity}",
+    "saving": "Zapisywanie…",
+    "listHeading": "Rekordy: {entity}",
+    "empty": "Na razie brak rekordów: {entity} — dodaj pierwszy powyżej.",
+    "remove": "Usuń",
+    "yes": "Tak",
+    "no": "Nie"
   },
   "dashboard": {
     "recordsLabel": "Rekordy: {entity}",

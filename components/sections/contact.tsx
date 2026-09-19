@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useContent } from "@/hooks/use-content";
-import { getDemoSlug } from "@/lib/firebase";
+import { getDemoSlug } from "@/lib/demo-slug";
 
 type Status = "idle" | "submitting" | "success" | "error";
 

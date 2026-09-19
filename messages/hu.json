@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Ezeket a rekordokat csak a prototípust kérő személy látja.",
-    "loadError": "A rekordok betöltése nem sikerült. Kérjük, próbálja újra hamarosan."
+    "loadError": "A rekordok betöltése nem sikerült. Kérjük, próbálja újra hamarosan.",
+    "addAction": "{entity} hozzáadása",
+    "saving": "Mentés folyamatban…",
+    "listHeading": "Rekordok: {entity}",
+    "empty": "Még nincs rekord: {entity} — adja hozzá az elsőt fent.",
+    "remove": "Eltávolítás",
+    "yes": "Igen",
+    "no": "Nem"
   },
   "dashboard": {
     "recordsLabel": "Rekordok: {entity}",

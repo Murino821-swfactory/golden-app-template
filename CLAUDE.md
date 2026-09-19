@@ -251,16 +251,6 @@ These are ready to use — just import and render:
 | `ProgressRing` | `@/components/features` | `progress: number (0-100)`, `label?: string` |
 | `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` |
 
-## Pre-built Hook: use-checkins.ts (READY TO USE)
-
-Complete working hook with streak calculation and Firestore persistence:
-
-```tsx
-import { useCheckins } from "@/hooks/use-checkins";
-
-const { checkins, todayCheckins, currentStreak, loading, doCheckin } = useCheckins();
-```
-
 ### Recipe 6: Add Dashboard Page (MOST COMMON)
 
 **Create:** `app/[locale]/dashboard/page.tsx`
@@ -269,30 +259,14 @@ const { checkins, todayCheckins, currentStreak, loading, doCheckin } = useChecki
 "use client";
 
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { useCheckins } from "@/hooks/use-checkins";
-import { CheckinToggle, StreakCounter, CalendarGrid } from "@/components/features";
-
-const PILLARS = ["Sleep", "Exercise", "Nutrition", "Mindfulness", "Hydration"];
-
-function DashboardContent() {
-  const { todayCheckins, currentStreak, checkins, doCheckin, loading } = useCheckins();
-  
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
-  
-  return (
-    <div className="mx-auto max-w-2xl space-y-8 p-6">
-      <h1 className="text-2xl font-bold text-center">Your Dashboard</h1>
-      <StreakCounter currentStreak={currentStreak} />
-      <CheckinToggle pillars={PILLARS} checkedToday={todayCheckins} onCheckin={doCheckin} />
-      <CalendarGrid checkedDates={checkins.map(c => c.date)} />
-    </div>
-  );
-}
 
 export default function DashboardPage() {
   return (
     <AuthGuard>
-      <DashboardContent />
+      <div className="mx-auto max-w-2xl space-y-8 p-6">
+        <h1 className="text-2xl font-bold text-center">Your Dashboard</h1>
+        {/* Your dashboard content here */}
+      </div>
     </AuthGuard>
   );
 }
@@ -338,8 +312,8 @@ Consequences when editing:
   bundle. `npm run schema` publishes the list as `menu.locales` and the harness reads it
   from there — the wizard and the harness keep no copy.
 - One declared language means no language switcher at all, and no hreflang alternates.
-- `fixtures/multilingual.config.json` is the CI job that builds more than one language.
-  Without it nothing exercises this.
+- `fixtures/full.config.json` and `fixtures/multilingual.config.json` both declare two
+  locales, so both CI jobs exercise locale routing.
 
 ## Firestore rules — owned by factory-web, not here
 

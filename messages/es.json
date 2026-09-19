@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Solo quien solicitó este prototipo puede ver estos registros.",
-    "loadError": "No se pudieron cargar tus registros. Inténtalo de nuevo en un momento."
+    "loadError": "No se pudieron cargar tus registros. Inténtalo de nuevo en un momento.",
+    "addAction": "Añadir {entity}",
+    "saving": "Guardando…",
+    "listHeading": "Registros: {entity}",
+    "empty": "Aún no hay registros: {entity} — añade el primero arriba.",
+    "remove": "Eliminar",
+    "yes": "Sí",
+    "no": "No"
   },
   "dashboard": {
     "recordsLabel": "Registros: {entity}",

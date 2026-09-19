@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Tieto záznamy vidí len ten, kto si prototyp vyžiadal.",
-    "loadError": "Záznamy sa nepodarilo načítať. Skúste to o chvíľu znova."
+    "loadError": "Záznamy sa nepodarilo načítať. Skúste to o chvíľu znova.",
+    "addAction": "Pridať {entity}",
+    "saving": "Ukladá sa…",
+    "listHeading": "Záznamy: {entity}",
+    "empty": "Zatiaľ žiadne záznamy: {entity} — pridajte prvý vyššie.",
+    "remove": "Odstrániť",
+    "yes": "Áno",
+    "no": "Nie"
   },
   "dashboard": {
     "recordsLabel": "Záznamy: {entity}",

@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Diese Einträge sieht nur, wer den Prototyp angefragt hat.",
-    "loadError": "Beim Laden Ihrer Einträge ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal."
+    "loadError": "Beim Laden Ihrer Einträge ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal.",
+    "addAction": "{entity} hinzufügen",
+    "saving": "Wird gespeichert…",
+    "listHeading": "Einträge: {entity}",
+    "empty": "Noch keine Einträge: {entity} – fügen Sie oben den ersten hinzu.",
+    "remove": "Entfernen",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "dashboard": {
     "recordsLabel": "Einträge: {entity}",

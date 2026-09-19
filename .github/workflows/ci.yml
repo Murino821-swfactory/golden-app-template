@@ -43,10 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # `multilingual` is the only config that declares a second language, so it is the
-        # only job that builds more than one document. Without it nothing in CI ever
-        # exercises locale routing, which is how a prototype came to be published with
-        # complete Slovak copy and a 404 at /sk/.
+        # `full` and `multilingual` both declare two locales, so both exercise locale routing.
         config: [default, minimal, full, composed, multilingual]
     steps:
       - uses: actions/checkout@v4

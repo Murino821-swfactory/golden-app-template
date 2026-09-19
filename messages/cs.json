@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Tyto záznamy vidí jen ten, kdo si prototyp vyžádal.",
-    "loadError": "Záznamy se nepodařilo načíst. Zkuste to prosím za chvíli znovu."
+    "loadError": "Záznamy se nepodařilo načíst. Zkuste to prosím za chvíli znovu.",
+    "addAction": "Přidat {entity}",
+    "saving": "Ukládání…",
+    "listHeading": "Záznamy: {entity}",
+    "empty": "Zatím žádné záznamy: {entity} — přidejte první výše.",
+    "remove": "Odstranit",
+    "yes": "Ano",
+    "no": "Ne"
   },
   "dashboard": {
     "recordsLabel": "Záznamy: {entity}",

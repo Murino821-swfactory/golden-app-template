@@ -62,7 +62,14 @@
   },
   "dataGrid": {
     "permissionDenied": "Only the person who requested this prototype can see these records.",
-    "loadError": "Something went wrong loading your records. Please try again shortly."
+    "loadError": "Something went wrong loading your records. Please try again shortly.",
+    "addAction": "Add {entity}",
+    "saving": "Saving…",
+    "listHeading": "{entity} records",
+    "empty": "No {entity} records yet — add the first one above.",
+    "remove": "Remove",
+    "yes": "Yes",
+    "no": "No"
   },
   "dashboard": {
     "recordsLabel": "{entity} records",
