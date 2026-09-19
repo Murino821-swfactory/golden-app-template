@@ -4,7 +4,8 @@
     "signOut": "Sign out",
     "account": "Account",
     "dashboard": "Dashboard",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "language": "Language"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -28,9 +29,9 @@
   },
   "pricing": {
     "title": "Pricing",
-    "free": "Free",
-    "pro": "Pro",
-    "enterprise": "Enterprise"
+    "free": "Example tier one",
+    "pro": "Example tier two",
+    "enterprise": "Example tier three"
   },
   "testimonials": {
     "title": "What people say",
@@ -41,8 +42,8 @@
   },
   "faq": {
     "title": "FAQ",
-    "q1": "How does it work?",
-    "a1": "It just works."
+    "q1": "Placeholder question — this section has no content schema yet.",
+    "a1": "Placeholder answer. A prototype's own words come from prototype.config.json."
   },
   "contact": {
     "title": "Contact",

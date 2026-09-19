@@ -1,0 +1,72 @@
+{
+  "common": {
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "account": "Compte",
+    "dashboard": "Tableau de bord",
+    "loading": "Chargement...",
+    "language": "Langue"
+  },
+  "auth": {
+    "signInTitle": "Connexion",
+    "signInDescription": "Continuez avec votre compte Google.",
+    "signInButton": "Se connecter avec Google",
+    "signInError": "La connexion a échoué. Veuillez réessayer."
+  },
+  "landing": {
+    "title": "Votre application",
+    "subtitle": "Construit avec le Golden Stack",
+    "cta": "Commencer"
+  },
+  "features": {
+    "title": "Fonctionnalités",
+    "item1": "Fonctionnalité une",
+    "item1desc": "Description de la première fonctionnalité",
+    "item2": "Fonctionnalité deux",
+    "item2desc": "Description de la deuxième fonctionnalité",
+    "item3": "Fonctionnalité trois",
+    "item3desc": "Description de la troisième fonctionnalité"
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "free": "Palier d'exemple un",
+    "pro": "Palier d'exemple deux",
+    "enterprise": "Palier d'exemple trois"
+  },
+  "testimonials": {
+    "title": "Ce qu'on en dit",
+    "quote1": "Texte de remplissage — un prototype met ici les mots du client.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Texte de remplissage — cette section n'a pas encore de schéma de contenu.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "q1": "Question de remplissage — cette section n'a pas encore de schéma de contenu.",
+    "a1": "Réponse de remplissage. Les mots propres à un prototype viennent de prototype.config.json."
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "E-mail",
+    "message": "Message",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "success": "Merci — votre message est en route. Nous vous répondrons bientôt.",
+    "error": "L'envoi a échoué. Veuillez réessayer.",
+    "notConfigured": "Le formulaire de contact n'est pas configuré dans cet aperçu."
+  },
+  "cta": {
+    "title": "Prêt à commencer ?",
+    "subtitle": "Lancez votre propre version en quelques minutes.",
+    "action": "Commencer"
+  },
+  "dataGrid": {
+    "permissionDenied": "Seule la personne qui a demandé ce prototype voit ces enregistrements.",
+    "loadError": "Le chargement de vos enregistrements a échoué. Veuillez réessayer dans un instant."
+  },
+  "dashboard": {
+    "recordsLabel": "Enregistrements : {entity}",
+    "addedThisMonth": "Ajoutés ce mois-ci",
+    "trackedFields": "Champs suivis"
+  }
+}

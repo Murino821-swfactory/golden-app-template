@@ -40,7 +40,17 @@
         "pricing": null,
         "testimonials": null
       }
-    }
+    },
+    "locales": [
+      "en",
+      "sk",
+      "cs",
+      "de",
+      "pl",
+      "hu",
+      "fr",
+      "es"
+    ]
   },
   "patterns": {
     "landing": {
@@ -328,9 +338,9 @@
             "cs",
             "de",
             "pl",
-            "es",
+            "hu",
             "fr",
-            "it"
+            "es"
           ]
         }
       },
@@ -342,9 +352,9 @@
           "cs",
           "de",
           "pl",
-          "es",
+          "hu",
           "fr",
-          "it"
+          "es"
         ]
       },
       "theme": {

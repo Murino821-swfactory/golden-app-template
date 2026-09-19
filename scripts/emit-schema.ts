@@ -13,6 +13,7 @@ import { resolve } from "node:path";
 import { z } from "zod";
 import {
   CONTENT_SCHEMAS,
+  LOCALES,
   LOCALE_DESCRIPTION_SCHEMA,
   PATTERN_PURPOSE,
   PATTERN_SCHEMAS,
@@ -46,6 +47,13 @@ const document = {
       selectable: modelSelectableSections(),
       copySource: SECTION_COPY_SOURCE,
     },
+    // The languages this template can actually render — one id per `messages/*.json`.
+    // It is here, in the MENU, rather than only inside `root.locales`'s enum because the
+    // harness asks the menu what there is to choose from; it reads this list instead of
+    // keeping its own. The copy it used to keep named `it`, which nothing offers, and
+    // omitted `hu`, which the wizard does — so a customer who picked Hungarian was
+    // filtered down to English without being told.
+    locales: [...LOCALES],
   },
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])

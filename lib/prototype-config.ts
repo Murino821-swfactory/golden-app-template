@@ -35,11 +35,21 @@ import { COLOR_SCHEME_IDS } from "./color-schemes";
 export const COLOR_SCHEMES = COLOR_SCHEME_IDS;
 
 /**
- * The languages a prototype can be published in. Closed enum: a locale with no message
- * bundle would render the template's English chrome under the customer's foreign copy,
- * which reads as a bug rather than as a missing translation.
+ * The languages a prototype can be published in — exactly the ids with a bundle in
+ * `messages/`. Closed enum: a locale with no bundle would render the template's English
+ * chrome under the customer's foreign copy, which reads as a bug rather than as a missing
+ * translation.
+ *
+ * **An id may not appear here until `messages/<id>.json` exists.** `tests/locale.spec.ts`
+ * asserts the two sets are equal, in both directions, because this list used to be an
+ * aspiration: it named eight languages while `messages/` held one, and the harness kept a
+ * copy of it whose comment claimed the bundles existed. A customer who picked Hungarian —
+ * which the wizard offered and this list did not — was silently given English.
+ *
+ * `npm run schema` publishes the list as `menu.locales` in `prototype.schema.json`, and the
+ * harness reads it from the clone. There is no second copy to keep in step.
  */
-export const LOCALES = ["en", "sk", "cs", "de", "pl", "es", "fr", "it"] as const;
+export const LOCALES = ["en", "sk", "cs", "de", "pl", "hu", "fr", "es"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 /** Landing sections that exist in `components/sections/`. A closed enum on purpose: an

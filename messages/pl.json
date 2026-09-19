@@ -1,0 +1,72 @@
+{
+  "common": {
+    "signIn": "Zaloguj się",
+    "signOut": "Wyloguj się",
+    "account": "Konto",
+    "dashboard": "Panel",
+    "loading": "Wczytywanie...",
+    "language": "Język"
+  },
+  "auth": {
+    "signInTitle": "Logowanie",
+    "signInDescription": "Kontynuuj przy użyciu konta Google.",
+    "signInButton": "Zaloguj się przez Google",
+    "signInError": "Logowanie nie powiodło się. Spróbuj ponownie."
+  },
+  "landing": {
+    "title": "Twoja aplikacja",
+    "subtitle": "Zbudowane na Golden Stacku",
+    "cta": "Zacznij"
+  },
+  "features": {
+    "title": "Funkcje",
+    "item1": "Pierwsza funkcja",
+    "item1desc": "Opis pierwszej funkcji",
+    "item2": "Druga funkcja",
+    "item2desc": "Opis drugiej funkcji",
+    "item3": "Trzecia funkcja",
+    "item3desc": "Opis trzeciej funkcji"
+  },
+  "pricing": {
+    "title": "Cennik",
+    "free": "Przykładowy poziom pierwszy",
+    "pro": "Przykładowy poziom drugi",
+    "enterprise": "Przykładowy poziom trzeci"
+  },
+  "testimonials": {
+    "title": "Co mówią ludzie",
+    "quote1": "Tekst zastępczy — prototyp umieszcza tu własne słowa klienta.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Tekst zastępczy — ta sekcja nie ma jeszcze schematu treści.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Najczęstsze pytania",
+    "q1": "Pytanie zastępcze — ta sekcja nie ma jeszcze schematu treści.",
+    "a1": "Odpowiedź zastępcza. Własne słowa prototypu pochodzą z prototype.config.json."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-mail",
+    "message": "Wiadomość",
+    "send": "Wyślij",
+    "sending": "Wysyłanie…",
+    "success": "Dziękujemy — wiadomość jest w drodze. Wkrótce się odezwiemy.",
+    "error": "Nie udało się wysłać wiadomości. Spróbuj ponownie.",
+    "notConfigured": "Formularz kontaktowy nie jest skonfigurowany w tym podglądzie."
+  },
+  "cta": {
+    "title": "Gotowi, by zacząć?",
+    "subtitle": "Własną wersję uruchomisz w kilka minut.",
+    "action": "Zacznij"
+  },
+  "dataGrid": {
+    "permissionDenied": "Te rekordy widzi tylko osoba, która zamówiła prototyp.",
+    "loadError": "Nie udało się wczytać rekordów. Spróbuj ponownie za chwilę."
+  },
+  "dashboard": {
+    "recordsLabel": "Rekordy: {entity}",
+    "addedThisMonth": "Dodane w tym miesiącu",
+    "trackedFields": "Śledzone pola"
+  }
+}
