@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import {
@@ -18,11 +17,20 @@ import {
  * means it uses three a model may never pick. Keeping both is the point: one covers the
  * components, the other covers the output space the content call actually has.
  *
- * The committed `prototype.config.json` matters for a different reason: it is what
- * /demo/golden ships. A section with no content slice falls back to this repo's
- * `messages/*.json`, so a locked section there puts placeholder copy on a public page —
- * which is how the demo spent a while answering "How does it work?" with "It just works."
+ * `prototype.config.json` matters for a different reason: it is what gets published. A
+ * section with no content slice falls back to this repo's `messages/*.json`, so a locked
+ * section puts placeholder copy on a public page — which is how the demo spent a while
+ * answering "How does it work?" with "It just works." In this repo that page is
+ * /demo/golden; in a prototype build it is the customer's own site, and the rule is the
+ * same one, because both are shown to a real person.
  */
+
+/**
+ * The fixture a CI matrix job swapped in, set per job in ci.yml. Absent (or "default")
+ * means `prototype.config.json` is whatever the checkout holds — this repo's own config
+ * in CI, the customer's config when the factory runs this suite as its smoke gate.
+ */
+const SWAPPED_IN_FIXTURE = process.env.PROTOTYPE_CONFIG_FIXTURE;
 
 function configAt(path: string): Record<string, unknown> {
   return JSON.parse(readFileSync(resolve(__dirname, "..", path), "utf-8")) as Record<
@@ -59,23 +67,31 @@ test.describe("composed config", () => {
   });
 });
 
-test("the shipped config puts no placeholder copy on the public demo", () => {
-  // Read from HEAD, not from the working tree: CI's matrix runs `use-config.mjs` first,
-  // which overwrites prototype.config.json with a fixture. This rule is about what SHIPS
-  // to /demo/golden, and what ships is what is committed — reading the file on disk made
-  // this assertion fail on the `full` job for a config nobody publishes.
-  const committed = JSON.parse(
-    execFileSync("git", ["show", "HEAD:prototype.config.json"], {
-      cwd: resolve(__dirname, ".."),
-      encoding: "utf-8",
-    })
-  ) as Record<string, unknown>;
+test("the config on disk puts no placeholder copy on a published page", () => {
+  // Read the working tree, NOT `git show HEAD:`. This suite is also the factory's smoke
+  // gate, where it runs inside a container over a bind-mounted checkout that git refuses
+  // to read at all ("detected dubious ownership in repository at '/work'"). That refusal
+  // failed five consecutive customer builds on 2026-09-19 while 184 other tests passed,
+  // and reported the gate as `unknown` — so no git, in a test that has a file to read.
+  //
+  // Disk is also the more useful subject. Here it is what /demo/golden ships; in a
+  // prototype build it is the customer's config, and checking it costs nothing behind the
+  // harness's own composition check.
+  //
+  // The exception is a matrix job that deliberately swapped a fixture in: `full` uses
+  // locked sections on purpose, to prove their components still render. A job holding a
+  // config nobody publishes cannot answer a question about published ones, so it says so
+  // instead of reconstructing a file it no longer has.
+  test.skip(
+    Boolean(SWAPPED_IN_FIXTURE) && SWAPPED_IN_FIXTURE !== "default",
+    `prototype.config.json was replaced with fixtures/${SWAPPED_IN_FIXTURE}.config.json`
+  );
 
   const selectable = modelSelectableSections() as string[];
-  for (const section of sectionsOf(committed)) {
+  for (const section of sectionsOf(configAt("prototype.config.json"))) {
     expect(
       selectable,
-      `/demo/golden would render "${section}" from messages/*.json — placeholder copy on a public page`
+      `"${section}" has no content slice, so it renders messages/*.json — placeholder copy on a published page`
     ).toContain(section);
   }
 });
