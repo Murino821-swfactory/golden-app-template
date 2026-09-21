@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "FutureRoadmap",
   "locales": [
-    "en"
+    "en",
+    "es"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,94 +13,146 @@
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
     "dashboard": {},
     "authGoogle": {},
     "cta": {
-      "href": "/login"
+      "href": "/dashboard"
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "milestone",
         "fields": [
           {
-            "key": "name",
+            "key": "pillar",
+            "type": "select",
+            "options": [
+              "Energy",
+              "Climate",
+              "Biodiversity",
+              "Medicine",
+              "Social"
+            ],
+            "required": true
+          },
+          {
+            "key": "title",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "targetYear",
+            "type": "number",
+            "required": true
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Planned",
+              "In Progress",
+              "Achieved"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+            "key": "notes",
+            "type": "longtext"
           }
         ]
       }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "FutureRoadmap maps humanity's path to a sustainable 2050 — energy, climate, biodiversity, medicine, and social progress with concrete steps for everyone.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "See the future. Help build it.",
+        "subheadline": "FutureRoadmap charts humanity's progress from 2035 to 2050 across five pillars and shows you exactly what it takes to get there.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "📅",
+            "title": "Interactive Timeline",
+            "description": "Scroll through milestones year by year from today to 2050 across energy, climate, biodiversity, medicine, and social development."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "🗺",
+            "title": "Concrete Roadmaps",
+            "description": "Every vision comes with measurable steps, breakthrough policies, and the innovations needed to turn it into reality."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "🌱",
+            "title": "Your Role in Change",
+            "description": "Each roadmap includes practical tips on what you and your community can do to move that goal forward."
+          },
+          {
+            "icon": "📊",
+            "title": "Track Your Milestones",
+            "description": "Log the steps you have committed to and mark them achieved as you contribute to the future you want."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Milestones"
       },
       "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Start exploring"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Milestone",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "pillar": "Pillar",
+          "title": "Goal",
+          "targetYear": "Target Year",
+          "status": "Status",
+          "notes": "Notes"
+        }
+      }
+    },
+    "es": {
+      "description": "FutureRoadmap traza el camino de la humanidad hacia un 2050 sostenible — energía, clima, biodiversidad, medicina y progreso social con pasos concretos para todos.",
+      "landing": {
+        "headline": "Imagina el futuro. Ayuda a construirlo.",
+        "subheadline": "FutureRoadmap muestra el avance de la humanidad de 2035 a 2050 en cinco pilares y te explica con precisión qué se necesita para llegar ahí.",
+        "features": [
+          {
+            "icon": "📅",
+            "title": "Línea de tiempo interactiva",
+            "description": "Recorre los hitos año a año desde hoy hasta 2050 en energía, clima, biodiversidad, medicina y desarrollo social."
+          },
+          {
+            "icon": "🗺",
+            "title": "Hojas de ruta concretas",
+            "description": "Cada visión incluye pasos medibles, políticas clave e innovaciones necesarias para convertirla en realidad."
+          },
+          {
+            "icon": "🌱",
+            "title": "Tu papel en el cambio",
+            "description": "Cada hoja de ruta ofrece consejos prácticos sobre lo que tú y tu comunidad pueden hacer para avanzar hacia ese objetivo."
+          },
+          {
+            "icon": "📊",
+            "title": "Registra tus avances",
+            "description": "Anota los pasos que has asumido y márcalos como logrados mientras contribuyes al futuro que quieres ver."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Mis hitos"
+      },
+      "cta": {
+        "label": "Empieza a explorar"
+      },
+      "dataGrid": {
+        "entityLabel": "Hito",
+        "fieldLabels": {
+          "pillar": "Pilar",
+          "title": "Objetivo",
+          "targetYear": "Año objetivo",
+          "status": "Estado",
+          "notes": "Notas"
         }
       }
     }
