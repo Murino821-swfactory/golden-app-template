@@ -1,106 +1,189 @@
 {
-  "appName": "Golden App Template",
+  "appName": "OSS Billing",
   "locales": [
-    "en"
+    "en",
+    "es"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {},
+    "dashboard": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "invoice",
         "fields": [
           {
-            "key": "name",
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "amount",
+            "type": "number",
+            "required": true
+          },
+          {
+            "key": "customerCountry",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "vatRate",
             "type": "select",
+            "required": true,
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "0%",
+              "5%",
+              "10%",
+              "20%",
+              "21%",
+              "23%",
+              "25%"
             ]
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "status",
+            "type": "select",
+            "required": true,
+            "options": [
+              "paid",
+              "pending",
+              "refunded"
+            ]
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "invoiceNumber",
+            "type": "text",
+            "required": false
           }
         ]
       }
     },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
+    "cta": {
+      "href": "/signup"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Automated EU OSS VAT compliance and invoicing for SaaS founders selling globally — from payment to quarterly tax report with zero admin.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Sell to anyone. Charge the right VAT. Never touch a spreadsheet.",
+        "subheadline": "OSS Billing is for SaaS founders and digital companies that collect payments worldwide and need EU VAT handled end-to-end.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "🌍",
+            "title": "Automatic VAT Detection",
+            "description": "Detect each customer's country by IP and card, then apply the correct EU OSS rate — or zero for buyers outside the EU."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "🧾",
+            "title": "Instant Slovak Invoicing",
+            "description": "Generate a compliant invoice via SuperFaktúra or Fakturoid and deliver it to your customer the moment a payment clears."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "📊",
+            "title": "Quarterly OSS Report",
+            "description": "Download a ready-to-submit XML OSS tax return at the end of every quarter — no manual data entry required."
+          },
+          {
+            "icon": "💳",
+            "title": "Stripe Payout Reconciliation",
+            "description": "Match every bulk Stripe payout against individual transaction fees automatically and export the result each month."
+          },
+          {
+            "icon": "📈",
+            "title": "€100k Turnover Guard",
+            "description": "Monitor your annual revenue in real time so you never cross the threshold that costs you the 10% income tax rate."
+          },
+          {
+            "icon": "📤",
+            "title": "Bookkeeping Exports",
+            "description": "Get monthly double-entry accounting exports your accountant can import directly — no reformatting, no copy-pasting."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Billing Dashboard"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Invoices",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "date": "Date",
+          "amount": "Amount (€)",
+          "customerCountry": "Customer Country",
+          "vatRate": "VAT Rate",
+          "status": "Status",
+          "invoiceNumber": "Invoice Number"
         }
+      },
+      "cta": {
+        "label": "Start automating your billing"
+      }
+    },
+    "es": {
+      "description": "Cumplimiento automático del IVA OSS de la UE y facturación para fundadores de SaaS que venden globalmente — del pago al informe fiscal sin papeleo.",
+      "landing": {
+        "headline": "Vende a cualquier país. Cobra el IVA correcto. Sin hojas de cálculo.",
+        "subheadline": "OSS Billing es para fundadores de SaaS y empresas digitales que cobran pagos en todo el mundo y necesitan el IVA europeo gestionado de principio a fin.",
+        "features": [
+          {
+            "icon": "🌍",
+            "title": "Detección automática del IVA",
+            "description": "Detecta el país de cada cliente por IP y tarjeta, y aplica el tipo OSS correcto — o cero para compradores fuera de la UE."
+          },
+          {
+            "icon": "🧾",
+            "title": "Facturación instantánea",
+            "description": "Genera una factura conforme a la normativa eslovaca mediante SuperFaktúra o Fakturoid y envíasela al cliente en el momento del pago."
+          },
+          {
+            "icon": "📊",
+            "title": "Informe OSS trimestral",
+            "description": "Descarga un archivo XML listo para presentar ante la Agencia Tributaria al cierre de cada trimestre, sin introducir datos a mano."
+          },
+          {
+            "icon": "💳",
+            "title": "Conciliación de pagos Stripe",
+            "description": "Empareja automáticamente cada liquidación masiva de Stripe con las comisiones por transacción y exporta el resultado mensualmente."
+          },
+          {
+            "icon": "📈",
+            "title": "Control del umbral de 100 000 €",
+            "description": "Monitoriza tu facturación anual en tiempo real para no superar el límite que te haría perder el tipo reducido del 10% en el impuesto sobre la renta."
+          },
+          {
+            "icon": "📤",
+            "title": "Exportaciones contables",
+            "description": "Obtén exportaciones mensuales de contabilidad por partida doble que tu gestor puede importar directamente, sin reformatear nada."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Panel de facturación"
+      },
+      "dataGrid": {
+        "entityLabel": "Facturas",
+        "fieldLabels": {
+          "date": "Fecha",
+          "amount": "Importe (€)",
+          "customerCountry": "País del cliente",
+          "vatRate": "Tipo de IVA",
+          "status": "Estado",
+          "invoiceNumber": "Número de factura"
+        }
+      },
+      "cta": {
+        "label": "Automatiza tu facturación"
       }
     }
   }
