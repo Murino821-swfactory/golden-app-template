@@ -1,30 +1,33 @@
 {
-  "appName": "Golden App Template",
+  "appName": "FaunaTrack",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "red"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
+    "dashboard": {},
+    "mapBase": {
+      "center": {
+        "lat": 48.7,
+        "lng": 19.5
+      },
+      "zoom": 7
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "animal",
         "fields": [
           {
             "key": "name",
@@ -32,75 +35,166 @@
             "required": true
           },
           {
-            "key": "category",
+            "key": "species",
             "type": "select",
+            "required": true,
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "Wolf",
+              "Lynx",
+              "Bear",
+              "Cattle",
+              "Sheep",
+              "Deer",
+              "Wild Boar",
+              "Other"
             ]
           },
           {
-            "key": "opened",
+            "key": "gps_status",
+            "type": "select",
+            "required": true,
+            "options": [
+              "Active",
+              "Low Battery",
+              "Inactive"
+            ]
+          },
+          {
+            "key": "activity",
+            "type": "select",
+            "options": [
+              "High",
+              "Normal",
+              "Low",
+              "Inactive"
+            ]
+          },
+          {
+            "key": "last_seen",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "territory",
+            "type": "text"
           }
         ]
       }
     },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
+    "cta": {
+      "href": "/signup"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "FaunaTrack gives conservation teams and farmers real-time GPS tracking, geofencing alerts and activity monitoring for every animal in the field.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Know where your animals are — the moment it matters",
+        "subheadline": "For conservation teams, researchers and farmers who need real-time GPS positions, movement history and instant alerts when an animal leaves its safe zone.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "🗺️",
+            "title": "Live Map View",
+            "description": "See every tracked animal's current position on an interactive map, filtered by species, territory or time range."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "📍",
+            "title": "Geofencing Alerts",
+            "description": "Draw virtual zones around safe areas and receive an instant alert whenever an animal crosses the boundary."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "📊",
+            "title": "Activity Monitoring",
+            "description": "Review estimated activity levels per animal and get notified automatically when inactivity suggests injury or distress."
+          },
+          {
+            "icon": "🐾",
+            "title": "Animal Profile Cards",
+            "description": "Open any animal's profile to inspect its full movement history, GPS sensor status and recent activity trends."
+          },
+          {
+            "icon": "🔋",
+            "title": "Sensor Health Status",
+            "description": "Monitor battery level and signal quality for every device in the field so you always know your data is live."
+          },
+          {
+            "icon": "📅",
+            "title": "Movement History Replay",
+            "description": "Replay any animal's path over a chosen date range to study migration patterns and seasonal behaviour."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Animal Overview"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Animal",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "name": "Name / ID",
+          "species": "Species",
+          "gps_status": "GPS Status",
+          "activity": "Activity Level",
+          "last_seen": "Last GPS Fix",
+          "territory": "Territory"
         }
+      },
+      "cta": {
+        "label": "Start monitoring"
+      }
+    },
+    "sk": {
+      "description": "FaunaTrack umožňuje ochranárom a farmárom sledovať polohu zvierat v reálnom čase s GPS telemetriou, geofencingom a monitoringom aktivity.",
+      "landing": {
+        "headline": "Vedzte, kde sú vaše zvieratá — v každom okamihu",
+        "subheadline": "Pre ochranárske tímy, výskumníkov a farmárov, ktorí potrebujú GPS monitoring v reálnom čase, históriu pohybu a okamžité výstrahy pri opustení bezpečnej zóny.",
+        "features": [
+          {
+            "icon": "🗺️",
+            "title": "Mapa v reálnom čase",
+            "description": "Sledujte aktuálnu polohu každého zvieraťa na interaktívnej mape s filtráciou podľa druhu, teritória alebo časového rozmedzia."
+          },
+          {
+            "icon": "📍",
+            "title": "Geofencing a výstrahy",
+            "description": "Vymedzíte virtuálne zóny okolo bezpečných oblastí a ihneď dostanete upozornenie, keď zviera zónu opustí."
+          },
+          {
+            "icon": "📊",
+            "title": "Monitoring aktivity",
+            "description": "Sledujte odhadovanú aktivitu každého zvieraťa a automaticky sa dozviete, keď neaktivita signalizuje zranenie alebo ohrozenie."
+          },
+          {
+            "icon": "🐾",
+            "title": "Profilové karty zvierat",
+            "description": "Otvorte profil ľubovoľného zvieraťa a prezrite si celú históriu pohybu, stav GPS senzora a trendy aktivity."
+          },
+          {
+            "icon": "🔋",
+            "title": "Stav GPS senzorov",
+            "description": "Monitorujte úroveň batérie a kvalitu signálu každého zariadenia v teréne, aby vaše dáta boli vždy aktuálne."
+          },
+          {
+            "icon": "📅",
+            "title": "História pohybu",
+            "description": "Prehrávajte trasu ľubovoľného zvieraťa za zvolené obdobie a skúmajte migračné vzorce a sezónne správanie."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Prehľad zvierat"
+      },
+      "dataGrid": {
+        "entityLabel": "Zviera",
+        "fieldLabels": {
+          "name": "Meno / ID",
+          "species": "Druh",
+          "gps_status": "Stav GPS",
+          "activity": "Úroveň aktivity",
+          "last_seen": "Posledná poloha",
+          "territory": "Teritórium"
+        }
+      },
+      "cta": {
+        "label": "Začať monitorovať"
       }
     }
   }
