@@ -1,106 +1,157 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Miska",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "yellow"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {},
+    "dashboard": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "candidate",
         "fields": [
           {
-            "key": "name",
+            "key": "candidateName",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "jobPosition",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "matchScore",
+            "type": "number"
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "New",
+              "In Review",
+              "Shortlisted",
+              "Rejected"
             ]
           },
           {
-            "key": "opened",
+            "key": "analyzedDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "notes",
+            "type": "longtext"
           }
         ]
       }
     },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
+    "cta": {
+      "href": "/signup"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Miska scores every CV against a job description in seconds, showing HR teams and candidates exactly where the gaps are.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Know exactly how every CV measures up",
+        "subheadline": "Miska gives HR specialists and job seekers an instant Match Score, skill-gap breakdown, and concrete steps to close the distance.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "📊",
+            "title": "Instant Match Score",
+            "description": "See how closely a candidate's profile fits the job description, expressed as a clear percentage you can act on."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "🔍",
+            "title": "Skill Gap Detection",
+            "description": "Pinpoint exactly which skills and experiences are missing before you make a shortlisting decision."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "✓",
+            "title": "Actionable Recommendations",
+            "description": "Receive specific, concrete tips that help candidates strengthen their CV for the exact role they are targeting."
+          },
+          {
+            "icon": "📋",
+            "title": "Candidate Comparison View",
+            "description": "Review multiple applicants side by side with a visual summary of each candidate's strengths and weak spots."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Your Candidates"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Candidate",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "candidateName": "Candidate Name",
+          "jobPosition": "Job Position",
+          "matchScore": "Match Score (%)",
+          "status": "Status",
+          "analyzedDate": "Date Analysed",
+          "notes": "Notes"
         }
+      },
+      "cta": {
+        "label": "Start Analysing CVs"
+      }
+    },
+    "sk": {
+      "description": "Miska vyhodnotí každý životopis oproti pracovnej pozícii za pár sekúnd – so skóre zhody, chýbajúcimi zručnosťami a odporúčaniami.",
+      "landing": {
+        "headline": "Presne viete, ako každý životopis obstojí",
+        "subheadline": "Miska dáva HR špecialistom aj uchádzačom okamžité skóre zhody, prehľad chýbajúcich zručností a konkrétne kroky na zlepšenie.",
+        "features": [
+          {
+            "icon": "📊",
+            "title": "Okamžité skóre zhody",
+            "description": "Zistite, ako blízko je profil kandidáta k požiadavkám pozície, vyjadrené v percentách, s ktorými môžete pracovať."
+          },
+          {
+            "icon": "🔍",
+            "title": "Odhalenie medzier v CV",
+            "description": "Nájdite presne, ktoré zručnosti a skúsenosti v životopise chýbajú, skôr než urobíte rozhodnutie o postupe."
+          },
+          {
+            "icon": "✓",
+            "title": "Konkrétne odporúčania",
+            "description": "Získajte praktické tipy, ktoré uchádzačovi pomôžu posilniť profil pre konkrétnu pracovnú pozíciu."
+          },
+          {
+            "icon": "📋",
+            "title": "Porovnanie kandidátov",
+            "description": "Zobrazte viacerých uchádzačov vedľa seba a prehľadne si prezrite silné aj slabé stránky každého z nich."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Vaši kandidáti"
+      },
+      "dataGrid": {
+        "entityLabel": "Kandidát",
+        "fieldLabels": {
+          "candidateName": "Meno kandidáta",
+          "jobPosition": "Pracovná pozícia",
+          "matchScore": "Skóre zhody (%)",
+          "status": "Stav",
+          "analyzedDate": "Dátum analýzy",
+          "notes": "Poznámky"
+        }
+      },
+      "cta": {
+        "label": "Začať analyzovať životopisy"
       }
     }
   }
