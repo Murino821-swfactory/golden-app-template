@@ -1,30 +1,29 @@
 {
-  "appName": "Golden App Template",
+  "appName": "BizLaunch CEE",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {},
     "cta": {
-      "href": "/login"
+      "href": "/dashboard"
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "task",
         "fields": [
           {
             "key": "name",
@@ -32,74 +31,146 @@
             "required": true
           },
           {
-            "key": "category",
+            "key": "country",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "SK",
+              "CZ",
+              "PL",
+              "HU",
+              "UA"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "entityType",
+            "type": "select",
+            "options": [
+              "s.r.o.",
+              "živnosť",
+              "Sp. z o.o.",
+              "JDG",
+              "Kft.",
+              "KATA",
+              "TOV",
+              "FOP"
+            ],
+            "required": true
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "todo",
+              "in-progress",
+              "done"
+            ],
+            "required": true
+          },
+          {
+            "key": "dueDate",
+            "type": "date",
+            "required": false
+          },
+          {
+            "key": "notes",
+            "type": "longtext",
+            "required": false
           }
         ]
       }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "BizLaunch CEE compares company structures, taxes and registration steps across Slovakia, Czechia, Poland, Hungary and Ukraine — all in one place.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Set up your CEE business without the guesswork",
+        "subheadline": "For entrepreneurs, digital nomads and IT professionals comparing company structures and tax obligations across five Central and Eastern European countries.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "🧮",
+            "title": "Tax & levy comparison",
+            "description": "Compare corporate and personal income tax rates, minimum contributions and share capital requirements across Slovakia, Czechia, Poland, Hungary and Ukraine side by side."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "✓",
+            "title": "Step-by-step registration",
+            "description": "Follow a country-specific checklist with direct links to official portals — Slovensko.sk, Moje daně, Biznes.gov.pl, Ügyfélkapu and Diia — to complete every required step."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "📄",
+            "title": "Ready-to-use document templates",
+            "description": "Download pre-filled founding deeds, property consent letters and powers of attorney formatted to each country's registration authority requirements."
+          },
+          {
+            "icon": "📋",
+            "title": "Post-registration obligations",
+            "description": "Track what comes after incorporation — electronic mailbox activation, bank account opening, VAT registration and applicable tax licences."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Registration Tracker"
       },
       "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Start comparing countries"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Registration tasks",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "name": "Task",
+          "country": "Country",
+          "entityType": "Entity type",
+          "status": "Status",
+          "dueDate": "Due date",
+          "notes": "Notes"
+        }
+      }
+    },
+    "sk": {
+      "description": "BizLaunch CEE porovnáva právne formy podnikania, dane a registračné kroky na Slovensku, v Česku, Poľsku, Maďarsku a na Ukrajine — všetko na jednom mieste.",
+      "landing": {
+        "headline": "Založte firmu v CEE regióne bez zbytočných komplikácií",
+        "subheadline": "Pre podnikateľov, digitálnych nomádov a IT špecialistov, ktorí porovnávajú právne formy a daňové povinnosti v piatich krajinách strednej a východnej Európy.",
+        "features": [
+          {
+            "icon": "🧮",
+            "title": "Porovnanie daní a odvodov",
+            "description": "Porovnajte sadzby dane PO a FO, minimálne odvody a požadované základné imanie na Slovensku, v Česku, Poľsku, Maďarsku a na Ukrajine na jednej obrazovke."
+          },
+          {
+            "icon": "✓",
+            "title": "Registrácia krok za krokom",
+            "description": "Postupujte podľa krajinového checklistu s priamymi odkazmi na štátne portály — Slovensko.sk, Moje daně, Biznes.gov.pl, Ügyfélkapu a Diia."
+          },
+          {
+            "icon": "📄",
+            "title": "Vzory zakladateľských dokumentov",
+            "description": "Stiahnite si zakladateľskú listinu, súhlas vlastníka nehnuteľnosti so sídlom a plnomocenstvo pripravené pre požiadavky každej krajiny."
+          },
+          {
+            "icon": "📋",
+            "title": "Povinnosti po zápise",
+            "description": "Sledujte, čo treba urobiť po zápise — aktivácia elektronickej schránky, otvorenie bankového účtu, registrácia k DPH a daňové licencie."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Môj prehľad registrácie"
+      },
+      "cta": {
+        "label": "Porovnať krajiny"
+      },
+      "dataGrid": {
+        "entityLabel": "Registračné úlohy",
+        "fieldLabels": {
+          "name": "Úloha",
+          "country": "Krajina",
+          "entityType": "Forma podnikania",
+          "status": "Stav",
+          "dueDate": "Termín",
+          "notes": "Poznámky"
         }
       }
     }
