@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "GitPulse Studio",
   "locales": [
-    "en"
+    "en",
+    "cs"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,95 +13,174 @@
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {},
+    "dashboard": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "post",
         "fields": [
           {
-            "key": "name",
+            "key": "title",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "week",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "repository",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "type",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Blog",
+              "LinkedIn",
+              "X",
+              "Instagram",
+              "Video"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "status",
+            "type": "select",
+            "options": [
+              "Draft",
+              "In Review",
+              "Published"
+            ],
+            "required": true
+          },
+          {
+            "key": "publishedAt",
             "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
           }
         ]
       }
     },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
+    "cta": {
+      "href": "#signup"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "GitPulse Studio turns your GitHub commits and pull requests into blog posts, social media content, and visuals — automatically, every week.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Your code tells a story. Let the world read it.",
+        "subheadline": "GitPulse Studio is for developers and technical founders who ship code every week but have no time to write about it — it turns your commits and PRs into ready-to-publish content.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "📡",
+            "title": "Connect Your Repos",
+            "description": "Link any GitHub repository and GitPulse Studio automatically reads your weekly commits, merged PRs, and changelogs."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "✍️",
+            "title": "Blog Post Generated",
+            "description": "Each week's changes become a polished Markdown article that translates technical work into a story your audience understands."
+          },
+          {
+            "icon": "📱",
+            "title": "Social Posts, Done",
+            "description": "Platform-optimized posts for LinkedIn, X, Facebook, and Instagram are produced from the same data, ready to schedule or copy."
+          },
+          {
+            "icon": "🎨",
+            "title": "Visuals Included",
+            "description": "An OpenGraph infographic and a short animated recap video of your changes are generated alongside every weekly digest."
+          },
+          {
+            "icon": "✓",
+            "title": "Review Before Publishing",
+            "description": "Every piece of content lands in your approval queue where you can read, tweak, and approve before anything goes public."
           },
           {
             "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "title": "One-Click Publish",
+            "description": "Send approved content directly to your blog and social profiles through connected APIs — no copy-pasting, no manual uploads."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Your Content Studio"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Content Item",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "title": "Title",
+          "week": "Week Of",
+          "repository": "Repository",
+          "type": "Content Type",
+          "status": "Status",
+          "publishedAt": "Published At"
         }
+      },
+      "cta": {
+        "label": "Connect Your Repository"
+      }
+    },
+    "cs": {
+      "description": "GitPulse Studio každý týden převede vaše GitHub commity a pull requesty na blogové články, sociální příspěvky a vizuály — automaticky.",
+      "landing": {
+        "headline": "Váš kód vypráví příběh. Nechte ho slyšet.",
+        "subheadline": "GitPulse Studio je pro vývojáře a technické zakladatele, kteří každý týden píší kód, ale nemají čas o něm psát — automaticky z commitů a PR vytvoří obsah připravený k publikování.",
+        "features": [
+          {
+            "icon": "📡",
+            "title": "Propojte repozitář",
+            "description": "Připojte libovolný GitHub repozitář a GitPulse Studio každý týden automaticky přečte vaše commity, mergnuté PR a changelogy."
+          },
+          {
+            "icon": "✍️",
+            "title": "Blogový článek hotový",
+            "description": "Změny za celý týden se přemění ve vybroušený Markdown článek, který technickou práci převypráví srozumitelně pro vaši komunitu."
+          },
+          {
+            "icon": "📱",
+            "title": "Sociální příspěvky připraveny",
+            "description": "Ze stejných dat vzniknou příspěvky optimalizované pro LinkedIn, X, Facebook a Instagram, připravené ke zkopírování nebo naplánování."
+          },
+          {
+            "icon": "🎨",
+            "title": "Vizuály v balení",
+            "description": "Ke každému týdennímu přehledu se automaticky vygeneruje infografický obrázek pro OpenGraph a krátké animované rekapitulační video."
+          },
+          {
+            "icon": "✓",
+            "title": "Kontrola před zveřejněním",
+            "description": "Veškerý obsah čeká ve schvalovací frontě, kde si ho můžete přečíst, upravit a schválit dříve, než se cokoliv zveřejní."
+          },
+          {
+            "icon": "🚀",
+            "title": "Publikování jedním klikem",
+            "description": "Schválený obsah odešlete přímo na blog a sociální profily přes napojená API — bez kopírování a ručního nahrávání."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Vaše obsahové studio"
+      },
+      "dataGrid": {
+        "entityLabel": "Obsah",
+        "fieldLabels": {
+          "title": "Název",
+          "week": "Týden",
+          "repository": "Repozitář",
+          "type": "Typ obsahu",
+          "status": "Stav",
+          "publishedAt": "Publikováno"
+        }
+      },
+      "cta": {
+        "label": "Připojte svůj repozitář"
       }
     }
   }
