@@ -45,6 +45,12 @@ jobs:
       matrix:
         # `full` and `multilingual` both declare two locales, so both exercise locale routing.
         config: [default, minimal, full, composed, multilingual]
+    env:
+      # Which config is actually on disk for this job. `composed-config.spec.ts` reads it to
+      # skip the "what gets published" rule in jobs that swapped a fixture in — `full` uses
+      # locked sections deliberately. Unset outside this matrix, which is what lets the same
+      # rule guard a customer's config when the factory runs this suite as its smoke gate.
+      PROTOTYPE_CONFIG_FIXTURE: ${{ matrix.config }}
     steps:
       - uses: actions/checkout@v4
 
