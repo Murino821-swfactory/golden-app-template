@@ -1,105 +1,145 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Pokerface",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "red"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {},
     "cta": {
       "href": "/login"
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "session",
         "fields": [
           {
-            "key": "name",
-            "type": "text",
+            "key": "date",
+            "type": "date",
             "required": true
           },
           {
-            "key": "category",
+            "key": "game_type",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Texas Hold'em",
+              "Omaha",
+              "Tournament"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "result",
+            "type": "select",
+            "options": [
+              "Win",
+              "Loss",
+              "Break-even"
+            ],
+            "required": true
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "duration",
+            "type": "number"
+          },
+          {
+            "key": "notes",
+            "type": "longtext"
           }
         ]
       }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Pokerface takes complete beginners through poker step by step — from hand rankings to tournament strategy.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Go from beginner to tournament player",
+        "subheadline": "Pokerface gives beginners a clear path from their very first hand to competing at a real tournament table.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "🃏",
+            "title": "Lessons from the basics",
+            "description": "Learn hand rankings, betting rounds and table rules one step at a time before moving on."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "🎯",
+            "title": "Tournament decision-making",
+            "description": "Understand exactly when to fold, call a bluff or push all-in to outlast your opponents."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "📊",
+            "title": "Track your practice games",
+            "description": "Log every session you play and see which parts of your game are getting stronger."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Progress"
       },
       "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Start learning free"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Practice Session",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "date": "Date",
+          "game_type": "Game Type",
+          "result": "Result",
+          "duration": "Duration (min)",
+          "notes": "Notes"
+        }
+      }
+    },
+    "sk": {
+      "description": "Pokerface vedie začiatočníkov cez poker krok za krokom — od základných pravidiel až po turnajovú stratégiu.",
+      "landing": {
+        "headline": "Od prvej karty k víťazstvu v turnaji",
+        "subheadline": "Pokerface dáva začiatočníkom jasnú cestu od prvej rozdanej ruky až po úspech pri turnajovom stole.",
+        "features": [
+          {
+            "icon": "🃏",
+            "title": "Lekcie od základov",
+            "description": "Naučte sa hodnoty kariet, kolá stávkovania a pravidlá stola v prehľadnom postupe krok za krokom."
+          },
+          {
+            "icon": "🎯",
+            "title": "Rozhodovanie v turnaji",
+            "description": "Zistite presne, kedy pasovať, vyrovnať alebo ísť all-in, aby ste prekonali svojich súperov."
+          },
+          {
+            "icon": "📊",
+            "title": "Sledujte tréningové partie",
+            "description": "Zaznamenajte každú odohranú hru a sledujte, kde sa váš výkon zlepšuje."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Môj pokrok"
+      },
+      "cta": {
+        "label": "Začať sa učiť zadarmo"
+      },
+      "dataGrid": {
+        "entityLabel": "Tréningová partie",
+        "fieldLabels": {
+          "date": "Dátum",
+          "game_type": "Typ hry",
+          "result": "Výsledok",
+          "duration": "Trvanie (min)",
+          "notes": "Poznámky"
         }
       }
     }
