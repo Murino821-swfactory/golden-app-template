@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Law expert",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,95 +13,155 @@
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {},
+    "dashboard": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "case",
         "fields": [
           {
-            "key": "name",
+            "key": "caseNumber",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "crimeType",
             "type": "select",
+            "required": true,
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "Majetkový",
+              "Násilný",
+              "Hospodársky",
+              "Korupčný",
+              "Iný"
             ]
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "courtName",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "decisionDate",
+            "type": "date",
+            "required": false
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "required": true,
+            "options": [
+              "Prebieha",
+              "Uzavreté",
+              "Odvolanie"
+            ]
+          },
+          {
+            "key": "notes",
+            "type": "longtext",
+            "required": false
           }
         ]
       }
     },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
+    "cta": {
+      "href": "/dashboard"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Law expert helps lawyers search judicial decisions and get consolidated recommendations on criminal cases — all in one place.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Find the right precedent before your opponent does",
+        "subheadline": "Law expert is built for lawyers who need to search judicial decisions and get a clear, consolidated opinion on a criminal act in minutes.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "icon": "🔍",
+            "title": "Judicial Decision Search",
+            "description": "Search across court decisions by keywords, crime type or date and retrieve the most relevant rulings immediately."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "⚖️",
+            "title": "Criminal Act Recommendation",
+            "description": "Get a consolidated legal opinion on the criminal act at hand, drawn directly from matching case law."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "📁",
+            "title": "Case Tracking",
+            "description": "Log every case you are researching, record the court, status and your notes, and filter the list at any time."
+          },
+          {
+            "icon": "📋",
+            "title": "Single-view Output",
+            "description": "Consolidate scattered database records into one readable output you can act on without switching tools."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "My Cases"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Case",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "caseNumber": "Case Number",
+          "crimeType": "Crime Type",
+          "courtName": "Court",
+          "decisionDate": "Decision Date",
+          "status": "Status",
+          "notes": "Notes"
         }
+      },
+      "cta": {
+        "label": "Start searching decisions"
+      }
+    },
+    "sk": {
+      "description": "Law expert pomáha advokátom vyhľadávať súdne rozhodnutia a získať konsolidované odporúčanie k trestnému činu — všetko na jednom mieste.",
+      "landing": {
+        "headline": "Správny precedens nájdete skôr, než ho hľadá protistrana",
+        "subheadline": "Law expert je určený advokátom, ktorí potrebujú prehľadať súdne rozhodnutia a získať jasné stanovisko k trestnému činu v priebehu minút.",
+        "features": [
+          {
+            "icon": "🔍",
+            "title": "Vyhľadávanie rozhodnutí",
+            "description": "Prehľadajte súdne rozhodnutia podľa kľúčových slov, typu trestného činu alebo dátumu a okamžite zobrazte relevantné nálezy."
+          },
+          {
+            "icon": "⚖️",
+            "title": "Odporúčanie k trestnému činu",
+            "description": "Získajte konsolidované právne stanovisko k danému trestnému činu, odvodené priamo z odpovedajúcej judikatúry."
+          },
+          {
+            "icon": "📁",
+            "title": "Správa prípadov",
+            "description": "Zaznamenajte každý prípad, na ktorom pracujete, uložte súd, stav a poznámky a kedykoľvek filtrujte zoznam."
+          },
+          {
+            "icon": "📋",
+            "title": "Prehľadný výstup",
+            "description": "Roztrúsené záznamy z databázy skombinujte do jedného čitateľného výstupu, s ktorým môžete ihneď pracovať."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Moje prípady"
+      },
+      "dataGrid": {
+        "entityLabel": "Prípad",
+        "fieldLabels": {
+          "caseNumber": "Číslo veci",
+          "crimeType": "Typ trestného činu",
+          "courtName": "Súd",
+          "decisionDate": "Dátum rozhodnutia",
+          "status": "Stav",
+          "notes": "Poznámky"
+        }
+      },
+      "cta": {
+        "label": "Začať vyhľadávať rozhodnutia"
       }
     }
   }
