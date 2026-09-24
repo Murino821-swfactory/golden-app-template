@@ -5,7 +5,7 @@
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "chartreuse-pastel-deep-teal-green"
   },
   "patterns": {
     "landing": {
@@ -68,8 +68,8 @@
         "features": [
           {
             "icon": "🎨",
-            "title": "Four color palettes",
-            "description": "Green, Yellow, Blue and Red schemes with WCAG AA-compliant contrast derived automatically."
+            "title": "Fifteen colour palettes",
+            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
           },
           {
             "icon": "🔧",

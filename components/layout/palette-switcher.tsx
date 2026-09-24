@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { COLOR_SCHEME_IDS, rolesFor, type ColorSchemeId } from "@/lib/color-schemes";
+import { COLOR_SCHEME_IDS, PALETTES, rolesFor, type ColorSchemeId } from "@/lib/color-schemes";
 import { config } from "@/lib/prototype-config";
 
 /**
@@ -19,13 +19,6 @@ import { config } from "@/lib/prototype-config";
 
 const STORAGE_KEY = "scheme";
 const CHANGE_EVENT = "scheme-change";
-
-const LABELS: Record<ColorSchemeId, string> = {
-  red: "Red",
-  blue: "Blue",
-  yellow: "Yellow",
-  green: "Green",
-};
 
 function subscribe(onStoreChange: () => void): () => void {
   window.addEventListener(CHANGE_EVENT, onStoreChange);
@@ -68,7 +61,7 @@ export function PaletteSwitcher() {
           type="button"
           role="radio"
           aria-checked={active === id}
-          aria-label={LABELS[id]}
+          aria-label={PALETTES[id].name}
           onClick={() => selectScheme(id)}
           // A 44px hit area around a 14px swatch: the target meets the mobile-first
           // minimum without the swatch itself growing into a button.

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { config } from "../lib/prototype-config";
-import { COLOR_SCHEME_IDS, rolesFor } from "../lib/color-schemes";
+import { COLOR_SCHEME_IDS, PALETTES, rolesFor } from "../lib/color-schemes";
 
 /**
  * The header is the only chrome every prototype shows on every page, so it is also the
@@ -12,13 +12,6 @@ import { COLOR_SCHEME_IDS, rolesFor } from "../lib/color-schemes";
  * name, introduced itself as the template. `<title>` was correct, which is why the smoke
  * suite never noticed.
  */
-
-const SCHEME_LABELS: Record<string, string> = {
-  red: "Red",
-  blue: "Blue",
-  yellow: "Yellow",
-  green: "Green",
-};
 
 /** A scheme the config does NOT ship as its default — so a click provably changes something. */
 const OTHER_SCHEME = COLOR_SCHEME_IDS.find((id) => id !== config.theme.colorScheme)!;
@@ -72,7 +65,7 @@ test.describe("colour scheme switcher", () => {
     );
 
     await page
-      .getByRole("radio", { name: SCHEME_LABELS[OTHER_SCHEME]! })
+      .getByRole("radio", { name: PALETTES[OTHER_SCHEME].name })
       .click();
 
     await expect(page.locator("html")).toHaveAttribute("data-scheme", OTHER_SCHEME);
@@ -83,7 +76,7 @@ test.describe("colour scheme switcher", () => {
 
   test("the choice survives a reload", async ({ page }) => {
     await page.goto("./");
-    await page.getByRole("radio", { name: SCHEME_LABELS[OTHER_SCHEME]! }).click();
+    await page.getByRole("radio", { name: PALETTES[OTHER_SCHEME].name }).click();
     await expect(page.locator("html")).toHaveAttribute("data-scheme", OTHER_SCHEME);
 
     await page.reload();
