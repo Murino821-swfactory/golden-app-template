@@ -1,0 +1,98 @@
+{
+  "appName": "Dvojjazyčné Demo",
+  "locales": ["en", "sk"],
+  "defaultLocale": "en",
+  "theme": { "colorScheme": "blue" },
+  "patterns": {
+    "landing": { "sections": ["hero", "features", "contact", "cta"] },
+    "dashboard": {},
+    "authGoogle": {},
+    "cta": { "href": "/login" },
+    "contactForm": {},
+    "dataGrid": {
+      "entity": {
+        "key": "booking",
+        "fields": [
+          { "key": "guest", "type": "text", "required": true },
+          { "key": "room", "type": "select", "options": ["Single", "Double", "Suite"] },
+          { "key": "arrives", "type": "date" },
+          { "key": "paid", "type": "boolean" }
+        ]
+      }
+    }
+  },
+  "content": {
+    "en": {
+      "description": "A prototype published in two languages: English at the bare URL, Slovak under /sk.",
+      "landing": {
+        "headline": "Two languages, one build",
+        "subheadline": "The same prototype, published in English and Slovak. The bare URL serves the default language; every other language gets its own path.",
+        "features": [
+          {
+            "icon": "🌍",
+            "title": "One URL per language",
+            "description": "The default language answers at the bare URL the customer was given. The rest are prefixed."
+          },
+          {
+            "icon": "🔤",
+            "title": "Chrome and copy, separately",
+            "description": "Buttons and labels come from the template's bundles; every word the customer chose comes from the config."
+          },
+          {
+            "icon": "🔗",
+            "title": "Findable in both",
+            "description": "Each document declares its own language and links to its translations, so a search engine can tell them apart."
+          }
+        ]
+      },
+      "dashboard": { "title": "Bookings" },
+      "cta": { "label": "Sign in to see the dashboard" },
+      "contactForm": { "heading": "Ask us anything", "submitLabel": "Send message" },
+      "dataGrid": {
+        "entityLabel": "Booking",
+        "fieldLabels": {
+          "guest": "Guest",
+          "room": "Room",
+          "arrives": "Arrives",
+          "paid": "Paid"
+        }
+      }
+    },
+    "sk": {
+      "description": "Prototyp publikovaný v dvoch jazykoch: angličtina na holej adrese, slovenčina pod /sk.",
+      "landing": {
+        "headline": "Dva jazyky, jeden build",
+        "subheadline": "Ten istý prototyp, publikovaný v angličtine a slovenčine. Holá adresa zobrazuje predvolený jazyk; každý ďalší má vlastnú cestu.",
+        "features": [
+          {
+            "icon": "🌍",
+            "title": "Jedna adresa na jazyk",
+            "description": "Predvolený jazyk odpovedá na holej adrese, ktorú zákazník dostal. Ostatné majú predponu."
+          },
+          {
+            "icon": "🔤",
+            "title": "Osobitne texty rozhrania a obsah",
+            "description": "Tlačidlá a popisky pochádzajú zo šablóny; každé slovo, ktoré si zákazník vybral, pochádza z konfigurácie."
+          },
+          {
+            "icon": "🔗",
+            "title": "Nájditeľné v oboch",
+            "description": "Každý dokument uvádza svoj jazyk a odkazuje na preklady, takže ich vyhľadávač vie rozlíšiť."
+          }
+        ]
+      },
+      "dashboard": { "title": "Rezervácie" },
+      "cta": { "label": "Prihláste sa a pozrite si prehľad" },
+      "contactForm": { "heading": "Opýtajte sa nás na čokoľvek", "submitLabel": "Odoslať správu" },
+      "dataGrid": {
+        "entityLabel": "Rezervácia",
+        "fieldLabels": {
+          "guest": "Hosť",
+          "room": "Izba",
+          "arrives": "Príchod",
+          "paid": "Zaplatené"
+        }
+      }
+    }
+  }
+}

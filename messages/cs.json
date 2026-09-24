@@ -1,0 +1,79 @@
+{
+  "common": {
+    "signIn": "Přihlásit se",
+    "signOut": "Odhlásit se",
+    "account": "Účet",
+    "dashboard": "Přehled",
+    "loading": "Načítání...",
+    "language": "Jazyk"
+  },
+  "auth": {
+    "signInTitle": "Přihlášení",
+    "signInDescription": "Pokračujte se svým účtem Google.",
+    "signInButton": "Přihlásit se přes Google",
+    "signInError": "Přihlášení se nezdařilo. Zkuste to prosím znovu."
+  },
+  "landing": {
+    "title": "Vaše aplikace",
+    "subtitle": "Postaveno na Golden Stacku",
+    "cta": "Začít"
+  },
+  "features": {
+    "title": "Funkce",
+    "item1": "První funkce",
+    "item1desc": "Popis první funkce",
+    "item2": "Druhá funkce",
+    "item2desc": "Popis druhé funkce",
+    "item3": "Třetí funkce",
+    "item3desc": "Popis třetí funkce"
+  },
+  "pricing": {
+    "title": "Ceník",
+    "free": "Ukázková úroveň jedna",
+    "pro": "Ukázková úroveň dvě",
+    "enterprise": "Ukázková úroveň tři"
+  },
+  "testimonials": {
+    "title": "Co lidé říkají",
+    "quote1": "Zástupný text — prototyp sem vloží vlastní slova zákazníka.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Zástupný text — tato sekce zatím nemá schéma obsahu.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Časté otázky",
+    "q1": "Zástupná otázka — tato sekce zatím nemá schéma obsahu.",
+    "a1": "Zástupná odpověď. Vlastní slova prototypu pocházejí z prototype.config.json."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-mail",
+    "message": "Zpráva",
+    "send": "Odeslat",
+    "sending": "Odesílání…",
+    "success": "Děkujeme — vaše zpráva je na cestě. Brzy se vám ozveme.",
+    "error": "Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.",
+    "notConfigured": "Kontaktní formulář není v tomto náhledu nastaven."
+  },
+  "cta": {
+    "title": "Pustíme se do toho?",
+    "subtitle": "Vlastní verzi spustíte během několika minut.",
+    "action": "Začít"
+  },
+  "dataGrid": {
+    "permissionDenied": "Tyto záznamy vidí jen ten, kdo si prototyp vyžádal.",
+    "loadError": "Záznamy se nepodařilo načíst. Zkuste to prosím za chvíli znovu.",
+    "addAction": "Přidat {entity}",
+    "saving": "Ukládání…",
+    "listHeading": "Záznamy: {entity}",
+    "empty": "Zatím žádné záznamy: {entity} — přidejte první výše.",
+    "remove": "Odstranit",
+    "yes": "Ano",
+    "no": "Ne"
+  },
+  "dashboard": {
+    "recordsLabel": "Záznamy: {entity}",
+    "addedThisMonth": "Přidáno tento měsíc",
+    "trackedFields": "Sledovaná pole"
+  }
+}

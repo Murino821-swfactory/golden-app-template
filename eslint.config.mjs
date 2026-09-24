@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // `npm run preview` stages the export here for basePath serving. It is gitignored, so
+    // CI never sees it — but locally it made `npm run lint` report ~9k problems in minified
+    // chunks, which is the same as having no lint at all.
+    ".preview/**",
   ]),
 ]);
 

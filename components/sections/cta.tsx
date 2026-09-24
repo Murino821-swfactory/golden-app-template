@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { config } from "@/lib/prototype-config";
+import { useContent } from "@/hooks/use-content";
 
 // The interactive half of the CTA — what it says and where it goes — is the `cta` pattern's
 // declared schema, so it comes from prototype.config.json. It used to come from the
@@ -14,7 +15,7 @@ const cta = config.patterns.cta;
 
 export function CtaSection() {
   const t = useTranslations("cta");
-  const label = cta?.label ?? t("action");
+  const label = useContent().cta?.label ?? t("action");
   const href = cta?.href ?? "#contact";
 
   return (

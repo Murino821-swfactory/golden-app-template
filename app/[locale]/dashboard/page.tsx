@@ -1,10 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { DailyCheckin, StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useRecords } from "@/hooks/use-records";
+import { useContent, useEntityFields } from "@/hooks/use-content";
 import { config } from "@/lib/prototype-config";
 
 /**
@@ -14,13 +16,14 @@ import { config } from "@/lib/prototype-config";
  * own code, and the check-in is what its signed-in page is for.
  */
 
-const dashboard = config.patterns.dashboard;
 const hasGrid = config.patterns.dataGrid !== undefined;
 const hasMap = config.patterns.mapBase !== undefined;
 
 function Stats() {
   const { records, entityLabel, loading } = useRecords();
+  const fieldCount = useEntityFields().length;
   const total = loading ? "—" : records.length;
+  const t = useTranslations("dashboard");
 
   const thisMonth = loading
     ? "—"
@@ -34,18 +37,16 @@ function Stats() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <StatCard value={total} label={`${entityLabel} records`} icon="📋" />
-      <StatCard value={thisMonth} label="Added this month" icon="📈" />
-      <StatCard
-        value={config.patterns.dataGrid?.entity.fields.length ?? 0}
-        label="Tracked fields"
-        icon="🏷️"
-      />
+      <StatCard value={total} label={t("recordsLabel", { entity: entityLabel })} icon="📋" />
+      <StatCard value={thisMonth} label={t("addedThisMonth")} icon="📈" />
+      <StatCard value={fieldCount} label={t("trackedFields")} icon="🏷️" />
     </div>
   );
 }
 
 function DashboardContent() {
+  const dashboard = useContent().dashboard;
+
   return (
     <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
       <header>

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { config } from "../lib/prototype-config";
+import { config, contentFor } from "../lib/prototype-config";
 
 /**
  * Smoke suite asserts the CUSTOMER'S app, not this template's identity.
@@ -12,6 +12,8 @@ import { config } from "../lib/prototype-config";
 
 const landing = config.patterns.landing;
 const cta = config.patterns.cta;
+// Copy is per-locale now; one build still ships one document, in the default locale.
+const copy = contentFor(config);
 
 test.describe("Smoke tests", () => {
   test("landing page carries the configured identity", async ({ page }) => {
@@ -19,7 +21,7 @@ test.describe("Smoke tests", () => {
     await expect(page).toHaveTitle(config.appName);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       "content",
-      config.description
+      copy.description
     );
   });
 
@@ -36,7 +38,7 @@ test.describe("Smoke tests", () => {
   test("CTA shows the configured label", async ({ page }) => {
     test.skip(!cta, "cta pattern not enabled in this config");
     await page.goto("./");
-    await expect(page.getByRole("link", { name: cta!.label }).first()).toBeVisible();
+    await expect(page.getByRole("link", { name: copy.cta!.label }).first()).toBeVisible();
   });
 
   test("landing page has no console errors", async ({ page }) => {
@@ -63,9 +65,16 @@ test.describe("Smoke tests", () => {
     await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
   });
 
-  test("playground params apply", async ({ page }) => {
-    await page.goto(`./?sections=hero,features&palette=${config.theme.colorScheme}`);
-    await expect(page.locator("[data-section='hero']")).toBeVisible();
-    await expect(page.locator("[data-section='features']")).toBeVisible();
+  test("URL section params cannot override the section lock", async ({ page }) => {
+    test.skip(!landing, "landing pattern not enabled in this config");
+    // testimonials/pricing/faq are locked out of the model's choice (validateComposition)
+    // because they have no content slice and would render this repo's placeholder copy.
+    // The renderer must honour that lock too, not just the harness that assigned sections.
+    await page.goto("./?sections=testimonials,pricing,faq");
+
+    const rendered = await page.locator("[data-section]").evaluateAll((nodes) =>
+      nodes.map((n) => n.getAttribute("data-section"))
+    );
+    expect(rendered).toEqual(landing!.sections);
   });
 });

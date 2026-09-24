@@ -1,0 +1,79 @@
+{
+  "common": {
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "account": "Cuenta",
+    "dashboard": "Panel",
+    "loading": "Cargando...",
+    "language": "Idioma"
+  },
+  "auth": {
+    "signInTitle": "Iniciar sesión",
+    "signInDescription": "Continúa con tu cuenta de Google.",
+    "signInButton": "Iniciar sesión con Google",
+    "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo."
+  },
+  "landing": {
+    "title": "Tu aplicación",
+    "subtitle": "Creado con el Golden Stack",
+    "cta": "Empezar"
+  },
+  "features": {
+    "title": "Funciones",
+    "item1": "Función uno",
+    "item1desc": "Descripción de la primera función",
+    "item2": "Función dos",
+    "item2desc": "Descripción de la segunda función",
+    "item3": "Función tres",
+    "item3desc": "Descripción de la tercera función"
+  },
+  "pricing": {
+    "title": "Precios",
+    "free": "Nivel de ejemplo uno",
+    "pro": "Nivel de ejemplo dos",
+    "enterprise": "Nivel de ejemplo tres"
+  },
+  "testimonials": {
+    "title": "Lo que dicen",
+    "quote1": "Texto de relleno — un prototipo pone aquí las palabras del cliente.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Texto de relleno — esta sección aún no tiene esquema de contenido.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "q1": "Pregunta de relleno — esta sección aún no tiene esquema de contenido.",
+    "a1": "Respuesta de relleno. Las palabras propias de un prototipo vienen de prototype.config.json."
+  },
+  "contact": {
+    "title": "Contacto",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "success": "Gracias — tu mensaje va en camino. Te responderemos pronto.",
+    "error": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+    "notConfigured": "El formulario de contacto no está configurado en esta vista previa."
+  },
+  "cta": {
+    "title": "¿Listo para empezar?",
+    "subtitle": "Pon en marcha tu propia versión en minutos.",
+    "action": "Empezar"
+  },
+  "dataGrid": {
+    "permissionDenied": "Solo quien solicitó este prototipo puede ver estos registros.",
+    "loadError": "No se pudieron cargar tus registros. Inténtalo de nuevo en un momento.",
+    "addAction": "Añadir {entity}",
+    "saving": "Guardando…",
+    "listHeading": "Registros: {entity}",
+    "empty": "Aún no hay registros: {entity} — añade el primero arriba.",
+    "remove": "Eliminar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "dashboard": {
+    "recordsLabel": "Registros: {entity}",
+    "addedThisMonth": "Añadidos este mes",
+    "trackedFields": "Campos registrados"
+  }
+}

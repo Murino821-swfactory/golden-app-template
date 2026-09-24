@@ -11,18 +11,59 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { z } from "zod";
-import { PATTERN_SCHEMAS, prototypeConfigSchema } from "../lib/prototype-config";
+import {
+  CONTENT_SCHEMAS,
+  LOCALES,
+  LOCALE_DESCRIPTION_SCHEMA,
+  PATTERN_PURPOSE,
+  PATTERN_SCHEMAS,
+  SECTION_COPY_SOURCE,
+  modelSelectableSections,
+  prototypeConfigSchema,
+} from "../lib/prototype-config";
 
 // `io: "input"` describes what a producer must SEND. Without it, fields carrying a zod
 // default (entityField.required) are emitted as required output fields, and the content
 // agent would be told to supply something it is allowed to omit.
 const toJson = (schema: z.ZodType) => z.toJSONSchema(schema, { io: "input" });
 
+// Two sections because a config has two halves. `patterns` is what a prototype IS and is
+// written once; `content` is what it SAYS and is written per locale. The harness embeds
+// both in the content prompt, so asking for one shape and enforcing another is impossible
+// by construction.
 const document = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
+  // The MENU: what there is to choose from, and what to choose on. `patterns` and
+  // `content` below describe the shape of an answer; none of it says what a pattern is
+  // FOR, which is all a model composing a prototype actually needs. Sections are listed
+  // separately from the enum in `patterns.landing` because the template can render more of
+  // them than a model may pick — one with no content slice would fall back to this repo's
+  // own placeholder copy on a customer's page.
+  menu: {
+    patterns: Object.fromEntries(
+      Object.entries(PATTERN_PURPOSE).map(([id, purpose]) => [id, { purpose }])
+    ),
+    sections: {
+      selectable: modelSelectableSections(),
+      copySource: SECTION_COPY_SOURCE,
+    },
+    // The languages this template can actually render — one id per `messages/*.json`.
+    // It is here, in the MENU, rather than only inside `root.locales`'s enum because the
+    // harness asks the menu what there is to choose from; it reads this list instead of
+    // keeping its own. The copy it used to keep named `it`, which nothing offers, and
+    // omitted `hu`, which the wizard does — so a customer who picked Hungarian was
+    // filtered down to English without being told.
+    locales: [...LOCALES],
+  },
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
   ),
+  content: {
+    description: toJson(LOCALE_DESCRIPTION_SCHEMA),
+    ...Object.fromEntries(
+      Object.entries(CONTENT_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
+    ),
+  },
   root: toJson(prototypeConfigSchema),
 };
 

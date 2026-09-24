@@ -38,8 +38,5 @@
         ]
       }
     ]
-  },
-  "firestore": {
-    "rules": "firestore.rules"
   }
 }

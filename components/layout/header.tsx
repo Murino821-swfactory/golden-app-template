@@ -1,26 +1,50 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
-import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
+import { useLocale } from "next-intl";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
+import { PaletteSwitcher } from "@/components/layout/palette-switcher";
+import { UserMenu } from "@/components/layout/user-menu";
 import { config } from "@/lib/prototype-config";
+import { localePath } from "@/lib/locale-routing";
 
+/**
+ * The header every page of a prototype shows.
+ *
+ * Contents are deliberately three controls and a name — palette, sign-in, and, when the
+ * prototype ships more than one locale, the language switcher. No nav: a prototype has
+ * two or three routes, and a menu over them is chrome pretending to be a product.
+ *
+ * The name comes from `prototype.config.json`. It used to come from `messages/en.json`,
+ * whose `common.appName` is the string "Golden App" — so every prototype, whatever the
+ * customer named it, introduced itself as the template in its own header and footer. The
+ * `<title>` was right, which is exactly why the smoke suite never saw it.
+ */
 export function Header() {
-  const t = useTranslations("common");
-  const { user, loading } = useAuth();
+  // Home in the language on screen: from `/sk/login` the name has to lead back to `/sk`,
+  // not to the default locale's landing page.
+  const locale = useLocale();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="font-heading text-sm font-semibold">
-          {config.appName}
-        </Link>
-        <Button asChild size="sm" variant={user ? "outline" : "default"}>
-          <Link href={user ? "/dashboard" : "/login"}>
-            {loading ? t("loading") : user ? t("dashboard") : t("signIn")}
-          </Link>
-        </Button>
+    <header
+      className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 py-3 backdrop-blur-sm"
+      style={{
+        background: "color-mix(in srgb, var(--background) 88%, transparent)",
+        paddingLeft: "var(--gutter)",
+        paddingRight: "var(--gutter)",
+      }}
+    >
+      <Link
+        href={localePath(locale)}
+        className="font-heading text-sm font-semibold tracking-tight text-foreground"
+      >
+        {config.appName}
+      </Link>
+
+      <div className="flex items-center gap-1">
+        <LanguageSwitcher />
+        <PaletteSwitcher />
+        {config.patterns.authGoogle !== undefined && <UserMenu />}
       </div>
     </header>
   );

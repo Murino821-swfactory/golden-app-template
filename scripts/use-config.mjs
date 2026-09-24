@@ -5,7 +5,7 @@
  * repo ONLY by this file. If the template builds green for the shipped config but breaks
  * for one a customer could pick, the build gate is theatre.
  *
- * Usage: node scripts/use-config.mjs <minimal|full|default>
+ * Usage: node scripts/use-config.mjs <minimal|full|composed|default>
  *
  * "default" means "whatever is checked in" and is a no-op — correct in CI, where every
  * matrix job starts from a fresh checkout. Locally, after swapping to a fixture, restore

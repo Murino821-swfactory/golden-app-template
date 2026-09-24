@@ -8,7 +8,7 @@ This branch is one customer's app, not the template. Code specific to it:
 
 | What | Where |
 |---|---|
-| Daily five-pillar check-in (OTH-84) — public page, no sign-in | `app/(public)/checkin/page.tsx` → `components/features/daily-checkin.tsx` |
+| Daily five-pillar check-in (OTH-84) — public page, no sign-in | `app/[locale]/checkin/page.tsx` (bare path: re-export in `app/(default)/checkin/`) → `components/features/daily-checkin.tsx` |
 | Week radar + month heatmap (inline SVG / CSS grid, no chart library) | `components/features/checkin-charts.tsx` |
 | Engine: streaks (per pillar and all five), 7/30-day consistency, week balance, month grid, log parsing | `lib/checkin-engine.ts` |
 | localStorage store (`unbroken:checkins:v1`) via `useSyncExternalStore` | `hooks/use-checkin-log.ts` |
@@ -21,15 +21,23 @@ subheadline says the same). The check-in also renders on `/dashboard`; the landi
 check-in) and the `mapBase` (New York) were removed from the config with OTH-84. Header and
 footer read `config.appName`, not `messages/en.json`.
 
+> **Staleness warning (2026-09-17).** Most of the recipes below were written for the era
+> when a Developer agent wrote code into this template per customer. That agent was
+> removed in Wave 2 (2026-09-14): a prototype is now **assembled** from
+> `prototype.config.json`, and no model writes code here at all. Treat the recipes as
+> history until they are rewritten. What is current: the structure table, the config
+> contract, the theming section and the commands.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
 |-------------|-----------------|
-| Landing copy | `messages/en.json` only |
-| Add dashboard | Create `app/dashboard/page.tsx` (see Recipe 6) |
-| Add checkins | Use `hooks/use-checkins.ts` + pre-built components |
-| Add/remove sections | `lib/playground.ts` + `app/(public)/page.tsx` |
-| Custom section | Create in `components/sections/` |
+| App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
+| Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
+| Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
+| Which sections render | `prototype.config.json` → `patterns.landing.sections` |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
+| Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 
 ## Critical Rules for Fast Implementation
 
@@ -38,6 +46,30 @@ footer read `config.appName`, not `messages/en.json`.
 3. **Read a file ONLY when you're about to edit it** — one read, one edit
 4. **Batch all changes to a file in ONE Edit call** — no read-edit-read-edit loops
 
+## The config splits in two — learn this before editing anything
+
+`prototype.config.json` has two halves, divided by ONE question: *does this value change
+when the language changes?*
+
+| | What | Written |
+|---|---|---|
+| `patterns` | what the prototype **is** — which patterns, which sections, entity field keys and types, map centre | once, whatever the language |
+| `content.<locale>` | what it **says** — headline, labels, meta description | once per language |
+
+So an entity's `fields[].key` and `.type` are in `patterns`, and that field's human label
+is in `content.<locale>.dataGrid.fieldLabels`. Components get copy from `useContent()` and
+merged grid fields from `useEntityFields()` (`hooks/use-content.ts`), both of which read
+`useLocale()` — so nothing needs editing when a build ships more than one language.
+
+A pattern is enabled iff its **`patterns`** slice exists. zod then requires the matching
+content slice in **every** declared locale, so a language can never be offered and then
+render blank.
+
+Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
+still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
+only for the window before the harness is deployed — do not write new configs in the old
+shape.
+
 ## Tech Stack (Golden Stack)
 
 - **Framework:** Next.js 16, App Router, static export (`output: 'export'`)
@@ -45,28 +77,38 @@ footer read `config.appName`, not `messages/en.json`.
 - **Styling:** Tailwind CSS 4 + shadcn/ui + Radix primitives
 - **Auth:** Firebase Authentication (Google Sign-In) — already implemented
 - **Database:** Cloud Firestore — use `getCollectionPath()` for demo namespacing
-- **i18n:** next-intl — all user text in `messages/en.json`
+- **i18n:** next-intl, **routed** — one document per declared language. The bundles in
+  `messages/<locale>.json` are chrome only (Sign in, Dashboard, Loading); the customer's
+  own words — app name, headline, features, CTA label — live in `prototype.config.json`.
+  Mixing the two is how every prototype ended up with "Golden App" in its header while its
+  `<title>` was correct. See "Languages and routing" below for which URL serves which.
 
 ## Project Structure (MEMORIZE — DO NOT EXPLORE)
 
 ```
 app/
-  (public)/page.tsx      # Landing page — renders sections from SECTION_REGISTRY
-  login/page.tsx         # Login page (already implemented)
+  shell.tsx              # The <html> document, in one language — both root layouts render it
+  (default)/             # The BARE path: /, /login, /dashboard — the default locale
+    layout.tsx           #   root layout #1
+    page.tsx             #   one-line re-exports of the [locale] modules
+  [locale]/              # The prefixed languages: /sk, /sk/login, /sk/dashboard
+    layout.tsx           #   root layout #2 + generateStaticParams
+    page.tsx             # Landing page — renders sections from SECTION_REGISTRY
+    login/page.tsx       # Login page (already implemented)
+    dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
 components/
   sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
-  layout/                # header.tsx, footer.tsx
+  layout/                # header.tsx, footer.tsx, palette-switcher.tsx, user-menu.tsx
 hooks/
   use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
-  playground.ts          # DEFAULT_CONFIG, parsePlaygroundParams()
   utils.ts               # cn() for className merging
 messages/
-  en.json                # All user-facing text (translate by copying to sk.json etc.)
+  en.json + 7 more       # Chrome text, one bundle per id in LOCALES (en sk cs de pl hu fr es)
 types/
   index.ts               # User, DemoConfig interfaces
 ```
@@ -152,7 +194,7 @@ export function useCheckin() {
 
 ### Recipe 3: Add New Section
 
-**Files to modify:** `components/sections/new-section.tsx` (create), `app/(public)/page.tsx`, `lib/playground.ts`, `messages/en.json`
+**Files to modify:** `components/sections/new-section.tsx` (create), `app/[locale]/page.tsx`, every `messages/*.json`
 
 1. Create component in `components/sections/`:
 ```tsx
@@ -169,19 +211,20 @@ export function NewSection() {
 }
 ```
 
-2. In `app/(public)/page.tsx` — add to SECTION_REGISTRY:
+2. In `app/[locale]/page.tsx` — add to SECTION_REGISTRY:
 ```tsx
 import { NewSection } from "@/components/sections/new-section";
 // In SECTION_REGISTRY:
 newSection: NewSection,
 ```
 
-3. In `lib/playground.ts` — add to DEFAULT_SECTIONS:
-```tsx
-const DEFAULT_SECTIONS = ["hero", "features", "newSection", "cta"];
-```
+3. In `lib/prototype-config.ts` — add the id to `SECTION_IDS`. It is a closed enum on
+   purpose: a section id nothing renders must fail the build, not render nothing. Then run
+   `npm run schema` so the harness asks for the same set (CI fails if you forget).
 
-4. In `messages/en.json` — add translations:
+4. In **every** `messages/*.json` — add the key. `tests/locale.spec.ts` fails if one
+   bundle carries a key another does not; a missing key renders the raw key path on a
+   customer's page.
 ```json
 "newSection": {
   "title": "New Section Title"
@@ -207,9 +250,13 @@ export default function ProtectedPage() {
 
 ### Recipe 5: Update Landing Copy
 
-**Files to modify:** `messages/en.json` ONLY
+**Files to modify:** `prototype.config.json` ONLY
 
-Just edit the JSON values. The components already read from it via `useTranslations()`.
+`content.<locale>.landing.headline`, `.subheadline`, `.features[]`,
+`content.<locale>.cta.label`, and `appName` at the root. The components read the config
+through `useContent()` and fall back to `messages/<locale>.json` only when a value is
+absent — that fallback is placeholder text for local dev, never something a customer
+should see.
 
 ## Pre-built Feature Components
 
@@ -223,48 +270,22 @@ These are ready to use — just import and render:
 | `ProgressRing` | `@/components/features` | `progress: number (0-100)`, `label?: string` |
 | `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` |
 
-## Pre-built Hook: use-checkins.ts (READY TO USE)
-
-Complete working hook with streak calculation and Firestore persistence:
-
-```tsx
-import { useCheckins } from "@/hooks/use-checkins";
-
-const { checkins, todayCheckins, currentStreak, loading, doCheckin } = useCheckins();
-```
-
 ### Recipe 6: Add Dashboard Page (MOST COMMON)
 
-**Create:** `app/dashboard/page.tsx`
+**Create:** `app/[locale]/dashboard/page.tsx`
 
 ```tsx
 "use client";
 
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { useCheckins } from "@/hooks/use-checkins";
-import { CheckinToggle, StreakCounter, CalendarGrid } from "@/components/features";
-
-const PILLARS = ["Sleep", "Exercise", "Nutrition", "Mindfulness", "Hydration"];
-
-function DashboardContent() {
-  const { todayCheckins, currentStreak, checkins, doCheckin, loading } = useCheckins();
-  
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
-  
-  return (
-    <div className="mx-auto max-w-2xl space-y-8 p-6">
-      <h1 className="text-2xl font-bold text-center">Your Dashboard</h1>
-      <StreakCounter currentStreak={currentStreak} />
-      <CheckinToggle pillars={PILLARS} checkedToday={todayCheckins} onCheckin={doCheckin} />
-      <CalendarGrid checkedDates={checkins.map(c => c.date)} />
-    </div>
-  );
-}
 
 export default function DashboardPage() {
   return (
     <AuthGuard>
-      <DashboardContent />
+      <div className="mx-auto max-w-2xl space-y-8 p-6">
+        <h1 className="text-2xl font-bold text-center">Your Dashboard</h1>
+        {/* Your dashboard content here */}
+      </div>
     </AuthGuard>
   );
 }
@@ -285,7 +306,52 @@ Import from `@/components/ui/`:
 `NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
 Always use `getCollectionPath(collection)` — never hardcode collection names.
 
+## Languages and routing
+
+A prototype declares `locales` and `defaultLocale` in `prototype.config.json`, and the
+build emits one document per language.
+
+| Language | URL |
+|---|---|
+| `defaultLocale` | the **bare** path — `/`, `/login`, `/dashboard` |
+| every other declared locale | prefixed — `/sk`, `/sk/login`, `/sk/dashboard` |
+
+The default locale stays at the bare path because that is the URL the customer is given
+(`tokenwise.sk/newapp/<slug>/`), and because the harness reads `out/index.html` and refuses
+to publish a build where it is not a real document with this build's `basePath` assets
+(`verifyExportBasePath`). A redirect stub at the root would fail that gate. The full
+reasoning, including why there are two root layouts and no `app/layout.tsx`, is in
+`lib/locale-routing.ts`.
+
+Consequences when editing:
+
+- **Never write a bare `/login` or `/dashboard` href.** Use `localePath(locale, route)`
+  from `lib/locale-routing.ts`, or a Slovak visitor silently lands in English.
+- `LOCALES` in `lib/prototype-config.ts` may only name ids that have a `messages/*.json`
+  bundle. `npm run schema` publishes the list as `menu.locales` and the harness reads it
+  from there — the wizard and the harness keep no copy.
+- One declared language means no language switcher at all, and no hreflang alternates.
+- `fixtures/full.config.json` and `fixtures/multilingual.config.json` both declare two
+  locales, so both CI jobs exercise locale routing.
+
+## Firestore rules — owned by factory-web, not here
+
+This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
+for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`,
+which binds each slug to the prototype's requester email (`demoOwnerEmail`) plus the
+founder — never re-add a copy here. A second copy of the same rule can only drift, and the
+weaker one is the one that eventually deploys: this repo previously shipped one that
+granted read/write on every prototype's data to any signed-in user of any prototype,
+latent only because `deploy:production` is hosting-only here.
+
 ## Tailwind Colors (DO NOT HARDCODE)
+
+All four palettes ship in every build as `html[data-scheme="<id>"]` rules
+(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's switcher changes the
+palette by writing that attribute — so a hardcoded colour is not merely off-brand, it is
+the one thing on the page that will not repaint when the visitor switches. The choice
+persists in `localStorage`; `prototype.config.json` still decides what a first-time
+visitor sees.
 
 Use semantic tokens — they adapt to the customer's palette:
 - `bg-background`, `text-foreground` — main surface

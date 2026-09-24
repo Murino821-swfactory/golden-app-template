@@ -135,12 +135,33 @@ export function rolesFor(id: ColorSchemeId): SchemeRoles {
 }
 
 /**
- * Roles mapped onto the shadcn token set the components already use. Returned as inline
- * custom properties for `<html>`, which is why no palette needs its own CSS block and why
- * the harness never has to rewrite `globals.css`.
+ * Roles mapped onto the shadcn token set the components already use. The harness never
+ * has to rewrite `globals.css`: a palette is data here, and `cssBlocksForAll` turns all of
+ * them into CSS at build time.
  */
 export function cssVariablesFor(id: ColorSchemeId): Record<string, string> {
-  const r = rolesFor(id);
+  return variablesFrom(rolesFor(id));
+}
+
+/**
+ * Every palette as a CSS rule keyed by `data-scheme`, so switching one is an attribute
+ * write rather than a rebuild. `html[data-scheme="x"]` is (0,1,1), which outranks both
+ * `:root` and `.dark` in globals.css — no `!important`, no ordering dependency.
+ *
+ * Calling `cssVariablesFor` for all four also runs `assertReadable` four times at build,
+ * which is the point: before this, only the palette a prototype happened to ship was
+ * checked by the build, and the other three were covered by the test suite alone.
+ */
+export function cssBlocksForAll(): string {
+  return COLOR_SCHEME_IDS.map((id) => {
+    const body = Object.entries(cssVariablesFor(id))
+      .map(([name, value]) => `${name}:${value}`)
+      .join(";");
+    return `html[data-scheme="${id}"]{${body}}`;
+  }).join("");
+}
+
+function variablesFrom(r: SchemeRoles): Record<string, string> {
   return {
     "--background": r.background,
     "--foreground": r.foreground,
