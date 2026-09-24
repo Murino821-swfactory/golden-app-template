@@ -14,7 +14,7 @@
         "contact"
       ],
       "headline": "One missed day won't break you.",
-      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Nutrition, Sleep, and Health in under ten seconds a day.",
+      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Mind, Relationships and Habits in under ten seconds a day.",
       "features": [
         {
           "icon": "✓",
@@ -44,62 +44,11 @@
     "authGoogle": {},
     "cta": {
       "label": "Start your first check-in",
-      "href": "/signup"
+      "href": "/checkin"
     },
     "contactForm": {
       "heading": "Get in touch",
       "submitLabel": "Send message"
-    },
-    "dataGrid": {
-      "entity": {
-        "key": "checkin",
-        "label": "Daily Check-In",
-        "fields": [
-          {
-            "key": "date",
-            "label": "Date",
-            "type": "date",
-            "required": true
-          },
-          {
-            "key": "work",
-            "label": "Work",
-            "type": "boolean",
-            "required": false
-          },
-          {
-            "key": "fitness",
-            "label": "Fitness",
-            "type": "boolean",
-            "required": false
-          },
-          {
-            "key": "nutrition",
-            "label": "Nutrition",
-            "type": "boolean",
-            "required": false
-          },
-          {
-            "key": "sleep",
-            "label": "Sleep",
-            "type": "boolean",
-            "required": false
-          },
-          {
-            "key": "health",
-            "label": "Health",
-            "type": "boolean",
-            "required": false
-          }
-        ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 40.7128,
-        "lng": -74.006
-      },
-      "zoom": 3
     }
   }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { StatCard } from "@/components/features";
+import { DailyCheckin, StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useRecords } from "@/hooks/use-records";
@@ -9,7 +9,9 @@ import { config } from "@/lib/prototype-config";
 
 /**
  * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
- * a pattern renders iff its config slice is present. No prototype-specific code.
+ * a pattern renders iff its config slice is present. No prototype-specific code —
+ * except `DailyCheckin` (OTH-84): this branch (demo/unbroken) is the unbroken prototype's
+ * own code, and the check-in is what its signed-in page is for.
  */
 
 const dashboard = config.patterns.dashboard;
@@ -45,12 +47,14 @@ function Stats() {
 
 function DashboardContent() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
+    <div className="mx-auto w-full max-w-6xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
       <header>
         <h1 className="text-2xl font-semibold sm:text-3xl">
           {dashboard?.title ?? config.appName}
         </h1>
       </header>
+
+      <DailyCheckin />
 
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}
