@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { StatCard } from "@/components/features";
+import { CvMatcher, StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useRecords } from "@/hooks/use-records";
@@ -10,7 +10,9 @@ import { config } from "@/lib/prototype-config";
 
 /**
  * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
- * a pattern renders iff its config slice is present. No prototype-specific code.
+ * a pattern renders iff its config slice is present. No prototype-specific code —
+ * except `CvMatcher` (OTH-85): this branch (demo/cv-matcher) is the cv-matcher prototype's
+ * own code, and the matcher is what its signed-in page is for.
  */
 
 const hasGrid = config.patterns.dataGrid !== undefined;
@@ -45,11 +47,13 @@ function DashboardContent() {
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
-      <header>
+      <header className="print:hidden">
         <h1 className="text-2xl font-semibold sm:text-3xl">
           {dashboard?.title ?? config.appName}
         </h1>
       </header>
+
+      <CvMatcher />
 
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}

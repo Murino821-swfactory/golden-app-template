@@ -21,7 +21,7 @@
     "dashboard": {},
     "authGoogle": {},
     "cta": {
-      "href": "/signup"
+      "href": "/analyze"
     },
     "contactForm": {}
   },
