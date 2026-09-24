@@ -2,6 +2,25 @@
 
 Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EXPLORE.**
 
+## This prototype — unbroken (branch `demo/unbroken`)
+
+This branch is one customer's app, not the template. Code specific to it:
+
+| What | Where |
+|---|---|
+| Daily five-pillar check-in (OTH-84) — public page, no sign-in | `app/(public)/checkin/page.tsx` → `components/features/daily-checkin.tsx` |
+| Week radar + month heatmap (inline SVG / CSS grid, no chart library) | `components/features/checkin-charts.tsx` |
+| Engine: streaks (per pillar and all five), 7/30-day consistency, week balance, month grid, log parsing | `lib/checkin-engine.ts` |
+| localStorage store (`unbroken:checkins:v1`) via `useSyncExternalStore` | `hooks/use-checkin-log.ts` |
+| Every string it shows (EN default, SK) | `lib/checkin-copy.ts` |
+| Tests | `tests/checkin-engine.spec.ts` (logic, no page), `tests/checkin.spec.ts` (UI) |
+
+Pillars are Work, Fitness, Mind, Relationships, Habits (from OTH-84 — the landing
+subheadline says the same). The check-in also renders on `/dashboard`; the landing CTA
+(`patterns.cta.href`) points to `/checkin`. The Firestore `dataGrid` (a second, different
+check-in) and the `mapBase` (New York) were removed from the config with OTH-84. Header and
+footer read `config.appName`, not `messages/en.json`.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
