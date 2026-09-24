@@ -2,7 +2,7 @@
   "appName": "Dvojjazyčné Demo",
   "locales": ["en", "sk"],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "blue" },
+  "theme": { "colorScheme": "burnt-orange-vanilla" },
   "patterns": {
     "landing": { "sections": ["hero", "features", "contact", "cta"] },
     "dashboard": {},
