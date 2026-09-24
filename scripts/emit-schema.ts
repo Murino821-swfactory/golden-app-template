@@ -13,8 +13,12 @@ import { resolve } from "node:path";
 import { z } from "zod";
 import {
   CONTENT_SCHEMAS,
+  LOCALES,
   LOCALE_DESCRIPTION_SCHEMA,
+  PATTERN_PURPOSE,
   PATTERN_SCHEMAS,
+  SECTION_COPY_SOURCE,
+  modelSelectableSections,
   prototypeConfigSchema,
 } from "../lib/prototype-config";
 
@@ -29,6 +33,28 @@ const toJson = (schema: z.ZodType) => z.toJSONSchema(schema, { io: "input" });
 // by construction.
 const document = {
   $schema: "https://json-schema.org/draft/2020-12/schema",
+  // The MENU: what there is to choose from, and what to choose on. `patterns` and
+  // `content` below describe the shape of an answer; none of it says what a pattern is
+  // FOR, which is all a model composing a prototype actually needs. Sections are listed
+  // separately from the enum in `patterns.landing` because the template can render more of
+  // them than a model may pick — one with no content slice would fall back to this repo's
+  // own placeholder copy on a customer's page.
+  menu: {
+    patterns: Object.fromEntries(
+      Object.entries(PATTERN_PURPOSE).map(([id, purpose]) => [id, { purpose }])
+    ),
+    sections: {
+      selectable: modelSelectableSections(),
+      copySource: SECTION_COPY_SOURCE,
+    },
+    // The languages this template can actually render — one id per `messages/*.json`.
+    // It is here, in the MENU, rather than only inside `root.locales`'s enum because the
+    // harness asks the menu what there is to choose from; it reads this list instead of
+    // keeping its own. The copy it used to keep named `it`, which nothing offers, and
+    // omitted `hu`, which the wizard does — so a customer who picked Hungarian was
+    // filtered down to English without being told.
+    locales: [...LOCALES],
+  },
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])
   ),

@@ -55,13 +55,10 @@ export async function ensureAuthPersistence(): Promise<void> {
   }
 }
 
-/**
- * Demo-tenant mode: when NEXT_PUBLIC_DEMO_SLUG is set, all Firestore paths
- * are namespaced under demos/{slug}/...
- */
-export function getDemoSlug(): string | null {
-  return process.env.NEXT_PUBLIC_DEMO_SLUG || null;
-}
+import { getDemoSlug } from "./demo-slug";
+
+// Re-export for existing consumers — new code should import from lib/demo-slug directly.
+export { getDemoSlug };
 
 export function getCollectionPath(collection: string): string {
   const slug = getDemoSlug();

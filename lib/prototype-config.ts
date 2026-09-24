@@ -35,11 +35,21 @@ import { COLOR_SCHEME_IDS } from "./color-schemes";
 export const COLOR_SCHEMES = COLOR_SCHEME_IDS;
 
 /**
- * The languages a prototype can be published in. Closed enum: a locale with no message
- * bundle would render the template's English chrome under the customer's foreign copy,
- * which reads as a bug rather than as a missing translation.
+ * The languages a prototype can be published in — exactly the ids with a bundle in
+ * `messages/`. Closed enum: a locale with no bundle would render the template's English
+ * chrome under the customer's foreign copy, which reads as a bug rather than as a missing
+ * translation.
+ *
+ * **An id may not appear here until `messages/<id>.json` exists.** `tests/locale.spec.ts`
+ * asserts the two sets are equal, in both directions, because this list used to be an
+ * aspiration: it named eight languages while `messages/` held one, and the harness kept a
+ * copy of it whose comment claimed the bundles existed. A customer who picked Hungarian —
+ * which the wizard offered and this list did not — was silently given English.
+ *
+ * `npm run schema` publishes the list as `menu.locales` in `prototype.schema.json`, and the
+ * harness reads it from the clone. There is no second copy to keep in step.
  */
-export const LOCALES = ["en", "sk", "cs", "de", "pl", "es", "fr", "it"] as const;
+export const LOCALES = ["en", "sk", "cs", "de", "pl", "hu", "fr", "es"] as const;
 export type Locale = (typeof LOCALES)[number];
 
 /** Landing sections that exist in `components/sections/`. A closed enum on purpose: an
@@ -53,6 +63,8 @@ export const SECTION_IDS = [
   "contact",
   "cta",
 ] as const;
+
+export type SectionId = (typeof SECTION_IDS)[number];
 
 /** Field types the generic `data-grid` and `map-base` patterns can render. Closed enum —
  * a new type is a deliberate decision with a decision record, not a config typo. */
@@ -107,9 +119,18 @@ const featureSchema = z.object({
 export type Feature = z.infer<typeof featureSchema>;
 
 /**
- * STRUCTURE, per pattern. Mirrors that pattern's `requiredSchema` in Firestore. Adding a
- * pattern means adding a slice here AND the entry in the registry — CI checks that neither
- * exists without the other.
+ * STRUCTURE, per pattern. This file is the ONLY source of truth for what a pattern is:
+ * `npm run schema` publishes it as `prototype.schema.json` and the harness reads that out
+ * of the clone it just made.
+ *
+ * An earlier version of this comment claimed the list mirrored a `patternRegistry`
+ * document in Firestore and that CI checked the two agreed. Neither existed — the document
+ * returned 404 and no such check was ever written. The registry is now cancelled rather
+ * than deferred: a pattern IS code, so a database row claiming one exists renders nothing.
+ * See `docs/decisions/prototype-model-composes.md` in the sw-factory repo.
+ *
+ * Adding a pattern means a slice here, an entry in `PATTERN_PURPOSE`, and files listed in
+ * `PATTERN_IMPLEMENTATIONS` — `tests/` fails if any of the three is missing.
  */
 export const PATTERN_SCHEMAS = {
   landing: z.object({
@@ -140,6 +161,40 @@ export const PATTERN_SCHEMAS = {
 export type PatternId = keyof typeof PATTERN_SCHEMAS;
 
 /**
+ * What each pattern is FOR — the half of the contract the schema never carried.
+ *
+ * The schema says what a pattern NEEDS (`dataGrid` needs `entity.fields`). That is enough
+ * to fill one in and useless for deciding whether to. Since the model now composes the
+ * prototype, this is what it chooses on.
+ *
+ * Written for a model, not for a customer: nobody reads these in the wizard any more, so
+ * they should be precise about WHEN to pick the pattern rather than flattering about what
+ * it does.
+ */
+export const PATTERN_PURPOSE: Record<PatternId, string> = {
+  landing:
+    "The public page every visitor lands on. Always enabled — every other pattern sits " +
+    "behind auth or below the fold, so a prototype without it opens on nothing.",
+  dashboard:
+    "A signed-in home screen summarising the user's own data. Pick it when the idea " +
+    "describes something people return to and track over time, rather than read once.",
+  authGoogle:
+    "Google sign-in plus a route guard. Pick it whenever the idea implies personal data, " +
+    "saved work or anything described as 'my' — accounts, history, preferences.",
+  cta: "A closing call-to-action band on the landing page. Pick it when the idea has one " +
+    "obvious next step for a visitor: book, request, subscribe, start a trial.",
+  contactForm:
+    "A contact form that captures a message and an email address. Pick it for services, " +
+    "consultancies and anything sold through a conversation rather than a signup.",
+  dataGrid:
+    "A table of records the user adds, edits and filters. Pick it when the idea is about " +
+    "keeping track of things — an inventory, a catalogue, a register, a log of entries.",
+  mapBase:
+    "A map with points the user can place and inspect. Pick it only when location is " +
+    "part of the idea itself, not merely mentioned — routes, venues, coverage, territory.",
+};
+
+/**
  * COPY, per pattern. Only patterns that carry words appear here — `authGoogle` and
  * `mapBase` say nothing of their own, so they have no content slice at all.
  */
@@ -165,6 +220,37 @@ export const CONTENT_SCHEMAS = {
 } as const;
 
 export type ContentPatternId = keyof typeof CONTENT_SCHEMAS;
+
+/**
+ * Where each landing section gets its words, or `null` if it has nowhere to get them.
+ *
+ * `SECTION_REGISTRY` renders seven sections, but only four have a content slice a model
+ * can fill. The other three fall back to `messages/*.json` — placeholder copy that is fine
+ * in local dev and, on a page shown to a real prospect, means invented testimonials and an
+ * invented price list. So they are not offered until someone writes their schemas.
+ *
+ * The map is also what ties a section to its pattern: a section whose copy comes from
+ * `contactForm` cannot render without that pattern enabled, because the pattern is where
+ * its configuration and its words live. Position and content are two different decisions
+ * and both have to be made.
+ *
+ * `null` is a deliberate entry, not an omission — a new section must state its source, and
+ * saying "none yet" is a valid answer that locks it rather than shipping placeholders.
+ */
+export const SECTION_COPY_SOURCE: Record<SectionId, ContentPatternId | null> = {
+  hero: "landing",
+  features: "landing",
+  contact: "contactForm",
+  cta: "cta",
+  faq: null,
+  pricing: null,
+  testimonials: null,
+};
+
+/** The sections a model may choose from: exactly those with somewhere to put words. */
+export function modelSelectableSections(): SectionId[] {
+  return SECTION_IDS.filter((id) => SECTION_COPY_SOURCE[id] !== null);
+}
 
 /**
  * Patterns whose copy is mandatory once the pattern is on. `landing` is absent on purpose

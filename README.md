@@ -31,10 +31,7 @@ Set `NEXT_PUBLIC_DEMO_SLUG=your-slug` to namespace Firestore paths under
 npm run test:e2e     # Playwright smoke suite (see tests/smoke.spec.ts)
 ```
 
-Two smoke tests are forward-looking gates and are expected to fail until later
-work lands: `login page accessible` (no `/login` route yet) and
-`playground params apply` (no landing page sections yet). See `CLAUDE.md` →
-"Known gaps" for details.
+See `tests/smoke.spec.ts` for the full test suite.
 
 ## License
 

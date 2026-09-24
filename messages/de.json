@@ -1,0 +1,79 @@
+{
+  "common": {
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "account": "Konto",
+    "dashboard": "Übersicht",
+    "loading": "Wird geladen...",
+    "language": "Sprache"
+  },
+  "auth": {
+    "signInTitle": "Anmelden",
+    "signInDescription": "Weiter mit Ihrem Google-Konto.",
+    "signInButton": "Mit Google anmelden",
+    "signInError": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "landing": {
+    "title": "Ihre App",
+    "subtitle": "Gebaut mit dem Golden Stack",
+    "cta": "Loslegen"
+  },
+  "features": {
+    "title": "Funktionen",
+    "item1": "Funktion eins",
+    "item1desc": "Beschreibung von Funktion eins",
+    "item2": "Funktion zwei",
+    "item2desc": "Beschreibung von Funktion zwei",
+    "item3": "Funktion drei",
+    "item3desc": "Beschreibung von Funktion drei"
+  },
+  "pricing": {
+    "title": "Preise",
+    "free": "Beispielstufe eins",
+    "pro": "Beispielstufe zwei",
+    "enterprise": "Beispielstufe drei"
+  },
+  "testimonials": {
+    "title": "Was andere sagen",
+    "quote1": "Platzhaltertext — ein Prototyp setzt hier die eigenen Worte des Kunden ein.",
+    "author1": "Example Name, Example Company",
+    "quote2": "Platzhaltertext — dieser Abschnitt hat noch kein Inhaltsschema.",
+    "author2": "Example Name, Example Company"
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "q1": "Platzhalterfrage — dieser Abschnitt hat noch kein Inhaltsschema.",
+    "a1": "Platzhalterantwort. Die eigenen Worte eines Prototyps stehen in prototype.config.json."
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-Mail",
+    "message": "Nachricht",
+    "send": "Senden",
+    "sending": "Wird gesendet…",
+    "success": "Danke — Ihre Nachricht ist unterwegs. Wir melden uns in Kürze.",
+    "error": "Beim Senden ist etwas schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "notConfigured": "Das Kontaktformular ist in dieser Vorschau nicht eingerichtet."
+  },
+  "cta": {
+    "title": "Bereit loszulegen?",
+    "subtitle": "Ihre eigene Version steht in wenigen Minuten.",
+    "action": "Loslegen"
+  },
+  "dataGrid": {
+    "permissionDenied": "Diese Einträge sieht nur, wer den Prototyp angefragt hat.",
+    "loadError": "Beim Laden Ihrer Einträge ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal.",
+    "addAction": "{entity} hinzufügen",
+    "saving": "Wird gespeichert…",
+    "listHeading": "Einträge: {entity}",
+    "empty": "Noch keine Einträge: {entity} – fügen Sie oben den ersten hinzu.",
+    "remove": "Entfernen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "dashboard": {
+    "recordsLabel": "Einträge: {entity}",
+    "addedThisMonth": "Diesen Monat hinzugefügt",
+    "trackedFields": "Erfasste Felder"
+  }
+}

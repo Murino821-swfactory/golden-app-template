@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { CvMatcher, StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
@@ -22,6 +23,7 @@ function Stats() {
   const { records, entityLabel, loading } = useRecords();
   const fieldCount = useEntityFields().length;
   const total = loading ? "—" : records.length;
+  const t = useTranslations("dashboard");
 
   const thisMonth = loading
     ? "—"
@@ -35,9 +37,9 @@ function Stats() {
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <StatCard value={total} label={`${entityLabel} records`} icon="📋" />
-      <StatCard value={thisMonth} label="Added this month" icon="📈" />
-      <StatCard value={fieldCount} label="Tracked fields" icon="🏷️" />
+      <StatCard value={total} label={t("recordsLabel", { entity: entityLabel })} icon="📋" />
+      <StatCard value={thisMonth} label={t("addedThisMonth")} icon="📈" />
+      <StatCard value={fieldCount} label={t("trackedFields")} icon="🏷️" />
     </div>
   );
 }
