@@ -5,7 +5,9 @@
     "account": "Fiók",
     "dashboard": "Áttekintés",
     "loading": "Betöltés...",
-    "language": "Nyelv"
+    "language": "Nyelv",
+    "changeColour": "Színváltás",
+    "changeColourLabel": "Színváltás — {name}, {position}/{total}"
   },
   "auth": {
     "signInTitle": "Bejelentkezés",

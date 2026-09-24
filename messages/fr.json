@@ -5,7 +5,9 @@
     "account": "Compte",
     "dashboard": "Tableau de bord",
     "loading": "Chargement...",
-    "language": "Langue"
+    "language": "Langue",
+    "changeColour": "Changer de couleur",
+    "changeColourLabel": "Changer de couleur — {name}, {position} sur {total}"
   },
   "auth": {
     "signInTitle": "Connexion",
