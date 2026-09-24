@@ -11,8 +11,9 @@ import { localePath } from "@/lib/locale-routing";
 /**
  * The header every page of a prototype shows.
  *
- * Contents are deliberately three controls and a name — palette, sign-in, and, when the
- * prototype ships more than one locale, the language switcher. No nav: a prototype has
+ * Contents are deliberately three controls and a name — Change colour, sign-in, and, when the
+ * prototype ships more than one locale, the language switcher. On a phone the name gives way
+ * (truncates) before any control does. No nav: a prototype has
  * two or three routes, and a menu over them is chrome pretending to be a product.
  *
  * The name comes from `prototype.config.json`. It used to come from `messages/en.json`,
@@ -27,7 +28,7 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-30 flex items-center justify-between border-b border-border/60 py-3 backdrop-blur-sm"
+      className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 py-3 backdrop-blur-sm"
       style={{
         background: "color-mix(in srgb, var(--background) 88%, transparent)",
         paddingLeft: "var(--gutter)",
@@ -36,12 +37,12 @@ export function Header() {
     >
       <Link
         href={localePath(locale)}
-        className="font-heading text-sm font-semibold tracking-tight text-foreground"
+        className="min-w-0 truncate font-heading text-sm font-semibold tracking-tight text-foreground"
       >
         {config.appName}
       </Link>
 
-      <div className="flex items-center gap-1">
+      <div className="flex shrink-0 items-center gap-1">
         <LanguageSwitcher />
         <PaletteSwitcher />
         {config.patterns.authGoogle !== undefined && <UserMenu />}

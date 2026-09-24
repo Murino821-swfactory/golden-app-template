@@ -363,10 +363,21 @@
           "colorScheme": {
             "type": "string",
             "enum": [
-              "red",
-              "blue",
-              "yellow",
-              "green"
+              "fresh-sky-blood-red",
+              "fresh-lime-azure-blue",
+              "wine-mauve-vanilla-beige",
+              "deep-indigo-frost-white",
+              "black-green-ruby-red",
+              "dark-plum-earthy-khaki",
+              "warm-apricot-royal-plum",
+              "midnight-teal-ocean-mist",
+              "burnt-orange-misty-ice-blue",
+              "fluorescent-cyan-oxford-blue",
+              "dark-cyan-tangerine",
+              "chartreuse-pastel-deep-teal-green",
+              "ice-blue-ocean-blue",
+              "honey-tan-jet-black",
+              "burnt-orange-vanilla"
             ]
           }
         },

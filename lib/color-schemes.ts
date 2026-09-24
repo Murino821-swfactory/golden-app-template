@@ -1,31 +1,95 @@
 /**
- * color-schemes.ts — the four palettes a customer picks from, and the deterministic rule
- * that turns a ramp into CSS roles.
+ * color-schemes.ts — the fifteen palettes a customer picks from, and the deterministic rule
+ * that turns a two-colour pair into CSS roles.
  *
- * The ramp is the artistic source; `roles` is what the page actually paints with. Deriving
- * roles instead of hand-writing them means editing a ramp — or adding a fifth palette —
- * needs no CSS work and cannot drift from the swatches the founder approved.
+ * A palette is a PAIR [founder decision 2026-09-24]: the fifteen combinations the founder
+ * supplied as images, in the order supplied — which is also the order the header's
+ * "Change colour" button cycles through. Deriving roles instead of hand-writing them means
+ * a sixteenth pair is one line and needs no CSS work.
  *
- * The rule is deliberately mechanical [founder decision 2026-09-12]: darkest is the
- * background, lightest is the text, most saturated is the accent. It does not know intent,
- * so `assertReadable` is the floor that stops an unreadable palette from shipping.
+ * The rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the darker
+ * colour is the background, the lighter is both text and accent. A pair whose text would
+ * fall under WCAG AA on a card is corrected — the background is deepened toward black
+ * first, then the text lifted toward white, one percent at a time — so the hue the founder
+ * picked survives and only the contrast moves. Five of the fifteen are corrected; the
+ * values are pinned in tests/color-schemes.spec.ts.
  *
- * Canonical documentation (including the known Blue accent issue):
- * sw-factory `docs/COLOR_SCHEMES.md`.
+ * Canonical documentation: sw-factory `docs/COLOR_SCHEMES.md`.
  *
- * Golden rule 1 (dark-only): light ends of a ramp may be text or accent, never background.
+ * Golden rule 1 (dark-only): the darker colour of a pair is always the background.
  */
 
-export const COLOR_SCHEME_IDS = ["red", "blue", "yellow", "green"] as const;
+/** Cycle order — the header's button walks this list and wraps after the last. */
+export const COLOR_SCHEME_IDS = [
+  "fresh-sky-blood-red",
+  "fresh-lime-azure-blue",
+  "wine-mauve-vanilla-beige",
+  "deep-indigo-frost-white",
+  "black-green-ruby-red",
+  "dark-plum-earthy-khaki",
+  "warm-apricot-royal-plum",
+  "midnight-teal-ocean-mist",
+  "burnt-orange-misty-ice-blue",
+  "fluorescent-cyan-oxford-blue",
+  "dark-cyan-tangerine",
+  "chartreuse-pastel-deep-teal-green",
+  "ice-blue-ocean-blue",
+  "honey-tan-jet-black",
+  "burnt-orange-vanilla",
+] as const;
 export type ColorSchemeId = (typeof COLOR_SCHEME_IDS)[number];
 
-/** Ramps exactly as supplied by the founder, top to bottom. */
-export const RAMPS: Record<ColorSchemeId, readonly string[]> = {
-  red: ["38364C", "965B77", "6A3349", "6C192A", "B32132", "F16A48", "FFA55B"],
-  blue: ["504D9C", "463688", "160C3D", "07031C", "2D0F3F", "5D2B7E", "AA5DC6"],
-  yellow: ["455A76", "394D6A", "2C3C55", "121B28", "D79005", "F2B006", "F8D237"],
-  green: ["79C412", "1A320C", "334C1F", "496039", "77905F", "D4E1B6", "E8F1CC"],
+export interface Palette {
+  /** What a visitor reads. Proper names — never translated. */
+  name: string;
+  /** Exactly as the founder supplied them, top colour of the image first. */
+  colors: readonly [string, string];
+}
+
+export const PALETTES: Record<ColorSchemeId, Palette> = {
+  "fresh-sky-blood-red": { name: "Fresh Sky & Blood Red", colors: ["8CCDE9", "640000"] },
+  "fresh-lime-azure-blue": { name: "Fresh Lime & Azure Blue", colors: ["DDF3A3", "0055A6"] },
+  "wine-mauve-vanilla-beige": { name: "Wine Mauve & Vanilla Beige", colors: ["66444F", "EFE0CC"] },
+  "deep-indigo-frost-white": { name: "Deep Indigo & Frost White", colors: ["271870", "F7F7FF"] },
+  "black-green-ruby-red": { name: "Black Green & Ruby Red", colors: ["000F08", "FB3640"] },
+  "dark-plum-earthy-khaki": { name: "Dark Plum & Earthy Khaki", colors: ["421407", "6D542E"] },
+  "warm-apricot-royal-plum": { name: "Warm Apricot & Royal Plum", colors: ["FAAE62", "3E0856"] },
+  "midnight-teal-ocean-mist": { name: "Midnight Teal & Ocean Mist", colors: ["05354C", "B1EDF8"] },
+  "burnt-orange-misty-ice-blue": {
+    name: "Burnt Orange & Misty Ice Blue",
+    colors: ["9F430A", "DFE7E7"],
+  },
+  "fluorescent-cyan-oxford-blue": {
+    name: "Fluorescent Cyan & Oxford Blue",
+    colors: ["6FFFE8", "0C142A"],
+  },
+  "dark-cyan-tangerine": { name: "Dark Cyan & Tangerine", colors: ["015B63", "FF8135"] },
+  "chartreuse-pastel-deep-teal-green": {
+    name: "Chartreuse Pastel & Deep Teal Green",
+    colors: ["CEFF8A", "143732"],
+  },
+  "ice-blue-ocean-blue": { name: "Ice Blue & Ocean Blue", colors: ["CFFAFE", "0891B2"] },
+  "honey-tan-jet-black": { name: "Honey Tan & Jet Black", colors: ["E3C586", "171717"] },
+  "burnt-orange-vanilla": { name: "Burnt Orange & Vanilla", colors: ["FC6C26", "FFF4D6"] },
 };
+
+/**
+ * The four ids retired on 2026-09-24, mapped by nearest hue. Every `demo/*` branch built
+ * before then carries one in prototype.config.json, and a refresh deliberately never edits
+ * a customer's config — so the parser translates instead (lib/prototype-config.ts).
+ */
+export const LEGACY_SCHEME_IDS: Readonly<Record<string, ColorSchemeId>> = {
+  red: "warm-apricot-royal-plum",
+  blue: "deep-indigo-frost-white",
+  yellow: "honey-tan-jet-black",
+  green: "chartreuse-pastel-deep-teal-green",
+};
+
+/** The palette after `id`, wrapping from the last back to the first. */
+export function nextSchemeId(id: ColorSchemeId): ColorSchemeId {
+  const index = COLOR_SCHEME_IDS.indexOf(id);
+  return COLOR_SCHEME_IDS[(index + 1) % COLOR_SCHEME_IDS.length]!;
+}
 
 export interface SchemeRoles {
   background: string;
@@ -36,7 +100,7 @@ export interface SchemeRoles {
   foreground: string;
 }
 
-/** WCAG AA for normal text. Body text below this does not ship. */
+/** WCAG AA for normal text. Text below this does not ship. */
 export const WCAG_AA_TEXT = 4.5;
 
 function toRgb(hex: string): [number, number, number] {
@@ -67,69 +131,98 @@ export function contrastRatio(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-/** HSL saturation — how colourful a swatch is, independent of how light it is. */
-export function saturation(hex: string): number {
-  const [r, g, b] = toRgb(hex).map((c) => c / 255) as [number, number, number];
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  if (max === min) return 0;
-  const l = (max + min) / 2;
-  return l > 0.5 ? (max - min) / (2 - max - min) : (max - min) / (max + min);
+/** `weight` of the way from `from` to `to`, per channel, rounded. Hex without `#`, upper case. */
+export function mix(from: string, to: string, weight: number): string {
+  const a = toRgb(from);
+  const b = toRgb(to);
+  return a
+    .map((v, i) =>
+      Math.round(v + (b[i]! - v) * weight)
+        .toString(16)
+        .padStart(2, "0")
+    )
+    .join("")
+    .toUpperCase();
 }
 
+/** Card surface: this far from the background toward the text. */
+const SURFACE_MIX = 0.08;
+/** Borders and inputs: further, so they read against both background and card. */
+const BORDER_MIX = 0.22;
+/** How far the background may be deepened toward black before the text is lifted instead. */
+const MAX_DEEPEN_PERCENT = 70;
+/** Muted text is the text pulled toward the background — at most this far. */
+const MAX_MUTED_PERCENT = 35;
+
 /**
- * The rule. Pure: same ramp in, same roles out, no I/O, no config.
+ * The rule. Pure: same pair in, same roles out, no I/O, no config.
+ *
+ * Contrast is checked against the SURFACE, not the background: the surface is the lighter
+ * of the two planes text sits on, so text readable on a card is readable everywhere.
  */
-export function deriveRoles(ramp: readonly string[]): SchemeRoles {
-  if (ramp.length < 4) {
-    throw new Error(`A ramp needs at least 4 colours, got ${ramp.length}`);
+export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
+  const [a, b] = pair;
+  const [dark, light] = relativeLuminance(a) <= relativeLuminance(b) ? [a, b] : [b, a];
+
+  let background = dark;
+  let foreground = light;
+  const surfaceOf = () => mix(background, foreground, SURFACE_MIX);
+
+  for (
+    let percent = 1;
+    percent <= MAX_DEEPEN_PERCENT && contrastRatio(foreground, surfaceOf()) < WCAG_AA_TEXT;
+    percent++
+  ) {
+    background = mix(dark, "000000", percent / 100);
+  }
+  for (
+    let percent = 1;
+    percent <= 100 && contrastRatio(foreground, surfaceOf()) < WCAG_AA_TEXT;
+    percent++
+  ) {
+    foreground = mix(light, "FFFFFF", percent / 100);
   }
 
-  const byLuminance = [...ramp].sort(
-    (a, b) => relativeLuminance(a) - relativeLuminance(b)
-  );
-  const background = byLuminance[0]!;
-  const surface = byLuminance[1]!;
-  const foreground = byLuminance[byLuminance.length - 1]!;
-
-  const taken = new Set([background, surface, foreground]);
-  const remaining = ramp.filter((c) => !taken.has(c));
-
-  const primary = remaining.reduce((best, c) =>
-    saturation(c) > saturation(best) ? c : best
-  );
-
-  const rest = remaining.filter((c) => c !== primary);
-  const border = rest.reduce((lowest, c) =>
-    relativeLuminance(c) < relativeLuminance(lowest) ? c : lowest
-  );
-  const muted = rest.reduce((highest, c) =>
-    relativeLuminance(c) > relativeLuminance(highest) ? c : highest
-  );
+  const surface = surfaceOf();
+  let muted = foreground;
+  for (let percent = 1; percent <= MAX_MUTED_PERCENT; percent++) {
+    const candidate = mix(foreground, background, percent / 100);
+    if (contrastRatio(candidate, surface) < WCAG_AA_TEXT) break;
+    muted = candidate;
+  }
 
   return {
     background: `#${background}`,
     surface: `#${surface}`,
-    border: `#${border}`,
-    primary: `#${primary}`,
+    border: `#${mix(background, foreground, BORDER_MIX)}`,
+    primary: `#${foreground}`,
     muted: `#${muted}`,
     foreground: `#${foreground}`,
   };
 }
 
-/** Throws when body text would be unreadable on its background. Called by the build. */
+/** Throws when any text the page paints would be unreadable. Called by the build. */
 export function assertReadable(id: string, roles: SchemeRoles): void {
-  const ratio = contrastRatio(roles.foreground, roles.background);
-  if (ratio < WCAG_AA_TEXT) {
-    throw new Error(
-      `Colour scheme "${id}" fails WCAG AA: foreground ${roles.foreground} on ` +
-        `background ${roles.background} is ${ratio.toFixed(2)}:1, needs ${WCAG_AA_TEXT}:1`
-    );
+  const checks: Array<[string, string, string]> = [
+    ["foreground on background", roles.foreground, roles.background],
+    ["foreground on surface", roles.foreground, roles.surface],
+    ["muted on surface", roles.muted, roles.surface],
+    // `--primary-foreground` is the background (variablesFrom): a button's own text.
+    ["button text on primary", roles.background, roles.primary],
+  ];
+  for (const [what, text, plane] of checks) {
+    const ratio = contrastRatio(text, plane);
+    if (ratio < WCAG_AA_TEXT) {
+      throw new Error(
+        `Colour scheme "${id}" fails WCAG AA: ${what} (${text} on ${plane}) is ` +
+          `${ratio.toFixed(2)}:1, needs ${WCAG_AA_TEXT}:1`
+      );
+    }
   }
 }
 
 export function rolesFor(id: ColorSchemeId): SchemeRoles {
-  const roles = deriveRoles(RAMPS[id]);
+  const roles = derivePairRoles(PALETTES[id].colors);
   assertReadable(id, roles);
   return roles;
 }
@@ -148,9 +241,8 @@ export function cssVariablesFor(id: ColorSchemeId): Record<string, string> {
  * write rather than a rebuild. `html[data-scheme="x"]` is (0,1,1), which outranks both
  * `:root` and `.dark` in globals.css — no `!important`, no ordering dependency.
  *
- * Calling `cssVariablesFor` for all four also runs `assertReadable` four times at build,
- * which is the point: before this, only the palette a prototype happened to ship was
- * checked by the build, and the other three were covered by the test suite alone.
+ * Calling `cssVariablesFor` for all fifteen also runs `assertReadable` fifteen times at
+ * build, so no palette the header can reach ships unchecked.
  */
 export function cssBlocksForAll(): string {
   return COLOR_SCHEME_IDS.map((id) => {
