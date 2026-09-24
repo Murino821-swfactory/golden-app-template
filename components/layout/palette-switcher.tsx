@@ -1,16 +1,27 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { COLOR_SCHEME_IDS, PALETTES, rolesFor, type ColorSchemeId } from "@/lib/color-schemes";
+import { useTranslations } from "next-intl";
+import {
+  COLOR_SCHEME_IDS,
+  PALETTES,
+  nextSchemeId,
+  rolesFor,
+  type ColorSchemeId,
+} from "@/lib/color-schemes";
 import { config } from "@/lib/prototype-config";
 
 /**
+ * "Change colour" — one button that steps to the next palette and wraps after the last
+ * [founder decision 2026-09-24]. Fifteen swatches do not fit a 390px header, and a picker
+ * asks the visitor for a decision they did not come to make; one step at a time is play.
+ *
  * The palette a visitor is looking at lives in the DOM (`html[data-scheme]`) and in
- * localStorage — outside React, because the bootstrap script in app/layout.tsx sets it
+ * localStorage — outside React, because the bootstrap script in app/shell.tsx sets it
  * before React exists. `useSyncExternalStore` is the primitive for reading exactly that
  * kind of state, and it keeps `window` out of the render path during static export via
  * `getServerSnapshot`. The alternative (read it in an effect, then setState) would render
- * one frame with the wrong swatch highlighted.
+ * one frame with the wrong palette named.
  *
  * The choice is per-browser and deliberately does NOT travel: `prototype.config.json`
  * still decides what every new visitor sees first, so the customer's wizard pick remains
@@ -47,41 +58,33 @@ function selectScheme(id: ColorSchemeId): void {
 }
 
 export function PaletteSwitcher() {
+  const t = useTranslations("common");
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const roles = rolesFor(active);
 
   return (
-    <div
-      role="radiogroup"
-      aria-label="Colour scheme"
-      className="flex items-center gap-1"
+    <button
+      type="button"
+      onClick={() => selectScheme(nextSchemeId(active))}
+      // Starts with the visible label (WCAG 2.5.3, label in name), then says what a sighted
+      // visitor learns from the page itself: which palette, and where in the cycle it is.
+      aria-label={t("changeColourLabel", {
+        name: PALETTES[active].name,
+        position: COLOR_SCHEME_IDS.indexOf(active) + 1,
+        total: COLOR_SCHEME_IDS.length,
+      })}
+      className="flex h-11 shrink-0 items-center gap-2 rounded-md px-2 text-xs font-medium text-foreground transition-colors hover:bg-foreground/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
-      {COLOR_SCHEME_IDS.map((id) => (
-        <button
-          key={id}
-          type="button"
-          role="radio"
-          aria-checked={active === id}
-          aria-label={PALETTES[id].name}
-          onClick={() => selectScheme(id)}
-          // A 44px hit area around a 14px swatch: the target meets the mobile-first
-          // minimum without the swatch itself growing into a button.
-          className="flex h-11 w-7 items-center justify-center sm:w-8"
-        >
-          {/* The swatch paints itself with that palette's own accent, derived by the same
-              pure rule the page uses — so a swatch can never advertise a colour the
-              scheme does not actually produce. */}
-          <span
-            aria-hidden
-            className={
-              "h-3.5 w-3.5 rounded-full border transition-[box-shadow,border-color] " +
-              (active === id
-                ? "border-foreground ring-2 ring-foreground/60"
-                : "border-border hover:border-foreground/50")
-            }
-            style={{ background: rolesFor(id).primary }}
-          />
-        </button>
-      ))}
-    </div>
+      {/* Both halves of the pair, painted by the same pure rule the page uses — so the
+          swatch can never advertise a colour the scheme does not actually produce. */}
+      <span
+        aria-hidden
+        className="h-3.5 w-3.5 shrink-0 rounded-full border border-foreground/60"
+        style={{
+          background: `linear-gradient(90deg, ${roles.background} 50%, ${roles.primary} 50%)`,
+        }}
+      />
+      <span className="whitespace-nowrap">{t("changeColour")}</span>
+    </button>
   );
 }
