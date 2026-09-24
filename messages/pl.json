@@ -5,7 +5,9 @@
     "account": "Konto",
     "dashboard": "Panel",
     "loading": "Wczytywanie...",
-    "language": "Język"
+    "language": "Język",
+    "changeColour": "Zmień kolor",
+    "changeColourLabel": "Zmień kolor — {name}, {position} z {total}"
   },
   "auth": {
     "signInTitle": "Logowanie",
