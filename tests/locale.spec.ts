@@ -147,3 +147,11 @@ test("a single-language prototype renders no switcher at all", async ({ page }) 
   // Not "hidden" — absent. A control offering one choice is chrome with nothing behind it.
   await expect(page.getByRole("navigation")).toHaveCount(0);
 });
+
+test("the Change colour button speaks the page's language", async ({ page }) => {
+  test.skip(!config.locales.includes("sk"), "this config has no Slovak");
+  await page.goto(pathFor("sk"));
+  await expect(
+    page.getByRole("banner").getByRole("button", { name: /^Zmeniť farbu/ })
+  ).toHaveText("Zmeniť farbu");
+});
