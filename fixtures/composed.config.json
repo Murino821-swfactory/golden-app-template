@@ -2,7 +2,7 @@
   "appName": "Golden Template",
   "locales": ["en"],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "green" },
+  "theme": { "colorScheme": "black-green-ruby-red" },
   "patterns": {
     "landing": { "sections": ["hero", "features", "contact", "cta"] },
     "dashboard": {},
@@ -36,8 +36,8 @@
           },
           {
             "icon": "🎨",
-            "title": "Four palettes, one build",
-            "description": "Every scheme ships in every build. Switch it in the header and the whole page repaints."
+            "title": "Fifteen palettes, one build",
+            "description": "Every scheme ships in every build. Press Change colour in the header and the whole page repaints."
           },
           {
             "icon": "🔐",

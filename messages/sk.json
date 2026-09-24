@@ -5,7 +5,9 @@
     "account": "Účet",
     "dashboard": "Prehľad",
     "loading": "Načítava sa...",
-    "language": "Jazyk"
+    "language": "Jazyk",
+    "changeColour": "Zmeniť farbu",
+    "changeColourLabel": "Zmeniť farbu — {name}, {position} z {total}"
   },
   "auth": {
     "signInTitle": "Prihlásenie",
