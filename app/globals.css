@@ -138,3 +138,22 @@
     @apply font-sans;
   }
 }
+
+/* Print is paper, not a theme: dark surfaces waste ink and light text vanishes on white.
+   `:root[data-scheme]` (0,2,0) outranks the palette rules `html[data-scheme="x"]` (0,1,1).
+   The site chrome is not part of a printed report. */
+@media print {
+  :root[data-scheme] {
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --muted-foreground: #444444;
+    --border: #cccccc;
+    --primary: #333333;
+  }
+  body > div > header,
+  body > div > footer {
+    display: none;
+  }
+}

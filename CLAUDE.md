@@ -9,6 +9,21 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 > history until they are rewritten. What is current: the structure table, the config
 > contract, the theming section and the commands.
 
+## This prototype — cv-matcher (branch `demo/cv-matcher`)
+
+This branch is one customer's app, not the template. Code specific to it:
+
+| What | Where |
+|---|---|
+| CV ↔ job posting matcher (OTH-85) — public page, no sign-in | `app/analyze/page.tsx` → `components/features/cv-matcher.tsx` |
+| Matching engine: skill taxonomy + aliases (EN/SK), must-have vs nice-to-have, score, advice, samples | `lib/cv-analyzer.ts` |
+| Every string it shows or exports (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
+| Tests | `tests/cv-analyzer.spec.ts` (logic, no page), `tests/cv-matcher.spec.ts` (UI) |
+
+The matcher also renders on `/dashboard`; the landing CTA (`patterns.cta.href`) points to
+`/analyze`. Everything runs in the browser — no Firestore, no API. A new skill is one row
+in `TAXONOMY`; aliases are lowercase without diacritics.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
