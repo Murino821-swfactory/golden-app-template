@@ -2,7 +2,7 @@
   "appName": "Minimal Demo",
   "locales": ["en"],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "red" },
+  "theme": { "colorScheme": "dark-plum-earthy-khaki" },
   "patterns": {
     "landing": { "sections": ["hero", "cta"] },
     "cta": { "href": "/login" }

@@ -17,7 +17,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
-| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the ramps) |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the fifteen pairs and the rule) |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 
 ## Critical Rules for Fast Implementation
@@ -327,12 +327,17 @@ latent only because `deploy:production` is hosting-only here.
 
 ## Tailwind Colors (DO NOT HARDCODE)
 
-All four palettes ship in every build as `html[data-scheme="<id>"]` rules
-(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's switcher changes the
-palette by writing that attribute — so a hardcoded colour is not merely off-brand, it is
-the one thing on the page that will not repaint when the visitor switches. The choice
-persists in `localStorage`; `prototype.config.json` still decides what a first-time
-visitor sees.
+All fifteen palettes ship in every build as `html[data-scheme="<id>"]` rules
+(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's **Change colour** button
+steps to the next one by writing that attribute — so a hardcoded colour is not merely
+off-brand, it is the one thing on the page that will not repaint when the visitor clicks.
+The choice persists in `localStorage`; `prototype.config.json` still decides what a
+first-time visitor sees. A palette is a two-colour pair: the darker colour is the
+background, the lighter is both text and accent (`primary` = `foreground`), so emphasis
+comes from weight, underline or a filled surface — never from a second hue.
+
+Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
+`fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
 
 Use semantic tokens — they adapt to the customer's palette:
 - `bg-background`, `text-foreground` — main surface

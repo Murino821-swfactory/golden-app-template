@@ -5,7 +5,9 @@
     "account": "Account",
     "dashboard": "Dashboard",
     "loading": "Loading...",
-    "language": "Language"
+    "language": "Language",
+    "changeColour": "Change colour",
+    "changeColourLabel": "Change colour — {name}, {position} of {total}"
   },
   "auth": {
     "signInTitle": "Sign in",
