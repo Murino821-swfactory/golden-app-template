@@ -5,6 +5,7 @@ import {
   config,
   type PrototypeConfig,
 } from "../lib/prototype-config";
+import { LEGACY_SCHEME_IDS } from "../lib/color-schemes";
 
 /**
  * The config splits along ONE line: does this value change when the language changes?
@@ -23,7 +24,7 @@ function baseConfig(): Record<string, unknown> {
     appName: "Trailhead",
     locales: ["en", "sk"],
     defaultLocale: "sk",
-    theme: { colorScheme: "green" },
+    theme: { colorScheme: "chartreuse-pastel-deep-teal-green" },
     patterns: {
       landing: { sections: ["hero", "cta"] },
       cta: { href: "/login" },
@@ -181,6 +182,31 @@ test.describe("configs written before the split still build", () => {
 
   test("the retired style knob is dropped, not rejected", () => {
     const parsed = parsePrototypeConfig(legacy);
-    expect(parsed.theme).toEqual({ colorScheme: "green" });
+    expect(parsed.theme).toEqual({ colorScheme: "chartreuse-pastel-deep-teal-green" });
+  });
+});
+
+/**
+ * The four ids retired on 2026-09-24. Every `demo/*` branch built before then carries one,
+ * and `prototypes:refresh` never edits a customer's config, so the parser translates.
+ */
+test.describe("palette ids retired on 2026-09-24 still build", () => {
+  for (const [retired, current] of Object.entries(LEGACY_SCHEME_IDS)) {
+    test(`"${retired}" is read as "${current}"`, () => {
+      const parsed = parsePrototypeConfig({ ...baseConfig(), theme: { colorScheme: retired } });
+      expect(parsed.theme.colorScheme).toBe(current);
+    });
+  }
+
+  test("an id that never existed is still rejected", () => {
+    expect(() =>
+      parsePrototypeConfig({ ...baseConfig(), theme: { colorScheme: "purple" } })
+    ).toThrow(/theme\.colorScheme/);
+  });
+
+  test("an inherited object key is not mistaken for a retired id", () => {
+    expect(() =>
+      parsePrototypeConfig({ ...baseConfig(), theme: { colorScheme: "constructor" } })
+    ).toThrow(/theme\.colorScheme/);
   });
 });

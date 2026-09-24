@@ -28,10 +28,10 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
-import { COLOR_SCHEME_IDS } from "./color-schemes";
+import { COLOR_SCHEME_IDS, LEGACY_SCHEME_IDS } from "./color-schemes";
 
-/** Re-exported, not restated: `color-schemes.ts` owns both the ids and their ramps, so a
- * fifth palette is one edit. A second literal here is how P5 happened. */
+/** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
+ * sixteenth palette is one edit. A second literal here is how P5 happened. */
 export const COLOR_SCHEMES = COLOR_SCHEME_IDS;
 
 /**
@@ -458,15 +458,31 @@ function migrateLegacyConfig(input: Record<string, unknown>): Record<string, unk
 }
 
 /**
+ * Translate a palette id retired on 2026-09-24 into its successor, before zod sees it.
+ *
+ * `Object.hasOwn`, not `in` or a plain index: `"constructor"` is a key of every object, and
+ * a lookup that walks the prototype would turn it into a function instead of a zod error.
+ * Unknown ids pass through untouched so the enum still rejects them by name.
+ */
+function normalizeLegacyScheme(input: Record<string, unknown>): Record<string, unknown> {
+  const theme = input.theme as Record<string, unknown> | undefined;
+  const id = theme?.colorScheme;
+  if (typeof id !== "string" || !Object.hasOwn(LEGACY_SCHEME_IDS, id)) return input;
+  return { ...input, theme: { ...theme, colorScheme: LEGACY_SCHEME_IDS[id] } };
+}
+
+/**
  * Parse a config object. Throws with every zod issue listed, because a build log that says
  * "invalid config" without saying which field is a second bug on top of the first.
  */
 export function parsePrototypeConfig(input: unknown): PrototypeConfig {
   const candidate = input as Record<string, unknown>;
-  const normalized =
+  const lifted =
     candidate && typeof candidate === "object" && candidate.content === undefined
       ? migrateLegacyConfig(candidate)
       : candidate;
+  const normalized =
+    lifted && typeof lifted === "object" ? normalizeLegacyScheme(lifted) : lifted;
 
   const result = prototypeConfigSchema.safeParse(normalized);
   if (!result.success) {
