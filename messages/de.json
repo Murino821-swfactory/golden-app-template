@@ -5,7 +5,9 @@
     "account": "Konto",
     "dashboard": "Übersicht",
     "loading": "Wird geladen...",
-    "language": "Sprache"
+    "language": "Sprache",
+    "changeColour": "Farbe ändern",
+    "changeColourLabel": "Farbe ändern — {name}, {position} von {total}"
   },
   "auth": {
     "signInTitle": "Anmelden",
