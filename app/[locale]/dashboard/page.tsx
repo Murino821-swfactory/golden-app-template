@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
+import { BizLaunchWorkspace } from "@/components/bizlaunch/workspace";
 import { StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
@@ -53,6 +54,7 @@ function DashboardContent() {
         </h1>
       </header>
 
+      <BizLaunchWorkspace />
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}
       {hasGrid && <DataGrid />}

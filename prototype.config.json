@@ -20,65 +20,6 @@
     "dashboard": {},
     "cta": {
       "href": "/dashboard"
-    },
-    "dataGrid": {
-      "entity": {
-        "key": "task",
-        "fields": [
-          {
-            "key": "name",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "country",
-            "type": "select",
-            "options": [
-              "SK",
-              "CZ",
-              "PL",
-              "HU",
-              "UA"
-            ],
-            "required": true
-          },
-          {
-            "key": "entityType",
-            "type": "select",
-            "options": [
-              "s.r.o.",
-              "živnosť",
-              "Sp. z o.o.",
-              "JDG",
-              "Kft.",
-              "KATA",
-              "TOV",
-              "FOP"
-            ],
-            "required": true
-          },
-          {
-            "key": "status",
-            "type": "select",
-            "options": [
-              "todo",
-              "in-progress",
-              "done"
-            ],
-            "required": true
-          },
-          {
-            "key": "dueDate",
-            "type": "date",
-            "required": false
-          },
-          {
-            "key": "notes",
-            "type": "longtext",
-            "required": false
-          }
-        ]
-      }
     }
   },
   "content": {
@@ -115,17 +56,6 @@
       },
       "cta": {
         "label": "Start comparing countries"
-      },
-      "dataGrid": {
-        "entityLabel": "Registration tasks",
-        "fieldLabels": {
-          "name": "Task",
-          "country": "Country",
-          "entityType": "Entity type",
-          "status": "Status",
-          "dueDate": "Due date",
-          "notes": "Notes"
-        }
       }
     },
     "sk": {
@@ -161,17 +91,6 @@
       },
       "cta": {
         "label": "Porovnať krajiny"
-      },
-      "dataGrid": {
-        "entityLabel": "Registračné úlohy",
-        "fieldLabels": {
-          "name": "Úloha",
-          "country": "Krajina",
-          "entityType": "Forma podnikania",
-          "status": "Stav",
-          "dueDate": "Termín",
-          "notes": "Poznámky"
-        }
       }
     }
   }
