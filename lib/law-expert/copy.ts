@@ -114,7 +114,7 @@ const en: ResearchCopy = {
     ecli: "ECLI",
     truncated: "Only the first part of this decision was read.",
     showQuote: (n) => `Show the quote from decision ${n}`,
-    unsupported: "Not backed by a quote from the decisions",
+    unsupported: "Text with a dotted underline is not backed by a quote from the decisions.",
     disclaimer: (model) =>
       `Written by AI (${model}) from the decisions listed below. This is research, not legal advice, and it does not replace a lawyer.`,
     took: (s) => `Took ${s} s`,
@@ -195,7 +195,7 @@ const sk: ResearchCopy = {
     ecli: "ECLI",
     truncated: "Z tohto rozhodnutia sa čítala len prvá časť.",
     showQuote: (n) => `Zobraziť citát z rozhodnutia ${n}`,
-    unsupported: "Bez citátu z rozhodnutí",
+    unsupported: "Text s bodkovaným podčiarknutím nemá oporu v citáte z rozhodnutí.",
     disclaimer: (model) =>
       `Napísala umelá inteligencia (${model}) z rozhodnutí uvedených nižšie. Ide o rešerš, nie o právnu radu, a nenahrádza advokáta.`,
     took: (s) => `Trvalo ${s} s`,
