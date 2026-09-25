@@ -7,7 +7,15 @@
     "loading": "Wird geladen...",
     "language": "Sprache",
     "changeColour": "Farbe ändern",
-    "changeColourLabel": "Farbe ändern — {name}, {position} von {total}"
+    "changeColourLabel": "Farbe ändern — {name}, {position} von {total}",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen",
+    "menu": "Menü",
+    "font": "Schrift",
+    "changeFontLabel": "Schrift ändern: {name} ({position} von {total})",
+    "cart": "Warenkorb",
+    "cartLabel": "Warenkorb, {count} Artikel",
+    "cartEmpty": "Dein Warenkorb ist leer"
   },
   "auth": {
     "signInTitle": "Anmelden",

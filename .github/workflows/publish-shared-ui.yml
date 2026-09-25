@@ -1,0 +1,50 @@
+name: Publish @tokenwise/shared-ui
+
+# Publishes packages/shared-ui to the public npm registry when main carries a version npm
+# does not have yet. Public on purpose: reading it needs no credential on the VM, in CI or on
+# a PC — the same reason this repo is public (founder decision 2026-09-15).
+# tokenwise.sk picks the release up through a Dependabot PR the founder merges; new
+# prototypes use the workspace copy directly and never wait for this.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/shared-ui/**"
+
+concurrency:
+  group: publish-shared-ui
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm provenance
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Package tests
+        run: npm run test:packages
+
+      - name: Publish if this version is not on npm yet
+        working-directory: packages/shared-ui
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          name=$(node -p 'require("./package.json").name')
+          version=$(node -p 'require("./package.json").version')
+          if npm view "$name@$version" version >/dev/null 2>&1; then
+            echo "$name@$version is already on npm — nothing to publish"
+            exit 0
+          fi
+          npm publish --access public --provenance

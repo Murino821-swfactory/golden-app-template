@@ -7,7 +7,15 @@
     "loading": "Loading...",
     "language": "Language",
     "changeColour": "Change colour",
-    "changeColourLabel": "Change colour — {name}, {position} of {total}"
+    "changeColourLabel": "Change colour — {name}, {position} of {total}",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "font": "Font",
+    "changeFontLabel": "Change font: {name} ({position} of {total})",
+    "cart": "Cart",
+    "cartLabel": "Cart, {count} items",
+    "cartEmpty": "Your cart is empty"
   },
   "auth": {
     "signInTitle": "Sign in",

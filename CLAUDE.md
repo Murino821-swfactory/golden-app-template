@@ -17,7 +17,8 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
-| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the fifteen pairs and the rule) |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
+| Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 
 ## Critical Rules for Fast Implementation
@@ -82,7 +83,7 @@ components/
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
-  layout/                # header.tsx, footer.tsx, palette-switcher.tsx, user-menu.tsx
+  layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
   use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
 lib/
@@ -315,6 +316,27 @@ Consequences when editing:
 - `fixtures/full.config.json` and `fixtures/multilingual.config.json` both declare two
   locales, so both CI jobs exercise locale routing.
 
+## The shared header — `packages/shared-ui` (2026-09-25)
+
+This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`**, the
+header tokenwise.sk renders too: logo · Change colour · font (10 faces) · language · cart ·
+user. Spec and decision in the **sw-factory** repo
+(`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
+`docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
+
+- The package never imports Firebase, next-intl or `@/…` — the adapter
+  `components/layout/header.tsx` turns auth, locale routing and `messages/*.json` into props.
+- It reads only `--shared-*` CSS variables; `app/globals.css` maps them onto the shadcn
+  tokens, so the header follows the palette. `@source "../packages/shared-ui/src"` is what
+  makes Tailwind compile its classes — remove it and the header renders unstyled.
+- Fonts are self-hosted woff2 in `packages/shared-ui/fonts` (no `next/font`, no Google CDN).
+  `<html data-font="inter">` is the first-visit face; `ThemeBootstrap` in `app/shell.tsx`
+  applies a returning visitor's palette and font before the first paint.
+- Any change under `packages/shared-ui/{src,styles.css,fonts}` must bump its version (CI
+  checks); merging to `main` publishes it to npm. Live prototypes change only through
+  `npm run prototypes:refresh` on the VM, never automatically.
+- New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -328,7 +350,7 @@ latent only because `deploy:production` is hosting-only here.
 ## Tailwind Colors (DO NOT HARDCODE)
 
 All fifteen palettes ship in every build as `html[data-scheme="<id>"]` rules
-(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's **Change colour** button
+(`cssBlocksForAll()` in `@tokenwise/shared-ui`, rendered by `ThemeBootstrap`), and the header's **Change colour** button
 steps to the next one by writing that attribute — so a hardcoded colour is not merely
 off-brand, it is the one thing on the page that will not repaint when the visitor clicks.
 The choice persists in `localStorage`; `prototype.config.json` still decides what a
