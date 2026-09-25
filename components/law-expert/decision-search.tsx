@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { searchDecisions, type SearchParams, type UiError } from "@/lib/law-expert/api";
 import { COURT_TYPES, FORMS, REGIONS, type ResearchCopy } from "@/lib/law-expert/copy";
 import { getIdToken } from "@/lib/law-expert/token";
-import { isoToInfoSudDate } from "@/lib/law-expert/view";
 import type { SearchResponse } from "@/lib/law-expert/types";
 import { DecisionCard } from "./decision-card";
 import { FacetStats } from "./facet-stats";
@@ -73,7 +72,7 @@ export function DecisionSearch({ copy }: { copy: ResearchCopy }) {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
-    void run({ q, paragraph, courtType, region, form, from: isoToInfoSudDate(from), page: 0 });
+    void run({ q, paragraph, courtType, region, form, from, page: 0 });
   }
 
   const page = result?.page ?? 0;

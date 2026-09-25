@@ -48,9 +48,7 @@ export function DecisionCard({ hit, copy, number, ecli, truncated }: DecisionCar
       </p>
       {hit.snippet.length > 0 && <Snippet segments={hit.snippet} />}
       {ecli && (
-        <p className="mt-2 break-all text-xs text-muted-foreground">
-          {copy.memo.ecli} {ecli}
-        </p>
+        <p className="mt-2 break-all text-xs text-muted-foreground">{ecli}</p>
       )}
       {truncated && <p className="mt-1 text-xs text-muted-foreground">{copy.memo.truncated}</p>}
       {pdf && (

@@ -7,7 +7,6 @@ import {
   facetShares,
   factsState,
   caseRecordValues,
-  isoToInfoSudDate,
   safePdfUrl,
   FACTS_MIN,
   FACTS_MAX,
@@ -23,6 +22,10 @@ import type { MemoBlock, MemoResponse, SourceDoc } from "../lib/law-expert/types
 test.describe("searchQueryString", () => {
   test("drops empty filters and a first page", () => {
     expect(searchQueryString({ q: "  ", paragraph: "", page: 0 })).toBe("");
+  });
+
+  test("a date goes out as the date input gives it — yyyy-MM-dd, the only form InfoSúd honours", () => {
+    expect(new URLSearchParams(searchQueryString({ from: "2024-01-31" })).get("from")).toBe("2024-01-31");
   });
 
   test("keeps set filters, trimmed and encoded", () => {
@@ -153,14 +156,6 @@ test.describe("caseRecordValues", () => {
     expect(v.status).toBe("Prebieha");
     expect(String(v.notes)).toContain("§ 212");
     expect(String(v.notes)).toContain("ECLI:SK:OSKE1:2004:7104892312.6");
-  });
-});
-
-test.describe("isoToInfoSudDate", () => {
-  test("a date input value becomes InfoSúd's dd.MM.yyyy; empty stays unset", () => {
-    expect(isoToInfoSudDate("2024-01-31")).toBe("31.01.2024");
-    expect(isoToInfoSudDate("")).toBeUndefined();
-    expect(isoToInfoSudDate("31.01.2024")).toBeUndefined();
   });
 });
 

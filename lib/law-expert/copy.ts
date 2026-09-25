@@ -45,7 +45,6 @@ export interface ResearchCopy {
     qualification: string;
     slovLex: string;
     sources: string;
-    ecli: string;
     truncated: string;
     showQuote: (n: number) => string;
     unsupported: string;
@@ -108,10 +107,9 @@ const en: ResearchCopy = {
     tooShort: (min) => `Describe the facts in at least ${min} characters.`,
     submit: "Write the memo",
     working: "Finding the Criminal Code sections, searching InfoSúd and reading the decisions. This usually takes 10–20 seconds.",
-    qualification: "Likely legal qualification",
+    qualification: "Criminal Code sections the search was based on",
     slovLex: "Read the section on Slov-Lex",
     sources: "Decisions this memo relies on",
-    ecli: "ECLI",
     truncated: "Only the first part of this decision was read.",
     showQuote: (n) => `Show the quote from decision ${n}`,
     unsupported: "Text with a dotted underline is not backed by a quote from the decisions.",
@@ -189,10 +187,9 @@ const sk: ResearchCopy = {
     tooShort: (min) => `Opíšte skutok aspoň ${min} znakmi.`,
     submit: "Napísať rešerš",
     working: "Hľadám paragrafy Trestného zákona, prehľadávam InfoSúd a čítam rozhodnutia. Zvyčajne to trvá 10–20 sekúnd.",
-    qualification: "Pravdepodobná právna kvalifikácia",
+    qualification: "Paragrafy Trestného zákona, podľa ktorých sa hľadalo",
     slovLex: "Znenie paragrafu na Slov-Lexe",
     sources: "Rozhodnutia, o ktoré sa rešerš opiera",
-    ecli: "ECLI",
     truncated: "Z tohto rozhodnutia sa čítala len prvá časť.",
     showQuote: (n) => `Zobraziť citát z rozhodnutia ${n}`,
     unsupported: "Text s bodkovaným podčiarknutím nemá oporu v citáte z rozhodnutí.",

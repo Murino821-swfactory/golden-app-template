@@ -91,12 +91,6 @@ export function caseRecordValues(
   };
 }
 
-/** `<input type="date">` gives yyyy-mm-dd; InfoSúd wants dd.MM.yyyy. Anything else: no filter. */
-export function isoToInfoSudDate(iso: string): string | undefined {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  return m ? `${m[3]}.${m[2]}.${m[1]}` : undefined;
-}
-
 const PDF_URL = /^https:\/\/obcan\.justice\.sk\/content\/public\/item\/[0-9a-f-]{36}$/i;
 
 /** The server already restricts PDF links; the page checks again before rendering an href. */
