@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Geist } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import "./globals.css";
@@ -10,7 +9,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { config, contentFor } from "@/lib/prototype-config";
 import { localeHref } from "@/lib/locale-routing";
-import { COLOR_SCHEME_IDS, cssBlocksForAll } from "@/lib/color-schemes";
+import { ThemeBootstrap } from "@tokenwise/shared-ui";
 
 /**
  * The document every page of a prototype is rendered into, in one language.
@@ -24,16 +23,10 @@ import { COLOR_SCHEME_IDS, cssBlocksForAll } from "@/lib/color-schemes";
  * with no route to read. Both root layouts render this, so the shell still exists once.
  */
 
-// Applied before the first paint, so a visitor who already picked a palette never sees the
-// customer's default flash first. It runs as the first child of <body> — the standard
-// blocking-script slot in the App Router, since a static export has no way to inject into
-// <head> — and it fails silently: localStorage throws outright in some privacy modes, and
-// a colour preference is not worth a blank page.
-const SCHEME_BOOTSTRAP = `try{var s=localStorage.getItem('scheme');if(${JSON.stringify(
-  COLOR_SCHEME_IDS
-)}.indexOf(s)>-1){document.documentElement.dataset.scheme=s}}catch(e){}`;
-
-const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
+// The visitor's palette and font are applied before the first paint by the package's
+// `ThemeBootstrap` (first child of <body>, the standard blocking-script slot in the App
+// Router), so a returning visitor never sees the customer's default flash first.
+// Typefaces are self-hosted by `@tokenwise/shared-ui` — no next/font, no Google CDN.
 
 /**
  * Title, description and hreflang for one language.
@@ -81,18 +74,23 @@ export async function PrototypeShell({
 
   return (
     // EVERY palette ships as a CSS rule keyed by `data-scheme`, computed at build time by
-    // the deterministic rule in lib/color-schemes.ts, so switching one is an attribute
+    // the deterministic rule in @tokenwise/shared-ui (theming/color-schemes.ts), so switching one is an attribute
     // write rather than a rebuild. `data-scheme` starts on the palette the customer picked
     // in the wizard — that is what a first-time visitor sees — and the bootstrap script
     // below overrides it only for a visitor who chose differently on this device.
+    // `data-font` works the same way: `inter` for every first visit, the visitor's pick
+    // after that.
     <html
       lang={locale}
-      className={cn("font-sans", geist.variable, "dark")}
+      className={cn("font-sans", "dark")}
       data-scheme={config.theme.colorScheme}
+      data-font="inter"
+      // ThemeBootstrap rewrites data-scheme / data-font before React hydrates; the
+      // mismatch is the point, not a bug.
+      suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <script dangerouslySetInnerHTML={{ __html: SCHEME_BOOTSTRAP }} />
-        <style dangerouslySetInnerHTML={{ __html: cssBlocksForAll() }} />
+        <ThemeBootstrap palettes />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page

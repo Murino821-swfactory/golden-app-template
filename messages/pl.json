@@ -7,7 +7,15 @@
     "loading": "Wczytywanie...",
     "language": "Język",
     "changeColour": "Zmień kolor",
-    "changeColourLabel": "Zmień kolor — {name}, {position} z {total}"
+    "changeColourLabel": "Zmień kolor — {name}, {position} z {total}",
+    "openMenu": "Otwórz menu",
+    "closeMenu": "Zamknij menu",
+    "menu": "Menu",
+    "font": "Czcionka",
+    "changeFontLabel": "Zmień czcionkę: {name} ({position} z {total})",
+    "cart": "Koszyk",
+    "cartLabel": "Koszyk, pozycje: {count}",
+    "cartEmpty": "Twój koszyk jest pusty"
   },
   "auth": {
     "signInTitle": "Logowanie",

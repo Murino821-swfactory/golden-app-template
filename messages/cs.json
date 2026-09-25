@@ -7,7 +7,15 @@
     "loading": "Načítání...",
     "language": "Jazyk",
     "changeColour": "Změnit barvu",
-    "changeColourLabel": "Změnit barvu — {name}, {position} z {total}"
+    "changeColourLabel": "Změnit barvu — {name}, {position} z {total}",
+    "openMenu": "Otevřít menu",
+    "closeMenu": "Zavřít menu",
+    "menu": "Menu",
+    "font": "Písmo",
+    "changeFontLabel": "Změnit písmo: {name} ({position} z {total})",
+    "cart": "Košík",
+    "cartLabel": "Košík, položek: {count}",
+    "cartEmpty": "Košík je prázdný"
   },
   "auth": {
     "signInTitle": "Přihlášení",

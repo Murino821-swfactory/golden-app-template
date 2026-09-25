@@ -7,7 +7,15 @@
     "loading": "Cargando...",
     "language": "Idioma",
     "changeColour": "Cambiar color",
-    "changeColourLabel": "Cambiar color — {name}, {position} de {total}"
+    "changeColourLabel": "Cambiar color — {name}, {position} de {total}",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "menu": "Menú",
+    "font": "Fuente",
+    "changeFontLabel": "Cambiar fuente: {name} ({position} de {total})",
+    "cart": "Carrito",
+    "cartLabel": "Carrito, {count} artículos",
+    "cartEmpty": "Tu carrito está vacío"
   },
   "auth": {
     "signInTitle": "Iniciar sesión",

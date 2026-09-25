@@ -7,7 +7,15 @@
     "loading": "Betöltés...",
     "language": "Nyelv",
     "changeColour": "Színváltás",
-    "changeColourLabel": "Színváltás — {name}, {position}/{total}"
+    "changeColourLabel": "Színváltás — {name}, {position}/{total}",
+    "openMenu": "Menü megnyitása",
+    "closeMenu": "Menü bezárása",
+    "menu": "Menü",
+    "font": "Betűtípus",
+    "changeFontLabel": "Betűtípus váltása: {name} ({position}/{total})",
+    "cart": "Kosár",
+    "cartLabel": "Kosár, {count} tétel",
+    "cartEmpty": "A kosár üres"
   },
   "auth": {
     "signInTitle": "Bejelentkezés",

@@ -7,7 +7,15 @@
     "loading": "Chargement...",
     "language": "Langue",
     "changeColour": "Changer de couleur",
-    "changeColourLabel": "Changer de couleur — {name}, {position} sur {total}"
+    "changeColourLabel": "Changer de couleur — {name}, {position} sur {total}",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "menu": "Menu",
+    "font": "Police",
+    "changeFontLabel": "Changer de police : {name} ({position} sur {total})",
+    "cart": "Panier",
+    "cartLabel": "Panier, {count} articles",
+    "cartEmpty": "Votre panier est vide"
   },
   "auth": {
     "signInTitle": "Connexion",
