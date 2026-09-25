@@ -85,6 +85,9 @@ export async function PrototypeShell({
       className={cn("font-sans", "dark")}
       data-scheme={config.theme.colorScheme}
       data-font="inter"
+      // ThemeBootstrap rewrites data-scheme / data-font before React hydrates; the
+      // mismatch is the point, not a bug.
+      suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeBootstrap palettes />

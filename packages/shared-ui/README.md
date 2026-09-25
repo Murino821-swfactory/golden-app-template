@@ -31,7 +31,8 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    Without `@source` the header renders unstyled and nothing fails.
 3. Layout: `<html data-font="<default>" [data-scheme="<default>"]>`, and
    `<ThemeBootstrap palettes? />` as the **first child of `<body>`** — it applies a returning
-   visitor's palette and font before the first paint.
+   visitor's palette and font before the first paint. Put `suppressHydrationWarning` on
+   `<html>`: the script changes those attributes before React hydrates, on purpose.
 
 ```tsx
 <Header

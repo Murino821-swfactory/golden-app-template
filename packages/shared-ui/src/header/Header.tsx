@@ -42,13 +42,14 @@ export interface HeaderProps {
 }
 
 const NAV_LINK =
-  "hidden min-h-11 items-center px-2 text-[12px] tracking-[0.05em] text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)] sm:flex";
+  "hidden min-h-11 items-center px-2 text-[12px] tracking-[0.05em] text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)] lg:flex";
 
 /**
  * The one header of tokenwise.sk and of every prototype.
  *
- *   ≥640px  [logo]  nav…  [● Change colour] [Aa Inter] [EN ▾] [cart] [user]
- *   <640px  [logo…]                         [●] [cart] [user] [☰]
+ *   ≥1024px  [logo]  nav…  [● Change colour] [Aa Inter] [EN ▾] [cart] [user]
+ *   <1024px  [logo…]              [● Change colour] [cart] [user] [☰]
+ *   <640px   [logo…]                               [●] [cart] [user] [☰]
  *
  * Translucent over the page (the host's background at 88% with a backdrop blur), no bottom
  * rule — as tokenwise.sk's header was before it moved here. Every colour and typeface is a
@@ -102,7 +103,7 @@ export function Header({
         {items.length > 0 && (
           <nav
             aria-label={labels.nav}
-            className="hidden items-center gap-1 sm:flex"
+            className="hidden items-center gap-1 lg:flex"
             style={{ fontFamily: "var(--shared-font-mono)" }}
           >
             {items.map((item) =>
@@ -121,12 +122,13 @@ export function Header({
 
         {palette && <PaletteSwitcher defaultScheme={palette} labels={labels} />}
 
-        {/* Font and language move into the menu below 640px: four 44px controls and the
-            logo are what fits a 390px bar. */}
-        <div className="hidden sm:flex">
+        {/* Nav, font and language sit in the bar from 1024px and in the menu below it.
+            Measured on tokenwise.sk (2026-09-25): the full row overflows by 213px at 640 and
+            113px at 768, and fits from 900 — so the bar/menu swap is `lg`, not `sm`. */}
+        <div className="hidden lg:flex">
           <FontSwitcher defaultFont={font} labels={labels} />
         </div>
-        <div className="hidden sm:flex">
+        <div className="hidden lg:flex">
           <LanguageSwitcher languages={languages} labels={labels} />
         </div>
 
@@ -148,7 +150,7 @@ export function Header({
           aria-label={labels.openMenu}
           aria-expanded={menuOpen}
           aria-controls={menuId}
-          className="flex h-11 w-11 items-center justify-center text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)] sm:hidden"
+          className="flex h-11 w-11 items-center justify-center text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)] lg:hidden"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden focusable="false">
             <path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" />

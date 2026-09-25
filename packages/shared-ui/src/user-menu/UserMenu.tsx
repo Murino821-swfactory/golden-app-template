@@ -99,7 +99,6 @@ export function UserMenu({
         onClick={() => setOpen(!open)}
         aria-label={labels.account}
         aria-expanded={open}
-        aria-haspopup="menu"
         className="flex h-11 w-11 items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--shared-accent)]"
       >
         {user.photoURL ? (
@@ -111,9 +110,10 @@ export function UserMenu({
         )}
       </button>
 
+      {/* A disclosure of plain links and buttons, not an ARIA `menu`: role="menu" promises
+          arrow-key navigation this list does not implement. */}
       {open && (
         <div
-          role="menu"
           className="absolute right-0 top-full z-50 mt-2 min-w-[12rem] rounded-lg border border-[var(--shared-rule)] bg-[var(--shared-bg)] py-1 shadow-lg"
         >
           <div className="border-b border-[var(--shared-rule)] px-3 py-2">
@@ -130,7 +130,7 @@ export function UserMenu({
                 <button
                   key={item.label}
                   type="button"
-                  role="menuitem"
+                 
                   className={ITEM}
                   onClick={() => {
                     setOpen(false);
@@ -144,12 +144,12 @@ export function UserMenu({
             }
             const tab = item.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {};
             return item.native || item.newTab ? (
-              <a key={item.label} href={item.href} role="menuitem" className={ITEM} onClick={close} {...tab}>
+              <a key={item.label} href={item.href} className={ITEM} onClick={close} {...tab}>
                 {item.icon}
                 {item.label}
               </a>
             ) : (
-              <Link key={item.label} href={item.href} role="menuitem" className={ITEM} onClick={close}>
+              <Link key={item.label} href={item.href} className={ITEM} onClick={close}>
                 {item.icon}
                 {item.label}
               </Link>
@@ -157,7 +157,7 @@ export function UserMenu({
           })}
           <button
             type="button"
-            role="menuitem"
+           
             className={`${ITEM_BASE} text-[var(--shared-ink-muted)]`}
             onClick={async () => {
               setOpen(false);

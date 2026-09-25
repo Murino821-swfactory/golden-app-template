@@ -14,7 +14,7 @@ const ROW =
   "flex min-h-14 items-center border-b border-[var(--shared-rule)] text-left text-[15px] uppercase tracking-[0.12em] text-[var(--shared-ink)] transition-colors hover:text-[var(--shared-accent)]";
 
 /**
- * The full-screen menu below 640px. It exists for every variant, a prototype's included:
+ * The full-screen menu below 1024px. It exists for every variant, a prototype's included:
  * with no nav it still carries the font and the languages, which do not fit the bar.
  *
  * Portalled to `<body>` on purpose: the header carries a backdrop-filter, and an ancestor
@@ -62,10 +62,10 @@ export function MenuPanel({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, toggleRef]);
 
-  // The panel is `sm:hidden`, so at >=640px it stops being visible — without this the
+  // The panel is `lg:hidden`, so at >=1024px it stops being visible — without this the
   // scroll lock would survive a rotation or resize with no way to undo it.
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 40rem)");
+    const mq = window.matchMedia("(min-width: 64rem)");
     const onChange = () => mq.matches && onClose();
     onChange();
     mq.addEventListener("change", onChange);
@@ -91,7 +91,7 @@ export function MenuPanel({
       aria-modal="true"
       aria-label={labels.menu}
       data-shared-ui-menu=""
-      className="fixed inset-0 z-50 flex flex-col bg-[var(--shared-bg)] text-[var(--shared-ink)] sm:hidden"
+      className="fixed inset-0 z-50 flex flex-col bg-[var(--shared-bg)] text-[var(--shared-ink)] lg:hidden"
     >
       <div className="flex items-center justify-between gap-3 py-4" style={gutter}>
         <Wordmark {...logo} />
