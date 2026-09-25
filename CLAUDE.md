@@ -9,6 +9,30 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 > history until they are rewritten. What is current: the structure table, the config
 > contract, the theming section and the commands.
 
+## law-expert — the research page (this branch only, OTH-91)
+
+`/research` (and `/sk/research`) is the product of this prototype; sign-in lands there.
+It has a **server half** — the only prototype that does — in factory-web
+(`functions/src/law-expert/`, function `lawExpertApi`, rewrite `/api/law-expert/**` on
+apps.tokenwise.sk). Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expert-research-design.md`.
+
+| What | Where |
+|---|---|
+| API client (origin-relative `/api/law-expert/*`, Bearer ID token) | `lib/law-expert/api.ts`, `token.ts` |
+| Contract — a COPY of factory-web `functions/src/law-expert/types.ts`; change both | `lib/law-expert/types.ts` |
+| What the page shows (memo grouping, unsupported flags, facet shares, case record) | `lib/law-expert/view.ts` |
+| Copy, en + sk (not `messages/*.json` — those are shared chrome) | `lib/law-expert/copy.ts` |
+| Components | `components/law-expert/*` |
+
+- **Dates go out as `yyyy-MM-dd`.** InfoSúd silently ignores `dd.MM.yyyy` in `vydaniaOd`
+  and returns the unfiltered set [FAKT 2026-09-25].
+- **Nothing is invented:** the server drops citations that point outside the sources and
+  never calls the memo model when no decisions were found; the page marks uncited text.
+- **Test gap, stated:** the suite does not sign in with Google, so the signed-in page has
+  no e2e test. Its logic is in `tests/law-expert-logic.spec.ts`; `tests/law-expert.spec.ts`
+  covers the redirect, the CTA and the landing copy; the live page is checked by the smoke
+  run after publishing.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
