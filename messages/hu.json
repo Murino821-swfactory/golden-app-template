@@ -85,5 +85,18 @@
     "recordsLabel": "Rekordok: {entity}",
     "addedThisMonth": "Ebben a hónapban hozzáadva",
     "trackedFields": "Nyomon követett mezők"
+  },
+  "heroImage": {
+    "generate": "Kép generálása",
+    "confirm": "Biztos? Egy próbálkozásod van",
+    "generating": "Generálás…",
+    "hide": "Kép elrejtése",
+    "show": "Kép megjelenítése",
+    "regenerate": "Új generálása",
+    "retry": "Újra",
+    "failed": "Nem sikerült",
+    "failedRetry": "Nem sikerült – a próbálkozásod megmaradt",
+    "unavailable": "A generálás most nem érhető el",
+    "slow": "Ez tovább tart – töltsd újra az oldalt"
   }
 }
