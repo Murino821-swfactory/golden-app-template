@@ -85,5 +85,18 @@
     "recordsLabel": "{entity} records",
     "addedThisMonth": "Added this month",
     "trackedFields": "Tracked fields"
+  },
+  "heroImage": {
+    "generate": "Generate image",
+    "confirm": "Sure? You have one try",
+    "generating": "Generating…",
+    "hide": "Hide image",
+    "show": "Show image",
+    "regenerate": "Generate new",
+    "retry": "Try again",
+    "failed": "It didn't work",
+    "failedRetry": "It didn't work — your try is not used up",
+    "unavailable": "Generating is not available right now",
+    "slow": "This is taking longer — reload the page"
   }
 }
