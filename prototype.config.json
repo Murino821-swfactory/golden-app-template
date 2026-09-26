@@ -1,106 +1,172 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Sportsevent",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "black-green-ruby-red"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {},
+    "dashboard": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "match",
         "fields": [
           {
-            "key": "name",
+            "key": "sport",
+            "type": "select",
+            "options": [
+              "Football",
+              "Volleyball",
+              "Basketball"
+            ],
+            "required": true
+          },
+          {
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "time",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "venue",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "teams",
+            "type": "text",
+            "required": false
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+              "Planned",
+              "In Progress",
+              "Completed"
+            ],
+            "required": true
           }
         ]
       }
     },
     "mapBase": {
       "center": {
-        "lat": 48.669,
-        "lng": 19.699
+        "lat": 48.1486,
+        "lng": 17.1077
       },
-      "zoom": 7
+      "zoom": 14
+    },
+    "cta": {
+      "href": "/dashboard"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Sportsevent helps event managers plan 3-day football, volleyball and basketball tournaments and keeps every attendee informed about the programme.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Your 3-day sports event, planned down to the last match",
+        "subheadline": "For event managers who need to schedule games, assign venues and keep every attendee informed across football, volleyball and basketball.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "📅",
+            "title": "Full Match Schedule",
+            "description": "Add every game with its sport, date, time and venue so the complete programme is visible at a glance."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "📍",
+            "title": "Venue Map",
+            "description": "Pin each playing location on a map so attendees always know exactly where to go."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "✓",
+            "title": "Live Status Updates",
+            "description": "Mark matches as planned, in progress or finished so participants can follow the event in real time."
+          },
+          {
+            "icon": "🏅",
+            "title": "Three Sports, One Tool",
+            "description": "Manage football, volleyball and basketball in one place without switching between separate systems."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Event Overview"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Match",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "sport": "Sport",
+          "date": "Date",
+          "time": "Time",
+          "venue": "Venue",
+          "teams": "Teams",
+          "status": "Status"
         }
+      },
+      "cta": {
+        "label": "Start planning your event"
+      }
+    },
+    "sk": {
+      "description": "Sportsevent pomáha organizátorom naplánovať trojdňové futbalové, volejbalové a basketbalové podujatia a informovať účastníkov o celom programe.",
+      "landing": {
+        "headline": "Trojdňový športový event pod kontrolou",
+        "subheadline": "Pre organizátorov, ktorí potrebujú rozvrhnúť zápasy, priradiť miesta a informovať všetkých účastníkov — na futbale, volejbale aj basketbale.",
+        "features": [
+          {
+            "icon": "📅",
+            "title": "Rozvrh zápasov",
+            "description": "Pridajte každý zápas so športom, dátumom, časom a miestom — celý program máte prehľadne na jednom mieste."
+          },
+          {
+            "icon": "📍",
+            "title": "Mapa ihrisk",
+            "description": "Označte každé hracie miesto na mape, aby účastníci vždy vedeli, kam presne musia prísť."
+          },
+          {
+            "icon": "✓",
+            "title": "Aktuálny stav zápasov",
+            "description": "Označte zápasy ako naplánované, prebiehajúce alebo ukončené a informujte účastníkov v reálnom čase."
+          },
+          {
+            "icon": "🏅",
+            "title": "Tri športy naraz",
+            "description": "Spravujte futbal, volejbal aj basketbal na jednom mieste bez prepínania medzi rôznymi nástrojmi."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Prehľad eventu"
+      },
+      "dataGrid": {
+        "entityLabel": "Zápas",
+        "fieldLabels": {
+          "sport": "Šport",
+          "date": "Dátum",
+          "time": "Čas",
+          "venue": "Miesto",
+          "teams": "Tímy",
+          "status": "Stav"
+        }
+      },
+      "cta": {
+        "label": "Začnite plánovať event"
       }
     }
   }
