@@ -21,6 +21,11 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
   landing: [
     "app/[locale]/page.tsx",
     "components/sections/hero.tsx",
+    "components/sections/hero-image-controls.tsx",
+    "hooks/use-hero-image.ts",
+    "lib/hero-image.ts",
+    "lib/hero-overlay.ts",
+    "public/hero-image.json",
     "components/sections/features.tsx",
     "components/sections/faq.tsx",
   ],
