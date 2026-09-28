@@ -32,12 +32,14 @@ footer read `config.appName`, not `messages/en.json`.
 
 | Feature Type | Files to Change |
 |-------------|-----------------|
-| App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
+| App name (footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json`. The header shows tokenwise.sk's logo, not the app name (founder, 2026-09-28) |
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
-| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `lib/color-schemes.ts` for the fifteen pairs and the rule) |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
+| Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
+| AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 
 ## Critical Rules for Fast Implementation
 
@@ -98,12 +100,14 @@ app/
     dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
 components/
   sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
+                         #   + hero-image-controls.tsx (creator/founder buttons under the hero)
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
-  layout/                # header.tsx, footer.tsx, palette-switcher.tsx, user-menu.tsx
+  layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
-  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
+  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
+  use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
   utils.ts               # cn() for className merging
@@ -334,6 +338,54 @@ Consequences when editing:
 - `fixtures/full.config.json` and `fixtures/multilingual.config.json` both declare two
   locales, so both CI jobs exercise locale routing.
 
+## The shared header — `packages/shared-ui` (2026-09-25)
+
+This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`**, the
+header tokenwise.sk renders too: logo · Change colour · font (10 faces) · language · cart ·
+user. Spec and decision in the **sw-factory** repo
+(`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
+`docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
+
+- **A prototype's header is tokenwise.sk's, 1:1 (founder decision 2026-09-28):** the
+  tokenwise.sk logo and the site's public nav (Articles … Privacy, Contact → `/?scene=9`),
+  every link absolute to `https://tokenwise.sk` — the adapter passes `siteOrigin`, because a
+  prototype is served from apps.tokenwise.sk. The palette, font, language, cart and sign-in
+  controls stay the prototype's. The app's name is in the footer and the `<title>`.
+- The package never imports Firebase, next-intl or `@/…` — the adapter
+  `components/layout/header.tsx` turns auth, locale routing and `messages/*.json` into props.
+- It reads only `--shared-*` CSS variables; `app/globals.css` maps them onto the shadcn
+  tokens, so the header follows the palette. `@source "../packages/shared-ui/src"` is what
+  makes Tailwind compile its classes — remove it and the header renders unstyled.
+- Fonts are self-hosted woff2 in `packages/shared-ui/fonts` (no `next/font`, no Google CDN).
+  `<html data-font="inter">` is the first-visit face; `ThemeBootstrap` in `app/shell.tsx`
+  applies a returning visitor's palette and font before the first paint.
+- Any change under `packages/shared-ui/{src,styles.css,fonts}` must bump its version (CI
+  checks); merging to `main` publishes it to npm. Live prototypes change only through
+  `npm run prototypes:refresh` on the VM, never automatically.
+- New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+
+## The AI hero image (2026-09-25)
+
+The hero can show a Gemini-generated background. The prototype's creator (signed in) may
+generate one; the founder any number; both may hide or show it. The server is factory-web
+(`prototypeHeroImage`); decision record `docs/decisions/prototype-hero-image.md` in the
+**sw-factory** repo.
+
+- Every visitor reads `<basePath>/hero-image.json`. `public/hero-image.json` ships as
+  `{"visible":false}` — keep it: on the harness sandbox and in this repo's CI there is no
+  function, and a 404 there is a console error that fails the smoke gate on every build.
+- **Never call `/api/*` without a signed-in user.** The static server in the sandbox and
+  in CI cannot answer it; `useHeroImage` calls `/api/prototype-hero-image` only when
+  `user` and `NEXT_PUBLIC_DEMO_SLUG` exist and the base path is `/newapp/…` (the golden
+  demo on tokenwise.sk/demo/golden has a slug but no such endpoint).
+- The hero `<section>` is full width; its content keeps the old `max-w-5xl` box, so with
+  no image it looks as before. The image layer is absolute (moves nothing, CLS 0).
+- Readability over the image is not guaranteed (founder decision): the overlay is drawn in
+  `var(--background)` at `HERO_OVERLAY_ALPHA`, and a visitor who cannot read the text
+  clicks "Change colour".
+- The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
+  copy goes into the `heroImage` block of all 8 `messages/*.json`.
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -347,7 +399,7 @@ latent only because `deploy:production` is hosting-only here.
 ## Tailwind Colors (DO NOT HARDCODE)
 
 All fifteen palettes ship in every build as `html[data-scheme="<id>"]` rules
-(`cssBlocksForAll()` in `lib/color-schemes.ts`), and the header's **Change colour** button
+(`cssBlocksForAll()` in `@tokenwise/shared-ui`, rendered by `ThemeBootstrap`), and the header's **Change colour** button
 steps to the next one by writing that attribute — so a hardcoded colour is not merely
 off-brand, it is the one thing on the page that will not repaint when the visitor clicks.
 The choice persists in `localStorage`; `prototype.config.json` still decides what a
