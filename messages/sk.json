@@ -7,7 +7,15 @@
     "loading": "Načítava sa...",
     "language": "Jazyk",
     "changeColour": "Zmeniť farbu",
-    "changeColourLabel": "Zmeniť farbu — {name}, {position} z {total}"
+    "changeColourLabel": "Zmeniť farbu — {name}, {position} z {total}",
+    "openMenu": "Otvoriť menu",
+    "closeMenu": "Zavrieť menu",
+    "menu": "Menu",
+    "font": "Písmo",
+    "changeFontLabel": "Zmeniť písmo: {name} ({position} z {total})",
+    "cart": "Košík",
+    "cartLabel": "Košík, položiek: {count}",
+    "cartEmpty": "Košík je prázdny"
   },
   "auth": {
     "signInTitle": "Prihlásenie",
@@ -77,5 +85,18 @@
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Pridané tento mesiac",
     "trackedFields": "Sledované polia"
+  },
+  "heroImage": {
+    "generate": "Vygenerovať obrázok",
+    "confirm": "Naozaj? Máš jeden pokus",
+    "generating": "Generujem…",
+    "hide": "Skryť obrázok",
+    "show": "Zobraziť obrázok",
+    "regenerate": "Vygenerovať nový",
+    "retry": "Skúsiť znova",
+    "failed": "Nepodarilo sa",
+    "failedRetry": "Nepodarilo sa, pokus ti ostáva",
+    "unavailable": "Generovanie teraz nie je dostupné",
+    "slow": "Trvá to dlhšie — obnov stránku"
   }
 }

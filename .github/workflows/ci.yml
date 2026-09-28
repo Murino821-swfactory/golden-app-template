@@ -27,12 +27,45 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # @tokenwise/shared-ui: font files, generated styles.css, no auth/i18n/network imports.
+      - name: Shared UI package tests
+        run: npm run test:packages
+
       # The committed schema is the harness's copy of this repo's contract. A stale one
       # would have the assembly line ask for a shape this repo no longer accepts.
       - name: Schema is in sync with the code
         run: |
           npm run schema
           git diff --exit-code prototype.schema.json
+
+  # Every change to what @tokenwise/shared-ui ships has to reach npm, or tokenwise.sk keeps
+  # rendering the old header while every new prototype renders the new one. publish.yml
+  # publishes only a version npm does not have yet, so an unbumped change would be merged
+  # and never released.
+  shared-ui-version:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: A change to the package bumps its version
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          changed=$(git diff --name-only "$BASE" HEAD -- packages/shared-ui/src packages/shared-ui/styles.css packages/shared-ui/fonts)
+          if [ -z "$changed" ]; then
+            echo "packages/shared-ui unchanged"
+            exit 0
+          fi
+          before=$(git show "$BASE:packages/shared-ui/package.json" 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{console.log(JSON.parse(s).version)}catch{console.log("")}})')
+          after=$(node -p 'require("./packages/shared-ui/package.json").version')
+          if [ "$before" = "$after" ]; then
+            echo "::error::packages/shared-ui changed but its version is still $after — bump packages/shared-ui/package.json (and src/version.ts)."
+            echo "$changed"
+            exit 1
+          fi
+          echo "shared-ui $before -> $after"
 
   # A prototype differs from this repo ONLY by prototype.config.json. Building just the
   # shipped config would prove nothing about the configs a customer can actually pick, so
