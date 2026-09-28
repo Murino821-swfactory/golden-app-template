@@ -1,6 +1,10 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { localePath } from "@/lib/locale-routing";
+import { researchCopy } from "@/lib/law-expert/copy";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
@@ -44,13 +48,17 @@ function Stats() {
 
 function DashboardContent() {
   const dashboard = useContent().dashboard;
+  const locale = useLocale();
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
-      <header>
+      <header className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold sm:text-3xl">
           {dashboard?.title ?? config.appName}
         </h1>
+        <Button asChild className="h-11 px-5">
+          <Link href={localePath(locale, "/research")}>{researchCopy(locale).dashboardLink}</Link>
+        </Button>
       </header>
 
       {hasGrid && <Stats />}

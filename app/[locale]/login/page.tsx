@@ -27,7 +27,9 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await signInWithGoogle();
-      router.push(localePath(locale, "/dashboard"));
+      // law-expert: the product is the research page — the case list is one tap away in
+      // the account menu.
+      router.push(localePath(locale, "/research"));
     } catch {
       setError(t("signInError"));
     } finally {

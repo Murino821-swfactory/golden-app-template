@@ -6,6 +6,7 @@ import { Header as SharedHeader, type HeaderLabels } from "@tokenwise/shared-ui"
 import { useAuth } from "@/hooks/use-auth";
 import { config } from "@/lib/prototype-config";
 import { localePath, routeFromPathname } from "@/lib/locale-routing";
+import { researchCopy } from "@/lib/law-expert/copy";
 
 /**
  * The prototype's header is `@tokenwise/shared-ui`'s — the same component tokenwise.sk
@@ -85,7 +86,10 @@ export function Header() {
       }))}
       user={withAuth ? (loading ? "loading" : user) : undefined}
       signInHref={localePath(locale, "/login")}
-      userMenuItems={[{ label: t("dashboard"), href: localePath(locale, "/dashboard") }]}
+      userMenuItems={[
+        { label: researchCopy(locale).nav, href: localePath(locale, "/research") },
+        { label: t("dashboard"), href: localePath(locale, "/dashboard") },
+      ]}
       onSignOut={signOut}
       labels={labels}
     />

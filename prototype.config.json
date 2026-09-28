@@ -68,35 +68,35 @@
       }
     },
     "cta": {
-      "href": "/dashboard"
+      "href": "/research"
     }
   },
   "content": {
     "en": {
-      "description": "Law expert helps lawyers search judicial decisions and get consolidated recommendations on criminal cases — all in one place.",
+      "description": "Law expert searches published Slovak criminal-law decisions and writes research memos that quote the decisions they rely on.",
       "landing": {
         "headline": "Find the right precedent before your opponent does",
-        "subheadline": "Law expert is built for lawyers who need to search judicial decisions and get a clear, consolidated opinion on a criminal act in minutes.",
+        "subheadline": "Search published Slovak court decisions and get a research memo in which every claim quotes the decision behind it.",
         "features": [
           {
             "icon": "🔍",
-            "title": "Judicial Decision Search",
-            "description": "Search across court decisions by keywords, crime type or date and retrieve the most relevant rulings immediately."
+            "title": "Live court decisions",
+            "description": "Search published Slovak criminal-law decisions in InfoSúd, the Ministry of Justice register, by words, Criminal Code section, court, region or date."
           },
           {
             "icon": "⚖️",
-            "title": "Criminal Act Recommendation",
-            "description": "Get a consolidated legal opinion on the criminal act at hand, drawn directly from matching case law."
+            "title": "A research memo that shows its sources",
+            "description": "Describe what happened. The app names the likely Criminal Code sections, reads the most relevant judgments and writes a memo in which every claim quotes the decision it comes from."
+          },
+          {
+            "icon": "📊",
+            "title": "How courts decide under a section",
+            "description": "See how decisions under a section split between judgments and penal orders, how appeals ended and in which regions they were decided."
           },
           {
             "icon": "📁",
-            "title": "Case Tracking",
-            "description": "Log every case you are researching, record the court, status and your notes, and filter the list at any time."
-          },
-          {
-            "icon": "📋",
-            "title": "Single-view Output",
-            "description": "Consolidate scattered database records into one readable output you can act on without switching tools."
+            "title": "Your cases",
+            "description": "Save a memo to your case list with the court, the status and the decisions it relied on."
           }
         ]
       },
@@ -119,30 +119,30 @@
       }
     },
     "sk": {
-      "description": "Law expert pomáha advokátom vyhľadávať súdne rozhodnutia a získať konsolidované odporúčanie k trestnému činu — všetko na jednom mieste.",
+      "description": "Law expert prehľadáva zverejnené slovenské trestnoprávne rozhodnutia a píše rešerše, ktoré citujú rozhodnutia, o ktoré sa opierajú.",
       "landing": {
         "headline": "Správny precedens nájdete skôr, než ho hľadá protistrana",
-        "subheadline": "Law expert je určený advokátom, ktorí potrebujú prehľadať súdne rozhodnutia a získať jasné stanovisko k trestnému činu v priebehu minút.",
+        "subheadline": "Prehľadajte zverejnené slovenské súdne rozhodnutia a získajte rešerš, v ktorej každé tvrdenie cituje rozhodnutie, z ktorého vychádza.",
         "features": [
           {
             "icon": "🔍",
-            "title": "Vyhľadávanie rozhodnutí",
-            "description": "Prehľadajte súdne rozhodnutia podľa kľúčových slov, typu trestného činu alebo dátumu a okamžite zobrazte relevantné nálezy."
+            "title": "Živé súdne rozhodnutia",
+            "description": "Prehľadávajte zverejnené trestnoprávne rozhodnutia v InfoSúde, registri Ministerstva spravodlivosti SR, podľa slov, paragrafu Trestného zákona, súdu, kraja alebo dátumu."
           },
           {
             "icon": "⚖️",
-            "title": "Odporúčanie k trestnému činu",
-            "description": "Získajte konsolidované právne stanovisko k danému trestnému činu, odvodené priamo z odpovedajúcej judikatúry."
+            "title": "Rešerš, ktorá ukazuje svoje zdroje",
+            "description": "Opíšte, čo sa stalo. Aplikácia navrhne paragrafy Trestného zákona, prečíta najrelevantnejšie rozsudky a napíše rešerš, v ktorej každé tvrdenie cituje rozhodnutie, z ktorého pochádza."
+          },
+          {
+            "icon": "📊",
+            "title": "Ako súdy rozhodujú podľa paragrafu",
+            "description": "Pozrite sa, koľko rozhodnutí k paragrafu tvoria rozsudky a trestné rozkazy, ako dopadli odvolania a v ktorých krajoch sa rozhodovalo."
           },
           {
             "icon": "📁",
-            "title": "Správa prípadov",
-            "description": "Zaznamenajte každý prípad, na ktorom pracujete, uložte súd, stav a poznámky a kedykoľvek filtrujte zoznam."
-          },
-          {
-            "icon": "📋",
-            "title": "Prehľadný výstup",
-            "description": "Roztrúsené záznamy z databázy skombinujte do jedného čitateľného výstupu, s ktorým môžete ihneď pracovať."
+            "title": "Vaše prípady",
+            "description": "Uložte rešerš do zoznamu prípadov spolu so súdom, stavom a rozhodnutiami, o ktoré sa opiera."
           }
         ]
       },

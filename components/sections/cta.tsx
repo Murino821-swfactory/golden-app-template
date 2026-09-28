@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { config } from "@/lib/prototype-config";
 import { useContent } from "@/hooks/use-content";
+import { localePath } from "@/lib/locale-routing";
 
 // The interactive half of the CTA — what it says and where it goes — is the `cta` pattern's
 // declared schema, so it comes from prototype.config.json. It used to come from the
@@ -16,7 +17,11 @@ const cta = config.patterns.cta;
 export function CtaSection() {
   const t = useTranslations("cta");
   const label = useContent().cta?.label ?? t("action");
-  const href = cta?.href ?? "#contact";
+  // An in-app route is addressed in the language on screen — from `/sk` the CTA must lead
+  // to `/sk/research`, not to the default locale's page. Anchors and external links as-is.
+  const locale = useLocale();
+  const target = cta?.href ?? "#contact";
+  const href = target.startsWith("/") ? localePath(locale, target) : target;
 
   return (
     <section
