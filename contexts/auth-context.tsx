@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -29,6 +30,12 @@ interface AuthContextType {
   authAvailable: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  /**
+   * The signed-in user's Firebase ID token, for a server that checks who is asking
+   * (the hero-image controls). `null` when nobody is signed in. Never loads Firebase for
+   * an anonymous visitor: without `user` it returns before importing anything.
+   */
+  getIdToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -289,9 +296,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const getIdToken = useCallback(async (): Promise<string | null> => {
+    if (!user) return null;
+    const { getAuthInstance } = await loadFirebase();
+    const current = getAuthInstance().currentUser;
+    return current ? current.getIdToken() : null;
+  }, [user]);
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, authAvailable, signInWithGoogle, signOut }}
+      value={{ user, loading, authAvailable, signInWithGoogle, signOut, getIdToken }}
     >
       {children}
     </AuthContext.Provider>
