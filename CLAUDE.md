@@ -13,7 +13,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 
 | Feature Type | Files to Change |
 |-------------|-----------------|
-| App name (header, footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json` |
+| App name (footer, title) | `prototype.config.json` → `appName` — **never** `messages/en.json`. The header shows tokenwise.sk's logo, not the app name (founder, 2026-09-28) |
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
@@ -327,6 +327,11 @@ user. Spec and decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
 
+- **A prototype's header is tokenwise.sk's, 1:1 (founder decision 2026-09-28):** the
+  tokenwise.sk logo and the site's public nav (Articles … Privacy, Contact → `/?scene=9`),
+  every link absolute to `https://tokenwise.sk` — the adapter passes `siteOrigin`, because a
+  prototype is served from apps.tokenwise.sk. The palette, font, language, cart and sign-in
+  controls stay the prototype's. The app's name is in the footer and the `<title>`.
 - The package never imports Firebase, next-intl or `@/…` — the adapter
   `components/layout/header.tsx` turns auth, locale routing and `messages/*.json` into props.
 - It reads only `--shared-*` CSS variables; `app/globals.css` maps them onto the shadcn

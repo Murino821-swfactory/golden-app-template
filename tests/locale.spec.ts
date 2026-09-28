@@ -153,7 +153,8 @@ test("a single-language prototype renders no switcher at all", async ({ page }) 
 
   await page.goto("./");
   // Not "hidden" — absent. A control offering one choice is chrome with nothing behind it.
-  await expect(page.getByRole("navigation")).toHaveCount(0);
+  // By name: the header also carries tokenwise.sk's nav (founder decision 2026-09-28).
+  await expect(page.getByRole("navigation", { name: "Language" })).toHaveCount(0);
 });
 
 test("the Change colour button speaks the page's language", async ({ page }) => {
