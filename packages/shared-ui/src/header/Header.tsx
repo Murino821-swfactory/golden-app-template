@@ -16,7 +16,7 @@ import { MenuPanel } from "./MenuPanel";
 import { navFor, type HeaderVariant } from "./nav";
 
 export interface HeaderProps {
-  /** Picks the nav (see nav.ts). `prototype` has none. */
+  /** Picks the nav (see nav.ts). `prototype` is tokenwise.sk's public nav on `siteOrigin`. */
   variant: HeaderVariant;
   logo: LogoProps;
   /** `sticky` pushes content; `fixed` and `absolute` overlay it. `absolute` is fully
@@ -24,6 +24,9 @@ export interface HeaderProps {
   position?: "sticky" | "fixed" | "absolute";
   /** Adds Contact to the landing/public nav. */
   onContact?: () => void;
+  /** Where tokenwise.sk lives, for a host served from elsewhere (a prototype on
+   * apps.tokenwise.sk): the `prototype` nav is tokenwise.sk's, made absolute to it. */
+  siteOrigin?: string;
   /** The palette the host renders first. Absent: no palette switcher (tokenwise.sk, wave 1). */
   palette?: ColorSchemeId;
   /** The font the host renders first — the same id it puts on `<html data-font>`. */
@@ -60,6 +63,7 @@ export function Header({
   logo,
   position = "sticky",
   onContact,
+  siteOrigin,
   palette,
   font,
   languages = [],
@@ -75,7 +79,7 @@ export function Header({
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const closeMenu = useCallback(() => setMenuOpen(false), [setMenuOpen]);
-  const items = navFor(variant, Boolean(onContact), labels.contact);
+  const items = navFor(variant, { hasContact: Boolean(onContact), contactLabel: labels.contact, siteOrigin });
 
   const positionClass =
     position === "fixed"
