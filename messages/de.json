@@ -85,5 +85,18 @@
     "recordsLabel": "Einträge: {entity}",
     "addedThisMonth": "Diesen Monat hinzugefügt",
     "trackedFields": "Erfasste Felder"
+  },
+  "heroImage": {
+    "generate": "Bild erzeugen",
+    "confirm": "Sicher? Du hast einen Versuch",
+    "generating": "Wird erzeugt…",
+    "hide": "Bild ausblenden",
+    "show": "Bild anzeigen",
+    "regenerate": "Neues erzeugen",
+    "retry": "Erneut versuchen",
+    "failed": "Das hat nicht geklappt",
+    "failedRetry": "Das hat nicht geklappt – dein Versuch bleibt erhalten",
+    "unavailable": "Erzeugen ist gerade nicht verfügbar",
+    "slow": "Das dauert länger – lade die Seite neu"
   }
 }

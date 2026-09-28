@@ -1,6 +1,6 @@
 {
   "name": "@tokenwise/shared-ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The one header of tokenwise.sk and every prototype: palette, font, language, cart and user controls.",
   "license": "UNLICENSED",
   "repository": {
