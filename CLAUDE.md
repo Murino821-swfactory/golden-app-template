@@ -20,6 +20,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
+| AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 
 ## Critical Rules for Fast Implementation
 
@@ -80,12 +81,14 @@ app/
     dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
 components/
   sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
+                         #   + hero-image-controls.tsx (creator/founder buttons under the hero)
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
   layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
-  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut }
+  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
+  use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
   utils.ts               # cn() for className merging
@@ -336,6 +339,28 @@ user. Spec and decision in the **sw-factory** repo
   checks); merging to `main` publishes it to npm. Live prototypes change only through
   `npm run prototypes:refresh` on the VM, never automatically.
 - New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+
+## The AI hero image (2026-09-25)
+
+The hero can show a Gemini-generated background. The prototype's creator (signed in) may
+generate one; the founder any number; both may hide or show it. The server is factory-web
+(`prototypeHeroImage`); decision record `docs/decisions/prototype-hero-image.md` in the
+**sw-factory** repo.
+
+- Every visitor reads `<basePath>/hero-image.json`. `public/hero-image.json` ships as
+  `{"visible":false}` — keep it: on the harness sandbox and in this repo's CI there is no
+  function, and a 404 there is a console error that fails the smoke gate on every build.
+- **Never call `/api/*` without a signed-in user.** The static server in the sandbox and
+  in CI cannot answer it; `useHeroImage` calls `/api/prototype-hero-image` only when
+  `user` and `NEXT_PUBLIC_DEMO_SLUG` exist and the base path is `/newapp/…` (the golden
+  demo on tokenwise.sk/demo/golden has a slug but no such endpoint).
+- The hero `<section>` is full width; its content keeps the old `max-w-5xl` box, so with
+  no image it looks as before. The image layer is absolute (moves nothing, CLS 0).
+- Readability over the image is not guaranteed (founder decision): the overlay is drawn in
+  `var(--background)` at `HERO_OVERLAY_ALPHA`, and a visitor who cannot read the text
+  clicks "Change colour".
+- The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
+  copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
 ## Firestore rules — owned by factory-web, not here
 

@@ -85,5 +85,18 @@
     "recordsLabel": "Registros: {entity}",
     "addedThisMonth": "Añadidos este mes",
     "trackedFields": "Campos registrados"
+  },
+  "heroImage": {
+    "generate": "Generar imagen",
+    "confirm": "¿Seguro? Tienes un intento",
+    "generating": "Generando…",
+    "hide": "Ocultar imagen",
+    "show": "Mostrar imagen",
+    "regenerate": "Generar otra",
+    "retry": "Reintentar",
+    "failed": "No ha funcionado",
+    "failedRetry": "No ha funcionado: tu intento sigue disponible",
+    "unavailable": "La generación no está disponible ahora",
+    "slow": "Está tardando más — recarga la página"
   }
 }

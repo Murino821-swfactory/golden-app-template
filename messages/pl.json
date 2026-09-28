@@ -85,5 +85,18 @@
     "recordsLabel": "Rekordy: {entity}",
     "addedThisMonth": "Dodane w tym miesiącu",
     "trackedFields": "Śledzone pola"
+  },
+  "heroImage": {
+    "generate": "Wygeneruj obraz",
+    "confirm": "Na pewno? Masz jedną próbę",
+    "generating": "Generuję…",
+    "hide": "Ukryj obraz",
+    "show": "Pokaż obraz",
+    "regenerate": "Wygeneruj nowy",
+    "retry": "Spróbuj ponownie",
+    "failed": "Nie udało się",
+    "failedRetry": "Nie udało się — próba nie przepadła",
+    "unavailable": "Generowanie jest teraz niedostępne",
+    "slow": "To trwa dłużej — odśwież stronę"
   }
 }

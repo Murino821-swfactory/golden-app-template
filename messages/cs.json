@@ -85,5 +85,18 @@
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Přidáno tento měsíc",
     "trackedFields": "Sledovaná pole"
+  },
+  "heroImage": {
+    "generate": "Vygenerovat obrázek",
+    "confirm": "Opravdu? Máš jeden pokus",
+    "generating": "Generuji…",
+    "hide": "Skrýt obrázek",
+    "show": "Zobrazit obrázek",
+    "regenerate": "Vygenerovat nový",
+    "retry": "Zkusit znovu",
+    "failed": "Nepodařilo se",
+    "failedRetry": "Nepodařilo se, pokus ti zůstává",
+    "unavailable": "Generování teď není dostupné",
+    "slow": "Trvá to déle — obnov stránku"
   }
 }
