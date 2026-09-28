@@ -1,5 +1,6 @@
 /**
- * color-schemes.ts — the fifteen palettes a customer picks from, and the deterministic rule
+ * color-schemes.ts (@tokenwise/shared-ui; moved from golden-app-template lib/ on 2026-09-25)
+ * — the fifteen palettes a customer picks from, and the deterministic rule
  * that turns a two-colour pair into CSS roles.
  *
  * A palette is a PAIR [founder decision 2026-09-24]: the fifteen combinations the founder
@@ -12,7 +13,7 @@
  * fall under WCAG AA on a card is corrected — the background is deepened toward black
  * first, then the text lifted toward white, one percent at a time — so the hue the founder
  * picked survives and only the contrast moves. Five of the fifteen are corrected; the
- * values are pinned in tests/color-schemes.spec.ts.
+ * values are pinned in golden-app-template tests/color-schemes.spec.ts.
  *
  * Canonical documentation: sw-factory `docs/COLOR_SCHEMES.md`.
  *
@@ -76,7 +77,7 @@ export const PALETTES: Record<ColorSchemeId, Palette> = {
 /**
  * The four ids retired on 2026-09-24, mapped by nearest hue. Every `demo/*` branch built
  * before then carries one in prototype.config.json, and a refresh deliberately never edits
- * a customer's config — so the parser translates instead (lib/prototype-config.ts).
+ * a customer's config — so the parser translates instead (golden-app-template lib/prototype-config.ts).
  */
 export const LEGACY_SCHEME_IDS: Readonly<Record<string, ColorSchemeId>> = {
   red: "warm-apricot-royal-plum",
