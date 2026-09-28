@@ -5,7 +5,7 @@ import {
   config,
   type PrototypeConfig,
 } from "../lib/prototype-config";
-import { LEGACY_SCHEME_IDS } from "../lib/color-schemes";
+import { LEGACY_SCHEME_IDS } from "@tokenwise/shared-ui/theming";
 
 /**
  * The config splits along ONE line: does this value change when the language changes?

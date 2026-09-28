@@ -13,6 +13,15 @@ import { config } from "../lib/prototype-config";
  */
 
 test.describe("contact form — no demo slug", () => {
+  // The factory's smoke gate builds and serves every prototype WITH its slug
+  // (`loadDemoEnv` in sw-factory), so the form there is live by design and this suite has
+  // nothing to say. Without this skip, every prototype that enables `contactForm` failed
+  // its smoke gate on these four tests while the template's own CI (no slug) stayed green.
+  test.skip(
+    Boolean(process.env.NEXT_PUBLIC_DEMO_SLUG),
+    "NEXT_PUBLIC_DEMO_SLUG is set — the form is configured, so the not-configured state cannot appear"
+  );
+
   test("renders the disabled, not-configured state", async ({ page }) => {
     test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
 
