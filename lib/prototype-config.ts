@@ -28,7 +28,7 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
-import { COLOR_SCHEME_IDS, LEGACY_SCHEME_IDS } from "./color-schemes";
+import { COLOR_SCHEME_IDS, LEGACY_SCHEME_IDS } from "@tokenwise/shared-ui/theming";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */

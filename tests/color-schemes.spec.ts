@@ -11,7 +11,7 @@ import {
   relativeLuminance,
   mix,
   WCAG_AA_TEXT,
-} from "../lib/color-schemes";
+} from "@tokenwise/shared-ui/theming";
 import { config } from "../lib/prototype-config";
 
 /**
