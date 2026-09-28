@@ -2,6 +2,9 @@
   "name": "golden-app-template",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,9 +15,11 @@
     "validate:config": "tsx scripts/validate-config.ts",
     "test:e2e": "playwright test",
     "deploy:production": "npm run build && firebase deploy --only hosting",
-    "preview": "node scripts/preview.mjs"
+    "preview": "node scripts/preview.mjs",
+    "test:packages": "npm test --workspaces --if-present"
   },
   "dependencies": {
+    "@tokenwise/shared-ui": "0.1.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.6",
     "firebase": "^12.18.0",

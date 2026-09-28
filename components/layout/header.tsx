@@ -1,52 +1,86 @@
 "use client";
 
-import Link from "next/link";
-import { useLocale } from "next-intl";
-import { LanguageSwitcher } from "@/components/layout/language-switcher";
-import { PaletteSwitcher } from "@/components/layout/palette-switcher";
-import { UserMenu } from "@/components/layout/user-menu";
+import { usePathname } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { Header as SharedHeader, type HeaderLabels } from "@tokenwise/shared-ui";
+import { useAuth } from "@/hooks/use-auth";
 import { config } from "@/lib/prototype-config";
-import { localePath } from "@/lib/locale-routing";
+import { localePath, routeFromPathname } from "@/lib/locale-routing";
 
 /**
- * The header every page of a prototype shows.
- *
- * Contents are deliberately three controls and a name — Change colour, sign-in, and, when the
- * prototype ships more than one locale, the language switcher. On a phone the name gives way
- * (truncates) before any control does. No nav: a prototype has
- * two or three routes, and a menu over them is chrome pretending to be a product.
+ * The prototype's header is `@tokenwise/shared-ui`'s — the same component tokenwise.sk
+ * renders, so a change to the header is one change (sw-factory spec
+ * 2026-09-25-shared-header-design.md). This file only translates the prototype's world into
+ * props: its name, its languages, its sign-in, its copy.
  *
  * The name comes from `prototype.config.json`. It used to come from `messages/en.json`,
  * whose `common.appName` is the string "Golden App" — so every prototype, whatever the
- * customer named it, introduced itself as the template in its own header and footer. The
- * `<title>` was right, which is exactly why the smoke suite never saw it.
+ * customer named it, introduced itself as the template in its own header and footer.
  */
+
+/** Each language named in ITSELF: a visitor on the wrong language has to be able to read
+ * the way out of it, and "Slovak" is no help to someone who only reads Slovak. */
+const LOCALE_NAMES: Record<string, string> = {
+  en: "English",
+  sk: "Slovenčina",
+  cs: "Čeština",
+  de: "Deutsch",
+  pl: "Polski",
+  hu: "Magyar",
+  fr: "Français",
+  es: "Español",
+};
+
+const LABEL_KEYS = [
+  "openMenu",
+  "closeMenu",
+  "menu",
+  "changeColour",
+  "changeColourLabel",
+  "font",
+  "changeFontLabel",
+  "language",
+  "cart",
+  "cartLabel",
+  "cartEmpty",
+  "signIn",
+  "signOut",
+  "account",
+] as const satisfies readonly (keyof HeaderLabels)[];
+
 export function Header() {
-  // Home in the language on screen: from `/sk/login` the name has to lead back to `/sk`,
-  // not to the default locale's landing page.
+  const t = useTranslations("common");
+  // Home, sign-in and dashboard in the language on screen: from `/sk/login` the name has
+  // to lead back to `/sk`, not to the default locale's landing page.
   const locale = useLocale();
+  const route = routeFromPathname(usePathname());
+  const { user, loading, signOut } = useAuth();
+  const withAuth = config.patterns.authGoogle !== undefined;
+
+  // `t.raw`, not `t`: the templates carry `{name}`-style placeholders the package fills in
+  // with the palette or font on screen, which only it knows.
+  const labels = Object.fromEntries(
+    LABEL_KEYS.map((key) => [key, t.raw(key) as string])
+  ) as Partial<HeaderLabels>;
 
   return (
-    <header
-      className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border/60 py-3 backdrop-blur-sm"
-      style={{
-        background: "color-mix(in srgb, var(--background) 88%, transparent)",
-        paddingLeft: "var(--gutter)",
-        paddingRight: "var(--gutter)",
-      }}
-    >
-      <Link
-        href={localePath(locale)}
-        className="min-w-0 truncate font-heading text-sm font-semibold tracking-tight text-foreground"
-      >
-        {config.appName}
-      </Link>
-
-      <div className="flex shrink-0 items-center gap-1">
-        <LanguageSwitcher />
-        <PaletteSwitcher />
-        {config.patterns.authGoogle !== undefined && <UserMenu />}
-      </div>
-    </header>
+    <SharedHeader
+      variant="prototype"
+      logo={{ href: localePath(locale), text: config.appName }}
+      palette={config.theme.colorScheme}
+      font="inter"
+      languages={config.locales.map((id) => ({
+        code: id,
+        name: LOCALE_NAMES[id] ?? id,
+        // Keeps the visitor on the page they were reading rather than sending them home.
+        href: localePath(id, route),
+        current: id === locale,
+      }))}
+      user={withAuth ? (loading ? "loading" : user) : undefined}
+      signInHref={localePath(locale, "/login")}
+      userMenuItems={[{ label: t("dashboard"), href: localePath(locale, "/dashboard") }]}
+      onSignOut={signOut}
+      labels={labels}
+    />
   );
 }

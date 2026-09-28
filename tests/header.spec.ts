@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { COLOR_SCHEME_IDS, PALETTES, nextSchemeId, rolesFor } from "../lib/color-schemes";
+import { COLOR_SCHEME_IDS, PALETTES, nextSchemeId, rolesFor } from "@tokenwise/shared-ui/theming";
 import { LOCALES, config } from "../lib/prototype-config";
 
 /**
@@ -126,6 +126,8 @@ test.describe("Change colour", () => {
     await expect(changeColour(page)).toHaveAttribute("aria-label", labelFor(START));
   });
 
+  // Below 640px only the swatch shows (shared header, 2026-09-25); the accessible name keeps
+  // the words.
   test("on a phone the header stays one row, however long the app's name", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("./");
@@ -133,11 +135,12 @@ test.describe("Change colour", () => {
       .getByRole("banner")
       .getByRole("link", { name: config.appName })
       .evaluate((el) => {
-        el.textContent = "An Extremely Long Customer Application Name That Keeps Going";
+        el.querySelector("span")!.textContent =
+          "An Extremely Long Customer Application Name That Keeps Going";
       });
 
-    await expect(changeColour(page)).toHaveText("Change colour");
     await expect(changeColour(page)).toBeInViewport({ ratio: 1 });
+    await expect(changeColour(page).getByText("Change colour")).toBeHidden();
     const box = await page.getByRole("banner").boundingBox();
     expect(box!.height).toBeLessThan(80);
   });

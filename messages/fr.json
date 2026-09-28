@@ -7,7 +7,15 @@
     "loading": "Chargement...",
     "language": "Langue",
     "changeColour": "Changer de couleur",
-    "changeColourLabel": "Changer de couleur — {name}, {position} sur {total}"
+    "changeColourLabel": "Changer de couleur — {name}, {position} sur {total}",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "menu": "Menu",
+    "font": "Police",
+    "changeFontLabel": "Changer de police : {name} ({position} sur {total})",
+    "cart": "Panier",
+    "cartLabel": "Panier, {count} articles",
+    "cartEmpty": "Votre panier est vide"
   },
   "auth": {
     "signInTitle": "Connexion",
@@ -77,5 +85,18 @@
     "recordsLabel": "Enregistrements : {entity}",
     "addedThisMonth": "Ajoutés ce mois-ci",
     "trackedFields": "Champs suivis"
+  },
+  "heroImage": {
+    "generate": "Générer une image",
+    "confirm": "Sûr ? Vous avez un seul essai",
+    "generating": "Génération…",
+    "hide": "Masquer l'image",
+    "show": "Afficher l'image",
+    "regenerate": "En générer une nouvelle",
+    "retry": "Réessayer",
+    "failed": "Cela n'a pas fonctionné",
+    "failedRetry": "Cela n'a pas fonctionné — votre essai n'est pas perdu",
+    "unavailable": "La génération n'est pas disponible pour le moment",
+    "slow": "Cela prend plus de temps — rechargez la page"
   }
 }

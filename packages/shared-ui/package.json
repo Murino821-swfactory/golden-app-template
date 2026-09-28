@@ -1,0 +1,41 @@
+{
+  "name": "@tokenwise/shared-ui",
+  "version": "0.1.0",
+  "description": "The one header of tokenwise.sk and every prototype: palette, font, language, cart and user controls.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Murino821-swfactory/golden-app-template.git",
+    "directory": "packages/shared-ui"
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./theming": "./src/theming/index.ts",
+    "./styles.css": "./styles.css"
+  },
+  "files": [
+    "src",
+    "styles.css",
+    "fonts",
+    "README.md"
+  ],
+  "scripts": {
+    "fonts:fetch": "tsx scripts/fetch-fonts.ts",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "peerDependencies": {
+    "next": ">=16",
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
