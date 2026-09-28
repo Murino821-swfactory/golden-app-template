@@ -13,10 +13,16 @@ import { localePath, routeFromPathname } from "@/lib/locale-routing";
  * 2026-09-25-shared-header-design.md). This file only translates the prototype's world into
  * props: its name, its languages, its sign-in, its copy.
  *
- * The name comes from `prototype.config.json`. It used to come from `messages/en.json`,
- * whose `common.appName` is the string "Golden App" — so every prototype, whatever the
- * customer named it, introduced itself as the template in its own header and footer.
+ * The header is tokenwise.sk's, 1:1 (founder decision 2026-09-28): the site's logo and
+ * public nav, every link absolute to tokenwise.sk — a prototype is served from
+ * apps.tokenwise.sk, where a relative `/articles` would land in the prototype itself. The
+ * customer's name is in the footer, the `<title>` and the page (it used to be the logo).
+ * The controls — palette, font, language, cart, the prototype's own sign-in — stay the
+ * prototype's.
  */
+
+/** Where tokenwise.sk lives. Absolute, because a prototype is never served from it. */
+const TOKENWISE_SITE = "https://tokenwise.sk";
 
 /** Each language named in ITSELF: a visitor on the wrong language has to be able to read
  * the way out of it, and "Slovak" is no help to someone who only reads Slovak. */
@@ -50,8 +56,8 @@ const LABEL_KEYS = [
 
 export function Header() {
   const t = useTranslations("common");
-  // Home, sign-in and dashboard in the language on screen: from `/sk/login` the name has
-  // to lead back to `/sk`, not to the default locale's landing page.
+  // Sign-in and dashboard in the language on screen: from `/sk/…` they lead to `/sk/login`
+  // and `/sk/dashboard`, not to the default locale's.
   const locale = useLocale();
   const route = routeFromPathname(usePathname());
   const { user, loading, signOut } = useAuth();
@@ -66,7 +72,8 @@ export function Header() {
   return (
     <SharedHeader
       variant="prototype"
-      logo={{ href: localePath(locale), text: config.appName }}
+      siteOrigin={TOKENWISE_SITE}
+      logo={{ href: `${TOKENWISE_SITE}/`, text: "tokenwise", accent: ".sk" }}
       palette={config.theme.colorScheme}
       font="inter"
       languages={config.locales.map((id) => ({

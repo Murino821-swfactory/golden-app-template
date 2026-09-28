@@ -73,9 +73,9 @@ test.describe("at 390px", () => {
     }
   });
 
-  test("a long app name truncates instead of pushing a control off screen", async ({ page }) => {
+  test("a long logo truncates instead of pushing a control off screen", async ({ page }) => {
     await page.goto("./");
-    const logo = page.getByRole("banner").getByRole("link", { name: config.appName });
+    const logo = page.getByRole("banner").getByRole("link", { name: "tokenwise.sk" });
     await logo.evaluate((el) => {
       el.querySelector("span")!.textContent =
         "An Extremely Long Customer Application Name That Keeps Going And Going";
@@ -178,7 +178,7 @@ test("the header is styled, not bare markup (the package's classes were compiled
   expect(await header.evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
   const logoFont = await page
     .getByRole("banner")
-    .getByRole("link", { name: config.appName })
+    .getByRole("link", { name: "tokenwise.sk" })
     .evaluate((el) => getComputedStyle(el).fontFamily);
   expect(logoFont).toContain("Big Shoulders");
 });

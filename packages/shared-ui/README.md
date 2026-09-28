@@ -37,7 +37,8 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
 ```tsx
 <Header
   variant="prototype"              // landing | public | dashboard | admin | prototype
-  logo={{ href: "/", text: "My App" }}
+  siteOrigin="https://tokenwise.sk" // prototype: tokenwise.sk's nav, absolute to the site
+  logo={{ href: "https://tokenwise.sk/", text: "tokenwise", accent: ".sk" }}
   palette="midnight-teal-ocean-mist" // omit: no palette switcher
   font="inter"                      // same id as <html data-font>
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}

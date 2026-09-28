@@ -32,12 +32,44 @@ function labelFor(id: (typeof COLOR_SCHEME_IDS)[number]): string {
   return `Change colour — ${PALETTES[id].name}, ${position} of ${COLOR_SCHEME_IDS.length}`;
 }
 
+const SITE = "https://tokenwise.sk";
+
 test.describe("header identity", () => {
-  test("the header names the customer's app, not the template", async ({ page }) => {
+  // Founder decision 2026-09-28: a prototype's header is tokenwise.sk's, 1:1 — the site's
+  // logo and nav, every link absolute to tokenwise.sk (the prototype is on another origin).
+  // The customer's name lives in the footer, the <title> and the page itself.
+  test("the header is tokenwise.sk's: its logo leads to the site", async ({ page }) => {
     await page.goto("./");
-    await expect(
-      page.getByRole("banner").getByRole("link", { name: config.appName })
-    ).toBeVisible();
+    const logo = page.getByRole("banner").getByRole("link", { name: "tokenwise.sk" });
+    await expect(logo).toBeVisible();
+    await expect(logo).toHaveAttribute("href", `${SITE}/`);
+    await expect(page.getByRole("banner").getByRole("link", { name: config.appName, exact: true })).toHaveCount(0);
+  });
+
+  test("on a desktop the bar carries tokenwise.sk's nav, pointing at the site", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("./");
+    const nav = page.getByRole("banner").getByRole("navigation", { name: "Main" });
+    for (const [label, path] of [
+      ["Articles", "/articles"],
+      ["Arena", "/compare"],
+      ["Projects", "/projects"],
+      ["Ideas", "/ideas"],
+      ["How It Works", "/how-it-works"],
+      ["Privacy", "/privacy"],
+      ["Contact", "/?scene=9"],
+    ] as const) {
+      await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("href", `${SITE}${path}`);
+    }
+  });
+
+  test("on a phone the same nav is in the menu", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("./");
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const dialog = page.getByRole("dialog", { name: "Menu" });
+    await expect(dialog.getByRole("link", { name: "Articles", exact: true })).toHaveAttribute("href", `${SITE}/articles`);
+    await expect(dialog.getByRole("link", { name: "Contact", exact: true })).toHaveAttribute("href", `${SITE}/?scene=9`);
   });
 
   test("the footer names the customer's app, not the template", async ({ page }) => {
@@ -51,9 +83,7 @@ test.describe("header identity", () => {
   test("the sign-in page carries the same header", async ({ page }) => {
     test.skip(!config.patterns.authGoogle, "authGoogle not enabled in this config");
     await page.goto("./login");
-    await expect(
-      page.getByRole("banner").getByRole("link", { name: config.appName })
-    ).toBeVisible();
+    await expect(page.getByRole("banner").getByRole("link", { name: "tokenwise.sk" })).toBeVisible();
     await expect(changeColour(page)).toBeVisible();
   });
 });
@@ -128,12 +158,12 @@ test.describe("Change colour", () => {
 
   // Below 640px only the swatch shows (shared header, 2026-09-25); the accessible name keeps
   // the words.
-  test("on a phone the header stays one row, however long the app's name", async ({ page }) => {
+  test("on a phone the header stays one row, however long the logo", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("./");
     await page
       .getByRole("banner")
-      .getByRole("link", { name: config.appName })
+      .getByRole("link", { name: "tokenwise.sk" })
       .evaluate((el) => {
         el.querySelector("span")!.textContent =
           "An Extremely Long Customer Application Name That Keeps Going";
