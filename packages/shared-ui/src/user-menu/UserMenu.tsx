@@ -64,11 +64,11 @@ export function UserMenu({
     return (
       <Link
         href={signInHref}
-        // On a phone the visible label is gone, and this is the only accessible name left.
+        // Icon only, at every width [founder decision 2026-09-28], so this is the control's
+        // only name — the figure alone says nothing to a screen reader.
         aria-label={labels.signIn}
         data-shared-control="user"
-        className="flex min-h-11 min-w-11 items-center justify-center gap-2 rounded px-2 text-[12px] tracking-[0.05em] text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)]"
-        style={{ fontFamily: "var(--shared-font-mono)" }}
+        className="flex h-11 w-11 items-center justify-center rounded-md text-[var(--shared-ink-muted)] transition-colors hover:text-[var(--shared-accent)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--shared-accent)]"
       >
         <svg
           width="18"
@@ -85,7 +85,6 @@ export function UserMenu({
           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
         </svg>
-        <span className="hidden sm:inline">{labels.signIn}</span>
       </Link>
     );
   }

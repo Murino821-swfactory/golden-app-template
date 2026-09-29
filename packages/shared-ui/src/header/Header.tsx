@@ -50,9 +50,12 @@ const NAV_LINK =
 /**
  * The one header of tokenwise.sk and of every prototype.
  *
- *   ≥1024px  [logo]  nav…  [● Change colour] [Aa Inter] [EN ▾] [cart] [user]
- *   <1024px  [logo…]              [● Change colour] [cart] [user] [☰]
- *   <640px   [logo…]                               [●] [cart] [user] [☰]
+ *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [EN ▾] [cart] [user]
+ *   <1024px  [logo…]                  [◎] [cart] [user] [☰]
+ *
+ * Every control right of the nav is an icon and nothing else [founder decision 2026-09-28]:
+ * a colour wheel, "Aa" in the face on screen, the cart, the figure. Their names live in
+ * `aria-label`, and the font and the languages are spelled out in the menu below 1024px.
  *
  * Translucent over the page (the host's background at 88% with a backdrop blur), no bottom
  * rule — as tokenwise.sk's header was before it moved here. Every colour and typeface is a
