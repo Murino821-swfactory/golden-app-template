@@ -9,6 +9,8 @@ import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroOverlayBackground } from "@/lib/hero-overlay";
 import { cn } from "@/lib/utils";
 import { HeroImageControls } from "./hero-image-controls";
+import { config } from "@/lib/prototype-config";
+import { landingActionHref } from "@/lib/landing-action";
 
 /**
  * Hero section — the first thing a visitor sees.
@@ -51,7 +53,9 @@ function HeroBackground({ src }: { src: string }) {
 
 export function HeroSection() {
   const t = useTranslations("landing");
-  const landing = useContent().landing;
+  const content = useContent();
+  const landing = content.landing;
+  const href = landingActionHref(config.patterns);
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
   const hero = useHeroImage();
@@ -66,9 +70,11 @@ export function HeroSection() {
         <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
           {subheadline}
         </p>
-        <Button asChild size="lg">
-          <Link href="#contact">{t("cta")}</Link>
-        </Button>
+        {href && (
+          <Button asChild size="lg">
+            <Link href={href}>{content.cta?.label ?? t("cta")}</Link>
+          </Button>
+        )}
       </div>
       <HeroImageControls hero={hero} />
     </section>
