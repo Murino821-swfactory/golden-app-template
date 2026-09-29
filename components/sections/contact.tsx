@@ -52,6 +52,7 @@ export function ContactSection() {
   if (status === "success") {
     return (
       <section
+        id="contact"
         data-section="contact"
         className="mx-auto w-full max-w-xl px-4 py-16 sm:py-24"
       >
@@ -70,6 +71,7 @@ export function ContactSection() {
 
   return (
     <section
+      id="contact"
       data-section="contact"
       className="mx-auto w-full max-w-xl px-4 py-16 sm:py-24"
     >
