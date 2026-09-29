@@ -35,6 +35,7 @@ in `TAXONOMY`; aliases are lowercase without diacritics.
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
+| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `ContactSection` owns the stable `contact` anchor. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 
 ## Critical Rules for Fast Implementation
@@ -347,6 +348,10 @@ user. Spec and decision in the **sw-factory** repo
   every link absolute to `https://tokenwise.sk` — the adapter passes `siteOrigin`, because a
   prototype is served from apps.tokenwise.sk. The palette, font, language, cart and sign-in
   controls stay the prototype's. The app's name is in the footer and the `<title>`.
+- **The controls are icons, no words (founder decision 2026-09-28, shared-ui 0.3.0):** a
+  colour wheel (Change colour), `Aa` in the face on screen (font), the cart, the figure
+  (Sign in). Their words live only in `aria-label` — so the `changeColourLabel`,
+  `changeFontLabel` and `signIn` strings in `messages/*.json` are still load-bearing.
 - The package never imports Firebase, next-intl or `@/…` — the adapter
   `components/layout/header.tsx` turns auth, locale routing and `messages/*.json` into props.
 - It reads only `--shared-*` CSS variables; `app/globals.css` maps them onto the shadcn
