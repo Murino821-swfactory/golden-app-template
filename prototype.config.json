@@ -1,105 +1,189 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Continue",
   "locales": [
-    "en"
+    "en",
+    "es"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "honey-tan-jet-black"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "contact",
         "cta"
       ]
     },
     "dashboard": {},
     "authGoogle": {},
     "cta": {
-      "href": "/login"
+      "href": "/dashboard"
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "session",
         "fields": [
           {
-            "key": "name",
-            "type": "text",
+            "key": "agent",
+            "type": "select",
+            "options": [
+              "Claude Code",
+              "OpenAI Codex",
+              "Continue"
+            ],
             "required": true
           },
           {
-            "key": "category",
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Active",
+              "Paused",
+              "Waiting for Reset",
+              "Completed"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "startedAt",
+            "type": "date",
+            "required": true
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "tokensUsed",
+            "type": "number",
+            "required": false
+          },
+          {
+            "key": "mode",
+            "type": "select",
+            "options": [
+              "Cloud API",
+              "Local Fallback"
+            ],
+            "required": true
+          },
+          {
+            "key": "task",
+            "type": "text",
+            "required": false
           }
         ]
       }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Continue keeps your AI coding agents running — monitor token quotas, manage sessions for Claude Code, Codex, and Continue, and catch rate limits before they stall your work.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "Keep every AI agent working, around the clock",
+        "subheadline": "For developers running Claude Code, Codex, or Continue — monitor sessions, track token quotas, and keep the queue moving.",
         "features": [
           {
-            "icon": "🎨",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "📋",
+            "title": "Session Status Table",
+            "description": "See every agent session in one filterable table with states: Active, Paused, Waiting for Reset, or Completed."
           },
           {
-            "icon": "🔧",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "⏱",
+            "title": "Quota Countdown",
+            "description": "Track exactly when each model's 5-hour and weekly token limits reset so you can plan uninterrupted work."
           },
           {
-            "icon": "🚀",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "🚫",
+            "title": "Error Detection",
+            "description": "Automatically catch HTTP 429 responses and 'try again at' messages before they block a running session."
+          },
+          {
+            "icon": "📥",
+            "title": "Task Queue Manager",
+            "description": "Assign tasks to models and keep work queued so the next agent picks up the moment a quota clears."
+          },
+          {
+            "icon": "⚙",
+            "title": "Cloud or Local Mode",
+            "description": "Switch between Cloud API and a local Ollama or vLLM fallback without leaving the dashboard."
+          },
+          {
+            "icon": "▶",
+            "title": "Force Resume",
+            "description": "Manually trigger a quota reset or push a paused session back to active with a single action."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Session Overview"
       },
       "cta": {
-        "label": "Get started"
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Open Dashboard"
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Session",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "agent": "Agent",
+          "status": "Status",
+          "startedAt": "Started",
+          "tokensUsed": "Tokens Used",
+          "mode": "Mode",
+          "task": "Task"
+        }
+      }
+    },
+    "es": {
+      "description": "Continue mantiene tus agentes de IA en marcha — supervisa cuotas de tokens, gestiona sesiones de Claude Code, Codex y Continue, y detecta límites de velocidad a tiempo.",
+      "landing": {
+        "headline": "Mantén a tus agentes de IA trabajando sin interrupciones",
+        "subheadline": "Para desarrolladores que usan Claude Code, Codex o Continue: supervisa sesiones, controla cuotas de tokens y gestiona la cola de tareas.",
+        "features": [
+          {
+            "icon": "📋",
+            "title": "Tabla de sesiones",
+            "description": "Consulta todas las sesiones de agentes en una tabla filtrable con estados: Activa, Pausada, Esperando reset o Completada."
+          },
+          {
+            "icon": "⏱",
+            "title": "Cuenta atrás de cuota",
+            "description": "Sigue exactamente cuándo se renuevan los límites de tokens de 5 horas y semanal de cada modelo."
+          },
+          {
+            "icon": "🚫",
+            "title": "Detección de errores",
+            "description": "Captura automáticamente respuestas HTTP 429 y mensajes 'try again at' antes de que bloqueen una sesión activa."
+          },
+          {
+            "icon": "📥",
+            "title": "Cola de tareas",
+            "description": "Asigna tareas a los modelos y mantenlas en cola para que el siguiente agente las tome en cuanto se libere el límite."
+          },
+          {
+            "icon": "⚙",
+            "title": "Modo Cloud o Local",
+            "description": "Cambia entre Cloud API y un fallback local con Ollama o vLLM sin salir del dashboard."
+          },
+          {
+            "icon": "▶",
+            "title": "Forzar reanudación",
+            "description": "Activa manualmente un reset de cuota o devuelve una sesión pausada al estado activo con una sola acción."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Vista general de sesiones"
+      },
+      "cta": {
+        "label": "Abrir dashboard"
+      },
+      "dataGrid": {
+        "entityLabel": "Sesión",
+        "fieldLabels": {
+          "agent": "Agente",
+          "status": "Estado",
+          "startedAt": "Inicio",
+          "tokensUsed": "Tokens usados",
+          "mode": "Modo",
+          "task": "Tarea"
         }
       }
     }
