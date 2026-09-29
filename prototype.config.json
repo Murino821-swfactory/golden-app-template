@@ -41,6 +41,38 @@
     "dashboard": {
       "title": "Today's Check-In"
     },
+    "dataGrid": {
+      "entity": {
+        "key": "goals",
+        "label": "Goal",
+        "fields": [
+          {
+            "key": "goal",
+            "label": "Goal",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "pillar",
+            "label": "Pillar",
+            "type": "select",
+            "options": [
+              "Work",
+              "Fitness",
+              "Mind",
+              "Relationships",
+              "Habits"
+            ],
+            "required": true
+          },
+          {
+            "key": "details",
+            "label": "Details",
+            "type": "longtext"
+          }
+        ]
+      }
+    },
     "authGoogle": {},
     "cta": {
       "label": "Start your first check-in",
