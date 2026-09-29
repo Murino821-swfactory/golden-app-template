@@ -160,7 +160,9 @@ test("a single-language prototype renders no switcher at all", async ({ page }) 
 test("the Change colour button speaks the page's language", async ({ page }) => {
   test.skip(!config.locales.includes("sk"), "this config has no Slovak");
   await page.goto(pathFor("sk"));
-  await expect(
-    page.getByRole("banner").getByRole("button", { name: /^Zmeniť farbu/ })
-  ).toHaveText("Zmeniť farbu");
+  // A colour wheel with no words since 2026-09-28, so the language is in its accessible
+  // name — which is what this locator matches on.
+  const button = page.getByRole("banner").getByRole("button", { name: /^Zmeniť farbu/ });
+  await expect(button).toHaveCount(1);
+  await expect(button).toHaveText("");
 });
