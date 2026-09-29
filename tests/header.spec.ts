@@ -91,7 +91,7 @@ test.describe("header identity", () => {
 test.describe("Change colour", () => {
   test("is one button, not a palette picker", async ({ page }) => {
     await page.goto("./");
-    await expect(changeColour(page)).toHaveText("Change colour");
+    await expect(changeColour(page)).toHaveCount(1);
     await expect(page.getByRole("radiogroup")).toHaveCount(0);
   });
 
@@ -156,8 +156,6 @@ test.describe("Change colour", () => {
     await expect(changeColour(page)).toHaveAttribute("aria-label", labelFor(START));
   });
 
-  // Below 640px only the swatch shows (shared header, 2026-09-25); the accessible name keeps
-  // the words.
   test("on a phone the header stays one row, however long the logo", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("./");
@@ -170,13 +168,14 @@ test.describe("Change colour", () => {
       });
 
     await expect(changeColour(page)).toBeInViewport({ ratio: 1 });
-    await expect(changeColour(page).getByText("Change colour")).toBeHidden();
     const box = await page.getByRole("banner").boundingBox();
     expect(box!.height).toBeLessThan(80);
   });
 
-  test("in every language the button's name starts with its visible text", () => {
-    // WCAG 2.5.3 (label in name): a voice-control user says what they see.
+  test("in every language the button's name opens with the plain phrase", () => {
+    // The button shows a colour wheel and no words (2026-09-28), so `changeColourLabel` is
+    // its only name. It opens with the plain phrase — what a voice-control user says to a
+    // colour wheel — before the palette's name and place in the cycle.
     for (const id of LOCALES) {
       const common = JSON.parse(
         readFileSync(resolve(__dirname, `../messages/${id}.json`), "utf-8")
@@ -189,16 +188,33 @@ test.describe("Change colour", () => {
   });
 });
 
-test.describe("sign-in control", () => {
-  test("keeps an accessible name when its label is hidden on a phone", async ({ page }) => {
-    test.skip(!config.patterns.authGoogle, "authGoogle not enabled in this config");
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("./");
+// Founder decision 2026-09-28: every control right of the nav is an icon, like the cart —
+// a colour wheel, "Aa", the cart, the figure. No "Change colour", no font name, no "Sign in"
+// in the bar at any width; the words are in each control's accessible name.
+test.describe("icon-only controls", () => {
+  for (const width of [390, 1280]) {
+    test(`carry no words in the bar at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("./");
+      const bar = page.getByRole("banner");
 
-    const signIn = page.getByRole("banner").getByRole("link", { name: "Sign in" });
-    await expect(signIn).toHaveAttribute("aria-label", "Sign in");
-    await expect(signIn.locator("span")).toBeHidden();
-  });
+      await expect(changeColour(page)).toHaveText("");
+      await expect(bar.getByRole("button", { name: /^Cart/ })).toHaveText("");
+      if (width >= 1024) {
+        // "Aa" is the icon, set in the face on screen; the face's name is only in the label.
+        const font = bar.getByRole("button", { name: /^Change font: / });
+        await expect(font).toHaveText("Aa");
+      }
+      if (config.patterns.authGoogle) {
+        const signIn = bar.getByRole("link", { name: "Sign in", exact: true });
+        await expect(signIn).toHaveAttribute("aria-label", "Sign in");
+        await expect(signIn).toHaveText("");
+      }
+    });
+  }
+});
+
+test.describe("sign-in control", () => {
 
   test("is absent when the prototype has no sign-in", async ({ page }) => {
     test.skip(Boolean(config.patterns.authGoogle), "authGoogle enabled in this config");

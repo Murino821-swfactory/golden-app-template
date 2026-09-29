@@ -4,6 +4,10 @@ The one header of tokenwise.sk and of every prototype built from `golden-app-tem
 logo, nav, **Change colour** (15 palettes), **font** (10 faces), **language**, **cart**
 and **user**. A change to the header is one PR here.
 
+Colour, font, cart and sign-in are icons with no visible words — a colour wheel, `Aa`, a
+cart, a figure (founder decision 2026-09-28, 0.3.0). Each one's name is its `aria-label`,
+so a host's translations of `changeColourLabel`, `changeFontLabel` and `signIn` still matter.
+
 Spec: sw-factory `docs/superpowers/specs/2026-09-25-shared-header-design.md`.
 Decision: sw-factory `docs/decisions/shared-header-package.md`.
 
