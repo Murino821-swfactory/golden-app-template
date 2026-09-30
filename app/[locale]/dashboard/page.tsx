@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
+import { OwnerLinks } from "@/components/owner/owner-links";
 import { StatCard } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
@@ -52,6 +53,7 @@ function DashboardContent() {
           {dashboard?.title ?? config.appName}
         </h1>
       </header>
+      <OwnerLinks />
 
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}

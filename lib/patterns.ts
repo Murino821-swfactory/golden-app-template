@@ -47,6 +47,10 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "hooks/use-owner-card.ts",
     "components/owner/owner-card-dialog.tsx",
     "public/owner-contact.json",
+    "lib/messages.ts",
+    "hooks/use-inbox.ts",
+    "app/[locale]/messages/page.tsx",
+    "components/owner/owner-links.tsx",
   ],
   dataGrid: [
     "components/patterns/data-grid/index.tsx",
