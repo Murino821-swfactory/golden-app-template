@@ -15,7 +15,8 @@
     "changeFontLabel": "Změnit písmo: {name} ({position} z {total})",
     "cart": "Košík",
     "cartLabel": "Košík, položek: {count}",
-    "cartEmpty": "Košík je prázdný"
+    "cartEmpty": "Košík je prázdný",
+    "close": "Zavřít"
   },
   "auth": {
     "signInTitle": "Přihlášení",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Vaše aplikace",
     "subtitle": "Postaveno na Golden Stacku",
-    "cta": "Začít"
+    "cta": "Začít",
+    "previewLabel": "Ukázka aplikace"
   },
   "features": {
     "title": "Funkce",
@@ -63,7 +65,23 @@
     "sending": "Odesílání…",
     "success": "Děkujeme — vaše zpráva je na cestě. Brzy se vám ozveme.",
     "error": "Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.",
-    "notConfigured": "Kontaktní formulář není v tomto náhledu nastaven."
+    "notConfigured": "Kontaktní formulář není v tomto náhledu nastaven.",
+    "name": "Jméno (nepovinné)",
+    "ownerEdit": "Upravit kontaktní údaje",
+    "ownerMessages": "Zprávy ({count})",
+    "firstName": "Jméno",
+    "lastName": "Příjmení",
+    "address": "Adresa",
+    "phone": "Telefon",
+    "emailField": "E-mail",
+    "publicNotice": "Tyto údaje uvidí každý návštěvník této stránky.",
+    "save": "Uložit",
+    "saving": "Ukládá se…",
+    "cancel": "Zrušit",
+    "saveError": "Údaje se nepodařilo uložit. Zkontrolujte pole a zkuste to znovu.",
+    "callLabel": "Zavolat na {phone}",
+    "emailLabel": "Poslat e-mail na {email}",
+    "mapLabel": "Zobrazit {address} na mapě"
   },
   "cta": {
     "title": "Pustíme se do toho?",
@@ -71,20 +89,42 @@
     "action": "Začít"
   },
   "dataGrid": {
-    "permissionDenied": "Tyto záznamy vidí jen ten, kdo si prototyp vyžádal.",
+    "permissionDenied": "Tuto změnu se nepodařilo uložit. Přihlaste se znovu a zkuste to ještě jednou.",
     "loadError": "Záznamy se nepodařilo načíst. Zkuste to prosím za chvíli znovu.",
     "addAction": "Přidat {entity}",
     "saving": "Ukládání…",
     "listHeading": "Záznamy: {entity}",
-    "empty": "Zatím žádné záznamy: {entity} — přidejte první výše.",
+    "empty": "Zatím žádné záznamy: {entity} — přidejte první.",
     "remove": "Odstranit",
     "yes": "Ano",
-    "no": "Ne"
+    "no": "Ne",
+    "addTitle": "Nový záznam: {entity}",
+    "editTitle": "Upravit záznam: {entity}",
+    "edit": "Upravit",
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "confirmDelete": "Smazat tento záznam? Nelze to vrátit zpět.",
+    "confirmDeleteAction": "Ano, smazat",
+    "searchLabel": "Hledat v záznamech",
+    "all": "Vše",
+    "noMatches": "Hledání neodpovídá žádný záznam.",
+    "limitReached": "Dosáhli jste limitu {limit} záznamů v tomto prototypu.",
+    "sortBy": "Seřadit podle: {field}",
+    "viewTable": "Tabulka",
+    "viewBoard": "Nástěnka",
+    "noValue": "Bez hodnoty",
+    "errorRequired": "Pole „{field}“ je povinné.",
+    "errorType": "Pole „{field}“ má neplatnou hodnotu.",
+    "errorTooLong": "Pole „{field}“ je příliš dlouhé.",
+    "errorOption": "Pole „{field}“ musí být jednou z nabízených možností."
   },
   "dashboard": {
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Přidáno tento měsíc",
-    "trackedFields": "Sledovaná pole"
+    "trackedFields": "Sledovaná pole",
+    "ownerMessages": "Zprávy ({count})",
+    "ownerContact": "Kontaktní údaje"
   },
   "heroImage": {
     "generate": "Vygenerovat obrázek",
@@ -98,5 +138,18 @@
     "failedRetry": "Nepodařilo se, pokus ti zůstává",
     "unavailable": "Generování teď není dostupné",
     "slow": "Trvá to déle — obnov stránku"
+  },
+  "inbox": {
+    "title": "Zprávy",
+    "empty": "Zatím žádné zprávy. Zprávy z kontaktního formuláře se zobrazí zde.",
+    "ownerOnly": "Tato stránka je jen pro vlastníka prototypu.",
+    "notConfigured": "Zprávy jsou dostupné v publikovaném prototypu.",
+    "loadError": "Zprávy se nepodařilo načíst. Zkuste to za chvíli znovu.",
+    "unread": "Nová",
+    "reply": "Odpovědět",
+    "back": "Zpět na přehled"
+  },
+  "howItWorks": {
+    "title": "Jak to funguje"
   }
 }

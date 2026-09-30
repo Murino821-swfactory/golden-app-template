@@ -166,3 +166,30 @@ test("the Change colour button speaks the page's language", async ({ page }) => 
   await expect(button).toHaveCount(1);
   await expect(button).toHaveText("");
 });
+
+test.describe("v2 chrome keys", () => {
+  const REQUIRED = [
+    "common.close",
+    "dataGrid.editTitle",
+    "dataGrid.limitReached",
+    "dataGrid.viewBoard",
+    "contact.ownerEdit",
+    "contact.publicNotice",
+    "inbox.title",
+    "inbox.ownerOnly",
+    "dashboard.ownerMessages",
+    "landing.previewLabel",
+    "howItWorks.title",
+  ];
+  for (const id of ["en", "sk", "cs", "de", "pl", "hu", "fr", "es"]) {
+    test(`${id}: carries every v2 key`, () => {
+      const bundle = JSON.parse(
+        readFileSync(resolve(__dirname, `../messages/${id}.json`), "utf8")
+      ) as Record<string, Record<string, string>>;
+      for (const path of REQUIRED) {
+        const [ns, key] = path.split(".") as [string, string];
+        expect(bundle[ns]?.[key], `${id}: ${path}`).toBeTruthy();
+      }
+    });
+  }
+});
