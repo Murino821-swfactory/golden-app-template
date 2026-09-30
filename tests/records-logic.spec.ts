@@ -15,6 +15,7 @@ import {
   type EntityRecord,
 } from "../lib/records";
 import type { EntityField } from "../lib/prototype-config";
+import * as recordsHook from "../hooks/use-records";
 
 /**
  * The grid's rules without a browser or Firestore. The op shapes are the contract
@@ -146,4 +147,12 @@ test.describe("display and lifecycle", () => {
     expect(writeErrorKind("unavailable", 10, "create")).toBe("other");
     expect(writeErrorKind(undefined, 10, "delete")).toBe("other");
   });
+});
+
+test("hooks/use-records keeps re-exporting the helpers other modules import", () => {
+  const mod = recordsHook;
+  expect(typeof mod.sortByCreatedAtDesc).toBe("function");
+  expect(typeof mod.emptyValues).toBe("function");
+  expect(typeof mod.missingRequired).toBe("function");
+  expect(typeof mod.RecordValidationError).toBe("function");
 });
