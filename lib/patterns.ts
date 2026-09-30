@@ -29,6 +29,9 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "components/sections/features.tsx",
     "components/sections/faq.tsx",
     "lib/icons.ts",
+    "components/sections/product-preview.tsx",
+    "components/sections/how-it-works.tsx",
+    "lib/faq-jsonld.ts",
   ],
   dashboard: ["app/[locale]/dashboard/page.tsx"],
   authGoogle: [

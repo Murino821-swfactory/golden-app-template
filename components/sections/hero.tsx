@@ -9,6 +9,7 @@ import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroOverlayBackground } from "@/lib/hero-overlay";
 import { cn } from "@/lib/utils";
 import { HeroImageControls } from "./hero-image-controls";
+import { ProductPreview } from "./product-preview";
 import { config } from "@/lib/prototype-config";
 import { landingActionHref } from "@/lib/landing-action";
 
@@ -59,22 +60,35 @@ export function HeroSection() {
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
   const hero = useHeroImage();
+  const hasPreview = Boolean(config.patterns.dataGrid && content.dataGrid?.sampleRecords?.length);
 
   return (
     <section data-section="hero" className="relative isolate w-full overflow-hidden">
       {hero.src ? <HeroBackground key={hero.src} src={hero.src} /> : null}
-      <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-4 py-20 text-center sm:py-28">
-        <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
-          {headline}
-        </h1>
-        <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
-          {subheadline}
-        </p>
-        {href && (
-          <Button asChild size="lg">
-            <Link href={href}>{content.cta?.label ?? t("cta")}</Link>
-          </Button>
+      <div
+        className={cn(
+          "mx-auto grid w-full max-w-5xl gap-10 px-4 py-20 sm:py-28",
+          hasPreview && "lg:grid-cols-2 lg:items-center"
         )}
+      >
+        <div
+          className={cn(
+            "flex flex-col items-center gap-6 text-center",
+            hasPreview && "lg:items-start lg:text-left"
+          )}
+        >
+          <p data-app-name className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
+            {config.appName}
+          </p>
+          <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{headline}</h1>
+          <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">{subheadline}</p>
+          {href && (
+            <Button asChild size="lg" className="h-11">
+              <Link href={href}>{content.cta?.label ?? t("cta")}</Link>
+            </Button>
+          )}
+        </div>
+        {hasPreview && <ProductPreview />}
       </div>
       <HeroImageControls hero={hero} />
     </section>

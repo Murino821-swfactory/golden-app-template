@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Preguntas frecuentes",
-    "q1": "Pregunta de relleno — esta sección aún no tiene esquema de contenido.",
-    "a1": "Respuesta de relleno. Las palabras propias de un prototipo vienen de prototype.config.json."
+    "title": "Preguntas frecuentes"
   },
   "contact": {
     "title": "Contacto",

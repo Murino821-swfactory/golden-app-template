@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Gyakori kérdések",
-    "q1": "Helykitöltő kérdés — ennek a szakasznak még nincs tartalomsémája.",
-    "a1": "Helykitöltő válasz. A prototípus saját szavai a prototype.config.json fájlból származnak."
+    "title": "Gyakori kérdések"
   },
   "contact": {
     "title": "Kapcsolat",

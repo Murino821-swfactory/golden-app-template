@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Najczęstsze pytania",
-    "q1": "Pytanie zastępcze — ta sekcja nie ma jeszcze schematu treści.",
-    "a1": "Odpowiedź zastępcza. Własne słowa prototypu pochodzą z prototype.config.json."
+    "title": "Najczęstsze pytania"
   },
   "contact": {
     "title": "Kontakt",

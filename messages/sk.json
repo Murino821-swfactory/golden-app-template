@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Časté otázky",
-    "q1": "Zástupná otázka — táto sekcia zatiaľ nemá schému obsahu.",
-    "a1": "Zástupná odpoveď. Vlastné slová prototypu pochádzajú z prototype.config.json."
+    "title": "Časté otázky"
   },
   "contact": {
     "title": "Kontakt",

@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "FAQ",
-    "q1": "Placeholder question — this section has no content schema yet.",
-    "a1": "Placeholder answer. A prototype's own words come from prototype.config.json."
+    "title": "FAQ"
   },
   "contact": {
     "title": "Contact",

@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Häufige Fragen",
-    "q1": "Platzhalterfrage — dieser Abschnitt hat noch kein Inhaltsschema.",
-    "a1": "Platzhalterantwort. Die eigenen Worte eines Prototyps stehen in prototype.config.json."
+    "title": "Häufige Fragen"
   },
   "contact": {
     "title": "Kontakt",

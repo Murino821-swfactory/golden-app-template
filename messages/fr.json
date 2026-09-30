@@ -53,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Questions fréquentes",
-    "q1": "Question de remplissage — cette section n'a pas encore de schéma de contenu.",
-    "a1": "Réponse de remplissage. Les mots propres à un prototype viennent de prototype.config.json."
+    "title": "Questions fréquentes"
   },
   "contact": {
     "title": "Contact",
