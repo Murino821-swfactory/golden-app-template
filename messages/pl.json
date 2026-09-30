@@ -121,7 +121,8 @@
     "recordsLabel": "Rekordy: {entity}",
     "addedThisMonth": "Dodane w tym miesiącu",
     "ownerMessages": "Wiadomości ({count})",
-    "ownerContact": "Dane kontaktowe"
+    "ownerContact": "Dane kontaktowe",
+    "trackedFields": "Śledzone pola"
   },
   "heroImage": {
     "generate": "Wygeneruj obraz",

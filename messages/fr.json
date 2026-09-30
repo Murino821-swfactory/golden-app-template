@@ -121,7 +121,8 @@
     "recordsLabel": "Enregistrements : {entity}",
     "addedThisMonth": "Ajoutés ce mois-ci",
     "ownerMessages": "Messages ({count})",
-    "ownerContact": "Coordonnées"
+    "ownerContact": "Coordonnées",
+    "trackedFields": "Champs suivis"
   },
   "heroImage": {
     "generate": "Générer une image",

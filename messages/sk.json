@@ -121,7 +121,8 @@
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Pridané tento mesiac",
     "ownerMessages": "Správy ({count})",
-    "ownerContact": "Kontaktné údaje"
+    "ownerContact": "Kontaktné údaje",
+    "trackedFields": "Sledované polia"
   },
   "heroImage": {
     "generate": "Vygenerovať obrázok",

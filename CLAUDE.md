@@ -304,8 +304,9 @@ Import from `@/components/ui/`:
 
 ## Data: every visitor's own sandbox (2026-09-29)
 
-`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`. Every signed-in
-visitor of a prototype works on their OWN records — sw-factory spec
+`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`. Always use
+`getCollectionPath(collection)` (or `lib/records.ts` paths) — never hardcode collection names.
+Every signed-in visitor of a prototype works on their OWN records — sw-factory spec
 `docs/superpowers/specs/2026-09-29-golden-template-v2-design.md` §4, rules in factory-web:
 
 - Records: `demos/{slug}/users/{uid}/records/{id}` = `{ values (≤ 12 keys), createdAt, updatedAt }`.
@@ -321,6 +322,10 @@ visitor of a prototype works on their OWN records — sw-factory spec
   seed twice), the rest in batches. A counter at 0 means the visitor deleted every sample —
   they are never re-seeded.
 - The prototype's owner cannot read visitors' records; the founder can read them.
+- **A visitor may write exactly two things:** their counter `users/{uid}` and
+  `users/{uid}/records/{id}`. Nothing else under `users/{uid}` is allowed — a new
+  collection there (e.g. `users/{uid}/notes`) passes CI here and is DENIED in production
+  until factory-web's rules and their emulator tests add it.
 
 ## Languages and routing
 
@@ -413,7 +418,9 @@ factory-web (`prototypeOwnerContact`, `prototypeContact`).
 - `/api/prototype-owner-contact` is called only for a signed-in user on a published prototype
   (`ownerActionsAvailable`: base path `/newapp/…` and a slug) — never from CI.
 - All five card fields are optional; a save replaces the whole card. The card's e-mail is
-  only displayed — notification e-mails go to the owner's verified address.
+  only displayed. A notification e-mail goes to the wizard address only after its owner
+  signed in with it on the prototype (the owner-controls status call records that proof) —
+  the wizard is anonymous, so the address alone proves nothing.
 - `/messages` lists `demos/{slug}/contactMessages` for the owner; opening one sets `readAt`.
   Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
   dashboard (renders nothing for anyone else).
@@ -423,7 +430,8 @@ factory-web (`prototypeOwnerContact`, `prototypeContact`).
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
 for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`:
 the owner (`demoOwnerEmail`) plus the founder get `demos/{slug}/{coll}/{docId}` except
-`users`, and every signed-in visitor owns `demos/{slug}/users/{uid}/**` — never re-add a
+`users`, and every signed-in visitor gets their own counter `demos/{slug}/users/{uid}` and
+`demos/{slug}/users/{uid}/records/{id}` — nothing else under `users/{uid}`. Never re-add a
 copy here. A second copy of the same rule can only drift, and the
 weaker one is the one that eventually deploys: this repo previously shipped one that
 granted read/write on every prototype's data to any signed-in user of any prototype,

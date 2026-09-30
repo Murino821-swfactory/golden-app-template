@@ -121,7 +121,8 @@
     "recordsLabel": "Rekordok: {entity}",
     "addedThisMonth": "Ebben a hónapban hozzáadva",
     "ownerMessages": "Üzenetek ({count})",
-    "ownerContact": "Kapcsolati adatok"
+    "ownerContact": "Kapcsolati adatok",
+    "trackedFields": "Nyomon követett mezők"
   },
   "heroImage": {
     "generate": "Kép generálása",

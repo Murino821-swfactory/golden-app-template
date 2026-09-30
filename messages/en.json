@@ -121,7 +121,8 @@
     "recordsLabel": "{entity} records",
     "addedThisMonth": "Added this month",
     "ownerMessages": "Messages ({count})",
-    "ownerContact": "Contact details"
+    "ownerContact": "Contact details",
+    "trackedFields": "Tracked fields"
   },
   "heroImage": {
     "generate": "Generate image",
