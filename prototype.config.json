@@ -67,17 +67,17 @@
         "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
         "features": [
           {
-            "icon": "🎨",
+            "icon": "star",
             "title": "Fifteen colour palettes",
             "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
           },
           {
-            "icon": "🔧",
+            "icon": "list-checks",
             "title": "Config-driven patterns",
             "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
           },
           {
-            "icon": "🚀",
+            "icon": "globe",
             "title": "Static export",
             "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
           }
@@ -100,7 +100,27 @@
           "category": "Category",
           "opened": "Opened",
           "active": "Active"
-        }
+        },
+        "sampleRecords": [
+          {
+            "name": "Riverside office",
+            "category": "Office",
+            "opened": "2026-08-12",
+            "active": true
+          },
+          {
+            "name": "East depot",
+            "category": "Depot",
+            "opened": "2026-07-30",
+            "active": true
+          },
+          {
+            "name": "North warehouse",
+            "category": "Warehouse",
+            "opened": "2026-09-02",
+            "active": false
+          }
+        ]
       }
     }
   }

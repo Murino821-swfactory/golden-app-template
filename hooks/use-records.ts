@@ -84,9 +84,7 @@ export function useRecords(): UseRecordsReturn {
   const fields = useMemo<EntityField[]>(() => localisedFields, [fieldsKey]); // eslint-disable-line react-hooks/exhaustive-deps
   const content = useContent();
   const entityLabel = content.dataGrid?.entityLabel ?? "Record";
-  const samplesKey = JSON.stringify(
-    (content.dataGrid as { sampleRecords?: unknown } | undefined)?.sampleRecords ?? null
-  );
+  const samplesKey = JSON.stringify(content.dataGrid?.sampleRecords ?? null);
   const slug = getDemoSlug();
 
   const load = useCallback(async (): Promise<{ records: EntityRecord[]; count: number }> => {

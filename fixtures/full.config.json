@@ -1,26 +1,87 @@
 {
   "appName": "Fleet Register",
-  "locales": ["en", "sk"],
+  "locales": [
+    "en",
+    "sk"
+  ],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "blue" },
+  "theme": {
+    "colorScheme": "blue"
+  },
   "patterns": {
-    "landing": { "sections": ["hero", "features", "pricing", "testimonials", "faq", "contact", "cta"] },
-    "dashboard": {},
+    "landing": {
+      "sections": [
+        "hero",
+        "features",
+        "pricing",
+        "testimonials",
+        "faq",
+        "contact",
+        "cta"
+      ]
+    },
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "routes",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "busShare",
+          "field": "mode",
+          "agg": "share",
+          "value": "Bus"
+        },
+        {
+          "id": "avgLength",
+          "field": "lengthKm",
+          "agg": "avg"
+        }
+      ]
+    },
     "authGoogle": {},
-    "cta": { "href": "/login" },
+    "cta": {
+      "href": "/login"
+    },
     "contactForm": {},
     "dataGrid": {
       "entity": {
         "key": "route",
         "fields": [
-          { "key": "name", "type": "text", "required": true },
-          { "key": "mode", "type": "select", "options": ["Bus", "Rail", "Truck"] },
-          { "key": "lengthKm", "type": "number" },
-          { "key": "active", "type": "boolean" }
+          {
+            "key": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "mode",
+            "type": "select",
+            "options": [
+              "Bus",
+              "Rail",
+              "Truck"
+            ]
+          },
+          {
+            "key": "lengthKm",
+            "type": "number"
+          },
+          {
+            "key": "active",
+            "type": "boolean"
+          }
         ]
-      }
+      },
+      "boardBy": "mode"
     },
-    "mapBase": { "center": { "lat": 48.669, "lng": 19.699 }, "zoom": 7 }
+    "mapBase": {
+      "center": {
+        "lat": 48.669,
+        "lng": 19.699
+      },
+      "zoom": 7
+    }
   },
   "content": {
     "en": {
@@ -28,15 +89,76 @@
       "landing": {
         "headline": "Know where every vehicle is",
         "subheadline": "Register your routes once and see them on a map your whole team shares.",
+        "featuresHeading": "What your dispatch desk gets",
         "features": [
-          { "icon": "🗺️", "title": "Routes on a map", "description": "See every registered route without opening a spreadsheet." },
-          { "icon": "🚌", "title": "Any mode", "description": "Bus, rail and truck routes live in the same register." },
-          { "icon": "📋", "title": "One record each", "description": "Add a route in four fields and it is available to everyone." }
-        ]
+          {
+            "icon": "map-pin",
+            "title": "Routes on a map",
+            "description": "See every registered route without opening a spreadsheet."
+          },
+          {
+            "icon": "route",
+            "title": "Any mode",
+            "description": "Bus, rail and truck routes live in the same register."
+          },
+          {
+            "icon": "list-checks",
+            "title": "One record each",
+            "description": "Add a route in four fields and it is available to everyone."
+          }
+        ],
+        "howItWorks": {
+          "steps": [
+            {
+              "title": "Sign in",
+              "description": "Use your Google account — no new password."
+            },
+            {
+              "title": "Register a route",
+              "description": "Name it, pick the mode and its length."
+            },
+            {
+              "title": "Share the map",
+              "description": "Everyone on the team sees the same register."
+            }
+          ]
+        },
+        "faq": {
+          "items": [
+            {
+              "question": "Do I need to install anything?",
+              "answer": "No. It runs in the browser on your phone or computer."
+            },
+            {
+              "question": "Who sees my routes?",
+              "answer": "Only you — every account has its own register."
+            },
+            {
+              "question": "Can I change a route later?",
+              "answer": "Yes. Open it from the list and edit any field."
+            }
+          ]
+        }
       },
-      "dashboard": { "title": "Fleet overview" },
-      "cta": { "label": "Start tracking" },
-      "contactForm": { "heading": "Talk to us", "submitLabel": "Send" },
+      "dashboard": {
+        "title": "Fleet overview",
+        "intro": "Your registered routes at a glance.",
+        "kpiLabels": {
+          "routes": "Routes",
+          "busShare": "Bus routes",
+          "avgLength": "Average length (km)"
+        }
+      },
+      "cta": {
+        "label": "Start tracking",
+        "title": "Your routes, one register",
+        "subtitle": "Sign in and add the first route in under a minute."
+      },
+      "contactForm": {
+        "heading": "Talk to us",
+        "submitLabel": "Send",
+        "intro": "Questions about fleets of any size are welcome."
+      },
       "dataGrid": {
         "entityLabel": "Route",
         "fieldLabels": {
@@ -44,7 +166,27 @@
           "mode": "Mode",
           "lengthKm": "Length (km)",
           "active": "Active"
-        }
+        },
+        "sampleRecords": [
+          {
+            "name": "Airport express",
+            "mode": "Bus",
+            "lengthKm": 24,
+            "active": true
+          },
+          {
+            "name": "Northern freight",
+            "mode": "Truck",
+            "lengthKm": 310,
+            "active": true
+          },
+          {
+            "name": "Valley line",
+            "mode": "Rail",
+            "lengthKm": 88,
+            "active": false
+          }
+        ]
       }
     },
     "sk": {
@@ -52,15 +194,76 @@
       "landing": {
         "headline": "Vedzte, kde je ktoré vozidlo",
         "subheadline": "Zapíšte trasy raz a uvidíte ich na mape, ktorú zdieľa celý tím.",
+        "featuresHeading": "Čo dostane váš dispečing",
         "features": [
-          { "icon": "🗺️", "title": "Trasy na mape", "description": "Pozrite si každú zapísanú trasu bez otvárania tabuľky." },
-          { "icon": "🚌", "title": "Ľubovoľný typ", "description": "Autobusové, železničné aj kamiónové trasy v jednom registri." },
-          { "icon": "📋", "title": "Jeden záznam na trasu", "description": "Pridajte trasu v štyroch poliach a majú ju všetci." }
-        ]
+          {
+            "icon": "map-pin",
+            "title": "Trasy na mape",
+            "description": "Pozrite si každú zapísanú trasu bez otvárania tabuľky."
+          },
+          {
+            "icon": "route",
+            "title": "Ľubovoľný typ",
+            "description": "Autobusové, železničné aj kamiónové trasy v jednom registri."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Jeden záznam na trasu",
+            "description": "Pridajte trasu v štyroch poliach a majú ju všetci."
+          }
+        ],
+        "howItWorks": {
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Účtom Google — bez nového hesla."
+            },
+            {
+              "title": "Zapíšte trasu",
+              "description": "Pomenujte ju, vyberte typ a dĺžku."
+            },
+            {
+              "title": "Zdieľajte mapu",
+              "description": "Celý tím vidí ten istý register."
+            }
+          ]
+        },
+        "faq": {
+          "items": [
+            {
+              "question": "Musím niečo inštalovať?",
+              "answer": "Nie. Beží v prehliadači na mobile aj počítači."
+            },
+            {
+              "question": "Kto vidí moje trasy?",
+              "answer": "Len vy — každý účet má vlastný register."
+            },
+            {
+              "question": "Dá sa trasa neskôr zmeniť?",
+              "answer": "Áno. Otvorte ju v zozname a upravte ľubovoľné pole."
+            }
+          ]
+        }
       },
-      "dashboard": { "title": "Prehľad flotily" },
-      "cta": { "label": "Začať sledovať" },
-      "contactForm": { "heading": "Napíšte nám", "submitLabel": "Odoslať" },
+      "dashboard": {
+        "title": "Prehľad flotily",
+        "intro": "Vaše zapísané trasy na jeden pohľad.",
+        "kpiLabels": {
+          "routes": "Trasy",
+          "busShare": "Autobusové trasy",
+          "avgLength": "Priemerná dĺžka (km)"
+        }
+      },
+      "cta": {
+        "label": "Začať sledovať",
+        "title": "Vaše trasy v jednom registri",
+        "subtitle": "Prihláste sa a prvú trasu pridáte za minútu."
+      },
+      "contactForm": {
+        "heading": "Napíšte nám",
+        "submitLabel": "Odoslať",
+        "intro": "Radi odpovieme na otázky o flotilách každej veľkosti."
+      },
       "dataGrid": {
         "entityLabel": "Trasa",
         "fieldLabels": {
@@ -68,7 +271,27 @@
           "mode": "Typ",
           "lengthKm": "Dĺžka (km)",
           "active": "Aktívna"
-        }
+        },
+        "sampleRecords": [
+          {
+            "name": "Letiskový expres",
+            "mode": "Bus",
+            "lengthKm": 24,
+            "active": true
+          },
+          {
+            "name": "Severná nákladná",
+            "mode": "Truck",
+            "lengthKm": 310,
+            "active": true
+          },
+          {
+            "name": "Údolná trať",
+            "mode": "Rail",
+            "lengthKm": 88,
+            "active": false
+          }
+        ]
       }
     }
   }
