@@ -37,6 +37,13 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
   ],
   cta: ["components/sections/cta.tsx"],
   contactForm: ["components/sections/contact.tsx"],
-  dataGrid: ["components/patterns/data-grid/index.tsx", "hooks/use-records.ts"],
+  dataGrid: [
+    "components/patterns/data-grid/index.tsx",
+    "components/patterns/data-grid/record-dialog.tsx",
+    "components/ui/dialog.tsx",
+    "hooks/use-records.ts",
+    "lib/records.ts",
+    "lib/records-firestore.ts",
+  ],
   mapBase: ["components/patterns/map-base/index.tsx"],
 };
