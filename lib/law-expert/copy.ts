@@ -70,8 +70,8 @@ const en: ResearchCopy = {
   nav: "Research",
   pageTitle: "Research",
   pageIntro:
-    "Search published Slovak criminal-law decisions, or describe what happened and get a memo that quotes the decisions it relies on.",
-  tabs: { search: "Search decisions", memo: "Memo on the facts" },
+    "Search Slovak court decisions, compare them with your legal issue and save the full research for further work.",
+  tabs: { search: "Search decisions", memo: "Research a problem" },
   search: {
     query: "Words",
     queryPlaceholder: "e.g. krádež vlámaním",
@@ -83,17 +83,17 @@ const en: ResearchCopy = {
     form: "Type of decision",
     any: "Any",
     submit: "Search",
-    searching: "Searching InfoSúd…",
+    searching: "Searching court sources…",
     found: (n) => `${n.toLocaleString("en")} decisions found`,
     none: "No decisions match. Try fewer words, another section or no date limit.",
     pdf: "Open the decision (PDF)",
     judge: "Judge",
     next: "Next page",
     previous: "Previous page",
-    source: "Source: InfoSúd, Ministry of Justice of the Slovak Republic",
+    source: "Sources: InfoSúd (Ministry of Justice) and NS SR OpenData",
   },
   stats: {
-    title: "How these decisions split",
+    title: "InfoSúd metadata distribution",
     form: "Type of decision",
     nature: "Outcome",
     region: "Region",
@@ -106,7 +106,7 @@ const en: ResearchCopy = {
     counter: (n, max) => `${n} / ${max}`,
     tooShort: (min) => `Describe the facts in at least ${min} characters.`,
     submit: "Write the memo",
-    working: "Finding the Criminal Code sections, searching InfoSúd and reading the decisions. This usually takes 10–20 seconds.",
+    working: "Searching InfoSúd and NS SR, reading decisions and comparing the legal issue and circumstances. This may take up to 50 seconds.",
     qualification: "Criminal Code sections the search was based on",
     slovLex: "Read the section on Slov-Lex",
     sources: "Decisions this memo relies on",
@@ -117,6 +117,7 @@ const en: ResearchCopy = {
       `Written by AI (${model}) from the decisions listed below. This is research, not legal advice, and it does not replace a lawyer.`,
     took: (s) => `Took ${s} s`,
     unavailable: {
+      "unreadable": "Decisions were found, but their text could not be read. Try again or open the source directly.",
       "no-decisions":
         "No decisions matched these facts, so no memo was written — nothing is invented. Describe the facts in more detail, or search the decisions directly.",
       "model-failed": "The memo could not be written this time. The decisions that were found are listed below.",
@@ -139,7 +140,7 @@ const en: ResearchCopy = {
     "quota-user": "You have used today's memos. Searching decisions still works; memos are available again tomorrow.",
     "quota-global": "Today's memo limit for this demo has been reached. Searching decisions still works.",
     rate: "Too many searches in a minute. Wait a moment and search again.",
-    source: "InfoSúd is not answering right now. Try again in a minute.",
+    source: "The requested sources are unavailable. Try again in a minute.",
     internal: "Something went wrong on our side. Try again.",
     network: "No connection to the server. Check your connection and try again.",
   },
@@ -150,8 +151,8 @@ const sk: ResearchCopy = {
   nav: "Rešerš",
   pageTitle: "Rešerš",
   pageIntro:
-    "Prehľadajte zverejnené slovenské trestnoprávne rozhodnutia, alebo opíšte, čo sa stalo, a získajte rešerš, ktorá cituje rozhodnutia, o ktoré sa opiera.",
-  tabs: { search: "Vyhľadať rozhodnutia", memo: "Rešerš k skutku" },
+    "Vyhľadajte slovenské súdne rozhodnutia, porovnajte ich so svojou právnou otázkou a uložte celú rešerš pre ďalšiu prácu.",
+  tabs: { search: "Vyhľadať rozhodnutia", memo: "Rešerš problému" },
   search: {
     query: "Slová",
     queryPlaceholder: "napr. krádež vlámaním",
@@ -163,17 +164,17 @@ const sk: ResearchCopy = {
     form: "Forma rozhodnutia",
     any: "Akýkoľvek",
     submit: "Hľadať",
-    searching: "Hľadám v InfoSúde…",
+    searching: "Prehľadávam súdne zdroje…",
     found: (n) => `Nájdených rozhodnutí: ${n.toLocaleString("sk")}`,
     none: "Žiadne rozhodnutie nevyhovuje. Skúste menej slov, iný paragraf alebo bez obmedzenia dátumu.",
     pdf: "Otvoriť rozhodnutie (PDF)",
     judge: "Sudca",
     next: "Ďalšia strana",
     previous: "Predchádzajúca strana",
-    source: "Zdroj: InfoSúd, Ministerstvo spravodlivosti SR",
+    source: "Zdroje: InfoSúd (Ministerstvo spravodlivosti SR) a NS SR OpenData",
   },
   stats: {
-    title: "Ako sa tieto rozhodnutia delia",
+    title: "Rozdelenie metadát InfoSúdu",
     form: "Forma rozhodnutia",
     nature: "Výsledok",
     region: "Kraj",
@@ -186,7 +187,7 @@ const sk: ResearchCopy = {
     counter: (n, max) => `${n} / ${max}`,
     tooShort: (min) => `Opíšte skutok aspoň ${min} znakmi.`,
     submit: "Napísať rešerš",
-    working: "Hľadám paragrafy Trestného zákona, prehľadávam InfoSúd a čítam rozhodnutia. Zvyčajne to trvá 10–20 sekúnd.",
+    working: "Hľadám v InfoSúde a NS SR, čítam rozhodnutia a porovnávam právnu otázku a okolnosti. Môže to trvať do 50 sekúnd.",
     qualification: "Paragrafy Trestného zákona, podľa ktorých sa hľadalo",
     slovLex: "Znenie paragrafu na Slov-Lexe",
     sources: "Rozhodnutia, o ktoré sa rešerš opiera",
@@ -197,6 +198,7 @@ const sk: ResearchCopy = {
       `Napísala umelá inteligencia (${model}) z rozhodnutí uvedených nižšie. Ide o rešerš, nie o právnu radu, a nenahrádza advokáta.`,
     took: (s) => `Trvalo ${s} s`,
     unavailable: {
+      "unreadable": "Rozhodnutia sa našli, ale ich text sa nepodarilo prečítať. Skúste znova alebo otvorte pôvodný zdroj.",
       "no-decisions":
         "K tomuto skutku sa nenašli žiadne rozhodnutia, preto rešerš nevznikla — nič sa nevymýšľa. Opíšte skutok podrobnejšie, alebo hľadajte rozhodnutia priamo.",
       "model-failed": "Rešerš sa tentoraz nepodarilo napísať. Nájdené rozhodnutia sú uvedené nižšie.",
@@ -219,7 +221,7 @@ const sk: ResearchCopy = {
     "quota-user": "Dnešné rešerše ste vyčerpali. Vyhľadávanie rozhodnutí funguje ďalej; rešerše budú opäť k dispozícii zajtra.",
     "quota-global": "Denný limit rešerší pre toto demo je vyčerpaný. Vyhľadávanie rozhodnutí funguje ďalej.",
     rate: "Priveľa vyhľadávaní za minútu. Chvíľu počkajte a hľadajte znova.",
-    source: "InfoSúd práve neodpovedá. Skúste to o minútu.",
+    source: "Zvolené zdroje práve neodpovedajú. Skúste to o minútu.",
     internal: "Na našej strane sa niečo pokazilo. Skúste to znova.",
     network: "Bez spojenia so serverom. Skontrolujte pripojenie a skúste to znova.",
   },
@@ -231,7 +233,7 @@ export function researchCopy(locale: string): ResearchCopy {
 }
 
 /** Filter options. InfoSúd's own values (Slovak in both languages — they are data). */
-export const COURT_TYPES = ["Okresný súd", "Mestský súd", "Krajský súd", "Špecializovaný trestný súd", "Najvyšší súd SR"];
+export const COURT_TYPES = ["Okresný súd", "Mestský súd", "Krajský súd", "Špecializovaný trestný súd", "Najvyšší súd SR", "Správny súd"];
 export const REGIONS = [
   "Bratislavský kraj",
   "Trnavský kraj",

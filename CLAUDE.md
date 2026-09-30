@@ -26,12 +26,21 @@ apps.tokenwise.sk). Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expe
 
 - **Dates go out as `yyyy-MM-dd`.** InfoSúd silently ignores `dd.MM.yyyy` in `vydaniaOd`
   and returns the unfiltered set [FAKT 2026-09-25].
-- **Nothing is invented:** the server drops citations that point outside the sources and
-  never calls the memo model when no decisions were found; the page marks uncited text.
-- **Test gap, stated:** the suite does not sign in with Google, so the signed-in page has
-  no e2e test. Its logic is in `tests/law-expert-logic.spec.ts`; `tests/law-expert.spec.ts`
-  covers the redirect, the CTA and the landing copy; the live page is checked by the smoke
-  run after publishing.
+- **Research, 2026-09-30:** direct search combines InfoSúd and NS SR. Explicit filters and
+  source coverage explain omissions; no hidden criminal-law/date/statute constraint. Problem
+  search compares issue and circumstances, displays a source passage and differences. A memo
+  is optional and off by default. Server-verifiable passages do not guarantee legal reasoning.
+- **Saved research:** `lib/law-expert/saved.ts` defines a versioned snapshot; `store.ts` uses
+  `demos/law-expert/research` through the shared Firebase path helper. Facts, submitted filters,
+  results, comparisons, selections and time persist even without a memo/case number. Dashboard
+  archive supports notes, reopening, deletion and repeat input. Repeat needs an explicit search
+  click, so opening an archive spends no model tokens. Snapshot limit is 700k UTF-8 bytes.
+- **Access:** prototype owner only, under existing factory-web Firestore rules. The client UID
+  query is convenience, not multi-user authorization; no rules were broadened for this feature.
+- **Tests:** `test:law-expert` exercises real components on desktop/mobile with injected API and
+  storage adapters (test-only harness, never exported). Existing static-export tests still run.
+  The backend's emulator suite verifies real rules/CRUD. Google OAuth and live production
+  writes are outside these automated tests; verify them after an approved publication.
 
 ## Quick Reference — Which Files to Edit
 

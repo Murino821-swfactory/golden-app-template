@@ -6,7 +6,7 @@ import type { ResearchCopy } from "@/lib/law-expert/copy";
 import { groupMemo, safePdfUrl, type MemoPart } from "@/lib/law-expert/view";
 import { DecisionCard } from "./decision-card";
 import { FacetStats } from "./facet-stats";
-import { SaveCase } from "./save-case";
+import { Coverage } from "./coverage";
 
 /**
  * The memo, rendered so that every claim can be checked: a cited sentence carries the
@@ -51,6 +51,7 @@ function Part({
 }
 
 export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: ResearchCopy; locale: string }) {
+  const sk = locale === "sk";
   const [open, setOpen] = useState<OpenQuote>(null);
   const sections = memo.memo ? groupMemo(memo.memo.blocks) : [];
   const hasUnsupported = sections.some((s) => s.parts.some((p) => p.unsupported));
@@ -58,6 +59,22 @@ export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: Res
 
   return (
     <div className="space-y-8">
+      <Coverage values={memo.coverage} sk={sk} />
+      {!!memo.queries?.length && <p className="text-sm text-muted-foreground">{sk ? "Použité dopyty: " : "Queries used: "}{memo.queries.join(" · ")}</p>}
+      {!!memo.unreadableCount && <p role="status" className="text-sm">{sk ? `Nepodarilo sa prečítať ${memo.unreadableCount} dokumentov.` : `${memo.unreadableCount} documents could not be read.`}</p>}
+      {memo.comparisonStatus && memo.comparisonStatus !== "ok" && <p role="status">{sk ? "Podobnosť sa nepodarilo podložiť overenou pasážou. Nižšie sú kandidáti, nie potvrdené podobné prípady." : "Similarity could not be supported by a verified passage. The documents below are candidates, not confirmed similar cases."}</p>}
+      {!!memo.comparisons?.length && <section className="space-y-4">
+        <h2 className="font-heading text-lg font-semibold">{sk ? "Podobnosť a rozdiely" : "Similarities and differences"}</h2>
+        <p className="text-xs text-muted-foreground">{sk ? "Porovnanie vytvorila AI z načítaných pasáží. Citovaný text bol overený v zdroji; posúdenie právnej podobnosti si vyžaduje kontrolu advokátom." : "AI compared the retrieved passages. Quoted text was checked against the source; legal similarity still requires a lawyer’s review."}</p>
+        {memo.comparisons.map(c => <article key={c.source} className="space-y-2 rounded-lg border border-border bg-card p-4">
+          <a className="font-medium underline" href={`#source-${c.source + 1}`}>{memo.sources[c.source]?.fileNumber} · {memo.sources[c.source]?.court}</a>
+          <p className="text-xs text-muted-foreground">{sk ? "Relevancia: " : "Relevance: "}{(sk ? { high: "vysoká", medium: "čiastočná", low: "nízka" } : { high: "high", medium: "partial", low: "low" })[c.relevance]}</p>
+          <p className="text-sm"><strong>{sk ? "Podobnosť: " : "Similarity: "}</strong>{c.similarity}</p>
+          <p className="text-sm"><strong>{sk ? "Rozdiely a neistoty: " : "Differences and uncertainties: "}</strong>{c.differences}</p>
+          <blockquote className="whitespace-pre-wrap border-l-2 border-primary pl-3 text-sm">{c.quote}</blockquote>
+        </article>)}
+      </section>}
+
       {memo.memoUnavailable && (
         <p role="status" className="rounded-lg border border-border bg-card p-4 text-sm">
           {copy.memo.unavailable[memo.memoUnavailable]}
@@ -163,7 +180,7 @@ export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: Res
 
       <p className="text-xs text-muted-foreground">{copy.memo.took(seconds)}</p>
 
-      {memo.memo && <SaveCase memo={memo} copy={copy} locale={locale} />}
+
     </div>
   );
 }
