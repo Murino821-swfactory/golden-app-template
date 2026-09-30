@@ -40,7 +40,14 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "app/[locale]/login/page.tsx",
   ],
   cta: ["components/sections/cta.tsx"],
-  contactForm: ["components/sections/contact.tsx"],
+  contactForm: [
+    "components/sections/contact.tsx",
+    "lib/owner-contact.ts",
+    "hooks/use-owner-role.ts",
+    "hooks/use-owner-card.ts",
+    "components/owner/owner-card-dialog.tsx",
+    "public/owner-contact.json",
+  ],
   dataGrid: [
     "components/patterns/data-grid/index.tsx",
     "components/patterns/data-grid/record-dialog.tsx",
