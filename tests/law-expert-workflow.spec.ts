@@ -52,6 +52,17 @@ test("manual filtered search is saved with selected decisions and can be repeate
   expect(await page.evaluate(() => sessionStorage.getItem("model-calls"))).toBeNull();
 });
 
+test("krádež and § 212 keep NS SR in the search with a visible full-text limit", async ({ page }) => {
+  await page.goto("/research");
+  await page.getByRole("tab", { name: "Vyhľadať rozhodnutia" }).click();
+  await page.getByLabel("Slová", { exact: true }).fill("krádež");
+  await page.getByRole("tabpanel", { name: "Vyhľadať rozhodnutia" }).getByLabel("§ Trestného zákona").fill("212");
+  await page.getByRole("button", { name: "Hľadať", exact: true }).click();
+  await expect(page.getByRole("article").getByText("NS SR OpenData")).toBeVisible();
+  await expect(page.getByText(/§ 212 overený ako textová zmienka/)).toBeVisible();
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("last-search")!))).toMatchObject({ q: "krádež", paragraph: "212" });
+});
+
 test("English workflow includes an optional memo and keeps it after reloading", async ({ page }) => {
   await page.goto("/research?lang=en");
   await page.getByLabel("Legal issue and circumstances").fill(facts);
