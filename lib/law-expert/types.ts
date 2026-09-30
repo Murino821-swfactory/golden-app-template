@@ -1,7 +1,8 @@
 /**
- * The HTTP contract of `/api/law-expert/*`. A COPY of factory-web
- * `functions/src/law-expert/types.ts`, which is the server that answers it — the two repos
- * share no package, so change both or this page breaks silently.
+ * The HTTP contract of `lawExpertApi`. A COPY of this file lives in the prototype
+ * (golden-app-template, branch `demo/law-expert`, `lib/law-expert/types.ts`) — the two
+ * repos share no package, so change both or the page breaks silently. Kept deliberately
+ * small; the server validates its input with zod and the client tolerates unknown fields.
  *
  * Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expert-research-design.md` §5.3.
  */
@@ -23,6 +24,8 @@ export type Facets = Record<FacetName, FacetValue[]>;
 export interface DecisionHit {
   /** InfoSúd guid, `<record uuid>:<document uuid>`. */
   id: string;
+  provider?: "infosud" | "nsud";
+  ecli?: string | null;
   court: string;
   judge?: string;
   fileNumber: string;
@@ -35,7 +38,10 @@ export interface DecisionHit {
 }
 
 export interface SearchResponse {
+  /** Sum of source counts before cross-source deduplication. */
   total: number;
+  hasMore?: boolean;
+  coverage?: SourceCoverage[];
   /** 0-based. */
   page: number;
   items: DecisionHit[];
@@ -73,10 +79,59 @@ export interface SourceDoc extends DecisionHit {
   truncated: boolean;
 }
 
-export type MemoUnavailable = "no-decisions" | "model-failed" | "refused";
+export type MemoUnavailable = "no-decisions" | "unreadable" | "model-failed" | "refused";
+
+export interface SearchFilters {
+  q?: string;
+  /** Exact indexed reference to Act 300/2005; optional, never inferred. */
+  paragraph?: string;
+  courtType?: string;
+  region?: string;
+  form?: string;
+  lawArea?: string;
+  fileNumber?: string;
+  ecli?: string;
+  from?: string;
+  to?: string;
+  page?: number;
+  sort?: "date" | "relevance";
+  source?: "all" | "infosud" | "nsud";
+  /** Internal source page size; not accepted from HTTP clients. */
+  size?: number;
+}
+
+export interface SourceCoverage {
+  provider: "infosud" | "nsud";
+  status: "ok" | "failed" | "unsupported" | "excluded";
+  total?: number;
+  /** A bounded source window or missing details; not exhaustive results. */
+  limited?: boolean;
+}
+
+export interface Comparison {
+  source: number;
+  relevance: "high" | "medium" | "low";
+  similarity: string;
+  differences: string;
+  /** Verbatim passage, checked against the text actually read. */
+  quote: string;
+}
+
+export interface ResearchInput {
+  facts: string;
+  locale: Locale;
+  filters?: SearchFilters;
+  includeMemo?: boolean;
+}
 
 export interface MemoResponse {
   qualification: Qualification[];
+  queries?: string[];
+  coverage?: SourceCoverage[];
+  comparisons?: Comparison[];
+  comparisonStatus?: "ok" | "failed" | "unverified";
+  searchedAt?: string;
+  unreadableCount?: number;
   crimeType: CrimeType;
   memo: { blocks: MemoBlock[] } | null;
   memoUnavailable?: MemoUnavailable;

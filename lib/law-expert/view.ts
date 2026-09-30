@@ -95,5 +95,5 @@ const PDF_URL = /^https:\/\/obcan\.justice\.sk\/content\/public\/item\/[0-9a-f-]
 
 /** The server already restricts PDF links; the page checks again before rendering an href. */
 export function safePdfUrl(url: string | null | undefined): string | null {
-  return url && PDF_URL.test(url) ? url : null;
+  return url && (PDF_URL.test(url) || /^https:\/\/www\.nsud\.sk\/data\/att\/[a-z0-9]+\/[a-z0-9.-]+\.pdf$/i.test(url)) ? url : null;
 }

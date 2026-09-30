@@ -7,6 +7,7 @@ import { localePath } from "@/lib/locale-routing";
 import { researchCopy } from "@/lib/law-expert/copy";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { StatCard } from "@/components/features";
+import { ResearchArchive } from "@/components/law-expert/archive";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useRecords } from "@/hooks/use-records";
@@ -61,6 +62,7 @@ function DashboardContent() {
         </Button>
       </header>
 
+      <ResearchArchive locale={locale === "sk" ? "sk" : "en"} />
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}
       {hasGrid && <DataGrid />}

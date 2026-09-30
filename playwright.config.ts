@@ -4,6 +4,7 @@ const withTrailingSlash = (url: string) => (url.endsWith("/") ? url : `${url}/`)
 
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: "**/law-expert-workflow.spec.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

@@ -43,6 +43,7 @@ export function DecisionCard({ hit, copy, number, ecli, truncated }: DecisionCar
         <span className="shrink-0 text-sm tabular-nums text-muted-foreground">{hit.date}</span>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">{hit.court}</p>
+      <p className="text-xs text-muted-foreground">{hit.provider === "nsud" ? "NS SR OpenData" : "InfoSúd"}</p>
       <p className="text-sm text-muted-foreground">
         {[hit.form, ...hit.nature].filter(Boolean).join(", ")}
       </p>

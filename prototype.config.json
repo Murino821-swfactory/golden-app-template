@@ -73,30 +73,30 @@
   },
   "content": {
     "en": {
-      "description": "Law expert searches published Slovak criminal-law decisions and writes research memos that quote the decisions they rely on.",
+      "description": "Search Slovak court decisions in InfoSúd and NS SR, compare legal issues and save full research with sources.",
       "landing": {
         "headline": "Find the right precedent before your opponent does",
-        "subheadline": "Search published Slovak court decisions and get a research memo in which every claim quotes the decision behind it.",
+        "subheadline": "Describe your legal issue, compare published court decisions and return to your saved research with passages, sources and notes.",
         "features": [
           {
             "icon": "🔍",
-            "title": "Live court decisions",
-            "description": "Search published Slovak criminal-law decisions in InfoSúd, the Ministry of Justice register, by words, Criminal Code section, court, region or date."
+            "title": "Two public court sources",
+            "description": "Search InfoSúd and Supreme Court OpenData. Choose sources, courts and dates; any coverage limits are shown with the results."
           },
           {
             "icon": "⚖️",
-            "title": "A research memo that shows its sources",
-            "description": "Describe what happened. The app names the likely Criminal Code sections, reads the most relevant judgments and writes a memo in which every claim quotes the decision it comes from."
+            "title": "Compare issues and circumstances",
+            "description": "See AI comparisons, material differences and passages checked against the retrieved decision text. Review the legal conclusions yourself."
           },
           {
             "icon": "📊",
-            "title": "How courts decide under a section",
-            "description": "See how decisions under a section split between judgments and penal orders, how appeals ended and in which regions they were decided."
+            "title": "Your search, visible limits",
+            "description": "Inspect the queries and source availability. Search older decisions without an automatic five-year limit."
           },
           {
             "icon": "📁",
-            "title": "Your cases",
-            "description": "Save a memo to your case list with the court, the status and the decisions it relied on."
+            "title": "Full research in your dashboard",
+            "description": "Save your problem, filters, decisions and any cited memo. Reopen the result, add notes and repeat the search without needing a case number."
           }
         ]
       },
@@ -119,30 +119,30 @@
       }
     },
     "sk": {
-      "description": "Law expert prehľadáva zverejnené slovenské trestnoprávne rozhodnutia a píše rešerše, ktoré citujú rozhodnutia, o ktoré sa opierajú.",
+      "description": "Vyhľadávanie slovenských súdnych rozhodnutí v InfoSúde a NS SR, porovnanie právnych otázok a uloženie celej rešerše so zdrojmi.",
       "landing": {
         "headline": "Správny precedens nájdete skôr, než ho hľadá protistrana",
-        "subheadline": "Prehľadajte zverejnené slovenské súdne rozhodnutia a získajte rešerš, v ktorej každé tvrdenie cituje rozhodnutie, z ktorého vychádza.",
+        "subheadline": "Opíšte právnu otázku, porovnajte zverejnené súdne rozhodnutia a vráťte sa k uloženej rešerši s pasážami, zdrojmi a poznámkami.",
         "features": [
           {
             "icon": "🔍",
-            "title": "Živé súdne rozhodnutia",
-            "description": "Prehľadávajte zverejnené trestnoprávne rozhodnutia v InfoSúde, registri Ministerstva spravodlivosti SR, podľa slov, paragrafu Trestného zákona, súdu, kraja alebo dátumu."
+            "title": "Dva verejné súdne zdroje",
+            "description": "Hľadajte v InfoSúde a OpenData Najvyššieho súdu. Vyberte zdroje, súdy a dátumy; obmedzenia pokrytia uvidíte pri výsledkoch."
           },
           {
             "icon": "⚖️",
-            "title": "Rešerš, ktorá ukazuje svoje zdroje",
-            "description": "Opíšte, čo sa stalo. Aplikácia navrhne paragrafy Trestného zákona, prečíta najrelevantnejšie rozsudky a napíše rešerš, v ktorej každé tvrdenie cituje rozhodnutie, z ktorého pochádza."
+            "title": "Porovnajte otázku a okolnosti",
+            "description": "Pozrite si AI porovnanie, podstatné rozdiely a pasáže overené v načítanom texte rozhodnutia. Právne závery si skontrolujte."
           },
           {
             "icon": "📊",
-            "title": "Ako súdy rozhodujú podľa paragrafu",
-            "description": "Pozrite sa, koľko rozhodnutí k paragrafu tvoria rozsudky a trestné rozkazy, ako dopadli odvolania a v ktorých krajoch sa rozhodovalo."
+            "title": "Viditeľné dopyty a obmedzenia",
+            "description": "Skontrolujte použité dopyty a dostupnosť zdrojov. Hľadajte aj staršie rozhodnutia bez automatického päťročného limitu."
           },
           {
             "icon": "📁",
-            "title": "Vaše prípady",
-            "description": "Uložte rešerš do zoznamu prípadov spolu so súdom, stavom a rozhodnutiami, o ktoré sa opiera."
+            "title": "Celá rešerš v dashboarde",
+            "description": "Uložte problém, filtre, rozhodnutia a prípadné stanovisko s citáciami. Výsledok znovu otvorte, doplňte poznámky a zopakujte hľadanie aj bez čísla spisu."
           }
         ]
       },

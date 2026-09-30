@@ -1,4 +1,4 @@
-import type { Locale, MemoResponse, SearchResponse } from "./types";
+import type { Locale, MemoResponse, SearchResponse, SearchFilters } from "./types";
 
 /**
  * The client half of `/api/law-expert/*` (factory-web `lawExpertApi`).
@@ -13,16 +13,7 @@ import type { Locale, MemoResponse, SearchResponse } from "./types";
 
 const BASE = "/api/law-expert";
 
-export interface SearchParams {
-  q?: string;
-  paragraph?: string;
-  courtType?: string;
-  region?: string;
-  form?: string;
-  from?: string;
-  to?: string;
-  page?: number;
-}
+export type SearchParams = SearchFilters;
 
 export type UiError = "auth" | "invalid" | "quota-user" | "quota-global" | "rate" | "source" | "internal" | "network";
 
@@ -30,7 +21,7 @@ export type ApiOutcome<T> = { ok: true; data: T } | { ok: false; error: UiError 
 
 export function searchQueryString(p: SearchParams): string {
   const qs = new URLSearchParams();
-  for (const key of ["q", "paragraph", "courtType", "region", "form", "from", "to"] as const) {
+  for (const key of ["q", "paragraph", "courtType", "region", "form", "from", "to", "source", "sort", "lawArea", "fileNumber", "ecli"] as const) {
     const v = p[key]?.trim();
     if (v) qs.set(key, v);
   }
@@ -73,10 +64,10 @@ export function searchDecisions(p: SearchParams, getToken: () => Promise<string 
   return call<SearchResponse>(`/search${qs ? `?${qs}` : ""}`, { method: "GET" }, getToken);
 }
 
-export function requestMemo(facts: string, locale: Locale, getToken: () => Promise<string | null>) {
+export function requestMemo(facts: string, locale: Locale, getToken: () => Promise<string | null>, filters: SearchFilters = {}, includeMemo = false) {
   return call<MemoResponse>(
     "/memo",
-    { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ facts, locale }) },
+    { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ facts, locale, filters, includeMemo }) },
     getToken
   );
 }
