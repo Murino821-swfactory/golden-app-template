@@ -28,6 +28,7 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "public/hero-image.json",
     "components/sections/features.tsx",
     "components/sections/faq.tsx",
+    "lib/icons.ts",
   ],
   dashboard: ["app/[locale]/dashboard/page.tsx"],
   authGoogle: [
