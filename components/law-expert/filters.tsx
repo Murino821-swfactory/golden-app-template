@@ -24,14 +24,14 @@ export function Filters({ value, onChange, sk, disabled = false }: { value: Sear
       {([
         ["from", sk ? "Dátum od" : "Date from", "date"], ["to", sk ? "Dátum do" : "Date to", "date"],
         ["fileNumber", sk ? "Spisová značka" : "File number", "text"], ["ecli", "ECLI", "text"],
-        ["paragraph", sk ? "Odkaz na § Trestného zákona (InfoSúd)" : "Criminal Code § reference (InfoSúd)", "text"],
+        ["paragraph", sk ? "§ Trestného zákona" : "Criminal Code §", "text"],
       ] as [keyof SearchFilters, string, string][]).map(([key, label, type]) => <label key={key} className="min-w-0 space-y-1 text-sm">
         <span>{label}</span><input aria-label={label} type={type} value={String(value[key] ?? "")} maxLength={key === "paragraph" ? 4 : 120} onChange={e => set(key, e.target.value)} className={fieldClass} />
       </label>)}
     </div>
     <p className="text-xs text-muted-foreground">{sk
-      ? "Bez dátumu sa hľadá aj v starších rozhodnutiach. Oblasť a paragraf sú filtre metadát — môžu vynechať relevantné texty. NS SR nepodporuje kraj, formu, tento paragrafový filter ani samostatné rodinné právo; pri ich použití sa tento zdroj neprehľadáva."
-      : "No date limit includes older decisions. Area and section filter metadata and may miss relevant text. NS SR does not support region, form, this section filter or a separate family-law category; these filters exclude that source."}</p>
+      ? "Bez dátumu sa hľadá aj v starších rozhodnutiach. InfoSúd filtruje § podľa metadát; NS SR hľadá jeho textovú zmienku v rozhodnutí, ktorá nemusí patriť k Trestnému zákonu. NS SR nepodporuje kraj, formu ani samostatné rodinné právo; tieto filtre ho vyradia."
+      : "No date limit includes older decisions. InfoSúd filters § by metadata; NS SR searches the section reference in decision text, which may cite another law. NS SR does not support region, form or a separate family-law category; these filters exclude that source."}</p>
     <button type="button" onClick={() => onChange({ source: "all" })} className="min-h-11 text-sm underline">{sk ? "Zrušiť obmedzenia" : "Clear limits"}</button>
   </fieldset>;
 }

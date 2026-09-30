@@ -24,7 +24,12 @@ createRoot(document.getElementById("root")!).render(<NextIntlClientProvider loca
     notes: async (id, notes) => write(rows().map(r => r.id === id ? { ...r, notes } : r)),
     remove: async id => write(rows().filter(r => r.id !== id)),
   },
-  search: async filters => { sessionStorage.setItem("last-search", JSON.stringify(filters)); return { ok: true, data: search }; },
+  search: async filters => {
+    sessionStorage.setItem("last-search", JSON.stringify(filters));
+    return { ok: true, data: { ...search, coverage: filters.paragraph
+      ? [{ provider: "infosud" as const, status: "ok" as const }, { provider: "nsud" as const, status: "ok" as const, paragraphText: filters.paragraph }]
+      : search.coverage } };
+  },
   research: async (facts, locale, filters, includeMemo) => {
     sessionStorage.setItem("last-request", JSON.stringify({ facts, locale, filters, includeMemo }));
     sessionStorage.setItem("model-calls", String(Number(sessionStorage.getItem("model-calls") ?? 0) + 1));

@@ -106,6 +106,8 @@ export interface SourceCoverage {
   total?: number;
   /** A bounded source window or missing details; not exhaustive results. */
   limited?: boolean;
+  /** NS SR: section reference was intersected in the text index and checked in each detail. */
+  paragraphText?: string;
 }
 
 export interface Comparison {

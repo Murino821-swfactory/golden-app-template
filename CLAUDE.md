@@ -30,6 +30,11 @@ apps.tokenwise.sk). Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expe
   source coverage explain omissions; no hidden criminal-law/date/statute constraint. Problem
   search compares issue and circumstances, displays a source passage and differences. A memo
   is optional and off by default. Server-verifiable passages do not guarantee legal reasoning.
+- **NS SR § reference, 2026-09-30:** `paragraph=212` does not exclude NS SR. Its API searches
+  `§ 212` and the issue text separately; backend intersects IDs and verifies the literal
+  section in each detail. This is only a text mention, which may refer to another law.
+  Coverage and filter help make that difference visible. Region/form restrictions still
+  exclude NS SR because its API cannot honor them.
 - **Saved research:** `lib/law-expert/saved.ts` defines a versioned snapshot; `store.ts` uses
   `demos/law-expert/research` through the shared Firebase path helper. Facts, submitted filters,
   results, comparisons, selections and time persist even without a memo/case number. Dashboard
