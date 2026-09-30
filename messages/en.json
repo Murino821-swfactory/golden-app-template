@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "{entity} records",
     "addedThisMonth": "Added this month",
-    "trackedFields": "Tracked fields",
     "ownerMessages": "Messages ({count})",
     "ownerContact": "Contact details"
   },

@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "Registros: {entity}",
     "addedThisMonth": "Añadidos este mes",
-    "trackedFields": "Campos registrados",
     "ownerMessages": "Mensajes ({count})",
     "ownerContact": "Datos de contacto"
   },

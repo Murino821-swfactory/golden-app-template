@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "Rekordy: {entity}",
     "addedThisMonth": "Dodane w tym miesiącu",
-    "trackedFields": "Śledzone pola",
     "ownerMessages": "Wiadomości ({count})",
     "ownerContact": "Dane kontaktowe"
   },

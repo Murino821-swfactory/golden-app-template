@@ -33,7 +33,7 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "components/sections/how-it-works.tsx",
     "lib/faq-jsonld.ts",
   ],
-  dashboard: ["app/[locale]/dashboard/page.tsx"],
+  dashboard: ["app/[locale]/dashboard/page.tsx", "components/dashboard/stats.tsx", "lib/kpi.ts"],
   authGoogle: [
     "contexts/auth-context.tsx",
     "components/auth/auth-guard.tsx",
@@ -59,6 +59,8 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "hooks/use-records.ts",
     "lib/records.ts",
     "lib/records-firestore.ts",
+    "components/patterns/data-grid/board.tsx",
+    "lib/board.ts",
   ],
   mapBase: ["components/patterns/map-base/index.tsx"],
 };

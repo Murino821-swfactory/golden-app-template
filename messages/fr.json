@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "Enregistrements : {entity}",
     "addedThisMonth": "Ajoutés ce mois-ci",
-    "trackedFields": "Champs suivis",
     "ownerMessages": "Messages ({count})",
     "ownerContact": "Coordonnées"
   },

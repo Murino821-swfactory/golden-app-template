@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Přidáno tento měsíc",
-    "trackedFields": "Sledovaná pole",
     "ownerMessages": "Zprávy ({count})",
     "ownerContact": "Kontaktní údaje"
   },

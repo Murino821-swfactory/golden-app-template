@@ -120,7 +120,6 @@
   "dashboard": {
     "recordsLabel": "Rekordok: {entity}",
     "addedThisMonth": "Ebben a hónapban hozzáadva",
-    "trackedFields": "Nyomon követett mezők",
     "ownerMessages": "Üzenetek ({count})",
     "ownerContact": "Kapcsolati adatok"
   },

@@ -11,6 +11,9 @@ import { useRecords } from "@/hooks/use-records";
 import { RECORD_LIMIT, filterRecords, formatValue, sortRecords, type EntityRecord, type SortKey } from "@/lib/records";
 import { cn } from "@/lib/utils";
 import { RecordDialog } from "./record-dialog";
+import { Board } from "./board";
+import { config } from "@/lib/prototype-config";
+import { getDemoSlug } from "@/lib/demo-slug";
 
 /**
  * data-grid — the visitor's own records of the configured entity (spec 2026-09-29 §6.2).
@@ -29,6 +32,23 @@ export function DataGrid() {
   const [dialog, setDialog] = useState<{ record?: EntityRecord } | null>(null);
 
   const chipField = fields.find((f) => f.type === "select");
+  const boardField = fields.find((f) => f.key === config.patterns.dataGrid?.boardBy && f.type === "select");
+  const viewKey = `grid-view:${getDemoSlug() ?? "local"}`;
+  const [view, setView] = useState<"table" | "board">(() => {
+    try {
+      return typeof window !== "undefined" && window.localStorage.getItem(viewKey) === "board" ? "board" : "table";
+    } catch {
+      return "table";
+    }
+  });
+  const chooseView = (next: "table" | "board") => {
+    setView(next);
+    try {
+      window.localStorage.setItem(viewKey, next);
+    } catch {
+      /* storage blocked (private mode, in-app browser): the choice lasts this visit */
+    }
+  };
   const yesNo = { yes: t("yes"), no: t("no") };
   const visible = useMemo(
     () => sortRecords(filterRecords(records, fields, query, chipField && chip ? { key: chipField.key, value: chip } : null), fields, sort),
@@ -62,6 +82,22 @@ export function DataGrid() {
         <Input id="grid-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)}
           placeholder={t("searchLabel")} className="h-11 pl-9 text-base sm:text-sm" />
       </div>
+
+      {boardField && (
+        <div className="inline-flex rounded-lg border border-border p-1" role="group" aria-label={boardField.label}>
+          {(["table", "board"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={view === v}
+              onClick={() => chooseView(v)}
+              className={cn("min-h-11 rounded-md px-4 text-sm", view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground")}
+            >
+              {v === "table" ? t("viewTable") : t("viewBoard")}
+            </button>
+          ))}
+        </div>
+      )}
 
       {chipField && (
         <div className="flex flex-wrap gap-2" role="group" aria-label={chipField.label}>
@@ -100,60 +136,68 @@ export function DataGrid() {
         <p className="p-4 text-center text-sm text-muted-foreground">{t("noMatches")}</p>
       )}
 
-      {!loading && visible.length > 0 && (
-        <ul className="space-y-3 sm:hidden">
-          {visible.map((rec) => (
-            <li key={rec.id}>
-              <button type="button" onClick={() => setDialog({ record: rec })}
-                className="w-full rounded-lg border border-border bg-card p-4 text-left focus-visible:outline-2 focus-visible:outline-ring">
-                <dl className="space-y-1.5">
+      {(!boardField || view === "table") && (
+        <>
+        {!loading && visible.length > 0 && (
+          <ul className="space-y-3 sm:hidden">
+            {visible.map((rec) => (
+              <li key={rec.id}>
+                <button type="button" onClick={() => setDialog({ record: rec })}
+                  className="w-full rounded-lg border border-border bg-card p-4 text-left focus-visible:outline-2 focus-visible:outline-ring">
+                  <dl className="space-y-1.5">
+                    {fields.map((field) => (
+                      <div key={field.key} className="flex justify-between gap-4 text-sm">
+                        <dt className="text-muted-foreground">{field.label}</dt>
+                        <dd className="text-right">{formatValue(field, rec.values[field.key], yesNo)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {!loading && visible.length > 0 && (
+          <div className="hidden overflow-x-auto rounded-lg border border-border sm:block">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border bg-card">
+                <tr>
                   {fields.map((field) => (
-                    <div key={field.key} className="flex justify-between gap-4 text-sm">
-                      <dt className="text-muted-foreground">{field.label}</dt>
-                      <dd className="text-right">{formatValue(field, rec.values[field.key], yesNo)}</dd>
-                    </div>
+                    <th key={field.key} scope="col"
+                      aria-sort={sort?.key === field.key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+                      className="px-2 py-1 text-left font-medium">
+                      <button type="button" onClick={() => setSort(nextSort(field.key))}
+                        aria-label={t("sortBy", { field: field.label })}
+                        className="inline-flex min-h-11 items-center gap-1 px-2">
+                        {field.label}
+                        {sort?.key === field.key && (sort.dir === "asc" ? <ArrowUp className="size-3.5" aria-hidden /> : <ArrowDown className="size-3.5" aria-hidden />)}
+                      </button>
+                    </th>
                   ))}
-                </dl>
-              </button>
-            </li>
-          ))}
-        </ul>
+                  <th className="px-4 py-3" />
+                </tr>
+              </thead>
+              <tbody>
+                {visible.map((rec) => (
+                  <tr key={rec.id} className="border-b border-border last:border-0">
+                    {fields.map((field) => (
+                      <td key={field.key} className="px-4 py-3">{formatValue(field, rec.values[field.key], yesNo)}</td>
+                    ))}
+                    <td className="px-2 py-1 text-right">
+                      <Button variant="ghost" className="h-11" onClick={() => setDialog({ record: rec })}>{t("edit")}</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        </>
       )}
 
-      {!loading && visible.length > 0 && (
-        <div className="hidden overflow-x-auto rounded-lg border border-border sm:block">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-card">
-              <tr>
-                {fields.map((field) => (
-                  <th key={field.key} scope="col"
-                    aria-sort={sort?.key === field.key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
-                    className="px-2 py-1 text-left font-medium">
-                    <button type="button" onClick={() => setSort(nextSort(field.key))}
-                      aria-label={t("sortBy", { field: field.label })}
-                      className="inline-flex min-h-11 items-center gap-1 px-2">
-                      {field.label}
-                      {sort?.key === field.key && (sort.dir === "asc" ? <ArrowUp className="size-3.5" aria-hidden /> : <ArrowDown className="size-3.5" aria-hidden />)}
-                    </button>
-                  </th>
-                ))}
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {visible.map((rec) => (
-                <tr key={rec.id} className="border-b border-border last:border-0">
-                  {fields.map((field) => (
-                    <td key={field.key} className="px-4 py-3">{formatValue(field, rec.values[field.key], yesNo)}</td>
-                  ))}
-                  <td className="px-2 py-1 text-right">
-                    <Button variant="ghost" className="h-11" onClick={() => setDialog({ record: rec })}>{t("edit")}</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {boardField && view === "board" && !loading && visible.length > 0 && (
+        <Board records={visible} fields={fields} boardField={boardField} onOpen={(record) => setDialog({ record })} />
       )}
 
       {dialog && (
