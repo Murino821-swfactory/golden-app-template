@@ -15,7 +15,8 @@ import { landingActionHref } from "@/lib/landing-action";
 
 export function CtaSection() {
   const t = useTranslations("cta");
-  const label = useContent().cta?.label ?? t("action");
+  const copy = useContent().cta;
+  const label = copy?.label ?? t("action");
   const href = landingActionHref(config.patterns);
 
   return (
@@ -24,8 +25,8 @@ export function CtaSection() {
       className="mx-auto w-full max-w-5xl px-4 py-16 text-center sm:py-24"
     >
       <div className="rounded-2xl bg-secondary px-6 py-12">
-        <h2 className="text-3xl font-semibold tracking-tight">{t("title")}</h2>
-        <p className="mt-2 text-muted-foreground">{t("subtitle")}</p>
+        <h2 className="text-3xl font-semibold tracking-tight">{copy?.title ?? t("title")}</h2>
+        <p className="mt-2 text-muted-foreground">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (
           <Button asChild size="lg" className="mt-6">
             <Link href={href}>{label}</Link>

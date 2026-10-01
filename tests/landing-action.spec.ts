@@ -4,6 +4,8 @@ import { landingActionHref } from "../lib/landing-action";
 
 test("landing next step follows the configured action, including customer routes", () => {
   expect(landingActionHref({ landing: { sections: ["hero"] }, cta: { href: "/analyze" } })).toBe("/analyze");
+  expect(landingActionHref({ landing: { sections: ["hero"] }, authGoogle: {}, cta: { href: "/signup" } })).toBe("/login");
+  expect(landingActionHref({ landing: { sections: ["hero"] }, authGoogle: {}, cta: { href: "#signup" } })).toBe("/login");
   expect(landingActionHref({ landing: { sections: ["hero", "contact"] }, contactForm: {} })).toBe("#contact");
   expect(landingActionHref({ landing: { sections: ["hero"] }, authGoogle: {} })).toBe("/login");
   expect(landingActionHref({ landing: { sections: ["hero"] }, dashboard: {} })).toBe("/dashboard");
@@ -37,4 +39,15 @@ test("landing anchor CTAs have real targets", async ({ page }) => {
     await page.evaluate(() => { window.location.hash = "contact"; });
     await expect(page.locator("#contact")).toBeInViewport();
   }
+});
+
+test("landing route CTA opens an exported page", async ({ page }) => {
+  test.skip(!config.patterns.landing?.sections.includes("hero"), "no hero in this config");
+  const href = landingActionHref(config.patterns);
+  test.skip(!href?.startsWith("/"), "no local route CTA");
+  await page.goto("./");
+  const target = await page.locator('[data-section="hero"] a').getAttribute("href");
+  expect(target).toBeTruthy();
+  const response = await page.request.get(new URL(target!, page.url()).href);
+  expect(response.status(), `CTA target ${target}`).toBe(200);
 });

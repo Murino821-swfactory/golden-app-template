@@ -1,19 +1,82 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { OwnerCardDialog } from "@/components/owner/owner-card-dialog";
 import { useContent } from "@/hooks/use-content";
+import { useOwnerCard } from "@/hooks/use-owner-card";
+import { useOwnerRole } from "@/hooks/use-owner-role";
 import { getDemoSlug } from "@/lib/demo-slug";
+import { localePath } from "@/lib/locale-routing";
+import { cardIsEmpty, fullName, mapsHref, telHref, type OwnerCard } from "@/lib/owner-contact";
+import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/**
+ * The owner's public card (sw-factory spec 2026-09-29-golden-template-v2 §6.3): only the
+ * fields the owner filled in, each one a link a phone can act on.
+ */
+function OwnerCardView({ card }: { card: OwnerCard }) {
+  const t = useTranslations("contact");
+  const name = fullName(card);
+  const link = "flex min-h-11 items-center gap-3 break-words hover:underline";
+  return (
+    <address data-owner-card className="rounded-lg border border-border bg-card p-5 text-sm not-italic">
+      {name && <p className="text-base font-semibold">{name}</p>}
+      <ul className="mt-2 space-y-1">
+        {card.address && (
+          <li>
+            <a
+              href={mapsHref(card.address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={link}
+              aria-label={t("mapLabel", { address: card.address })}
+            >
+              <MapPin aria-hidden className="size-4 shrink-0 text-primary" />
+              {card.address}
+            </a>
+          </li>
+        )}
+        {card.phone && (
+          <li>
+            <a href={telHref(card.phone)} className={link} aria-label={t("callLabel", { phone: card.phone })}>
+              <Phone aria-hidden className="size-4 shrink-0 text-primary" />
+              {card.phone}
+            </a>
+          </li>
+        )}
+        {card.email && (
+          <li>
+            <a href={`mailto:${card.email}`} className={link} aria-label={t("emailLabel", { email: card.email })}>
+              <Mail aria-hidden className="size-4 shrink-0 text-primary" />
+              {card.email}
+            </a>
+          </li>
+        )}
+      </ul>
+    </address>
+  );
+}
+
 export function ContactSection() {
   const t = useTranslations("contact");
+  const locale = useLocale();
   const copy = useContent().contactForm;
   const slug = getDemoSlug();
+  const { status: owner, saveCard } = useOwnerRole();
+  const [publicCard, setPublicCard] = useOwnerCard();
+  const card = owner?.card ?? publicCard;
+  const hasCard = !cardIsEmpty(card);
+  const [editing, setEditing] = useState(false);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState(""); // honeypot — see the hidden wrapper below
@@ -38,7 +101,13 @@ export function ContactSection() {
       const res = await fetch("/api/prototype-contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, email, message, website }),
+        body: JSON.stringify({
+          slug,
+          email,
+          message,
+          website,
+          ...(name.trim() ? { name: name.trim() } : {}),
+        }),
       });
       const body = (await res.json().catch(() => null)) as { ok?: boolean } | null;
       if (!res.ok || !body?.ok) throw new Error(`prototype-contact responded ${res.status}`);
@@ -49,119 +118,135 @@ export function ContactSection() {
     }
   }
 
-  if (status === "success") {
-    return (
-      <section
-        id="contact"
-        data-section="contact"
-        className="mx-auto w-full max-w-xl px-4 py-16 sm:py-24"
-      >
-        <h2 className="text-center text-3xl font-semibold tracking-tight">
-          {copy?.heading ?? t("title")}
-        </h2>
-        <p
-          className="mt-8 rounded-lg border border-border bg-card p-6 text-center text-sm"
-          role="status"
-        >
-          {t("success")}
-        </p>
-      </section>
-    );
-  }
-
   return (
-    <section
-      id="contact"
-      data-section="contact"
-      className="mx-auto w-full max-w-xl px-4 py-16 sm:py-24"
-    >
-      <h2 className="text-center text-3xl font-semibold tracking-tight">
-        {copy?.heading ?? t("title")}
-      </h2>
+    <section id="contact" data-section="contact" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+      <h2 className="text-center text-3xl font-semibold tracking-tight">{copy?.heading ?? t("title")}</h2>
+      {copy?.intro && <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground">{copy.intro}</p>}
 
-      {!slug && (
-        // No demo slug means the endpoint has no prototype to identify — a real request
-        // would 404. Local dev and the template's own /demo/golden build both have no
-        // slug, so the form says so instead of pretending to work.
-        <p
-          className="mt-4 text-center text-sm text-muted-foreground"
-          role="status"
-        >
-          {t("notConfigured")}
-        </p>
+      {owner && (
+        <div data-owner-controls className="mt-4 flex flex-wrap justify-center gap-2">
+          <Button variant="outline" className="h-11" onClick={() => setEditing(true)}>
+            {t("ownerEdit")}
+          </Button>
+          <Button asChild variant="ghost" className="h-11">
+            <Link href={localePath(locale, "/messages")}>{t("ownerMessages", { count: owner.unreadMessages })}</Link>
+          </Button>
+        </div>
       )}
 
-      <form className="mt-8 flex flex-col gap-4" onSubmit={handleSubmit}>
-        {/* A disabled fieldset disables every descendant control regardless of the
-            `contents` display below — that propagation is standard HTML form
-            behaviour, not something the CSS has to do. */}
-        <fieldset disabled={!slug || status === "submitting"} className="contents">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="contact-email" className="text-sm font-medium">
-              {t("email")}
-            </label>
-            <Input
-              id="contact-email"
-              name="email"
-              type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="contact-message" className="text-sm font-medium">
-              {t("message")}
-            </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              rows={4}
-              required
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              className="w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30"
-            />
-          </div>
-
-          {/* Honeypot. A bot that fills every input in the DOM fills this one; a sighted
-              visitor never sees it because the WRAPPER (not the input) is display:none —
-              some bots specifically skip an input that is itself hidden, so hiding it one
-              level up defeats that check — and a screen reader never reaches it either,
-              because display:none removes the whole subtree from the accessibility tree.
-              tabIndex={-1} keeps it out of the Tab order as a second guard for any
-              assistive tech that doesn't honour display:none. Its label is plain English,
-              not run through useTranslations: by construction nobody — sighted, screen
-              reader, any locale — ever encounters it, so it is not "user-visible copy" in
-              the sense the rest of this file's strings are. */}
-          <div className="hidden" aria-hidden="true">
-            <label htmlFor="contact-website">Leave this field blank</label>
-            <input
-              id="contact-website"
-              name="website"
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={website}
-              onChange={(event) => setWebsite(event.target.value)}
-            />
-          </div>
-        </fieldset>
-
-        {status === "error" && (
-          <p className="text-sm text-destructive" role="alert">
-            {t("error")}
+      <div className={cn("mt-8 grid gap-8", hasCard ? "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]" : "mx-auto max-w-xl")}>
+        {hasCard && <OwnerCardView card={card} />}
+        {status === "success" ? (
+          <p className="rounded-lg border border-border bg-card p-6 text-center text-sm" role="status">
+            {t("success")}
           </p>
-        )}
+        ) : (
+          <div>
+            {!slug && (
+              // No demo slug means the endpoint has no prototype to identify — a real request
+              // would 404. Local dev and the template's own /demo/golden build both have no
+              // slug, so the form says so instead of pretending to work.
+              <p className="mb-4 text-center text-sm text-muted-foreground" role="status">
+                {t("notConfigured")}
+              </p>
+            )}
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!slug || status === "submitting"}
-        >
-          {status === "submitting" ? t("sending") : (copy?.submitLabel ?? t("send"))}
-        </Button>
-      </form>
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+              {/* A disabled fieldset disables every descendant control regardless of the
+                  `contents` display below — that propagation is standard HTML form
+                  behaviour, not something the CSS has to do. */}
+              <fieldset disabled={!slug || status === "submitting"} className="contents">
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="contact-name" className="text-sm font-medium">
+                    {t("name")}
+                  </label>
+                  <Input
+                    id="contact-name"
+                    name="name"
+                    autoComplete="name"
+                    maxLength={100}
+                    className="h-11 text-base sm:text-sm"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="contact-email" className="text-sm font-medium">
+                  {t("email")}
+                </label>
+                <Input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  className="h-11 text-base sm:text-sm"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="contact-message" className="text-sm font-medium">
+                  {t("message")}
+                </label>
+                <Textarea
+                  id="contact-message"
+                  name="message"
+                  rows={4}
+                  required
+                  value={message}
+                  onChange={(event) => setMessage(event.target.value)}
+                />
+              </div>
+
+              {/* Honeypot. A bot that fills every input in the DOM fills this one; a sighted
+                  visitor never sees it because the WRAPPER (not the input) is display:none —
+                  some bots specifically skip an input that is itself hidden, so hiding it one
+                  level up defeats that check — and a screen reader never reaches it either,
+                  because display:none removes the whole subtree from the accessibility tree.
+                  tabIndex={-1} keeps it out of the Tab order as a second guard for any
+                  assistive tech that doesn't honour display:none. Its label is plain English,
+                  not run through useTranslations: by construction nobody — sighted, screen
+                  reader, any locale — ever encounters it, so it is not "user-visible copy" in
+                  the sense the rest of this file's strings are. */}
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="contact-website">Leave this field blank</label>
+                <input
+                  id="contact-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(event) => setWebsite(event.target.value)}
+                />
+              </div>
+              </fieldset>
+
+              {status === "error" && (
+                <p className="text-sm text-destructive" role="alert">
+                  {t("error")}
+                </p>
+              )}
+
+              <Button type="submit" className="h-11 w-full" disabled={!slug || status === "submitting"}>
+                {status === "submitting" ? t("sending") : (copy?.submitLabel ?? t("send"))}
+              </Button>
+            </form>
+          </div>
+        )}
+      </div>
+
+      {owner && editing && (
+        <OwnerCardDialog
+          open
+          onOpenChange={setEditing}
+          card={card}
+          onSave={async (next) => {
+            setPublicCard(await saveCard(next));
+          }}
+        />
+      )}
     </section>
   );
 }

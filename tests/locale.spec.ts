@@ -166,3 +166,47 @@ test("the Change colour button speaks the page's language", async ({ page }) => 
   await expect(button).toHaveCount(1);
   await expect(button).toHaveText("");
 });
+
+test.describe("v2 chrome keys", () => {
+  const REQUIRED = [
+    "common.close",
+    "dataGrid.editTitle",
+    "dataGrid.limitReached",
+    "dataGrid.viewBoard",
+    "contact.ownerEdit",
+    "contact.publicNotice",
+    "inbox.title",
+    "inbox.ownerOnly",
+    "dashboard.ownerMessages",
+    "landing.previewLabel",
+    "howItWorks.title",
+  ];
+  for (const id of ["en", "sk", "cs", "de", "pl", "hu", "fr", "es"]) {
+    test(`${id}: carries every v2 key`, () => {
+      const bundle = JSON.parse(
+        readFileSync(resolve(__dirname, `../messages/${id}.json`), "utf8")
+      ) as Record<string, Record<string, string>>;
+      for (const path of REQUIRED) {
+        const [ns, key] = path.split(".") as [string, string];
+        expect(bundle[ns]?.[key], `${id}: ${path}`).toBeTruthy();
+      }
+    });
+  }
+});
+
+// Review I3 (2026-09-30): four adopted prototypes (bizlaunch-cee, cv-matcher, law-expert,
+// unbroken) keep their own dashboard page, which still calls t("trackedFields"). Their
+// messages/*.json merge from the template without a conflict, so dropping the key here
+// would leave a raw key path on their signed-in page. Keep it one cycle, until those four
+// branches are merged by hand (plan Part D3).
+test.describe("keys adopted prototypes still call", () => {
+  for (const id of ["en", "sk", "cs", "de", "pl", "hu", "fr", "es"]) {
+    test(`${id}: dashboard.trackedFields stays for one cycle`, () => {
+      const bundle = JSON.parse(readFileSync(resolve(__dirname, `../messages/${id}.json`), "utf8")) as Record<
+        string,
+        Record<string, string>
+      >;
+      expect(bundle.dashboard?.trackedFields, id).toBeTruthy();
+    });
+  }
+});

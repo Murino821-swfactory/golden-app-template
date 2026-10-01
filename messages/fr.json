@@ -15,7 +15,8 @@
     "changeFontLabel": "Changer de police : {name} ({position} sur {total})",
     "cart": "Panier",
     "cartLabel": "Panier, {count} articles",
-    "cartEmpty": "Votre panier est vide"
+    "cartEmpty": "Votre panier est vide",
+    "close": "Fermer"
   },
   "auth": {
     "signInTitle": "Connexion",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Votre application",
     "subtitle": "Construit avec le Golden Stack",
-    "cta": "Commencer"
+    "cta": "Commencer",
+    "previewLabel": "Aperçu de l'application"
   },
   "features": {
     "title": "Fonctionnalités",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Questions fréquentes",
-    "q1": "Question de remplissage — cette section n'a pas encore de schéma de contenu.",
-    "a1": "Réponse de remplissage. Les mots propres à un prototype viennent de prototype.config.json."
+    "title": "Questions fréquentes"
   },
   "contact": {
     "title": "Contact",
@@ -63,7 +63,23 @@
     "sending": "Envoi…",
     "success": "Merci — votre message est en route. Nous vous répondrons bientôt.",
     "error": "L'envoi a échoué. Veuillez réessayer.",
-    "notConfigured": "Le formulaire de contact n'est pas configuré dans cet aperçu."
+    "notConfigured": "Le formulaire de contact n'est pas configuré dans cet aperçu.",
+    "name": "Nom (facultatif)",
+    "ownerEdit": "Modifier les coordonnées",
+    "ownerMessages": "Messages ({count})",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "address": "Adresse",
+    "phone": "Téléphone",
+    "emailField": "E-mail",
+    "publicNotice": "Tous les visiteurs de cette page verront ces informations.",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "cancel": "Annuler",
+    "saveError": "Les informations n'ont pas pu être enregistrées. Vérifiez les champs et réessayez.",
+    "callLabel": "Appeler le {phone}",
+    "emailLabel": "Envoyer un e-mail à {email}",
+    "mapLabel": "Afficher {address} sur une carte"
   },
   "cta": {
     "title": "Prêt à commencer ?",
@@ -71,19 +87,41 @@
     "action": "Commencer"
   },
   "dataGrid": {
-    "permissionDenied": "Seule la personne qui a demandé ce prototype voit ces enregistrements.",
+    "permissionDenied": "Cette modification a été refusée. Reconnectez-vous et réessayez.",
     "loadError": "Le chargement de vos enregistrements a échoué. Veuillez réessayer dans un instant.",
     "addAction": "Ajouter {entity}",
     "saving": "Enregistrement…",
     "listHeading": "Enregistrements : {entity}",
-    "empty": "Aucun enregistrement pour l'instant : {entity} — ajoutez le premier ci-dessus.",
+    "empty": "Aucun enregistrement pour l'instant : {entity} — ajoutez le premier.",
     "remove": "Supprimer",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "addTitle": "Nouvel enregistrement : {entity}",
+    "editTitle": "Modifier l'enregistrement : {entity}",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "confirmDelete": "Supprimer cet enregistrement ? Cette action est irréversible.",
+    "confirmDeleteAction": "Oui, supprimer",
+    "searchLabel": "Rechercher dans les enregistrements",
+    "all": "Tous",
+    "noMatches": "Aucun enregistrement ne correspond à votre recherche.",
+    "limitReached": "Vous avez atteint la limite de {limit} enregistrements dans ce prototype.",
+    "sortBy": "Trier par : {field}",
+    "viewTable": "Tableau",
+    "viewBoard": "Tableau Kanban",
+    "noValue": "Aucune valeur",
+    "errorRequired": "Le champ « {field} » est obligatoire.",
+    "errorType": "Le champ « {field} » contient une valeur non valide.",
+    "errorTooLong": "Le champ « {field} » est trop long.",
+    "errorOption": "Le champ « {field} » doit être l'une des options proposées."
   },
   "dashboard": {
     "recordsLabel": "Enregistrements : {entity}",
     "addedThisMonth": "Ajoutés ce mois-ci",
+    "ownerMessages": "Messages ({count})",
+    "ownerContact": "Coordonnées",
     "trackedFields": "Champs suivis"
   },
   "heroImage": {
@@ -98,5 +136,18 @@
     "failedRetry": "Cela n'a pas fonctionné — votre essai n'est pas perdu",
     "unavailable": "La génération n'est pas disponible pour le moment",
     "slow": "Cela prend plus de temps — rechargez la page"
+  },
+  "inbox": {
+    "title": "Messages",
+    "empty": "Aucun message pour l'instant. Les messages envoyés via le formulaire de contact apparaissent ici.",
+    "ownerOnly": "Cette page est réservée au propriétaire du prototype.",
+    "notConfigured": "Les messages sont disponibles dans le prototype publié.",
+    "loadError": "Impossible de charger les messages. Réessayez dans un instant.",
+    "unread": "Nouveau",
+    "reply": "Répondre",
+    "back": "Retour au tableau de bord"
+  },
+  "howItWorks": {
+    "title": "Comment ça marche"
   }
 }
