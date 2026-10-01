@@ -15,7 +15,8 @@
     "changeFontLabel": "Change font: {name} ({position} of {total})",
     "cart": "Cart",
     "cartLabel": "Cart, {count} items",
-    "cartEmpty": "Your cart is empty"
+    "cartEmpty": "Your cart is empty",
+    "close": "Close"
   },
   "auth": {
     "signInTitle": "Sign in",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Your App",
     "subtitle": "Built with the Golden Stack",
-    "cta": "Get Started"
+    "cta": "Get Started",
+    "previewLabel": "App preview"
   },
   "features": {
     "title": "Features",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "FAQ",
-    "q1": "Placeholder question — this section has no content schema yet.",
-    "a1": "Placeholder answer. A prototype's own words come from prototype.config.json."
+    "title": "FAQ"
   },
   "contact": {
     "title": "Contact",
@@ -63,7 +63,23 @@
     "sending": "Sending…",
     "success": "Thanks — your message is on its way. We'll get back to you soon.",
     "error": "Something went wrong sending that. Please try again.",
-    "notConfigured": "The contact form isn't configured in this preview."
+    "notConfigured": "The contact form isn't configured in this preview.",
+    "name": "Name (optional)",
+    "ownerEdit": "Edit contact details",
+    "ownerMessages": "Messages ({count})",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "address": "Address",
+    "phone": "Phone",
+    "emailField": "E-mail",
+    "publicNotice": "Everyone who visits this page will see these details.",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "saveError": "The details could not be saved. Check the fields and try again.",
+    "callLabel": "Call {phone}",
+    "emailLabel": "Send an e-mail to {email}",
+    "mapLabel": "Show {address} on a map"
   },
   "cta": {
     "title": "Ready to get started?",
@@ -71,19 +87,41 @@
     "action": "Get Started"
   },
   "dataGrid": {
-    "permissionDenied": "Only the person who requested this prototype can see these records.",
+    "permissionDenied": "This change was refused. Sign in again and retry.",
     "loadError": "Something went wrong loading your records. Please try again shortly.",
     "addAction": "Add {entity}",
     "saving": "Saving…",
     "listHeading": "{entity} records",
-    "empty": "No {entity} records yet — add the first one above.",
+    "empty": "No {entity} records yet — add the first one.",
     "remove": "Remove",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "addTitle": "New record: {entity}",
+    "editTitle": "Edit record: {entity}",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmDelete": "Delete this record? This cannot be undone.",
+    "confirmDeleteAction": "Yes, delete",
+    "searchLabel": "Search records",
+    "all": "All",
+    "noMatches": "No records match your search.",
+    "limitReached": "You have reached the limit of {limit} records in this prototype.",
+    "sortBy": "Sort by {field}",
+    "viewTable": "Table",
+    "viewBoard": "Board",
+    "noValue": "No value",
+    "errorRequired": "{field} is required.",
+    "errorType": "{field} has an invalid value.",
+    "errorTooLong": "{field} is too long.",
+    "errorOption": "{field} must be one of the listed options."
   },
   "dashboard": {
     "recordsLabel": "{entity} records",
     "addedThisMonth": "Added this month",
+    "ownerMessages": "Messages ({count})",
+    "ownerContact": "Contact details",
     "trackedFields": "Tracked fields"
   },
   "heroImage": {
@@ -98,5 +136,18 @@
     "failedRetry": "It didn't work — your try is not used up",
     "unavailable": "Generating is not available right now",
     "slow": "This is taking longer — reload the page"
+  },
+  "inbox": {
+    "title": "Messages",
+    "empty": "No messages yet. Messages sent through the contact form appear here.",
+    "ownerOnly": "This page is only for the prototype's owner.",
+    "notConfigured": "Messages are available on the published prototype.",
+    "loadError": "Messages could not be loaded. Try again shortly.",
+    "unread": "New",
+    "reply": "Reply",
+    "back": "Back to dashboard"
+  },
+  "howItWorks": {
+    "title": "How it works"
   }
 }

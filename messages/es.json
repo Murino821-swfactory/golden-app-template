@@ -15,7 +15,8 @@
     "changeFontLabel": "Cambiar fuente: {name} ({position} de {total})",
     "cart": "Carrito",
     "cartLabel": "Carrito, {count} artículos",
-    "cartEmpty": "Tu carrito está vacío"
+    "cartEmpty": "Tu carrito está vacío",
+    "close": "Cerrar"
   },
   "auth": {
     "signInTitle": "Iniciar sesión",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Tu aplicación",
     "subtitle": "Creado con el Golden Stack",
-    "cta": "Empezar"
+    "cta": "Empezar",
+    "previewLabel": "Vista previa de la aplicación"
   },
   "features": {
     "title": "Funciones",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Preguntas frecuentes",
-    "q1": "Pregunta de relleno — esta sección aún no tiene esquema de contenido.",
-    "a1": "Respuesta de relleno. Las palabras propias de un prototipo vienen de prototype.config.json."
+    "title": "Preguntas frecuentes"
   },
   "contact": {
     "title": "Contacto",
@@ -63,7 +63,23 @@
     "sending": "Enviando…",
     "success": "Gracias — tu mensaje va en camino. Te responderemos pronto.",
     "error": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
-    "notConfigured": "El formulario de contacto no está configurado en esta vista previa."
+    "notConfigured": "El formulario de contacto no está configurado en esta vista previa.",
+    "name": "Nombre (opcional)",
+    "ownerEdit": "Editar datos de contacto",
+    "ownerMessages": "Mensajes ({count})",
+    "firstName": "Nombre",
+    "lastName": "Apellidos",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "emailField": "Correo electrónico",
+    "publicNotice": "Todas las personas que visiten esta página verán estos datos.",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "saveError": "No se han podido guardar los datos. Revisa los campos e inténtalo de nuevo.",
+    "callLabel": "Llamar al {phone}",
+    "emailLabel": "Enviar un correo a {email}",
+    "mapLabel": "Ver {address} en el mapa"
   },
   "cta": {
     "title": "¿Listo para empezar?",
@@ -71,19 +87,41 @@
     "action": "Empezar"
   },
   "dataGrid": {
-    "permissionDenied": "Solo quien solicitó este prototipo puede ver estos registros.",
+    "permissionDenied": "No se ha podido guardar este cambio. Vuelve a iniciar sesión e inténtalo de nuevo.",
     "loadError": "No se pudieron cargar tus registros. Inténtalo de nuevo en un momento.",
     "addAction": "Añadir {entity}",
     "saving": "Guardando…",
     "listHeading": "Registros: {entity}",
-    "empty": "Aún no hay registros: {entity} — añade el primero arriba.",
+    "empty": "Aún no hay registros: {entity} — añade el primero.",
     "remove": "Eliminar",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "addTitle": "Nuevo registro: {entity}",
+    "editTitle": "Editar registro: {entity}",
+    "edit": "Editar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar este registro? No se puede deshacer.",
+    "confirmDeleteAction": "Sí, eliminar",
+    "searchLabel": "Buscar en los registros",
+    "all": "Todos",
+    "noMatches": "Ningún registro coincide con tu búsqueda.",
+    "limitReached": "Has alcanzado el límite de {limit} registros en este prototipo.",
+    "sortBy": "Ordenar por: {field}",
+    "viewTable": "Tabla",
+    "viewBoard": "Tablero",
+    "noValue": "Sin valor",
+    "errorRequired": "El campo «{field}» es obligatorio.",
+    "errorType": "El campo «{field}» tiene un valor no válido.",
+    "errorTooLong": "El campo «{field}» es demasiado largo.",
+    "errorOption": "El campo «{field}» debe ser una de las opciones ofrecidas."
   },
   "dashboard": {
     "recordsLabel": "Registros: {entity}",
     "addedThisMonth": "Añadidos este mes",
+    "ownerMessages": "Mensajes ({count})",
+    "ownerContact": "Datos de contacto",
     "trackedFields": "Campos registrados"
   },
   "heroImage": {
@@ -98,5 +136,18 @@
     "failedRetry": "No ha funcionado: tu intento sigue disponible",
     "unavailable": "La generación no está disponible ahora",
     "slow": "Está tardando más — recarga la página"
+  },
+  "inbox": {
+    "title": "Mensajes",
+    "empty": "Aún no hay mensajes. Los mensajes enviados desde el formulario de contacto aparecen aquí.",
+    "ownerOnly": "Esta página es solo para la persona propietaria del prototipo.",
+    "notConfigured": "Los mensajes están disponibles en el prototipo publicado.",
+    "loadError": "No se han podido cargar los mensajes. Inténtalo de nuevo en un momento.",
+    "unread": "Nuevo",
+    "reply": "Responder",
+    "back": "Volver al panel"
+  },
+  "howItWorks": {
+    "title": "Cómo funciona"
   }
 }

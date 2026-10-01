@@ -41,6 +41,9 @@ footer read `config.appName`, not `messages/en.json`.
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `ContactSection` owns the stable `contact` anchor. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
+| Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
+| Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 
 ## Critical Rules for Fast Implementation
 
@@ -99,9 +102,14 @@ app/
     page.tsx             # Landing page — renders sections from SECTION_REGISTRY
     login/page.tsx       # Login page (already implemented)
     dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
+    messages/page.tsx    # The owner's inbox (contact-form messages), owner/founder only
 components/
-  sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
+  sections/              # Landing sections: hero, features, howItWorks, pricing, testimonials, faq, contact, cta
                          #   + hero-image-controls.tsx (creator/founder buttons under the hero)
+                         #   + product-preview.tsx (sample records drawn in the hero)
+  patterns/data-grid/    # The grid: index.tsx, record-dialog.tsx (add/edit), board.tsx (boardBy view)
+  dashboard/stats.tsx    # KPI cards (patterns.dashboard.kpis, or total + this month)
+  owner/                 # owner-card-dialog.tsx (edit the public card), owner-links.tsx (dashboard)
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
@@ -111,6 +119,13 @@ hooks/
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
+  records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
+  owner-contact.ts       # owner card: parse, links, /api/prototype-owner-contact client
+  messages.ts            # inbox: parse a message, which view to show
+  kpi.ts, board.ts       # dashboard numbers; records grouped by a select field
+  icons.ts               # ICON_IDS → Lucide components
+  faq-jsonld.ts          # FAQPage JSON-LD, `<` escaped
   utils.ts               # cn() for className merging
 messages/
   en.json + 7 more       # Chrome text, one bundle per id in LOCALES (en sk cs de pl hu fr es)
@@ -273,7 +288,7 @@ These are ready to use — just import and render:
 | `StreakCounter` | `@/components/features` | `currentStreak: number`, `label?: string` |
 | `CalendarGrid` | `@/components/features` | `checkedDates: Date[]`, `month?: Date` |
 | `ProgressRing` | `@/components/features` | `progress: number (0-100)`, `label?: string` |
-| `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` |
+| `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` (the template passes no icon — no emoji) |
 
 ### Recipe 6: Add Dashboard Page (MOST COMMON)
 
@@ -306,10 +321,30 @@ Import from `@/components/ui/`:
 - `Input` — `<Input placeholder="..." />`
 - `Skeleton` — loading placeholder
 
-## Demo Mode
+## Data: every visitor's own sandbox (2026-09-29)
 
-`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
-Always use `getCollectionPath(collection)` — never hardcode collection names.
+`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`. Always use
+`getCollectionPath(collection)` (or `lib/records.ts` paths) — never hardcode collection names.
+Every signed-in visitor of a prototype works on their OWN records — sw-factory spec
+`docs/superpowers/specs/2026-09-29-golden-template-v2-design.md` §4, rules in factory-web:
+
+- Records: `demos/{slug}/users/{uid}/records/{id}` = `{ values (≤ 12 keys), createdAt, updatedAt }`.
+  Counter: `demos/{slug}/users/{uid}` = `{ count, last }`. Without a slug (local dev):
+  `users/{uid}/…` (`lib/records.ts` `sandboxRoot`).
+- A create or delete is ONE batch: the record write plus `count ±1` naming it in `last`
+  (`buildCreateOps` / `buildDeleteOps`). The rules require both halves — change the op
+  shapes only together with factory-web's rules and their emulator tests.
+- `RECORD_LIMIT` = 200 per visitor per prototype; the grid shows a limit notice, and a
+  refused create at the cap reads as the limit, not a permission error (`writeErrorKind`).
+- A first visit (no counter yet) is seeded with `content.<locale>.dataGrid.sampleRecords`:
+  the first sample in a transaction that refuses when the counter exists (two tabs cannot
+  seed twice), the rest in batches. A counter at 0 means the visitor deleted every sample —
+  they are never re-seeded.
+- The prototype's owner cannot read visitors' records; the founder can read them.
+- **A visitor may write exactly two things:** their counter `users/{uid}` and
+  `users/{uid}/records/{id}`. Nothing else under `users/{uid}` is allowed — a new
+  collection there (e.g. `users/{uid}/notes`) passes CI here and is DENIED in production
+  until factory-web's rules and their emulator tests add it.
 
 ## Languages and routing
 
@@ -391,12 +426,32 @@ generate one; the founder any number; both may hide or show it. The server is fa
 - The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
   copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
+## Owner card and inbox (2026-09-29)
+
+The prototype's owner (verified wizard e-mail — the same definition as the hero image) and
+the founder can edit a public contact card and read contact-form messages. The server is
+factory-web (`prototypeOwnerContact`, `prototypeContact`).
+
+- Every visitor reads `<basePath>/owner-contact.json`. `public/owner-contact.json` ships as
+  `{}` — keep it, for the same reason as `hero-image.json` (no functions in the sandbox or CI).
+- `/api/prototype-owner-contact` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`: base path `/newapp/…` and a slug) — never from CI.
+- All five card fields are optional; a save replaces the whole card. The card's e-mail is
+  only displayed. A notification e-mail goes to the wizard address only after its owner
+  signed in with it on the prototype (the owner-controls status call records that proof) —
+  the wizard is anonymous, so the address alone proves nothing.
+- `/messages` lists `demos/{slug}/contactMessages` for the owner; opening one sets `readAt`.
+  Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
+  dashboard (renders nothing for anyone else).
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
-for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`,
-which binds each slug to the prototype's requester email (`demoOwnerEmail`) plus the
-founder — never re-add a copy here. A second copy of the same rule can only drift, and the
+for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`:
+the owner (`demoOwnerEmail`) plus the founder get `demos/{slug}/{coll}/{docId}` except
+`users`, and every signed-in visitor gets their own counter `demos/{slug}/users/{uid}` and
+`demos/{slug}/users/{uid}/records/{id}` — nothing else under `users/{uid}`. Never re-add a
+copy here. A second copy of the same rule can only drift, and the
 weaker one is the one that eventually deploys: this repo previously shipped one that
 granted read/write on every prototype's data to any signed-in user of any prototype,
 latent only because `deploy:production` is hosting-only here.
@@ -414,6 +469,9 @@ comes from weight, underline or a filled surface — never from a second hue.
 
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
+
+Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
+never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
 
 Use semantic tokens — they adapt to the customer's palette:
 - `bg-background`, `text-foreground` — main surface
