@@ -1,6 +1,7 @@
 import { type ComponentType } from "react";
 import { HeroSection } from "@/components/sections/hero";
 import { FeaturesSection } from "@/components/sections/features";
+import { HowItWorksSection } from "@/components/sections/how-it-works";
 import { PricingSection } from "@/components/sections/pricing";
 import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FaqSection } from "@/components/sections/faq";
@@ -20,6 +21,7 @@ const SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 const SECTION_REGISTRY: Record<string, ComponentType> = {
   hero: HeroSection,
   features: FeaturesSection,
+  howItWorks: HowItWorksSection,
   pricing: PricingSection,
   testimonials: TestimonialsSection,
   faq: FaqSection,

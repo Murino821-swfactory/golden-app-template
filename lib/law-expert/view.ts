@@ -1,4 +1,5 @@
 import type { FacetValue, MemoBlock, MemoResponse } from "./types";
+import { LONGTEXT_MAX } from "@/lib/records";
 
 /**
  * What the research page shows, decided without a browser. Kept apart from the
@@ -75,6 +76,12 @@ export function factsState(text: string) {
  * The memo knows the qualification and the sources; the case number and the court are
  * the user's own matter, so they come from the form.
  */
+/** The template stores a longtext of at most LONGTEXT_MAX characters (golden template v2,
+ * `coerceValues`); a longer one would refuse the whole save. Cut, mark the cut, keep the save. */
+function capNotes(notes: string): string {
+  return notes.length <= LONGTEXT_MAX ? notes : `${notes.slice(0, LONGTEXT_MAX - 1)}…`;
+}
+
 export function caseRecordValues(
   memo: MemoResponse,
   own: { caseNumber: string; courtName: string }
@@ -87,7 +94,7 @@ export function caseRecordValues(
     crimeType: memo.crimeType,
     status: "Prebieha",
     decisionDate: "",
-    notes: [...qualification, "", "Judikatúra:", ...sources].join("\n"),
+    notes: capNotes([...qualification, "", "Judikatúra:", ...sources].join("\n")),
   };
 }
 

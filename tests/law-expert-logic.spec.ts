@@ -12,6 +12,8 @@ import {
   FACTS_MAX,
 } from "../lib/law-expert/view";
 import type { MemoBlock, MemoResponse, SourceDoc } from "../lib/law-expert/types";
+import { LONGTEXT_MAX, coerceValues } from "../lib/records";
+import { config, entityFieldsFor } from "../lib/prototype-config";
 
 /**
  * The law-expert research page (OTH-91) — the logic that decides what the page shows.
@@ -156,6 +158,23 @@ test.describe("caseRecordValues", () => {
     expect(v.status).toBe("Prebieha");
     expect(String(v.notes)).toContain("§ 212");
     expect(String(v.notes)).toContain("ECLI:SK:OSKE1:2004:7104892312.6");
+  });
+
+  // Golden template v2 (2026-10-01): records go through coerceValues, which refuses a
+  // longtext over LONGTEXT_MAX. A long memo must still save — the notes are cut, not lost.
+  test("a long memo still saves: the values pass the template's own validation", () => {
+    const many: MemoResponse = {
+      ...memo,
+      qualification: Array.from({ length: 12 }, (_, i) => ({
+        section: String(200 + i),
+        reason: "Dlhé odôvodnenie kvalifikácie. ".repeat(8),
+        slovLexUrl: "https://example",
+      })),
+      sources: Array.from({ length: 40 }, (_, i) => ({ ...source, id: `a:${i}`, ecli: `ECLI:SK:OSKE1:2004:${i}` })),
+    };
+    const v = caseRecordValues(many, { caseNumber: "2T/5/2026", courtName: "Okresný súd Prešov" });
+    expect(String(v.notes).length).toBeLessThanOrEqual(LONGTEXT_MAX);
+    expect(coerceValues(entityFieldsFor(config), v).errors).toEqual([]);
   });
 });
 
