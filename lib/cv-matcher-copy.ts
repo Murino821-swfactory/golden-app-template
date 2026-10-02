@@ -21,6 +21,13 @@ interface Copy {
   cvPlaceholder: string;
   jobLabel: string;
   jobPlaceholder: string;
+  library: {
+    title: string; intro: string; search: string; choose: string; defaults: string;
+    saved: string; noMatches: string; use: string; roleTitle: string; category: string;
+    categories: { ai: string; data: string; aws: string };
+    save: string; update: string; remove: string; savedNotice: string; deletedNotice: string;
+    loadedNotice: string; invalid: string; limit: string; storageError: string;
+  };
   words: (n: number) => string;
   clear: string;
   importFile: string;
@@ -80,6 +87,20 @@ const EN: Copy = {
   cvPlaceholder: "Paste the CV text here…",
   jobLabel: "Job posting",
   jobPlaceholder: "Paste the job description here…",
+  library: {
+    title: "Job title library",
+    intro: "10 starter roles across AI, Data and AWS Cloud. Customize a description and save your own roles in this browser. Saved roles stay on this device; clearing browser data removes them.",
+    search: "Search roles", choose: "Choose a role", defaults: "Default roles", saved: "Your saved roles",
+    noMatches: "No roles match your search.", use: "Use role description",
+    roleTitle: "Role title", category: "Role category",
+    categories: { ai: "AI", data: "Data", aws: "AWS Cloud" },
+    save: "Save current posting as a role", update: "Update saved role", remove: "Delete saved role",
+    savedNotice: "Role saved in this browser.", deletedNotice: "Saved role deleted. Your posting is still available below.",
+    loadedNotice: "Role description loaded. You can edit it below.",
+    invalid: "Enter a role title (up to 120 characters) and a job description (up to 50,000 characters).",
+    limit: "You can save up to 100 custom roles. Update or delete a saved role first.",
+    storageError: "Saved roles could not be read or saved. Check browser storage settings, or reload if another tab changed the library. You can still use the default roles and paste a posting.",
+  },
   words: (n) => `${n} ${n === 1 ? "word" : "words"}`,
   clear: "Clear",
   importFile: "Upload file",
@@ -155,6 +176,20 @@ const SK: Copy = {
   cvPlaceholder: "Sem vložte text životopisu…",
   jobLabel: "Pracovná ponuka",
   jobPlaceholder: "Sem vložte popis pracovnej pozície…",
+  library: {
+    title: "Knižnica pracovných pozícií",
+    intro: "10 predvolených rolí z oblastí AI, Data a AWS Cloud. Upravte popis a uložte vlastné roly v tomto prehliadači. Uložené roly zostávajú na tomto zariadení; vymazanie dát prehliadača ich odstráni.",
+    search: "Hľadať roly", choose: "Vyberte rolu", defaults: "Predvolené roly", saved: "Vaše uložené roly",
+    noMatches: "Hľadaniu nezodpovedá žiadna rola.", use: "Použiť popis roly",
+    roleTitle: "Názov roly", category: "Oblasť roly",
+    categories: { ai: "AI", data: "Data", aws: "AWS Cloud" },
+    save: "Uložiť aktuálnu ponuku ako rolu", update: "Aktualizovať uloženú rolu", remove: "Odstrániť uloženú rolu",
+    savedNotice: "Rola je uložená v tomto prehliadači.", deletedNotice: "Uložená rola bola odstránená. Ponuka zostala dostupná nižšie.",
+    loadedNotice: "Popis roly bol načítaný. Môžete ho upraviť nižšie.",
+    invalid: "Zadajte názov roly (najviac 120 znakov) a popis práce (najviac 50 000 znakov).",
+    limit: "Môžete uložiť najviac 100 vlastných rolí. Najprv aktualizujte alebo odstráňte uloženú rolu.",
+    storageError: "Uložené roly sa nepodarilo načítať alebo uložiť. Skontrolujte nastavenia úložiska prehliadača alebo obnovte stránku, ak knižnicu zmenila iná karta. Predvolené roly aj vloženie ponuky môžete naďalej používať.",
+  },
   words: (n) => `${n} ${n === 1 ? "slovo" : n >= 2 && n <= 4 ? "slová" : "slov"}`,
   clear: "Vymazať",
   importFile: "Nahrať súbor",

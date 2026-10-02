@@ -18,10 +18,15 @@ This branch is one customer's app, not the template. Code specific to it:
 | CV ↔ job posting matcher (OTH-85) — public page, no sign-in | `app/[locale]/analyze/page.tsx` (bare path: re-export in `app/(default)/analyze/`) → `components/features/cv-matcher.tsx` |
 | Matching engine: skill taxonomy + aliases (EN/SK), must-have vs nice-to-have, score, advice, samples | `lib/cv-analyzer.ts` |
 | Every string it shows or exports (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
+| Job title library (OTH-104 / OTH-114): ten AI/Data/AWS starters, search, use, custom CRUD | `lib/job-library.ts`, `components/features/job-library.tsx`, `tests/job-library.spec.ts` |
 | Tests | `tests/cv-analyzer.spec.ts` (logic, no page), `tests/cv-matcher.spec.ts` (UI) |
 
 The matcher also renders on `/dashboard`; the landing CTA (`patterns.cta.href`) points to
-`/analyze`. Everything runs in the browser — no Firestore, no API. A new skill is one row
+`/analyze`. Everything runs in the browser — no Firestore, no API. Custom job roles persist in versioned browser localStorage (`cv-matcher:job-library:v1`),
+not across accounts/devices. Default descriptions are curated EN/SK starting points, not
+a measured popularity ranking. Selecting a role does not replace the posting until
+**Use role description** is clicked, and never changes the CV. See `docs/JOB_LIBRARY.md`.
+A new skill is one row
 in `TAXONOMY`; aliases are lowercase without diacritics.
 
 ## Quick Reference — Which Files to Edit

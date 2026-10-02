@@ -9,6 +9,7 @@ import { analyzeCv, SAMPLES, type AnalysisResult, type MatchTier, type SkillHit 
 import { COPY, cvLocale, groupedRecommendations, reportToMarkdown, type CvLocale } from "@/lib/cv-matcher-copy";
 import { CvParseError, parseCvFile } from "@/lib/cv-file-parser";
 import { CvInputPanel, LinkedInImportDialog } from "./cv-import";
+import { JobLibrary } from "./job-library";
 
 /**
  * CV ↔ job posting matcher (OTH-85). Everything runs in the browser: the score, the gaps
@@ -307,14 +308,17 @@ export function CvMatcher({ className }: { className?: string }) {
           onFile={importFile}
           onOpenLinkedIn={() => setLinkedInOpen(true)}
         />
-        <TextPanel
-          label={c.jobLabel}
-          placeholder={c.jobPlaceholder}
-          value={job}
-          onChange={setJob}
-          clearLabel={c.clear}
-          words={c.words(wordCount(job))}
-        />
+        <div className="min-w-0 space-y-4">
+          <JobLibrary locale={locale} job={job} onUse={setJob} />
+          <TextPanel
+            label={c.jobLabel}
+            placeholder={c.jobPlaceholder}
+            value={job}
+            onChange={setJob}
+            clearLabel={c.clear}
+            words={c.words(wordCount(job))}
+          />
+        </div>
       </div>
 
       {!result ? (
