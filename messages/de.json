@@ -86,6 +86,30 @@
     "addedThisMonth": "Diesen Monat hinzugefügt",
     "trackedFields": "Erfasste Felder"
   },
+  "quota": {
+    "title": "Kontingent-Countdown",
+    "active": "Alle Modelle aktiv",
+    "sleeping": "Claude im Ruhemodus (wartet auf Reset)",
+    "resetsIn": "Reset in",
+    "noReset": "Kein Reset geplant",
+    "preset3am": "3:00 Uhr",
+    "presetPlus5h": "+5 Stunden",
+    "customLabel": "Reset-Zeit festlegen",
+    "clear": "Löschen"
+  },
+  "logParser": {
+    "title": "Schneller Log-Import",
+    "placeholder": "Terminal-Fehlerausgabe einfügen…",
+    "analyze": "Analysieren und hinzufügen",
+    "added": "Sitzung hinzugefügt, wartet auf Reset.",
+    "addedWithTime": "Reset-Zeit erkannt – Sitzung hinzugefügt, wartet auf Reset.",
+    "empty": "Fügen Sie zuerst eine Log-Zeile ein."
+  },
+  "gridFilter": {
+    "filterAll": "Alle",
+    "filterBy": "Filtern nach {field}",
+    "noMatch": "Keine Einträge entsprechen dem ausgewählten Filter."
+  },
   "heroImage": {
     "generate": "Bild erzeugen",
     "confirm": "Sicher? Du hast einen Versuch",

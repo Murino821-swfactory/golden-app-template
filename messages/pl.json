@@ -86,6 +86,30 @@
     "addedThisMonth": "Dodane w tym miesiącu",
     "trackedFields": "Śledzone pola"
   },
+  "quota": {
+    "title": "Odliczanie limitu",
+    "active": "Wszystkie modele aktywne",
+    "sleeping": "Claude w trybie uśpienia (czeka na reset)",
+    "resetsIn": "Reset za",
+    "noReset": "Brak zaplanowanego resetu",
+    "preset3am": "3:00",
+    "presetPlus5h": "+5 godzin",
+    "customLabel": "Ustaw czas resetu",
+    "clear": "Wyczyść"
+  },
+  "logParser": {
+    "title": "Szybki import logu",
+    "placeholder": "Wklej błąd z terminala…",
+    "analyze": "Analizuj i dodaj",
+    "added": "Dodano sesję oczekującą na reset.",
+    "addedWithTime": "Wykryto czas resetu – dodano sesję oczekującą na reset.",
+    "empty": "Najpierw wklej wiersz logu."
+  },
+  "gridFilter": {
+    "filterAll": "Wszystkie",
+    "filterBy": "Filtruj według: {field}",
+    "noMatch": "Żadne rekordy nie pasują do wybranego filtra."
+  },
   "heroImage": {
     "generate": "Wygeneruj obraz",
     "confirm": "Na pewno? Masz jedną próbę",

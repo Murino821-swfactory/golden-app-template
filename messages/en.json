@@ -86,6 +86,30 @@
     "addedThisMonth": "Added this month",
     "trackedFields": "Tracked fields"
   },
+  "quota": {
+    "title": "Quota Countdown",
+    "active": "All models active",
+    "sleeping": "Claude sleeping (waiting for reset)",
+    "resetsIn": "Resets in",
+    "noReset": "No reset scheduled",
+    "preset3am": "3:00 AM",
+    "presetPlus5h": "+5 hours",
+    "customLabel": "Set reset time",
+    "clear": "Clear"
+  },
+  "logParser": {
+    "title": "Quick Log Import",
+    "placeholder": "Paste terminal error output…",
+    "analyze": "Analyze & add",
+    "added": "Added a session waiting for reset.",
+    "addedWithTime": "Detected a reset time — added a session waiting for reset.",
+    "empty": "Paste a log line first."
+  },
+  "gridFilter": {
+    "filterAll": "All",
+    "filterBy": "Filter by {field}",
+    "noMatch": "No records match the selected filter."
+  },
   "heroImage": {
     "generate": "Generate image",
     "confirm": "Sure? You have one try",

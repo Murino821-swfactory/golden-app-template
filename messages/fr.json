@@ -86,6 +86,30 @@
     "addedThisMonth": "Ajoutés ce mois-ci",
     "trackedFields": "Champs suivis"
   },
+  "quota": {
+    "title": "Compte à rebours du quota",
+    "active": "Tous les modèles actifs",
+    "sleeping": "Claude en veille (en attente de réinitialisation)",
+    "resetsIn": "Réinitialisation dans",
+    "noReset": "Aucune réinitialisation prévue",
+    "preset3am": "3h00",
+    "presetPlus5h": "+5 heures",
+    "customLabel": "Définir l'heure de réinitialisation",
+    "clear": "Effacer"
+  },
+  "logParser": {
+    "title": "Import rapide de journal",
+    "placeholder": "Collez la sortie d'erreur du terminal…",
+    "analyze": "Analyser et ajouter",
+    "added": "Session ajoutée, en attente de réinitialisation.",
+    "addedWithTime": "Heure de réinitialisation détectée – session ajoutée.",
+    "empty": "Collez d'abord une ligne de journal."
+  },
+  "gridFilter": {
+    "filterAll": "Tous",
+    "filterBy": "Filtrer par {field}",
+    "noMatch": "Aucun enregistrement ne correspond au filtre sélectionné."
+  },
   "heroImage": {
     "generate": "Générer une image",
     "confirm": "Sûr ? Vous avez un seul essai",

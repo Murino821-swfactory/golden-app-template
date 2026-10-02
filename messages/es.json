@@ -86,6 +86,30 @@
     "addedThisMonth": "Añadidos este mes",
     "trackedFields": "Campos registrados"
   },
+  "quota": {
+    "title": "Cuenta atrás de cuota",
+    "active": "Todos los modelos activos",
+    "sleeping": "Claude en reposo (esperando el reinicio)",
+    "resetsIn": "Se reinicia en",
+    "noReset": "Sin reinicio programado",
+    "preset3am": "3:00 AM",
+    "presetPlus5h": "+5 horas",
+    "customLabel": "Fijar hora de reinicio",
+    "clear": "Borrar"
+  },
+  "logParser": {
+    "title": "Importación rápida de registro",
+    "placeholder": "Pega la salida de error del terminal…",
+    "analyze": "Analizar y añadir",
+    "added": "Se añadió una sesión esperando el reinicio.",
+    "addedWithTime": "Se detectó una hora de reinicio: se añadió una sesión en espera.",
+    "empty": "Pega primero una línea de registro."
+  },
+  "gridFilter": {
+    "filterAll": "Todos",
+    "filterBy": "Filtrar por {field}",
+    "noMatch": "Ningún registro coincide con el filtro seleccionado."
+  },
   "heroImage": {
     "generate": "Generar imagen",
     "confirm": "¿Seguro? Tienes un intento",

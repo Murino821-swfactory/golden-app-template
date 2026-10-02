@@ -86,6 +86,30 @@
     "addedThisMonth": "Přidáno tento měsíc",
     "trackedFields": "Sledovaná pole"
   },
+  "quota": {
+    "title": "Odpočet kvóty",
+    "active": "Všechny modely aktivní",
+    "sleeping": "Claude v režimu spánku (čeká na reset)",
+    "resetsIn": "Reset za",
+    "noReset": "Žádný reset není naplánován",
+    "preset3am": "3:00",
+    "presetPlus5h": "+5 hodin",
+    "customLabel": "Nastavit čas resetu",
+    "clear": "Vymazat"
+  },
+  "logParser": {
+    "title": "Rychlý import logu",
+    "placeholder": "Vložte chybový výstup z terminálu…",
+    "analyze": "Analyzovat a přidat",
+    "added": "Přidán záznam čekající na reset.",
+    "addedWithTime": "Zjištěn čas resetu – přidán záznam čekající na reset.",
+    "empty": "Nejprve vložte řádek logu."
+  },
+  "gridFilter": {
+    "filterAll": "Vše",
+    "filterBy": "Filtrovat podle: {field}",
+    "noMatch": "Žádné záznamy neodpovídají vybranému filtru."
+  },
   "heroImage": {
     "generate": "Vygenerovat obrázek",
     "confirm": "Opravdu? Máš jeden pokus",

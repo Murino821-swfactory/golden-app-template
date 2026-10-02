@@ -3,3 +3,10 @@ export { StreakCounter, type StreakCounterProps } from "./streak-counter";
 export { CalendarGrid, type CalendarGridProps } from "./calendar-grid";
 export { ProgressRing, type ProgressRingProps } from "./progress-ring";
 export { StatCard, type StatCardProps } from "./stat-card";
+export { QuotaCountdown, nextOccurrence, type QuotaCountdownProps } from "./quota-countdown";
+export {
+  QuickLogParser,
+  parseTerminalLog,
+  type QuickLogParserProps,
+  type ParsedLog,
+} from "./quick-log-parser";

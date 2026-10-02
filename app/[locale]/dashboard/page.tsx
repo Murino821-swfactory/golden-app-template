@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { StatCard } from "@/components/features";
+import { StatCard, QuotaCountdown, QuickLogParser, nextOccurrence } from "@/components/features";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useRecords } from "@/hooks/use-records";
@@ -45,6 +46,16 @@ function Stats() {
 function DashboardContent() {
   const dashboard = useContent().dashboard;
 
+  // The reset target is shared: presets on the countdown card and reset times parsed out of
+  // a pasted terminal log both write here. Initialised in an effect (not at render) so the
+  // server render and first client render agree — see QuotaCountdown.
+  const [resetTarget, setResetTarget] = useState<Date | null>(null);
+  const [refreshSignal, setRefreshSignal] = useState(0);
+
+  useEffect(() => {
+    setResetTarget(nextOccurrence(3, 0));
+  }, []);
+
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
       <header>
@@ -53,9 +64,16 @@ function DashboardContent() {
         </h1>
       </header>
 
+      {hasGrid && <QuotaCountdown target={resetTarget} onChange={setResetTarget} />}
       {hasGrid && <Stats />}
       {hasMap && <MapBase />}
-      {hasGrid && <DataGrid />}
+      {hasGrid && (
+        <QuickLogParser
+          onResetDetected={setResetTarget}
+          onAdded={() => setRefreshSignal((n) => n + 1)}
+        />
+      )}
+      {hasGrid && <DataGrid refreshSignal={refreshSignal} />}
     </div>
   );
 }

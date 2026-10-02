@@ -86,6 +86,30 @@
     "addedThisMonth": "Ebben a hónapban hozzáadva",
     "trackedFields": "Nyomon követett mezők"
   },
+  "quota": {
+    "title": "Kvóta-visszaszámlálás",
+    "active": "Minden modell aktív",
+    "sleeping": "A Claude alvó módban (visszaállításra vár)",
+    "resetsIn": "Visszaállítás",
+    "noReset": "Nincs ütemezett visszaállítás",
+    "preset3am": "3:00",
+    "presetPlus5h": "+5 óra",
+    "customLabel": "Visszaállítás idejének beállítása",
+    "clear": "Törlés"
+  },
+  "logParser": {
+    "title": "Gyors naplóimport",
+    "placeholder": "Illeszd be a terminál hibakimenetét…",
+    "analyze": "Elemzés és hozzáadás",
+    "added": "Visszaállításra váró munkamenet hozzáadva.",
+    "addedWithTime": "Visszaállítási idő észlelve – munkamenet hozzáadva.",
+    "empty": "Előbb illessz be egy naplósort."
+  },
+  "gridFilter": {
+    "filterAll": "Mind",
+    "filterBy": "Szűrés: {field}",
+    "noMatch": "Egyetlen rekord sem felel meg a kiválasztott szűrőnek."
+  },
   "heroImage": {
     "generate": "Kép generálása",
     "confirm": "Biztos? Egy próbálkozásod van",
