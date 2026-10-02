@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useDeferredValue, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { Download, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -214,9 +214,12 @@ export function CvMatcher({ className }: { className?: string }) {
   const [importError, setImportError] = useState<string | null>(null);
   const [importStatus, setImportStatus] = useState("");
   const [linkedInOpen, setLinkedInOpen] = useState(false);
+  const importBusy = useRef(false);
 
   const importFile = useCallback(
     async (file: File) => {
+      if (importBusy.current) return;
+      importBusy.current = true;
       setImportError(null);
       setImportStatus(c.importLoading);
       setImportLoading(true);
@@ -236,6 +239,7 @@ export function CvMatcher({ className }: { className?: string }) {
         );
         setImportStatus("");
       } finally {
+        importBusy.current = false;
         setImportLoading(false);
       }
     },
@@ -276,6 +280,7 @@ export function CvMatcher({ className }: { className?: string }) {
               type="button"
               variant="outline"
               className="h-11"
+              disabled={importLoading}
               onClick={() => {
                 setCv(s.cv);
                 setJob(s.job);

@@ -1,7 +1,7 @@
 "use client";
 
 import { type DragEvent, type ReactNode, useId, useRef, useState } from "react";
-import { AlertCircle, FileUp, Linkedin, Upload } from "lucide-react";
+import { AlertCircle, FileUp, Link, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -45,14 +45,16 @@ export function CvImportDropzone({
     <div
       className="relative"
       onDragEnter={(e) => {
-        if (!accepting || !hasFiles(e)) return;
+        if (!hasFiles(e)) return;
         e.preventDefault();
+        if (!accepting) return;
         depth.current += 1;
         setDrag(kind(e));
       }}
       onDragOver={(e) => {
-        if (!accepting || !hasFiles(e)) return;
+        if (!hasFiles(e)) return;
         e.preventDefault();
+        if (!accepting) return;
         setDrag(kind(e));
       }}
       onDragLeave={(e) => {
@@ -65,8 +67,8 @@ export function CvImportDropzone({
         }
       }}
       onDrop={(e) => {
-        if (!accepting) return;
         e.preventDefault();
+        if (!accepting) return;
         depth.current = 0;
         setDrag("none");
         const file = e.dataTransfer.files?.[0];
@@ -175,7 +177,7 @@ export function CvInputPanel({
                 aria-label={c.importLinkedInAriaLabel}
                 onClick={onOpenLinkedIn}
               >
-                <Linkedin aria-hidden />
+                <Link aria-hidden />
                 {c.importLinkedIn}
               </Button>
             </>
@@ -194,6 +196,7 @@ export function CvInputPanel({
         <textarea
           id={id}
           value={value}
+          disabled={loading}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           spellCheck={false}
@@ -210,7 +213,7 @@ export function CvInputPanel({
         <button
           type="button"
           onClick={() => onChange("")}
-          disabled={!value}
+          disabled={!value || loading}
           aria-label={`${clearLabel} ${label}`}
           className="min-h-11 rounded-md px-2 underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
         >

@@ -63,21 +63,25 @@ function tidy(text: string): string {
 
 async function parsePdf(file: File): Promise<string> {
   const pdfjs = await import("pdfjs-dist");
-  // The worker is a separate asset; `new URL(..., import.meta.url)` lets the bundler emit and
-  // fingerprint it so it is served from our own origin (no CDN — Golden Stack rule 4).
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    "pdfjs-dist/build/pdf.worker.min.mjs",
-    import.meta.url
-  ).toString();
+  // prebuild copies the matching reader assets to public/. Include the deployed
+  // base path and library version: no CDN, stale worker, or bundler-specific URL.
+  const assets = `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/cv-readers/${pdfjs.version}/`;
+  pdfjs.GlobalWorkerOptions.workerSrc = `${assets}pdf.worker.min.mjs`;
 
   const data = new Uint8Array(await file.arrayBuffer());
-  const doc = await pdfjs.getDocument({ data }).promise;
+  const doc = await pdfjs.getDocument({
+    data, isEvalSupported: false, cMapUrl: `${assets}cmaps/`,
+    cMapPacked: true, standardFontDataUrl: `${assets}standard_fonts/`,
+  }).promise;
   try {
+    if (doc.numPages > 100) throw new CvParseError("read");
     const pages: string[] = [];
     for (let i = 1; i <= doc.numPages; i++) {
       const page = await doc.getPage(i);
       const content = await page.getTextContent();
-      pages.push(content.items.map((item) => ("str" in item ? item.str : "")).join(" "));
+      pages.push(content.items.map((item) =>
+        "str" in item ? item.str + (item.hasEOL ? "\n" : " ") : ""
+      ).join(""));
     }
     return pages.join("\n\n");
   } finally {
@@ -104,7 +108,10 @@ export async function parseCvFile(file: File): Promise<string> {
 
   let raw: string;
   try {
-    raw = extensionOf(file.name) === "pdf" ? await parsePdf(file) : await parseDocx(file);
+    const extension = extensionOf(file.name);
+    raw = extension === "pdf" ? await parsePdf(file)
+      : extension === "doc" ? await (await import("./cv-doc-parser")).parseDoc(file)
+      : await parseDocx(file);
   } catch (err) {
     if (err instanceof CvParseError) throw err;
     throw new CvParseError("read");

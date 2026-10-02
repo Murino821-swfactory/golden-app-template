@@ -1,5 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+
+const fixture = (extension: string) => resolve(`tests/fixtures/cv/resume.${extension}`);
 
 /**
  * OTH-85 — the CV matcher on its public page. The export is what ships, so this runs
@@ -83,9 +86,64 @@ test.describe("CV matcher", () => {
       mimeType: "image/png",
       buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
     });
-    await expect(page.getByRole("alert")).toHaveText("Only PDF, DOC and DOCX files are supported.");
+    await expect(page.getByRole("alert").filter({ hasText: "Only PDF" })).toHaveText("Only PDF, DOC and DOCX files are supported.");
     // The CV box stays empty and the tool is still usable.
     await expect(page.getByLabel("CV", { exact: true })).toHaveValue("");
+  });
+
+  for (const extension of ["pdf", "doc", "docx"]) {
+    test(`imports real ${extension.toUpperCase()} text and recomputes the match`, async ({ page }) => {
+      const uploads: string[] = [];
+      page.on("request", request => {
+        if (request.method() !== "GET" && request.method() !== "HEAD") uploads.push(request.url());
+      });
+      await page.getByLabel("Job posting", { exact: true }).fill("React, TypeScript, Docker, GraphQL");
+      await page.getByTestId("cv-file-input").setInputFiles(fixture(extension));
+      await expect(page.getByLabel("CV", { exact: true })).toHaveValue(/Jana Nováková/, { timeout: 15000 });
+      await expect(page.getByTestId("match-score")).toHaveText("100%");
+      expect(uploads).toEqual([]);
+    });
+  }
+
+  test("imports a LinkedIn PDF through the dialog", async ({ page }) => {
+    await page.getByRole("button", { name: /Import from LinkedIn/ }).click();
+    await page.getByTestId("linkedin-file-input").setInputFiles(fixture("pdf"));
+    await expect(page.getByRole("dialog")).toBeHidden({ timeout: 15000 });
+    await expect(page.getByLabel("CV", { exact: true })).toHaveValue(/React and TypeScript/);
+  });
+
+  test("a corrupt document preserves the existing CV and allows a retry", async ({ page }) => {
+    await page.getByLabel("CV", { exact: true }).fill("Existing candidate text");
+    await page.getByTestId("cv-file-input").setInputFiles({
+      name: "broken.doc", mimeType: "application/msword", buffer: Buffer.from("not a Word document"),
+    });
+    await expect(page.getByRole("alert").filter({ hasText: "Could not read" })).toContainText("Could not read the file");
+    await expect(page.getByLabel("CV", { exact: true })).toHaveValue("Existing candidate text");
+    await page.getByTestId("cv-file-input").setInputFiles(fixture("doc"));
+    await expect(page.getByLabel("CV", { exact: true })).toHaveValue(/Jana Nováková/);
+  });
+
+  test("imports a dropped DOCX without navigating away", async ({ page }) => {
+    const bytes = Array.from(await readFile(fixture("docx")));
+    const transfer = await page.evaluateHandle(bytes => {
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([Uint8Array.from(bytes)], "resume.docx", {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      }));
+      return transfer;
+    }, bytes);
+    await page.getByLabel("CV", { exact: true }).dispatchEvent("drop", { dataTransfer: transfer });
+    await expect(page.getByLabel("CV", { exact: true })).toHaveValue(/Jana Nováková/);
+    await expect(page).toHaveURL(/\/analyze\/?$/);
+  });
+
+  test("imports in Slovak with localized LinkedIn instructions", async ({ page }) => {
+    await page.goto("./sk/analyze");
+    await page.getByRole("button", { name: /Importovať z LinkedIn/ }).click();
+    await expect(page.getByRole("dialog")).toContainText("Uložiť ako PDF");
+    await page.getByTestId("linkedin-file-input").setInputFiles(fixture("pdf"));
+    await expect(page.getByRole("dialog")).toBeHidden({ timeout: 15000 });
+    await expect(page.getByLabel("Životopis", { exact: true })).toHaveValue(/Jana Nováková/);
   });
 
   test("has no console errors", async ({ page }) => {
