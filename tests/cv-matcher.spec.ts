@@ -61,6 +61,33 @@ test.describe("CV matcher", () => {
     expect(body).toContain("52%");
   });
 
+  test("offers file and LinkedIn import next to the CV box", async ({ page }) => {
+    await expect(page.getByRole("button", { name: "Upload CV file (PDF, DOC, DOCX)" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Import from LinkedIn/ })).toBeVisible();
+  });
+
+  test("the LinkedIn button opens guided export instructions", async ({ page }) => {
+    await page.getByRole("button", { name: /Import from LinkedIn/ }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByText("Import from LinkedIn")).toBeVisible();
+    await expect(dialog.getByText("Click More → Save to PDF")).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Upload LinkedIn PDF" })).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog")).toBeHidden();
+  });
+
+  test("an unsupported file is refused with a clear message", async ({ page }) => {
+    await page.getByTestId("cv-file-input").setInputFiles({
+      name: "headshot.png",
+      mimeType: "image/png",
+      buffer: Buffer.from([0x89, 0x50, 0x4e, 0x47]),
+    });
+    await expect(page.getByRole("alert")).toHaveText("Only PDF, DOC and DOCX files are supported.");
+    // The CV box stays empty and the tool is still usable.
+    await expect(page.getByLabel("CV", { exact: true })).toHaveValue("");
+  });
+
   test("has no console errors", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (m) => m.type() === "error" && errors.push(m.text()));

@@ -1,12 +1,14 @@
 "use client";
 
-import { useDeferredValue, useId, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useId, useMemo, useState } from "react";
 import { useLocale } from "next-intl";
 import { Download, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { analyzeCv, SAMPLES, type AnalysisResult, type MatchTier, type SkillHit } from "@/lib/cv-analyzer";
 import { COPY, cvLocale, groupedRecommendations, reportToMarkdown, type CvLocale } from "@/lib/cv-matcher-copy";
+import { CvParseError, parseCvFile } from "@/lib/cv-file-parser";
+import { CvInputPanel, LinkedInImportDialog } from "./cv-import";
 
 /**
  * CV ↔ job posting matcher (OTH-85). Everything runs in the browser: the score, the gaps
@@ -207,6 +209,46 @@ export function CvMatcher({ className }: { className?: string }) {
   const [cv, setCv] = useState("");
   const [job, setJob] = useState("");
 
+  // Import state, shared by the file button, the dropzone and the LinkedIn dialog.
+  const [importLoading, setImportLoading] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const [importStatus, setImportStatus] = useState("");
+  const [linkedInOpen, setLinkedInOpen] = useState(false);
+
+  const importFile = useCallback(
+    async (file: File) => {
+      setImportError(null);
+      setImportStatus(c.importLoading);
+      setImportLoading(true);
+      try {
+        const text = await parseCvFile(file);
+        setCv(text);
+        setImportStatus(c.importSuccess(file.name));
+        setLinkedInOpen(false);
+      } catch (err) {
+        const reason = err instanceof CvParseError ? err.reason : "read";
+        setImportError(
+          reason === "type"
+            ? c.importTypeError
+            : reason === "size"
+              ? c.importSizeError
+              : c.importError
+        );
+        setImportStatus("");
+      } finally {
+        setImportLoading(false);
+      }
+    },
+    [c]
+  );
+
+  // Clear a stale error after a few seconds so it doesn't linger over a fresh attempt.
+  useEffect(() => {
+    if (!importError) return;
+    const t = setTimeout(() => setImportError(null), 6000);
+    return () => clearTimeout(t);
+  }, [importError]);
+
   // Typing stays instant on a long paste; the analysis catches up a frame later.
   const deferredCv = useDeferredValue(cv);
   const deferredJob = useDeferredValue(job);
@@ -215,6 +257,16 @@ export function CvMatcher({ className }: { className?: string }) {
 
   return (
     <div className={cn("space-y-8", className)}>
+      <LinkedInImportDialog
+        open={linkedInOpen}
+        onOpenChange={setLinkedInOpen}
+        locale={locale}
+        loading={importLoading}
+        error={importError}
+        status={importStatus}
+        onFile={importFile}
+      />
+
       <div className="space-y-3 print:hidden">
         <p className="text-sm text-muted-foreground">{c.samplesLabel}</p>
         <div className="flex flex-wrap gap-2">
@@ -236,13 +288,19 @@ export function CvMatcher({ className }: { className?: string }) {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 print:hidden">
-        <TextPanel
+        <CvInputPanel
+          locale={locale}
           label={c.cvLabel}
           placeholder={c.cvPlaceholder}
           value={cv}
           onChange={setCv}
           clearLabel={c.clear}
           words={c.words(wordCount(cv))}
+          loading={importLoading}
+          error={importError}
+          status={importStatus}
+          onFile={importFile}
+          onOpenLinkedIn={() => setLinkedInOpen(true)}
         />
         <TextPanel
           label={c.jobLabel}
