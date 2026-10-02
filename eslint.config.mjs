@@ -16,6 +16,8 @@ const eslintConfig = defineConfig([
     // CI never sees it — but locally it made `npm run lint` report ~9k problems in minified
     // chunks, which is the same as having no lint at all.
     ".preview/**",
+    // Versioned upstream PDF reader assets copied by prebuild.
+    "public/cv-readers/**",
   ]),
 ]);
 

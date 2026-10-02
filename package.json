@@ -16,17 +16,21 @@
     "test:e2e": "playwright test",
     "deploy:production": "npm run build && firebase deploy --only hosting",
     "preview": "node scripts/preview.mjs",
-    "test:packages": "npm test --workspaces --if-present"
+    "test:packages": "npm test --workspaces --if-present",
+    "prebuild": "node scripts/stage-cv-readers.mjs"
   },
   "dependencies": {
     "@tokenwise/shared-ui": "0.3.0",
+    "cfb": "^1.2.2",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.6",
     "firebase": "^12.18.0",
     "lucide-react": "^1.42.0",
+    "mammoth": "^1.9.0",
     "maplibre-gl": "^6.9.0",
     "next": "16.3.4",
     "next-intl": "^4.14.2",
+    "pdfjs-dist": "^4.10.38",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",

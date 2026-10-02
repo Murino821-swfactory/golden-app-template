@@ -23,6 +23,24 @@ interface Copy {
   jobPlaceholder: string;
   words: (n: number) => string;
   clear: string;
+  importFile: string;
+  importFileAriaLabel: string;
+  importLinkedIn: string;
+  importLinkedInAriaLabel: string;
+  importDragHint: string;
+  importDragInvalid: string;
+  importLoading: string;
+  importSuccess: (name: string) => string;
+  importError: string;
+  importTypeError: string;
+  importSizeError: string;
+  linkedInDialogTitle: string;
+  linkedInDialogDesc: string;
+  linkedInStep1: string;
+  linkedInStep2: string;
+  linkedInStep3: string;
+  linkedInUpload: string;
+  linkedInClose: string;
   emptyState: string;
   scoreLabel: string;
   tier: Record<MatchTier, string>;
@@ -64,6 +82,25 @@ const EN: Copy = {
   jobPlaceholder: "Paste the job description here…",
   words: (n) => `${n} ${n === 1 ? "word" : "words"}`,
   clear: "Clear",
+  importFile: "Upload file",
+  importFileAriaLabel: "Upload CV file (PDF, DOC, DOCX)",
+  importLinkedIn: "LinkedIn",
+  importLinkedInAriaLabel: "Import from LinkedIn — opens instructions",
+  importDragHint: "Drop your CV here",
+  importDragInvalid: "PDF, DOC or DOCX only",
+  importLoading: "Reading file…",
+  importSuccess: (name) => `Loaded: ${name}`,
+  importError: "Could not read the file. Try a different format or paste the text.",
+  importTypeError: "Only PDF, DOC and DOCX files are supported.",
+  importSizeError: "File is too large. Maximum size is 5 MB.",
+  linkedInDialogTitle: "Import from LinkedIn",
+  linkedInDialogDesc:
+    "LinkedIn doesn't support direct import. Export your profile as a PDF and upload it here.",
+  linkedInStep1: "Open your LinkedIn profile",
+  linkedInStep2: "Click More → Save to PDF",
+  linkedInStep3: "Upload the downloaded file below",
+  linkedInUpload: "Upload LinkedIn PDF",
+  linkedInClose: "Done",
   emptyState: "Paste both texts, or load a sample, to see how well they match.",
   scoreLabel: "Match score",
   tier: { high: "Strong match", medium: "Partial match", low: "Weak match" },
@@ -120,6 +157,25 @@ const SK: Copy = {
   jobPlaceholder: "Sem vložte popis pracovnej pozície…",
   words: (n) => `${n} ${n === 1 ? "slovo" : n >= 2 && n <= 4 ? "slová" : "slov"}`,
   clear: "Vymazať",
+  importFile: "Nahrať súbor",
+  importFileAriaLabel: "Nahrať životopis (PDF, DOC, DOCX)",
+  importLinkedIn: "LinkedIn",
+  importLinkedInAriaLabel: "Importovať z LinkedIn — otvorí návod",
+  importDragHint: "Sem pustite životopis",
+  importDragInvalid: "Len PDF, DOC alebo DOCX",
+  importLoading: "Čítam súbor…",
+  importSuccess: (name) => `Načítané: ${name}`,
+  importError: "Súbor sa nepodarilo načítať. Skúste iný formát alebo vložte text.",
+  importTypeError: "Podporované sú len súbory PDF, DOC a DOCX.",
+  importSizeError: "Súbor je príliš veľký. Maximum je 5 MB.",
+  linkedInDialogTitle: "Importovať z LinkedIn",
+  linkedInDialogDesc:
+    "LinkedIn neumožňuje priamy import. Exportujte profil ako PDF a nahrajte ho tu.",
+  linkedInStep1: "Otvorte svoj LinkedIn profil",
+  linkedInStep2: "Kliknite na Ďalšie → Uložiť ako PDF",
+  linkedInStep3: "Nahrajte stiahnutý súbor nižšie",
+  linkedInUpload: "Nahrať LinkedIn PDF",
+  linkedInClose: "Hotovo",
   emptyState: "Vložte oba texty alebo načítajte ukážku a uvidíte, ako sa zhodujú.",
   scoreLabel: "Skóre zhody",
   tier: { high: "Vysoká zhoda", medium: "Stredná zhoda", low: "Nízka zhoda" },

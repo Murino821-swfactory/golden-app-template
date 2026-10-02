@@ -50,3 +50,5 @@ next-env.d.ts
 
 # preview staging for basePath builds
 /.preview/
+
+/public/cv-readers/
