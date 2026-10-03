@@ -24,6 +24,8 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
+| SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 
 ## Critical Rules for Fast Implementation
@@ -477,3 +479,35 @@ npm run test:e2e         # Playwright smoke tests (must pass)
 3. For each file: read → make ALL changes → move to next file
 4. Run `npm run build` once at the end
 5. Done — no exploration, no extra reads, no refactoring
+
+## OTH-117 — landing stories and discovery (2026-10-03)
+
+`patterns.landing.presentation` is `story` by default; `document` opts out. Desktop
+with a fine pointer, at least 1024×700 and no reduced-motion preference gets a sticky
+stage driven by native scrolling. Chapter buttons support keyboard navigation;
+`#contact` reveals its chapter. The header height is measured, not assumed. Long
+chapters can scroll within their panel. Mobile, short viewports, reduced motion,
+print and no JavaScript retain the same server-rendered document.
+
+New `useCases` and `comparison` patterns each require their matching landing section
+and content slice in every locale. Their schemas describe when to choose them and
+forbid invented customer results or competitor claims. The exported menu is still
+consumed dynamically by the assembly harness; there is no second pattern registry.
+Pricing and testimonials remain locked.
+
+`NEXT_PUBLIC_SITE_ORIGIN` must be the real HTTP(S) origin without a path. The harness
+already supplies it for prototypes; factory-web supplies `https://tokenwise.sk` for
+`/demo/golden`. `NEXT_PUBLIC_BASE_PATH` remains separate. Canonical, localized OG/Twitter,
+hreflang including x-default, WebSite/WebPage JSON-LD, sitemap and generated llms.txt
+use the configured content. FAQ keeps its existing FAQPage JSON-LD. Login, dashboard
+and inbox receive noindex/nofollow and clear inherited public-page canonical/social
+metadata. Discovery excludes private sample records and unrendered sections. An
+unconfigured local build has relative URLs and an empty sitemap, rather than a made-up
+production host. No Organization, prices or ratings are fabricated from an app name.
+
+The root robots.txt controls an origin: the demo's subdirectory robots.txt is an export
+artifact, not an independent crawler policy. On tokenwise.sk the host robots allows all
+public paths. A custom deployment must publish these files at its own appropriate root.
+
+Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
+`npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.

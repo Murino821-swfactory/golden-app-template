@@ -151,3 +151,79 @@
     @apply font-sans;
   }
 }
+
+/* Document is the SSR/no-JS/mobile baseline. Hydration enables the desktop stage. */
+[data-landing-mode="story"] {
+  --story-top: 76px;
+  height: calc(var(--chapters) * (100svh - var(--story-top)));
+}
+[data-landing-mode="story"] [data-story-stage] {
+  position: sticky;
+  top: var(--story-top);
+  height: calc(100svh - var(--story-top));
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--background);
+}
+[data-landing-mode="story"] [data-story-panel] {
+  position: absolute;
+  inset: 0 0 76px;
+  display: flex;
+  align-items: center;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(32px) scale(.98);
+}
+[data-landing-mode="story"] [data-story-panel][data-active="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+[data-landing-mode="story"] [data-story-panel][data-active="true"]:not(:first-child) {
+  animation: story-enter 480ms ease both;
+}
+@keyframes story-enter {
+  from { opacity: 0; transform: translateY(32px) scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+[data-landing-mode="story"] [data-story-panel] > section {
+  margin-block: auto;
+  padding-block: 32px;
+}
+[data-landing-mode="story"] [data-section="hero"] > div:not([aria-hidden]) {
+  padding-block: 32px;
+}
+[data-story-navigation] {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+}
+[data-story-navigation] button {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+[data-story-navigation] button[aria-current] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+[data-story-navigation] button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+@media print, (prefers-reduced-motion: reduce), (max-width: 1023px) {
+  [data-landing-mode="story"] { height: auto; }
+  [data-landing-mode="story"] [data-story-stage] { position: static; height: auto; overflow: visible; }
+  [data-landing-mode="story"] [data-story-panel] { position: static; display: block; opacity: 1; visibility: visible; transform: none; overflow: visible; animation: none !important; }
+  [data-story-navigation] { display: none; }
+}

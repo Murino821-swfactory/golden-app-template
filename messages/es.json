@@ -149,5 +149,9 @@
   },
   "howItWorks": {
     "title": "Cómo funciona"
+  },
+  "story": {
+    "chapters": "Capítulos",
+    "chapter": "Capítulo {number}"
   }
 }

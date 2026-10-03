@@ -111,7 +111,7 @@ test.describe("routing", () => {
       expect(
         alternates.map(([id]) => id).sort(),
         `${locale} does not declare its translations`
-      ).toEqual([...config.locales].sort());
+      ).toEqual([...config.locales, "x-default"].sort());
 
       // The default language's alternate must be the BARE path. Pointing it at the
       // prefixed duplicate would hand a search engine the copy instead of the URL the

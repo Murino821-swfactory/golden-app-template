@@ -12,9 +12,14 @@
       "sections": [
         "hero",
         "features",
+        "useCases",
+        "comparison",
+        "howItWorks",
+        "faq",
         "contact",
         "cta"
-      ]
+      ],
+      "presentation": "story"
     },
     "dashboard": {},
     "authGoogle": {},
@@ -57,14 +62,16 @@
         "lng": 19.699
       },
       "zoom": 7
-    }
+    },
+    "useCases": {},
+    "comparison": {}
   },
   "content": {
     "en": {
       "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
       "landing": {
-        "headline": "Ship your prototype in days, not months",
-        "subheadline": "Composable patterns for landing pages, dashboards and data grids — configured, not generated. Pick your palette, enable your patterns, deploy.",
+        "headline": "One configuration. A working prototype.",
+        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
         "features": [
           {
             "icon": "star",
@@ -81,13 +88,50 @@
             "title": "Static export",
             "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "How do you try the prototype?",
+          "steps": [
+            {
+              "title": "Explore the landing",
+              "description": "Scroll through the chapters to see the enabled patterns."
+            },
+            {
+              "title": "Sign in with Google",
+              "description": "Open the dashboard with your own account."
+            },
+            {
+              "title": "Try your own records",
+              "description": "Add and edit records in your private sandbox."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "What should you know before trying it?",
+          "items": [
+            {
+              "question": "Is this generated code?",
+              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+            },
+            {
+              "question": "Where do the records live?",
+              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+            },
+            {
+              "question": "Does the page work on a phone?",
+              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+            }
+          ]
+        },
+        "featuresHeading": "What is already built?"
       },
       "dashboard": {
         "title": "Dashboard"
       },
       "cta": {
-        "label": "Get started"
+        "label": "Get started",
+        "title": "Try the working patterns",
+        "subtitle": "Sign in to explore the dashboard and your own records."
       },
       "contactForm": {
         "heading": "Get in touch",
@@ -119,6 +163,43 @@
             "category": "Warehouse",
             "opened": "2026-09-02",
             "active": false
+          }
+        ]
+      },
+      "useCases": {
+        "heading": "What can you try here?",
+        "items": [
+          {
+            "title": "Explore a product idea",
+            "situation": "You want to see how reusable blocks form a working prototype.",
+            "action": "Read the landing, then sign in to open your own dashboard."
+          },
+          {
+            "title": "Work with sample records",
+            "situation": "You need a place to try a records workflow before committing to an idea.",
+            "action": "Add, edit and filter records in your own signed-in sandbox."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "How is the prototype assembled?",
+        "beforeLabel": "Custom implementation",
+        "afterLabel": "This template",
+        "rows": [
+          {
+            "topic": "Page content",
+            "before": "Write each section as a separate code change.",
+            "after": "Fill localized content in a validated JSON configuration."
+          },
+          {
+            "topic": "Product building blocks",
+            "before": "Implement authentication and record controls for each project.",
+            "after": "Enable existing Google sign-in, dashboard and records patterns."
+          },
+          {
+            "topic": "Finding the page",
+            "before": "Maintain separate text for the page and discovery files.",
+            "after": "Generate metadata, structured data and llms.txt from the page content."
           }
         ]
       }

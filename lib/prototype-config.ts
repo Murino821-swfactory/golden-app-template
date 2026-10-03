@@ -58,6 +58,8 @@ export const SECTION_IDS = [
   "hero",
   "features",
   "howItWorks",
+  "useCases",
+  "comparison",
   "pricing",
   "testimonials",
   "faq",
@@ -226,6 +228,7 @@ export type Feature = z.infer<typeof featureSchema>;
 export const PATTERN_SCHEMAS = {
   landing: z.object({
     sections: z.array(z.enum(SECTION_IDS)).min(1),
+    presentation: z.enum(["story", "document"]).optional().describe("Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages."),
   }),
   dashboard: z.object({
     kpis: z
@@ -243,6 +246,8 @@ export const PATTERN_SCHEMAS = {
     href: z.string().min(1),
   }),
   contactForm: z.object({}),
+  useCases: z.object({}).describe("Requires the useCases landing section and localized useCases copy."),
+  comparison: z.object({}).describe("Requires the comparison landing section and localized comparison copy."),
   dataGrid: z.object({
     entity: z.object({
       key: z.string().min(1),
@@ -291,6 +296,8 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
   contactForm:
     "A contact form that captures a message and an email address. Pick it for services, " +
     "consultancies and anything sold through a conversation rather than a signup.",
+  useCases: "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results.",
+  comparison: "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices.",
   dataGrid:
     "A table of records the user adds, edits and filters. Pick it when the idea is about " +
     "keeping track of things — an inventory, a catalogue, a register, a log of entries.",
@@ -304,6 +311,24 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
  * `mapBase` say nothing of their own, so they have no content slice at all.
  */
 export const CONTENT_SCHEMAS = {
+  useCases: z.object({
+    heading: z.string().min(1).max(80),
+    items: z.array(z.object({
+      title: z.string().min(1).max(60),
+      situation: z.string().min(1).max(180),
+      action: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."),
+  }),
+  comparison: z.object({
+    heading: z.string().min(1).max(80),
+    beforeLabel: z.string().min(1).max(40),
+    afterLabel: z.string().min(1).max(40),
+    rows: z.array(z.object({
+      topic: z.string().min(1).max(60),
+      before: z.string().min(1).max(180),
+      after: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."),
+  }),
   landing: z.object({
     /** Optional: the template must stay buildable before any content agent has run, and
      * the sections fall back to `messages/*.json` placeholders for local dev. */
@@ -386,6 +411,8 @@ export const SECTION_COPY_SOURCE: Record<SectionId, ContentPatternId | null> = {
   cta: "cta",
   faq: "landing",
   howItWorks: "landing",
+  useCases: "useCases",
+  comparison: "comparison",
   pricing: null,
   testimonials: null,
 };
@@ -405,6 +432,8 @@ const CONTENT_REQUIRED_FOR: readonly ContentPatternId[] = [
   "cta",
   "contactForm",
   "dataGrid",
+  "useCases",
+  "comparison",
 ];
 
 /** Meta description, per language. Required, not optional: golden rule 3 (SEO+GEO) makes
@@ -422,6 +451,8 @@ const localeContentSchema = z.object({
   cta: CONTENT_SCHEMAS.cta.optional(),
   contactForm: CONTENT_SCHEMAS.contactForm.optional(),
   dataGrid: CONTENT_SCHEMAS.dataGrid.optional(),
+  useCases: CONTENT_SCHEMAS.useCases.optional(),
+  comparison: CONTENT_SCHEMAS.comparison.optional(),
 });
 
 export type LocaleContent = z.infer<typeof localeContentSchema>;
@@ -454,10 +485,21 @@ export const prototypeConfigSchema = z
       contactForm: PATTERN_SCHEMAS.contactForm.optional(),
       dataGrid: PATTERN_SCHEMAS.dataGrid.optional(),
       mapBase: PATTERN_SCHEMAS.mapBase.optional(),
+      useCases: PATTERN_SCHEMAS.useCases.optional(),
+      comparison: PATTERN_SCHEMAS.comparison.optional(),
     }),
     content: z.record(z.string(), localeContentSchema),
   })
   .superRefine((cfg, ctx) => {
+    const sections = cfg.patterns.landing?.sections ?? [];
+    if (new Set(sections).size !== sections.length) {
+      ctx.addIssue({ code: "custom", path: ["patterns", "landing", "sections"], message: "Landing sections must be unique" });
+    }
+    for (const pattern of ["useCases", "comparison"] as const) {
+      if (Boolean(cfg.patterns[pattern]) !== sections.includes(pattern)) {
+        ctx.addIssue({ code: "custom", path: ["patterns", pattern], message: `${pattern} pattern and landing section must be enabled together` });
+      }
+    }
     if (!cfg.locales.includes(cfg.defaultLocale)) {
       ctx.addIssue({
         code: "custom",
