@@ -8,7 +8,7 @@ test("search and AI discovery use the rendered localized copy", async ({ page })
     const copy = contentFor(config, locale);
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute("content", copy.description);
     await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute("content", copy.description);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", siteOrigin() ? publicUrl(locale) : new URL(publicUrl(locale), "http://localhost:3000").href);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", publicUrl(locale));
     const graph = JSON.parse((await page.locator("[data-site-jsonld]").textContent())!)["@graph"];
     expect(graph.find((item: { "@type": string }) => item["@type"] === "WebPage")).toMatchObject({ description: copy.description, inLanguage: locale });
   }
