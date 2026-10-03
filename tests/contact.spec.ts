@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { config } from "../lib/prototype-config";
 
+// These tests exercise form behavior in the accessible document shell. Story navigation
+// and reaching this same form on desktop are covered in landing-story.spec.ts.
+test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "reduce" }); });
+
 /**
  * `NEXT_PUBLIC_DEMO_SLUG` is unset for this template's own CI build (and for local
  * `npm run dev`) — the contact endpoint identifies a prototype by slug, so with no slug
