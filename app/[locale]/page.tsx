@@ -1,3 +1,4 @@
+import { ReadingDiary } from "@/components/features/reading-diary";
 import { type ComponentType } from "react";
 import { HeroSection } from "@/components/sections/hero";
 import { FeaturesSection } from "@/components/sections/features";
@@ -42,7 +43,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <script data-site-jsonld type="application/ld+json" dangerouslySetInnerHTML={{ __html: landingJsonLd(locale) }} />
       <LandingStory presentation={config.patterns.landing?.presentation} chapters={SECTIONS.map((id) => {
         const Section = SECTION_REGISTRY[id];
-        return { id, content: Section ? <Section /> : null };
+        return { id, content: Section ? <><Section />{id === "hero" && <ReadingDiary />}</> : null };
       })} />
     </>
   );

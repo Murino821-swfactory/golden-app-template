@@ -1,0 +1,10 @@
+{
+  "name": "Reading Diary",
+  "short_name": "Reading Diary",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#102a24",
+  "theme_color": "#102a24",
+  "icons": [{ "src": "./reading-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

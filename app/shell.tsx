@@ -42,7 +42,7 @@ import { ThemeBootstrap } from "@tokenwise/shared-ui";
  * get no alternates at all, because a lone hreflang pointing at itself says nothing.
  */
 export function metadataFor(locale: string): Metadata {
-  return landingMetadata(locale);
+  return { ...landingMetadata(locale), manifest: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/manifest.webmanifest` };
 }
 
 export async function PrototypeShell({

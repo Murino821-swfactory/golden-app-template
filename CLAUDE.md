@@ -1,3 +1,27 @@
+# Reading Diary — OTH-25
+
+This is the isolated `demo/reading-diary` prototype, not shared-template main.
+The public diary lives at `/` (English) and `/sk` (Slovak), using next-intl.
+Canonical product decisions and validation: [docs/READING_DIARY.md](docs/READING_DIARY.md).
+
+Edit `components/features/reading-diary.tsx` for the flow, `lib/reading-diary.ts`
+for the catalogue, quiz and storage rules, `lib/reading-copy.ts` for EN/SK copy,
+and `prototype.config.json` for identity and discovery. Keep the shared header.
+Static export with `NEXT_PUBLIC_BASE_PATH=/newapp/reading-diary` is required.
+The existing Firebase client bundle remains provisioned by the template; this
+prototype's diary deliberately stores data on the device and requires no account.
+Do not describe it as private across browser profiles, cloud-synced or tamperproof.
+
+Validation: `npm run typecheck`, `npm run lint`, `npm run validate:config`,
+`node --test --import tsx tests/reading-diary.unit.ts`, `npm run build`, and
+`npx playwright test tests/reading-diary.spec.ts tests/smoke.spec.ts tests/seo.spec.ts`.
+Retain all existing regression suites. Config-specific template tests should be
+run only when their relevant patterns are configured.
+
+---
+
+## Shared template reference (unchanged)
+
 # CLAUDE.md — Golden App Template
 
 Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EXPLORE.**
