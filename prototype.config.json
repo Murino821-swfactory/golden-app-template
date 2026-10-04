@@ -1,35 +1,49 @@
 {
-  "appName": "Golden App Template",
+  "appName": "fundraising",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "warm-apricot-royal-plum"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
+        "useCases",
         "faq",
-        "contact",
         "cta"
-      ],
-      "presentation": "story"
+      ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalCalls",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "applied",
+          "field": "status",
+          "agg": "share",
+          "value": "Applied"
+        },
+        {
+          "id": "approved",
+          "field": "status",
+          "agg": "share",
+          "value": "Approved"
+        }
+      ]
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "grant",
         "fields": [
           {
             "key": "name",
@@ -37,171 +51,326 @@
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "provider",
+            "type": "text"
           },
           {
-            "key": "opened",
+            "key": "deadline",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "amount",
+            "type": "number"
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "Open",
+              "Applied",
+              "Under Review",
+              "Approved",
+              "Rejected"
+            ]
+          },
+          {
+            "key": "notes",
+            "type": "longtext"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
     "useCases": {},
-    "comparison": {}
+    "cta": {
+      "href": "/dashboard"
+    }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Track grant calls, manage applications and gather documents for your company — all in one place for small businesses and startups.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Never miss a grant your company qualifies for",
+        "subheadline": "For small businesses and startups that need to track, apply for and manage external funding opportunities.",
+        "featuresHeading": "Everything you need to manage grant applications",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "file-text",
+            "title": "Grant Register",
+            "description": "Add every grant call you find and store its deadline, provider and maximum amount in one place."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Application Status",
+            "description": "Move each application through stages — open, applied, under review, approved — so you always know where you stand."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "funnel",
+            "title": "Filter and Search",
+            "description": "Filter your grants by status or deadline to focus on what needs your attention right now."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Pipeline Overview",
+            "description": "See how many grants you are tracking, how many you have applied for and how many are approved on your dashboard."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Start tracking in minutes",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Log in with your Google account to keep your grant data private and always accessible."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add a grant call",
+              "description": "Enter the grant name, funding provider, application deadline and maximum amount available."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Update the status",
+              "description": "As you gather documents and submit your application, move the grant to the right stage."
+            },
+            {
+              "title": "Review your pipeline",
+              "description": "Open your dashboard to see which grants are open, applied for and awaiting a decision."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Frequently asked questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "What types of grants can I track?",
+              "answer": "You can track any grant call or fund — EU structural funds, national subsidies, regional programmes or any other external financing opportunity relevant to your business."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can I store the conditions and required documents for each grant?",
+              "answer": "Yes. Each grant record has a notes field where you can write down the conditions, required documents and any other important details for that call."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "How does the status tracking work?",
+              "answer": "Each grant moves through stages: Open, Applied, Under Review, Approved and Rejected. You update the status yourself as your application progresses."
+            },
+            {
+              "question": "Is my data visible to other companies?",
+              "answer": "No. Your grant records are tied to your own account and are not shared with anyone else."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "My Grant Pipeline",
+        "intro": "An overview of all the grant calls you are tracking, applied for and awaiting a decision on.",
+        "kpiLabels": {
+          "totalCalls": "Grants tracked",
+          "applied": "Applications submitted",
+          "approved": "Grants approved"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Grant Call",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "name": "Grant Name",
+          "provider": "Provider",
+          "deadline": "Deadline",
+          "amount": "Max Amount (€)",
+          "status": "Status",
+          "notes": "Notes & Conditions"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "name": "SME Digitalization Fund 2026",
+            "provider": "Ministry of Economy",
+            "deadline": "2026-10-31",
+            "amount": 50000,
+            "status": "Open",
+            "notes": "Supports digital transformation projects for small and medium enterprises"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "name": "Regional Development Grant",
+            "provider": "EU Structural Funds",
+            "deadline": "2026-10-15",
+            "amount": 120000,
+            "status": "Applied",
+            "notes": "Infrastructure and equipment upgrades are eligible costs"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
+            "name": "Green Business Initiative",
+            "provider": "Environmental Agency",
+            "deadline": "2026-09-30",
+            "amount": 30000,
+            "status": "Under Review",
+            "notes": "Focused on energy efficiency improvements and renewable energy sources"
           }
         ]
       },
       "useCases": {
-        "heading": "What can you try here?",
+        "heading": "Who uses fundraising",
         "items": [
           {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
+            "title": "Small Business Owner",
+            "situation": "You run a small company and know grants exist, but keeping track of which ones apply to you is time-consuming.",
+            "action": "Add each relevant grant call, set the deadline and track your application from submission to decision."
           },
           {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
+            "title": "Startup Founder",
+            "situation": "Your startup needs external capital and you are applying to multiple funds at the same time.",
+            "action": "Manage all your applications in one list, update their status and note the documents each fund requires."
+          },
+          {
+            "title": "Operations Manager",
+            "situation": "You oversee grant applications on behalf of the company and need to report on their progress.",
+            "action": "Filter applications by status and always have an up-to-date picture of where each grant stands."
           }
         ]
       },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
+      "cta": {
+        "label": "Start tracking grants",
+        "title": "Your next grant is waiting",
+        "subtitle": "Sign in and start building your grant pipeline today."
+      }
+    },
+    "sk": {
+      "description": "Sledujte grantové výzvy, spravujte prihlášky a zbierajte podklady pre vašu firmu — všetko na jednom mieste pre malých podnikateľov a startupy.",
+      "landing": {
+        "headline": "Nezmeškajte ani jednu výzvu, na ktorú máte nárok",
+        "subheadline": "Pre malých podnikateľov a startupy, ktoré potrebujú sledovať, podávať a spravovať externé zdroje financovania.",
+        "featuresHeading": "Všetko pre správu grantových prihlášok",
+        "features": [
           {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
+            "icon": "file-text",
+            "title": "Register výziev",
+            "description": "Pridajte každú výzvu, ktorú nájdete, a uložte jej termín, poskytovateľa a maximálnu výšku podpory na jednom mieste."
           },
           {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
+            "icon": "list-checks",
+            "title": "Stav prihlášok",
+            "description": "Posúvajte každú prihlášku cez fázy — otvorená, podaná, v hodnotení, schválená — aby ste vždy vedeli, kde stojíte."
           },
           {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "icon": "funnel",
+            "title": "Filter a vyhľadávanie",
+            "description": "Filtrujte výzvy podľa stavu alebo termínu a sústreďte sa na to, čo práve potrebuje vašu pozornosť."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Prehľad priebežného stavu",
+            "description": "Na dashboarde vidíte, koľko výziev sledujete, koľko ste podali a koľko je schválených."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Začnite sledovať za niekoľko minút",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa účtom Google a udržte svoje grantové dáta v bezpečí a vždy dostupné."
+            },
+            {
+              "title": "Pridajte výzvu",
+              "description": "Zadajte názov výzvy, poskytovateľa, termín podania a maximálnu výšku dostupnej podpory."
+            },
+            {
+              "title": "Aktualizujte stav",
+              "description": "Keď zhromažďujete podklady a podávate prihlášku, presuňte výzvu do správnej fázy."
+            },
+            {
+              "title": "Sledujte postup",
+              "description": "Otvorte dashboard a zistite, ktoré výzvy sú otvorené, ktoré ste podali a ktoré čakajú na rozhodnutie."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Aké typy grantov môžem sledovať?",
+              "answer": "Môžete sledovať akúkoľvek grantovú výzvu alebo fond — štrukturálne fondy EÚ, národné dotácie, regionálne programy alebo iné externé zdroje financovania relevantné pre vaše podnikanie."
+            },
+            {
+              "question": "Môžem ukladať podmienky a potrebné podklady ku každej výzve?",
+              "answer": "Áno. Každý záznam výzvy obsahuje pole pre poznámky, kam môžete zapísať podmienky, požadované dokumenty a ďalšie dôležité informácie pre danú výzvu."
+            },
+            {
+              "question": "Ako funguje sledovanie stavu?",
+              "answer": "Každá výzva prechádza fázami: Open, Applied, Under Review, Approved a Rejected. Stav aktualizujete sami podľa toho, ako postupuje vaša prihláška."
+            },
+            {
+              "question": "Sú moje dáta viditeľné pre iné spoločnosti?",
+              "answer": "Nie. Vaše záznamy sú viazané na váš vlastný účet a nie sú zdieľané s nikým iným."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Môj grantový prehľad",
+        "intro": "Prehľad všetkých výziev, ktoré sledujete, na ktoré ste sa prihlásili a na rozhodnutie ktorých čakáte.",
+        "kpiLabels": {
+          "totalCalls": "Sledované výzvy",
+          "applied": "Podané prihlášky",
+          "approved": "Schválené granty"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Grantová výzva",
+        "fieldLabels": {
+          "name": "Názov výzvy",
+          "provider": "Poskytovateľ",
+          "deadline": "Termín podania",
+          "amount": "Max. výška (€)",
+          "status": "Stav",
+          "notes": "Poznámky a podmienky"
+        },
+        "sampleRecords": [
+          {
+            "name": "Fond digitalizácie MSP 2026",
+            "provider": "Ministerstvo hospodárstva SR",
+            "deadline": "2026-10-31",
+            "amount": 50000,
+            "status": "Open",
+            "notes": "Podpora projektov digitálnej transformácie pre malé a stredné podniky"
+          },
+          {
+            "name": "Regionálny rozvojový grant",
+            "provider": "Štrukturálne fondy EÚ",
+            "deadline": "2026-10-15",
+            "amount": 120000,
+            "status": "Applied",
+            "notes": "Oprávnené sú náklady na infraštruktúru a obstaranie zariadení"
+          },
+          {
+            "name": "Zelené podnikanie",
+            "provider": "Agentúra životného prostredia",
+            "deadline": "2026-09-30",
+            "amount": 30000,
+            "status": "Under Review",
+            "notes": "Zameraná na zvyšovanie energetickej efektívnosti a obnoviteľné zdroje energie"
           }
         ]
+      },
+      "useCases": {
+        "heading": "Kto používa fundraising",
+        "items": [
+          {
+            "title": "Malý podnikateľ",
+            "situation": "Vedúte malú firmu a viete, že existujú granty, no sledovanie tých, ktoré sa vás týkajú, je časovo náročné.",
+            "action": "Pridajte každú relevantnú výzvu, nastavte termín a sledujte prihlášku od podania až po rozhodnutie."
+          },
+          {
+            "title": "Zakladateľ startupu",
+            "situation": "Váš startup potrebuje externý kapitál a zároveň sa prihlasujete do viacerých fondov naraz.",
+            "action": "Spravujte všetky prihlášky v jednom zozname, aktualizujte ich stav a zaznamenajte, aké podklady každý fond vyžaduje."
+          },
+          {
+            "title": "Prevádzkový manažér",
+            "situation": "Dohliadate na grantové prihlášky v mene spoločnosti a potrebujete priebežne podávať správy o ich stave.",
+            "action": "Filtrujte prihlášky podľa stavu a majte vždy aktuálny prehľad, kde sa každý grant nachádza."
+          }
+        ]
+      },
+      "cta": {
+        "label": "Začať sledovať výzvy",
+        "title": "Váš ďalší grant čaká",
+        "subtitle": "Prihláste sa a začnite budovať váš grantový prehľad ešte dnes."
       }
     }
   }
