@@ -1,207 +1,378 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Travel expert",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "dark-cyan-tangerine"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
+        "useCases",
         "faq",
-        "contact",
         "cta"
-      ],
-      "presentation": "story"
+      ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalTrips",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "activeTrips",
+          "field": "status",
+          "agg": "share",
+          "value": "Prebieha"
+        },
+        {
+          "id": "plannedTrips",
+          "field": "status",
+          "agg": "share",
+          "value": "Plánovaná"
+        }
+      ]
     },
-    "contactForm": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "trip",
         "fields": [
           {
-            "key": "name",
+            "key": "employee",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "destination",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "departureDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "returnDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "hotel",
+            "type": "text"
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+              "Plánovaná",
+              "Prebieha",
+              "Ukončená"
+            ],
+            "required": true
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
     "useCases": {},
-    "comparison": {}
+    "cta": {
+      "href": "/app"
+    }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Travel expert helps small companies log employee business trips and keep hotel bookings organised in one place.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "All your company's business trips, tracked in one place",
+        "subheadline": "Travel expert is built for small companies that need to log employee trips and keep hotel bookings organised without spreadsheets.",
+        "featuresHeading": "Everything you need to manage business travel",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "route",
+            "title": "Trip Register",
+            "description": "Log every business trip with the employee's name, destination, and travel dates."
+          },
+          {
+            "icon": "building-2",
+            "title": "Hotel Records",
+            "description": "Attach hotel details to each trip so booking information is always at hand."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Status Tracking",
+            "description": "See at a glance which trips are planned, in progress, or completed."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "users",
+            "title": "Team Overview",
+            "description": "Filter and view all trips by employee across your entire team."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in four steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Connect with your Google account to get started immediately."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add a trip",
+              "description": "Enter the destination, travel dates, employee name, and hotel."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Update the status",
+              "description": "Change the trip status as it moves from planned to in progress to completed."
+            },
+            {
+              "title": "Review at any time",
+              "description": "Browse all past and upcoming trips in one searchable, filterable list."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Frequently asked questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Can I track trips for multiple employees at the same time?",
+              "answer": "Yes. Each trip record includes the employee's name, so you can log trips for your whole team and filter the list by any team member."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Does Travel expert book hotels directly?",
+              "answer": "Travel expert stores the hotel details you enter for each trip. The actual reservation is made through your usual channels, and the information is saved here for your records."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Who can see and edit our trip records?",
+              "answer": "Only signed-in users with access to your account can view or edit trip records."
+            },
+            {
+              "question": "Can I filter trips by destination or employee?",
+              "answer": "Yes. The trip list supports filtering and searching by any field, including employee name, destination, dates, and status."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Business Trips Overview",
+        "intro": "A summary of all business trips registered for your company.",
+        "kpiLabels": {
+          "totalTrips": "Total Trips",
+          "activeTrips": "In Progress",
+          "plannedTrips": "Planned"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Business Trip",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "employee": "Employee",
+          "destination": "Destination",
+          "departureDate": "Departure Date",
+          "returnDate": "Return Date",
+          "hotel": "Hotel",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "employee": "Ján Novák",
+            "destination": "Bratislava",
+            "departureDate": "2026-09-15",
+            "returnDate": "2026-09-17",
+            "hotel": "Hotel Centrum",
+            "status": "Ukončená"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "employee": "Mária Kováčová",
+            "destination": "Praha",
+            "departureDate": "2026-10-05",
+            "returnDate": "2026-10-07",
+            "hotel": "Grand Hotel Praha",
+            "status": "Prebieha"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
+            "employee": "Peter Horváth",
+            "destination": "Viedeň",
+            "departureDate": "2026-10-20",
+            "returnDate": "2026-10-22",
+            "hotel": "Vienna Business Hotel",
+            "status": "Plánovaná"
           }
         ]
       },
       "useCases": {
-        "heading": "What can you try here?",
+        "heading": "Who uses Travel expert",
         "items": [
           {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
+            "title": "Office Manager",
+            "situation": "You manage travel for a growing team but have no dedicated travel department.",
+            "action": "Log each trip, attach the hotel, and update the status — all from a single screen, without maintaining spreadsheets."
           },
           {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
+            "title": "Company Owner",
+            "situation": "You want a quick overview of which employees are travelling and where.",
+            "action": "Open the dashboard to see all active and upcoming trips at a glance, and click into any record for full details."
+          },
+          {
+            "title": "Accountant",
+            "situation": "You need a record of completed business trips to match against expense reports.",
+            "action": "Filter the trip list by date range or employee and review completed trips with their destinations and hotel details."
           }
         ]
       },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
+      "cta": {
+        "label": "Start tracking trips",
+        "title": "Your company's trips, always in order",
+        "subtitle": "Sign in and add your first business trip in under two minutes."
+      }
+    },
+    "sk": {
+      "description": "Travel expert pomáha malým firmám evidovať pracovné cesty zamestnancov a spravovať hotelové rezervácie na jednom mieste.",
+      "landing": {
+        "headline": "Všetky pracovné cesty vašej firmy prehľadne na jednom mieste",
+        "subheadline": "Travel expert je určený pre malé firmy, ktoré potrebujú evidovať cesty zamestnancov a mať pod kontrolou hotelové rezervácie bez zbytočných tabuliek.",
+        "featuresHeading": "Všetko, čo potrebujete na správu pracovných ciest",
+        "features": [
           {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
+            "icon": "route",
+            "title": "Evidencia ciest",
+            "description": "Zaznamenajte každú pracovnú cestu s menom zamestnanca, destináciou a dátumami."
           },
           {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
+            "icon": "building-2",
+            "title": "Záznamy o hoteli",
+            "description": "Ku každej ceste pripojte informácie o hoteli, aby ste ich mali vždy po ruke."
           },
           {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "icon": "list-checks",
+            "title": "Sledovanie stavu",
+            "description": "Jedným pohľadom zistíte, ktoré cesty sú plánované, prebiehajú alebo sú ukončené."
+          },
+          {
+            "icon": "users",
+            "title": "Prehľad tímu",
+            "description": "Filtrujte a zobrazujte cesty podľa konkrétneho zamestnanca naprieč celým tímom."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Začnite za štyri jednoduché kroky",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa cez Google účet a začnite pracovať okamžite."
+            },
+            {
+              "title": "Pridajte cestu",
+              "description": "Zadajte destináciu, dátumy, meno zamestnanca a hotel."
+            },
+            {
+              "title": "Aktualizujte stav",
+              "description": "Zmeňte stav cesty pri prechode z plánovanej na prebiehajúcu a neskôr ukončenú."
+            },
+            {
+              "title": "Prezerajte kedykoľvek",
+              "description": "Všetky minulé aj nadchádzajúce cesty nájdete v jednom prehľadnom a filtrovateľnom zozname."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Často kladené otázky",
+          "items": [
+            {
+              "question": "Môžem sledovať cesty viacerých zamestnancov súčasne?",
+              "answer": "Áno. Každý záznam obsahuje meno zamestnanca, takže môžete evidovať cesty celého tímu a zoznam filtrovať podľa ľubovoľného člena."
+            },
+            {
+              "question": "Rezervuje Travel expert hotely priamo?",
+              "answer": "Travel expert uchováva informácie o hoteli, ktoré sami zadáte. Samotnú rezerváciu vykonáte cez váš obvyklý kanál a údaje si uložíte do aplikácie."
+            },
+            {
+              "question": "Kto môže prezerať a upravovať záznamy o cestách?",
+              "answer": "Záznamy môžu prezerať a upravovať iba prihlásení používatelia s prístupom k vášmu účtu."
+            },
+            {
+              "question": "Môžem filtrovať cesty podľa destinácie alebo zamestnanca?",
+              "answer": "Áno. Zoznam ciest podporuje filtrovanie a vyhľadávanie podľa akéhokoľvek poľa vrátane mena zamestnanca, destinácie, dátumov a stavu."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Prehľad pracovných ciest",
+        "intro": "Súhrn všetkých pracovných ciest evidovaných vo vašej firme.",
+        "kpiLabels": {
+          "totalTrips": "Všetky cesty",
+          "activeTrips": "Prebiehajúce",
+          "plannedTrips": "Plánované"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Pracovná cesta",
+        "fieldLabels": {
+          "employee": "Zamestnanec",
+          "destination": "Destinácia",
+          "departureDate": "Dátum odchodu",
+          "returnDate": "Dátum návratu",
+          "hotel": "Hotel",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "employee": "Ján Novák",
+            "destination": "Bratislava",
+            "departureDate": "2026-09-15",
+            "returnDate": "2026-09-17",
+            "hotel": "Hotel Centrum",
+            "status": "Ukončená"
+          },
+          {
+            "employee": "Mária Kováčová",
+            "destination": "Praha",
+            "departureDate": "2026-10-05",
+            "returnDate": "2026-10-07",
+            "hotel": "Grand Hotel Praha",
+            "status": "Prebieha"
+          },
+          {
+            "employee": "Peter Horváth",
+            "destination": "Viedeň",
+            "departureDate": "2026-10-20",
+            "returnDate": "2026-10-22",
+            "hotel": "Vienna Business Hotel",
+            "status": "Plánovaná"
           }
         ]
+      },
+      "useCases": {
+        "heading": "Komu Travel expert pomáha",
+        "items": [
+          {
+            "title": "Správca kancelárie",
+            "situation": "Organizujete pracovné cesty rastúceho tímu, no nemáte špeciálne oddelenie pre cestovanie.",
+            "action": "Zaznamenajte každú cestu, pridajte hotel a aktualizujte stav – všetko z jednej obrazovky bez nutnosti udržiavať tabuľky."
+          },
+          {
+            "title": "Majiteľ firmy",
+            "situation": "Potrebujete rýchly prehľad o tom, kto zo zamestnancov cestuje a kam.",
+            "action": "Otvorte prehľad a okamžite vidíte všetky aktívne aj plánované cesty, pričom do každého záznamu môžete kliknúť pre detail."
+          },
+          {
+            "title": "Účtovník",
+            "situation": "Potrebujete záznamy o ukončených pracovných cestách na párenie s výdavkovými správami.",
+            "action": "Filtrujte zoznam podľa časového obdobia alebo zamestnanca a skontrolujte ukončené cesty s destináciami a hotelmi."
+          }
+        ]
+      },
+      "cta": {
+        "label": "Začať evidovať cesty",
+        "title": "Pracovné cesty vašej firmy vždy pod kontrolou",
+        "subtitle": "Prihláste sa a pridajte prvú pracovnú cestu za menej ako dve minúty."
       }
     }
   }
