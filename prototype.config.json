@@ -1,205 +1,317 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Dopice",
   "locales": [
-    "en"
+    "en",
+    "pl"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "fluorescent-cyan-oxford-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
         "faq",
-        "contact",
         "cta"
-      ],
-      "presentation": "story"
+      ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalLogs",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "avgWeight",
+          "field": "weight",
+          "agg": "avg"
+        },
+        {
+          "id": "vetVisits",
+          "field": "category",
+          "agg": "share",
+          "value": "Vet visit"
+        }
+      ]
     },
-    "contactForm": {},
+    "cta": {
+      "href": "/dashboard"
+    },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "log",
         "fields": [
           {
-            "key": "name",
-            "type": "text",
+            "key": "date",
+            "type": "date",
             "required": true
           },
           {
             "key": "category",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "Feeding",
+              "Vet visit",
+              "Medication",
+              "Grooming",
+              "Exercise"
+            ],
+            "required": true
+          },
+          {
+            "key": "weight",
+            "type": "number"
+          },
+          {
+            "key": "mood",
+            "type": "select",
+            "options": [
+              "Happy",
+              "Calm",
+              "Agitated",
+              "Unwell"
             ]
           },
           {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+            "key": "notes",
+            "type": "longtext"
           }
         ]
       }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
-    },
-    "useCases": {},
-    "comparison": {}
+    }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Dopice lets you log your pet's feedings, vet visits, weight and daily mood so every care detail is always at hand.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every day with your pet, remembered",
+        "subheadline": "Dopice is for pet owners who want to keep a simple, lasting record of their pet's care, health and daily moments.",
+        "featuresHeading": "Everything your pet's diary needs",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "calendar",
+            "title": "Daily Care Log",
+            "description": "Record feedings, grooming and any care event the moment it happens."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "chart-line",
+            "title": "Weight Over Time",
+            "description": "Log your pet's weight with each entry and watch changes across weeks."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "stethoscope",
+            "title": "Vet Visit History",
+            "description": "Keep every appointment and medication note in one place you can review any time."
+          },
+          {
+            "icon": "heart",
+            "title": "Mood Notes",
+            "description": "Note how your pet feels each day so you can spot patterns and share them with your vet."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in minutes",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Log in with your Google account — your data stays private and linked only to you."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add an entry",
+              "description": "Choose a category, pick the date and fill in weight or mood if you have them."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Write a note",
+              "description": "Add a short note about anything worth remembering from today's care session."
+            },
+            {
+              "title": "Review the history",
+              "description": "Open the dashboard to see your pet's weight trend and a full log of every past entry."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Common questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "What can I log in Dopice?",
+              "answer": "You can log feedings, vet visits, medications, grooming sessions, weight measurements and mood notes. Each entry also supports a free-text note for anything else worth recording."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Who can see my entries?",
+              "answer": "Your logs are linked to your Google account and visible only to you."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Can I track more than one pet?",
+              "answer": "Yes — use the notes field to identify which pet a record belongs to. There is no limit on the number of entries you can add."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Your Pet's Overview",
+        "intro": "A quick look at your pet's recent care history and weight trend.",
+        "kpiLabels": {
+          "totalLogs": "Total Entries",
+          "avgWeight": "Avg Weight (kg)",
+          "vetVisits": "Vet Visit Share"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Start logging",
+        "title": "Keep track of every moment",
+        "subtitle": "Sign in and add your first entry in under a minute."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Care Log",
         "fieldLabels": {
-          "name": "Name",
+          "date": "Date",
           "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "weight": "Weight (kg)",
+          "mood": "Mood",
+          "notes": "Notes"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "date": "2026-10-05",
+            "category": "Feeding",
+            "weight": 0.8,
+            "mood": "Happy",
+            "notes": "Morning and evening meal, ate everything"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "date": "2026-09-28",
+            "category": "Vet visit",
+            "weight": 0.75,
+            "mood": "Calm",
+            "notes": "Annual check-up, all clear"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
+            "date": "2026-10-02",
+            "category": "Medication",
+            "weight": 0.8,
+            "mood": "Agitated",
+            "notes": "Antiparasitic treatment applied"
           }
         ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
+      }
+    },
+    "pl": {
+      "description": "Dopice pozwala zapisywać karmienia, wizyty u weterynarza, wagę i nastrój pupila, żeby żaden szczegół opieki nie umknął.",
+      "landing": {
+        "headline": "Każdy dzień z Twoim pupilem zapamiętany",
+        "subheadline": "Dopice jest dla właścicieli zwierząt, którzy chcą prowadzić prosty dziennik opieki, zdrowia i codziennych chwil swojego pupila.",
+        "featuresHeading": "Wszystko, czego potrzebuje dziennik Twojego pupila",
+        "features": [
           {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
+            "icon": "calendar",
+            "title": "Dziennik opieki",
+            "description": "Zapisuj karmienia, pielęgnację i inne zdarzenia w chwili, gdy się dzieją."
           },
           {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
+            "icon": "chart-line",
+            "title": "Waga w czasie",
+            "description": "Notuj wagę pupila przy każdym wpisie i obserwuj zmiany na przestrzeni tygodni."
+          },
+          {
+            "icon": "stethoscope",
+            "title": "Historia wizyt",
+            "description": "Miej wszystkie wizyty i informacje o lekach w jednym miejscu, dostępnym w każdej chwili."
+          },
+          {
+            "icon": "heart",
+            "title": "Notatki o nastroju",
+            "description": "Zapisuj codzienne samopoczucie pupila, żeby wychwycić wzorce i podzielić się nimi z weterynarzem."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "Gotowy w kilka minut",
+          "steps": [
+            {
+              "title": "Zaloguj się",
+              "description": "Zaloguj się kontem Google — Twoje dane są prywatne i powiązane tylko z Tobą."
+            },
+            {
+              "title": "Dodaj wpis",
+              "description": "Wybierz kategorię, podaj datę i opcjonalnie wpisz wagę lub nastrój."
+            },
+            {
+              "title": "Dopisz notatkę",
+              "description": "Napisz krótką notatkę o tym, co warto zapamiętać z dzisiejszej sesji opieki."
+            },
+            {
+              "title": "Przeglądaj historię",
+              "description": "Otwórz pulpit, żeby zobaczyć trend wagi i pełny dziennik poprzednich wpisów."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Częste pytania",
+          "items": [
+            {
+              "question": "Co mogę zapisywać w Dopice?",
+              "answer": "Możesz logować karmienia, wizyty u weterynarza, leki, sesje pielęgnacyjne, pomiary wagi i notatki o nastroju. Każdy wpis obsługuje też dowolną notatkę tekstową."
+            },
+            {
+              "question": "Kto widzi moje wpisy?",
+              "answer": "Twoje wpisy są powiązane z Twoim kontem Google i widoczne wyłącznie dla Ciebie."
+            },
+            {
+              "question": "Czy mogę śledzić więcej niż jedno zwierzę?",
+              "answer": "Tak — w polu notatek możesz zaznaczyć, którego pupila dotyczy rekord. Nie ma limitu liczby wpisów, które możesz dodać."
+            }
+          ]
+        }
       },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
+      "dashboard": {
+        "title": "Przegląd opieki nad pupilem",
+        "intro": "Szybki rzut oka na ostatnią historię opieki i trend wagi Twojego pupila.",
+        "kpiLabels": {
+          "totalLogs": "Wszystkie wpisy",
+          "avgWeight": "Śr. waga (kg)",
+          "vetVisits": "Udział wizyt wet."
+        }
+      },
+      "cta": {
+        "label": "Zacznij zapisywać",
+        "title": "Pamiętaj każdy ważny moment",
+        "subtitle": "Zaloguj się i dodaj pierwszy wpis w mniej niż minutę."
+      },
+      "dataGrid": {
+        "entityLabel": "Dziennik opieki",
+        "fieldLabels": {
+          "date": "Data",
+          "category": "Kategoria",
+          "weight": "Waga (kg)",
+          "mood": "Nastrój",
+          "notes": "Notatki"
+        },
+        "sampleRecords": [
           {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
+            "date": "2026-10-05",
+            "category": "Feeding",
+            "weight": 0.8,
+            "mood": "Happy",
+            "notes": "Poranny i wieczorny posiłek, zjadł wszystko"
           },
           {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
+            "date": "2026-09-28",
+            "category": "Vet visit",
+            "weight": 0.75,
+            "mood": "Calm",
+            "notes": "Coroczne badanie kontrolne, wszystko w porządku"
           },
           {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "date": "2026-10-02",
+            "category": "Medication",
+            "weight": 0.8,
+            "mood": "Agitated",
+            "notes": "Podano preparat przeciwpasożytniczy"
           }
         ]
       }
