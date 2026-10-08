@@ -544,3 +544,7 @@ public paths. A custom deployment must publish these files at its own appropriat
 
 Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
 `npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.
+
+Prototype export browser gates read chrome, login and contact labels from the configured
+default locale bundle. They must not require English controls on a Slovak-first export.
+The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
