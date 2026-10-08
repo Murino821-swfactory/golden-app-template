@@ -62,11 +62,21 @@ test.describe("section copy source", () => {
     expect([...modelSelectableSections()].sort()).toEqual([...backed].sort());
   });
 
-  test("faq, pricing and testimonials are locked until they can be written", () => {
+  test("pricing and testimonials stay locked until they can be written", () => {
+    // Invented prices and invented endorsements on a real prospect's page are claims nobody
+    // can deliver (sw-factory spec 2026-09-29-golden-template-v2-design.md §7).
     const selectable = modelSelectableSections();
-    for (const locked of ["faq", "pricing", "testimonials"] as const) {
+    for (const locked of ["pricing", "testimonials"] as const) {
       expect(selectable, `"${locked}" has no copy schema and must not be offered`)
         .not.toContain(locked);
+    }
+  });
+
+  test("faq and howItWorks are offered, their copy written into the landing slice", () => {
+    const selectable = modelSelectableSections();
+    for (const unlocked of ["faq", "howItWorks"] as const) {
+      expect(selectable).toContain(unlocked);
+      expect(SECTION_COPY_SOURCE[unlocked]).toBe("landing");
     }
   });
 });

@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { config } from "../lib/prototype-config";
 
+// These tests exercise form behavior in the accessible document shell. Story navigation
+// and reaching this same form on desktop are covered in landing-story.spec.ts.
+test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "reduce" }); });
+
 /**
  * `NEXT_PUBLIC_DEMO_SLUG` is unset for this template's own CI build (and for local
  * `npm run dev`) — the contact endpoint identifies a prototype by slug, so with no slug
@@ -62,5 +66,37 @@ test.describe("contact form — no demo slug", () => {
 
     expect(requested).toBe(false);
     await expect(section.getByRole("status")).toContainText(/isn't configured/i);
+  });
+});
+
+test.describe("owner contact card", () => {
+  test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
+
+  test("the shipped static card is empty: no card, no error", async ({ page }) => {
+    const res = await page.request.get("owner-contact.json");
+    expect(res.status()).toBe(200);
+    expect(await res.json()).toEqual({});
+    await page.goto("./");
+    await expect(page.locator("[data-owner-card]")).toHaveCount(0);
+  });
+
+  test("a published card shows only the filled fields, with working links", async ({ page }) => {
+    await page.route("**/owner-contact.json", (route) =>
+      route.fulfill({ json: { firstName: "Jana", lastName: "Nováková", phone: "+421 900 123 456" } })
+    );
+    await page.goto("./");
+    const card = page.locator("[data-owner-card]");
+    await expect(card).toContainText("Jana Nováková");
+    await expect(card.locator('a[href="tel:+421900123456"]')).toBeVisible();
+    await expect(card.locator('a[href^="mailto:"]')).toHaveCount(0);
+    await expect(card.locator('a[href*="google.com/maps"]')).toHaveCount(0);
+  });
+
+  test("the visitor form offers an optional name; an anonymous visitor sees no owner controls", async ({ page }) => {
+    await page.goto("./");
+    const name = page.locator("#contact-name");
+    await expect(name).toHaveAttribute("autocomplete", "name");
+    await expect(name).not.toHaveAttribute("required", "");
+    await expect(page.locator("[data-owner-controls]")).toHaveCount(0);
   });
 });
