@@ -4,9 +4,12 @@ const facts = "Páchateľ rozbil okno uzamknutej garáže a odniesol bicykel. Je
 test("problem → verified comparison → save without a case number → reopen → notes → repeat", async ({ page }) => {
   await page.goto("/research");
   await page.getByLabel("Právna otázka a okolnosti prípadu").fill(facts);
+  await expect(page.getByText(/Zadanie a nájdené výsledky uchovávame 180 dní/)).toBeVisible();
   await page.getByRole("button", { name: "Nájsť a porovnať rozhodnutia" }).click();
   await expect(page.getByRole("heading", { name: "Podobnosť a rozdiely" })).toBeVisible();
   await expect(page.getByText("Odlišná procesná fáza a dostupné dôkazy.")).toBeVisible();
+  await expect(page.getByText("Hľadané paragrafy: § 212 Krádež")).toBeVisible();
+  await expect(page.getByText("Rovnaká otázka vniknutia do uzavretého priestoru.")).toBeVisible();
   await expect(page.getByText("Súd preskúmal otázku zavinenia pri vniknutí do uzavretého priestoru.")).toBeVisible();
   await expect(page.getByText(/výpadok — výsledky sú neúplné/)).toBeVisible();
   await expect(page.getByLabel("Číslo veci")).toHaveCount(0);
@@ -52,15 +55,54 @@ test("manual filtered search is saved with selected decisions and can be repeate
   expect(await page.evaluate(() => sessionStorage.getItem("model-calls"))).toBeNull();
 });
 
-test("krádež and § 212 keep NS SR in the search with a visible full-text limit", async ({ page }) => {
+test("krádež and § 212: the section is named, searched in NS SR merito, and its qualification shown", async ({ page }) => {
   await page.goto("/research");
   await page.getByRole("tab", { name: "Vyhľadať rozhodnutia" }).click();
+  const panel = page.getByRole("tabpanel", { name: "Vyhľadať rozhodnutia" });
   await page.getByLabel("Slová", { exact: true }).fill("krádež");
-  await page.getByRole("tabpanel", { name: "Vyhľadať rozhodnutia" }).getByLabel("§ Trestného zákona").fill("212");
+  await panel.getByLabel("§ Trestného zákona").fill("212");
+  await expect(panel.getByText("§ 212: Krádež")).toBeVisible();
   await page.getByRole("button", { name: "Hľadať", exact: true }).click();
   await expect(page.getByRole("article").getByText("NS SR OpenData")).toBeVisible();
-  await expect(page.getByText(/§ 212 overený ako textová zmienka/)).toBeVisible();
+  await expect(page.getByText(/NS SR: prehľadaný; § 212 v hlavnej kvalifikácii rozhodnutia \(merito\)/)).toBeVisible();
+  await expect(page.getByText(/InfoSúd: prehľadaný; § 212 hľadaný v texte rozhodnutí/)).toBeVisible();
+  await expect(page.getByText("Kvalifikácia (merito): § 212/1 Tr.zák.")).toBeVisible();
   expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("last-search")!))).toMatchObject({ q: "krádež", paragraph: "212" });
+});
+
+test("words of another section are flagged, the right section is one click away, and an empty search offers wider ones", async ({ page }) => {
+  await page.goto("/research");
+  await page.getByRole("tab", { name: "Vyhľadať rozhodnutia" }).click();
+  const panel = page.getByRole("tabpanel", { name: "Vyhľadať rozhodnutia" });
+  await page.getByLabel("Slová", { exact: true }).fill("verejna listina");
+  await panel.getByLabel("§ Trestného zákona").fill("208");
+  await expect(panel.getByText("§ 208: Týranie blízkej osoby a zverenej osoby")).toBeVisible();
+  await page.getByRole("button", { name: "Hľadať", exact: true }).click();
+  await expect(page.getByText(/§ 208 Trestného zákona je „Týranie blízkej osoby a zverenej osoby“/)).toBeVisible();
+  await expect(page.getByText(/slová overené v 40 z 168 rozhodnutí, zhoda 0/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Len slová, bez § (57)" })).toBeVisible();
+  await page.getByRole("button", { name: /^§ 352 — Falšovanie a pozmeňovanie verejnej listiny/ }).first().click();
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem("last-search")!))).toMatchObject({ q: "verejna listina", paragraph: "352" });
+  await expect(page.getByText("Kvalifikácia (merito): § 352/1 Tr.zák.")).toBeVisible();
+  await expect(panel.getByLabel("§ Trestného zákona")).toHaveValue("352");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("choosing, saving and opening a result are reported against the search that showed it", async ({ page }) => {
+  await page.goto("/research");
+  await page.getByRole("tab", { name: "Vyhľadať rozhodnutia" }).click();
+  await expect(page.getByText(/Hľadania a ich výsledky uchovávame 180 dní/)).toBeVisible();
+  await page.getByLabel("Slová", { exact: true }).fill("krádež");
+  await page.getByRole("button", { name: "Hľadať", exact: true }).click();
+  await page.getByLabel("Vybrať pre ďalšiu prácu").check();
+  await page.getByLabel("Názov rešerše").fill("Spätná väzba");
+  await page.getByRole("button", { name: "Uložiť celú rešerš" }).click();
+  await expect(page.getByRole("link", { name: "Otvoriť dashboard" })).toBeVisible();
+  const events = await page.evaluate(() => JSON.parse(sessionStorage.getItem("feedback")!));
+  expect(events).toEqual([
+    { searchId: "searchlogid000000001", action: "select", resultId: "nsud:247174", rank: 0 },
+    { searchId: "searchlogid000000001", action: "save" },
+  ]);
 });
 
 test("English workflow includes an optional memo and keeps it after reloading", async ({ page }) => {

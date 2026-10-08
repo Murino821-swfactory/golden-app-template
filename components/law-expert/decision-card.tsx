@@ -26,9 +26,12 @@ interface DecisionCardProps {
   number?: number;
   ecli?: string | null;
   truncated?: boolean;
+  /** The model's reason for ranking this decision, when a research run ranked it. */
+  reason?: string;
+  onOpenPdf?: () => void;
 }
 
-export function DecisionCard({ hit, copy, number, ecli, truncated }: DecisionCardProps) {
+export function DecisionCard({ hit, copy, number, ecli, truncated, reason, onOpenPdf }: DecisionCardProps) {
   const pdf = safePdfUrl(hit.pdfUrl);
   return (
     <article
@@ -47,6 +50,8 @@ export function DecisionCard({ hit, copy, number, ecli, truncated }: DecisionCar
       <p className="text-sm text-muted-foreground">
         {[hit.form, ...hit.nature].filter(Boolean).join(", ")}
       </p>
+      {hit.merito && <p className="mt-1 text-sm">{copy.search.merito}{hit.merito}</p>}
+      {reason && <p className="mt-1 text-sm"><strong>{copy.search.why}</strong>{reason}</p>}
       {hit.snippet.length > 0 && <Snippet segments={hit.snippet} />}
       {ecli && (
         <p className="mt-2 break-all text-xs text-muted-foreground">{ecli}</p>
@@ -57,6 +62,7 @@ export function DecisionCard({ hit, copy, number, ecli, truncated }: DecisionCar
           href={pdf}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onOpenPdf}
           className="mt-2 inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
         >
           {copy.search.pdf}

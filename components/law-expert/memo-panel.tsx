@@ -21,6 +21,10 @@ export function MemoPanel({ copy, locale, initial }: { copy: ResearchCopy; local
   const [error, setError] = useState<UiError | null>(null);
   const [touched, setTouched] = useState(false);
   const state = factsState(facts);
+  const react = (action: "select" | "unselect" | "save" | "pdf", resultId?: string, rank?: number) => {
+    const searchId = snapshot?.memo?.searchId;
+    if (searchId) services.feedback({ searchId, action, resultId, rank });
+  };
   async function onSubmit(e: FormEvent) {
     e.preventDefault(); setTouched(true);
     if (!state.valid || loading) return;
@@ -45,9 +49,9 @@ export function MemoPanel({ copy, locale, initial }: { copy: ResearchCopy; local
       {loading && <p className="text-sm text-muted-foreground">{copy.memo.working}</p>}
       {error && <p role="alert">{copy.errors[error]}</p>}
       {snapshot?.memo && <div className="space-y-6">
-        <MemoView memo={snapshot.memo} copy={copy} locale={locale} />
-        {snapshot.memo.sources.length > 0 && <fieldset className="space-y-2"><legend className="font-medium">{sk ? "Rozhodnutia pre ďalšiu prácu" : "Decisions for further work"}</legend>{snapshot.memo.sources.map(hit => <label key={hit.id} className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={snapshot.selectedIds.includes(hit.id)} onChange={e => setSnapshot({ ...snapshot, selectedIds: e.target.checked ? [...snapshot.selectedIds, hit.id] : snapshot.selectedIds.filter(id => id !== hit.id) })} />{hit.fileNumber} · {hit.court}</label>)}</fieldset>}
-        <SaveResearch key={`${snapshot.searchedAt}:${snapshot.selectedIds.join()}`} snapshot={snapshot} />
+        <MemoView memo={snapshot.memo} copy={copy} locale={locale} onOpenPdf={(id, rank) => react("pdf", id, rank)} />
+        {snapshot.memo.sources.length > 0 && <fieldset className="space-y-2"><legend className="font-medium">{sk ? "Rozhodnutia pre ďalšiu prácu" : "Decisions for further work"}</legend>{snapshot.memo.sources.map((hit, rank) => <label key={hit.id} className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={snapshot.selectedIds.includes(hit.id)} onChange={e => { react(e.target.checked ? "select" : "unselect", hit.id, rank); setSnapshot({ ...snapshot, selectedIds: e.target.checked ? [...snapshot.selectedIds, hit.id] : snapshot.selectedIds.filter(id => id !== hit.id) }); }} />{hit.fileNumber} · {hit.court}</label>)}</fieldset>}
+        <SaveResearch key={`${snapshot.searchedAt}:${snapshot.selectedIds.join()}`} snapshot={snapshot} onSaved={() => react("save")} />
       </div>}
     </div>
   </div>;

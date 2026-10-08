@@ -1,4 +1,4 @@
-import type { FacetValue, MemoBlock, MemoResponse } from "./types";
+import type { FacetValue, MemoBlock, MemoResponse, SearchSuggestion, SourceCoverage } from "./types";
 import { LONGTEXT_MAX } from "@/lib/records";
 
 /**
@@ -103,4 +103,39 @@ const PDF_URL = /^https:\/\/obcan\.justice\.sk\/content\/public\/item\/[0-9a-f-]
 /** The server already restricts PDF links; the page checks again before rendering an href. */
 export function safePdfUrl(url: string | null | undefined): string | null {
   return url && (PDF_URL.test(url) || /^https:\/\/www\.nsud\.sk\/data\/att\/[a-z0-9]+\/[a-z0-9.-]+\.pdf$/i.test(url)) ? url : null;
+}
+
+/**
+ * One line per source saying how it was searched and what the result can and cannot claim —
+ * never "searched, nothing" when the source could not have found it (audit 2026-10-08).
+ */
+export function coverageLine(c: SourceCoverage, sk: boolean): string {
+  const name = c.provider === "nsud" ? "NS SR" : "InfoSúd";
+  const status = { ok: sk ? "prehľadaný" : "searched", failed: sk ? "výpadok — výsledky sú neúplné" : "unavailable — incomplete results",
+    unsupported: sk ? "neprehľadaný: nepodporuje zvolené filtre" : "not searched: selected filters unsupported",
+    excluded: sk ? "vylúčený filtrom súdu" : "excluded by court filter" }[c.status];
+  const parts = [`${name}: ${status}`];
+  if (c.status === "ok") {
+    if (c.method === "fulltext" && c.section) parts.push(sk ? `§ ${c.section} hľadaný v texte rozhodnutí` : `§ ${c.section} searched in decision text`);
+    if (c.method === "merito") parts.push(sk ? `§ ${c.section} v hlavnej kvalifikácii rozhodnutia (merito)` : `§ ${c.section} in the decision's main qualification (merito)`);
+    if (c.scanned !== undefined) parts.push(sk ? `slová overené v ${c.scanned} z ${c.candidates} rozhodnutí, zhoda ${c.matched}` : `words checked in ${c.scanned} of ${c.candidates} decisions, ${c.matched} matched`);
+    if (c.shortOnly) parts.push(sk ? "textové hľadanie NS SR pokrýva len kratšie rozhodnutia — pre úplné výsledky NS SR zadajte § Trestného zákona" : "NS SR text search covers shorter decisions only — enter a Criminal Code section for complete NS SR results");
+    if (c.capped) parts.push(sk ? "zdroj vrátil najviac 1 000 záznamov" : "the source returned at most 1,000 records");
+    if (c.limited && !c.shortOnly && !c.capped && c.scanned === undefined) parts.push(sk ? "len časť výsledkov bola dostupná" : "only part of the results was available");
+  }
+  return parts.join("; ");
+}
+
+/** The button text for a wider search offered after an empty result. */
+export function suggestionLabel(s: SearchSuggestion, sk: boolean): string {
+  const label = {
+    court: sk ? "Všetky súdy a zdroje" : "All courts and sources",
+    lawArea: sk ? "Bez oblasti práva" : "Without the legal area",
+    dates: sk ? "Bez obmedzenia dátumu" : "Without the date limit",
+    regionForm: sk ? "Bez kraja a formy" : "Without region and form",
+    withoutWords: sk ? `Len § ${s.filters.paragraph}, bez slov` : `Only § ${s.filters.paragraph}, without words`,
+    withoutSection: sk ? "Len slová, bez §" : "Only the words, without §",
+    suggestedSection: `§ ${s.section?.section ?? s.filters.paragraph} — ${s.section?.heading ?? ""}`,
+  }[s.reason];
+  return `${label} (${s.total.toLocaleString(sk ? "sk" : "en")})`;
 }

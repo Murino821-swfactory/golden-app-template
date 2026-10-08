@@ -71,3 +71,24 @@ export function requestMemo(facts: string, locale: Locale, getToken: () => Promi
     getToken
   );
 }
+
+/** Criminal Code section headings (Slov-Lex), shown next to the § field. */
+export function fetchSections(getToken: () => Promise<string | null>) {
+  return call<{ version: string; sections: Record<string, string> }>("/sections", { method: "GET" }, getToken);
+}
+
+/** A reaction to a result, logged against the search that showed it (quality measurement). */
+export interface FeedbackEvent {
+  searchId: string;
+  action: "select" | "unselect" | "save" | "pdf";
+  resultId?: string;
+  rank?: number;
+}
+
+export function sendFeedback(event: FeedbackEvent, getToken: () => Promise<string | null>) {
+  return call<{ ok: true }>(
+    "/feedback",
+    { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(event) },
+    getToken
+  );
+}
