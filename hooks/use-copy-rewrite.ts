@@ -77,9 +77,16 @@ export function useCopyRewrite(): UseCopyRewrite {
     }
   }, [call]);
 
+  // Signed-in creator or founder: fetch the state once the session is known.
   useEffect(() => {
     if (!user || !available) return;
-    void refreshStatus();
+    let cancelled = false;
+    void (async () => {
+      if (!cancelled) await refreshStatus();
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user, available, refreshStatus]);
 
   // While a preview or a publish runs, re-check every 2.5 s, up to its kind's limit.
