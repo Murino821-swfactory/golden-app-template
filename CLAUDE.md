@@ -55,6 +55,16 @@ A pattern is enabled iff its **`patterns`** slice exists. zod then requires the 
 content slice in **every** declared locale, so a language can never be offered and then
 render blank.
 
+New customer creation uses `npm run validate:config -- --production` before building.
+`parseProductionPrototypeConfig` requires customer text for every rendered section and
+pattern in every locale, rejects blank text and unsupported placeholder sections, and
+checks records/auth/dashboard dependencies and unique field keys. Copy requirements are
+published as `productionValidation`, `menu.sections.requiredCopy` and
+`menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
+The usual parser stays compatible with local starter fixtures and archived prototypes.
+Tests: `tests/production-copy.spec.ts`; cross-repo decision:
+[prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
+
 Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
 still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
 only for the window before the harness is deployed — do not write new configs in the old

@@ -1,4 +1,5 @@
 {
+  "productionValidation": true,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "menu": {
     "patterns": {
@@ -52,6 +53,24 @@
         "comparison": "comparison",
         "pricing": null,
         "testimonials": null
+      },
+      "requiredCopy": {
+        "hero": [
+          "landing.headline",
+          "landing.subheadline"
+        ],
+        "features": [
+          "landing.featuresHeading",
+          "landing.features"
+        ],
+        "howItWorks": [
+          "landing.howItWorks.heading",
+          "landing.howItWorks.steps"
+        ],
+        "faq": [
+          "landing.faq.heading",
+          "landing.faq.items"
+        ]
       }
     },
     "locales": [
@@ -63,7 +82,28 @@
       "hu",
       "fr",
       "es"
-    ]
+    ],
+    "requiredPatternCopy": {
+      "cta": [
+        "label",
+        "title",
+        "subtitle"
+      ],
+      "contactForm": [
+        "heading",
+        "submitLabel",
+        "intro"
+      ],
+      "dashboard": [
+        "title",
+        "intro"
+      ],
+      "dataGrid": [
+        "entityLabel",
+        "fieldLabels",
+        "sampleRecords"
+      ]
+    }
   },
   "patterns": {
     "landing": {
