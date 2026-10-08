@@ -1,25 +1,61 @@
 {
   "appName": "Dvojjazyčné Demo",
-  "locales": ["en", "sk"],
+  "locales": [
+    "en",
+    "sk"
+  ],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "burnt-orange-vanilla" },
+  "theme": {
+    "colorScheme": "burnt-orange-vanilla"
+  },
   "patterns": {
-    "landing": { "sections": ["hero", "features", "contact", "cta"] },
+    "landing": {
+      "sections": [
+        "hero",
+        "features",
+        "useCases",
+        "comparison",
+        "contact",
+        "cta"
+      ]
+    },
     "dashboard": {},
     "authGoogle": {},
-    "cta": { "href": "/login" },
+    "cta": {
+      "href": "/login"
+    },
     "contactForm": {},
     "dataGrid": {
       "entity": {
         "key": "booking",
         "fields": [
-          { "key": "guest", "type": "text", "required": true },
-          { "key": "room", "type": "select", "options": ["Single", "Double", "Suite"] },
-          { "key": "arrives", "type": "date" },
-          { "key": "paid", "type": "boolean" }
+          {
+            "key": "guest",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "room",
+            "type": "select",
+            "options": [
+              "Single",
+              "Double",
+              "Suite"
+            ]
+          },
+          {
+            "key": "arrives",
+            "type": "date"
+          },
+          {
+            "key": "paid",
+            "type": "boolean"
+          }
         ]
       }
-    }
+    },
+    "useCases": {},
+    "comparison": {}
   },
   "content": {
     "en": {
@@ -45,9 +81,16 @@
           }
         ]
       },
-      "dashboard": { "title": "Bookings" },
-      "cta": { "label": "Sign in to see the dashboard" },
-      "contactForm": { "heading": "Ask us anything", "submitLabel": "Send message" },
+      "dashboard": {
+        "title": "Bookings"
+      },
+      "cta": {
+        "label": "Sign in to see the dashboard"
+      },
+      "contactForm": {
+        "heading": "Ask us anything",
+        "submitLabel": "Send message"
+      },
       "dataGrid": {
         "entityLabel": "Booking",
         "fieldLabels": {
@@ -56,6 +99,43 @@
           "arrives": "Arrives",
           "paid": "Paid"
         }
+      },
+      "useCases": {
+        "heading": "What can you try here?",
+        "items": [
+          {
+            "title": "Explore a product idea",
+            "situation": "You want to see how reusable blocks form a working prototype.",
+            "action": "Read the landing, then sign in to open your own dashboard."
+          },
+          {
+            "title": "Work with sample records",
+            "situation": "You need a place to try a records workflow before committing to an idea.",
+            "action": "Add, edit and filter records in your own signed-in sandbox."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "How is the prototype assembled?",
+        "beforeLabel": "Custom implementation",
+        "afterLabel": "This template",
+        "rows": [
+          {
+            "topic": "Page content",
+            "before": "Write each section as a separate code change.",
+            "after": "Fill localized content in a validated JSON configuration."
+          },
+          {
+            "topic": "Product building blocks",
+            "before": "Implement authentication and record controls for each project.",
+            "after": "Enable existing Google sign-in, dashboard and records patterns."
+          },
+          {
+            "topic": "Finding the page",
+            "before": "Maintain separate text for the page and discovery files.",
+            "after": "Generate metadata, structured data and llms.txt from the page content."
+          }
+        ]
       }
     },
     "sk": {
@@ -81,9 +161,16 @@
           }
         ]
       },
-      "dashboard": { "title": "Rezervácie" },
-      "cta": { "label": "Prihláste sa a pozrite si prehľad" },
-      "contactForm": { "heading": "Opýtajte sa nás na čokoľvek", "submitLabel": "Odoslať správu" },
+      "dashboard": {
+        "title": "Rezervácie"
+      },
+      "cta": {
+        "label": "Prihláste sa a pozrite si prehľad"
+      },
+      "contactForm": {
+        "heading": "Opýtajte sa nás na čokoľvek",
+        "submitLabel": "Odoslať správu"
+      },
       "dataGrid": {
         "entityLabel": "Rezervácia",
         "fieldLabels": {
@@ -92,6 +179,38 @@
           "arrives": "Príchod",
           "paid": "Zaplatené"
         }
+      },
+      "useCases": {
+        "heading": "Čo si môžete vyskúšať?",
+        "items": [
+          {
+            "title": "Preskúmajte nápad na produkt",
+            "situation": "Chcete vidieť, ako z hotových blokov vznikne funkčný prototyp.",
+            "action": "Prečítajte si stránku a prihláste sa do vlastného prehľadu."
+          },
+          {
+            "title": "Pracujte s vlastnými záznamami",
+            "situation": "Potrebujete si vyskúšať evidenciu pred rozpracovaním nápadu.",
+            "action": "Pridávajte, upravujte a filtrujte záznamy vo vlastnom súkromnom priestore."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Ako sa prototyp skladá?",
+        "beforeLabel": "Vlastná implementácia",
+        "afterLabel": "Táto šablóna",
+        "rows": [
+          {
+            "topic": "Obsah stránky",
+            "before": "Každú sekciu napíšete ako zmenu kódu.",
+            "after": "Lokalizovaný obsah vložíte do validovanej JSON konfigurácie."
+          },
+          {
+            "topic": "Základné funkcie",
+            "before": "Prihlásenie a ovládanie záznamov implementujete pre každý projekt.",
+            "after": "Zapnete existujúce patterns pre Google prihlásenie, prehľad a záznamy."
+          }
+        ]
       }
     }
   }

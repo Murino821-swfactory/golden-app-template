@@ -17,6 +17,12 @@
       "contactForm": {
         "purpose": "A contact form that captures a message and an email address. Pick it for services, consultancies and anything sold through a conversation rather than a signup."
       },
+      "useCases": {
+        "purpose": "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results."
+      },
+      "comparison": {
+        "purpose": "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices."
+      },
       "dataGrid": {
         "purpose": "A table of records the user adds, edits and filters. Pick it when the idea is about keeping track of things — an inventory, a catalogue, a register, a log of entries."
       },
@@ -28,6 +34,10 @@
       "selectable": [
         "hero",
         "features",
+        "howItWorks",
+        "useCases",
+        "comparison",
+        "faq",
         "contact",
         "cta"
       ],
@@ -36,7 +46,10 @@
         "features": "landing",
         "contact": "contactForm",
         "cta": "cta",
-        "faq": null,
+        "faq": "landing",
+        "howItWorks": "landing",
+        "useCases": "useCases",
+        "comparison": "comparison",
         "pricing": null,
         "testimonials": null
       }
@@ -65,6 +78,9 @@
             "enum": [
               "hero",
               "features",
+              "howItWorks",
+              "useCases",
+              "comparison",
               "pricing",
               "testimonials",
               "faq",
@@ -72,6 +88,14 @@
               "cta"
             ]
           }
+        },
+        "presentation": {
+          "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+          "type": "string",
+          "enum": [
+            "story",
+            "document"
+          ]
         }
       },
       "required": [
@@ -81,7 +105,45 @@
     "dashboard": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
-      "properties": {}
+      "properties": {
+        "kpis": {
+          "description": "The one to three numbers this user checks first. Prefer a share of a status over a raw count. agg \"count\" takes field \"*\"; \"sum\"/\"avg\" a number field; \"share\" a select field plus one of its options as value.",
+          "minItems": 1,
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-zA-Z0-9]*$"
+              },
+              "field": {
+                "type": "string",
+                "minLength": 1
+              },
+              "agg": {
+                "type": "string",
+                "enum": [
+                  "count",
+                  "sum",
+                  "avg",
+                  "share"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "field",
+              "agg"
+            ]
+          }
+        }
+      }
     },
     "authGoogle": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -106,6 +168,18 @@
       "type": "object",
       "properties": {}
     },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the useCases landing section and localized useCases copy."
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the comparison landing section and localized comparison copy."
+    },
     "dataGrid": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -119,6 +193,7 @@
             },
             "fields": {
               "minItems": 1,
+              "maxItems": 12,
               "type": "array",
               "items": {
                 "type": "object",
@@ -162,6 +237,11 @@
             "key",
             "fields"
           ]
+        },
+        "boardBy": {
+          "description": "Key of a select field that is a workflow stage (a status). Adds a board view grouped by its options. Omit when no field is a stage.",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -209,6 +289,110 @@
       "type": "string",
       "minLength": 1
     },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "items": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "situation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "title",
+              "situation",
+              "action"
+            ]
+          },
+          "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+        }
+      },
+      "required": [
+        "heading",
+        "items"
+      ]
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "beforeLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "afterLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "rows": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "before": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "after": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "topic",
+              "before",
+              "after"
+            ]
+          },
+          "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+        }
+      },
+      "required": [
+        "heading",
+        "beforeLabel",
+        "afterLabel",
+        "rows"
+      ]
+    },
     "landing": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -229,9 +413,50 @@
             "type": "object",
             "properties": {
               "icon": {
+                "description": "The icon that names what the feature lets the user do.",
                 "type": "string",
-                "minLength": 1,
-                "maxLength": 16
+                "enum": [
+                  "book-open",
+                  "calendar",
+                  "map-pin",
+                  "bell",
+                  "chart-line",
+                  "list-checks",
+                  "users",
+                  "wallet",
+                  "receipt",
+                  "shield-check",
+                  "clock",
+                  "search",
+                  "funnel",
+                  "file-text",
+                  "message-square",
+                  "mail",
+                  "phone",
+                  "camera",
+                  "heart",
+                  "star",
+                  "trophy",
+                  "target",
+                  "truck",
+                  "package",
+                  "shopping-cart",
+                  "credit-card",
+                  "graduation-cap",
+                  "stethoscope",
+                  "dumbbell",
+                  "leaf",
+                  "paw-print",
+                  "house",
+                  "building-2",
+                  "briefcase",
+                  "route",
+                  "timer",
+                  "scale",
+                  "gavel",
+                  "globe",
+                  "tag"
+                ]
               },
               "title": {
                 "type": "string",
@@ -247,6 +472,88 @@
               "description"
             ]
           }
+        },
+        "featuresHeading": {
+          "description": "Heading above the features, in the customer's words about their product — never about building or templates.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "howItWorks": {
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "steps": {
+              "minItems": 3,
+              "maxItems": 4,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 140
+                  }
+                },
+                "required": [
+                  "title",
+                  "description"
+                ]
+              },
+              "description": "The first three or four things a user does, in order, each starting with a verb."
+            }
+          },
+          "required": [
+            "steps"
+          ]
+        },
+        "faq": {
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "items": {
+              "minItems": 3,
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "answer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 400
+                  }
+                },
+                "required": [
+                  "question",
+                  "answer"
+                ]
+              },
+              "description": "Questions a visitor would ask before trying the app. Answer only what the idea states; never promise prices, integrations, certifications, availability or dates."
+            }
+          },
+          "required": [
+            "items"
+          ]
         }
       }
     },
@@ -257,6 +564,23 @@
         "title": {
           "type": "string",
           "minLength": 1
+        },
+        "intro": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "kpiLabels": {
+          "description": "A short label for each patterns.dashboard.kpis[].id.",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
         }
       },
       "required": [
@@ -270,6 +594,17 @@
         "label": {
           "type": "string",
           "minLength": 1
+        },
+        "title": {
+          "description": "Heading of the closing band, about the customer's product — never about building or templates.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "subtitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
         }
       },
       "required": [
@@ -287,6 +622,11 @@
         "submitLabel": {
           "type": "string",
           "minLength": 1
+        },
+        "intro": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
         }
       },
       "required": [
@@ -310,6 +650,25 @@
           "additionalProperties": {
             "type": "string",
             "minLength": 1
+          }
+        },
+        "sampleRecords": {
+          "description": "Three plausible example records a first-time user sees and may edit. Invented: never real people, real companies, phone numbers or e-mail addresses. Dates as YYYY-MM-DD within the last 60 days. Select values exactly as listed in options, even in other languages.",
+          "minItems": 3,
+          "maxItems": 3,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
           }
         }
       },
@@ -399,6 +758,9 @@
                   "enum": [
                     "hero",
                     "features",
+                    "howItWorks",
+                    "useCases",
+                    "comparison",
                     "pricing",
                     "testimonials",
                     "faq",
@@ -406,6 +768,14 @@
                     "cta"
                   ]
                 }
+              },
+              "presentation": {
+                "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+                "type": "string",
+                "enum": [
+                  "story",
+                  "document"
+                ]
               }
             },
             "required": [
@@ -414,7 +784,45 @@
           },
           "dashboard": {
             "type": "object",
-            "properties": {}
+            "properties": {
+              "kpis": {
+                "description": "The one to three numbers this user checks first. Prefer a share of a status over a raw count. agg \"count\" takes field \"*\"; \"sum\"/\"avg\" a number field; \"share\" a select field plus one of its options as value.",
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-zA-Z0-9]*$"
+                    },
+                    "field": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "agg": {
+                      "type": "string",
+                      "enum": [
+                        "count",
+                        "sum",
+                        "avg",
+                        "share"
+                      ]
+                    },
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "field",
+                    "agg"
+                  ]
+                }
+              }
+            }
           },
           "authGoogle": {
             "type": "object",
@@ -448,6 +856,7 @@
                   },
                   "fields": {
                     "minItems": 1,
+                    "maxItems": 12,
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -491,6 +900,11 @@
                   "key",
                   "fields"
                 ]
+              },
+              "boardBy": {
+                "description": "Key of a select field that is a workflow stage (a status). Adds a board view grouped by its options. Omit when no field is a stage.",
+                "type": "string",
+                "minLength": 1
               }
             },
             "required": [
@@ -529,6 +943,16 @@
               "center",
               "zoom"
             ]
+          },
+          "useCases": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the useCases landing section and localized useCases copy."
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the comparison landing section and localized comparison copy."
           }
         }
       },
@@ -563,9 +987,50 @@
                     "type": "object",
                     "properties": {
                       "icon": {
+                        "description": "The icon that names what the feature lets the user do.",
                         "type": "string",
-                        "minLength": 1,
-                        "maxLength": 16
+                        "enum": [
+                          "book-open",
+                          "calendar",
+                          "map-pin",
+                          "bell",
+                          "chart-line",
+                          "list-checks",
+                          "users",
+                          "wallet",
+                          "receipt",
+                          "shield-check",
+                          "clock",
+                          "search",
+                          "funnel",
+                          "file-text",
+                          "message-square",
+                          "mail",
+                          "phone",
+                          "camera",
+                          "heart",
+                          "star",
+                          "trophy",
+                          "target",
+                          "truck",
+                          "package",
+                          "shopping-cart",
+                          "credit-card",
+                          "graduation-cap",
+                          "stethoscope",
+                          "dumbbell",
+                          "leaf",
+                          "paw-print",
+                          "house",
+                          "building-2",
+                          "briefcase",
+                          "route",
+                          "timer",
+                          "scale",
+                          "gavel",
+                          "globe",
+                          "tag"
+                        ]
                       },
                       "title": {
                         "type": "string",
@@ -581,6 +1046,88 @@
                       "description"
                     ]
                   }
+                },
+                "featuresHeading": {
+                  "description": "Heading above the features, in the customer's words about their product — never about building or templates.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "howItWorks": {
+                  "type": "object",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "steps": {
+                      "minItems": 3,
+                      "maxItems": 4,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40
+                          },
+                          "description": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 140
+                          }
+                        },
+                        "required": [
+                          "title",
+                          "description"
+                        ]
+                      },
+                      "description": "The first three or four things a user does, in order, each starting with a verb."
+                    }
+                  },
+                  "required": [
+                    "steps"
+                  ]
+                },
+                "faq": {
+                  "type": "object",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "items": {
+                      "minItems": 3,
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "question": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "answer": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 400
+                          }
+                        },
+                        "required": [
+                          "question",
+                          "answer"
+                        ]
+                      },
+                      "description": "Questions a visitor would ask before trying the app. Answer only what the idea states; never promise prices, integrations, certifications, availability or dates."
+                    }
+                  },
+                  "required": [
+                    "items"
+                  ]
                 }
               }
             },
@@ -590,6 +1137,23 @@
                 "title": {
                   "type": "string",
                   "minLength": 1
+                },
+                "intro": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "kpiLabels": {
+                  "description": "A short label for each patterns.dashboard.kpis[].id.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
                 }
               },
               "required": [
@@ -602,6 +1166,17 @@
                 "label": {
                   "type": "string",
                   "minLength": 1
+                },
+                "title": {
+                  "description": "Heading of the closing band, about the customer's product — never about building or templates.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "subtitle": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 140
                 }
               },
               "required": [
@@ -618,6 +1193,11 @@
                 "submitLabel": {
                   "type": "string",
                   "minLength": 1
+                },
+                "intro": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
                 }
               },
               "required": [
@@ -641,11 +1221,132 @@
                     "type": "string",
                     "minLength": 1
                   }
+                },
+                "sampleRecords": {
+                  "description": "Three plausible example records a first-time user sees and may edit. Invented: never real people, real companies, phone numbers or e-mail addresses. Dates as YYYY-MM-DD within the last 60 days. Select values exactly as listed in options, even in other languages.",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "number",
+                        "boolean"
+                      ]
+                    }
+                  }
                 }
               },
               "required": [
                 "entityLabel",
                 "fieldLabels"
+              ]
+            },
+            "useCases": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "items": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "situation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "action": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "situation",
+                      "action"
+                    ]
+                  },
+                  "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+                }
+              },
+              "required": [
+                "heading",
+                "items"
+              ]
+            },
+            "comparison": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "beforeLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "afterLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "rows": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "topic": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "before": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "after": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "topic",
+                      "before",
+                      "after"
+                    ]
+                  },
+                  "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+                }
+              },
+              "required": [
+                "heading",
+                "beforeLabel",
+                "afterLabel",
+                "rows"
               ]
             }
           },

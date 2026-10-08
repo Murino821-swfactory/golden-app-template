@@ -15,7 +15,8 @@
     "changeFontLabel": "Zmień czcionkę: {name} ({position} z {total})",
     "cart": "Koszyk",
     "cartLabel": "Koszyk, pozycje: {count}",
-    "cartEmpty": "Twój koszyk jest pusty"
+    "cartEmpty": "Twój koszyk jest pusty",
+    "close": "Zamknij"
   },
   "auth": {
     "signInTitle": "Logowanie",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Twoja aplikacja",
     "subtitle": "Zbudowane na Golden Stacku",
-    "cta": "Zacznij"
+    "cta": "Zacznij",
+    "previewLabel": "Podgląd aplikacji"
   },
   "features": {
     "title": "Funkcje",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Najczęstsze pytania",
-    "q1": "Pytanie zastępcze — ta sekcja nie ma jeszcze schematu treści.",
-    "a1": "Odpowiedź zastępcza. Własne słowa prototypu pochodzą z prototype.config.json."
+    "title": "Najczęstsze pytania"
   },
   "contact": {
     "title": "Kontakt",
@@ -63,7 +63,23 @@
     "sending": "Wysyłanie…",
     "success": "Dziękujemy — wiadomość jest w drodze. Wkrótce się odezwiemy.",
     "error": "Nie udało się wysłać wiadomości. Spróbuj ponownie.",
-    "notConfigured": "Formularz kontaktowy nie jest skonfigurowany w tym podglądzie."
+    "notConfigured": "Formularz kontaktowy nie jest skonfigurowany w tym podglądzie.",
+    "name": "Imię (opcjonalnie)",
+    "ownerEdit": "Edytuj dane kontaktowe",
+    "ownerMessages": "Wiadomości ({count})",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "address": "Adres",
+    "phone": "Telefon",
+    "emailField": "E-mail",
+    "publicNotice": "Te dane zobaczy każdy, kto odwiedzi tę stronę.",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "cancel": "Anuluj",
+    "saveError": "Nie udało się zapisać danych. Sprawdź pola i spróbuj ponownie.",
+    "callLabel": "Zadzwoń pod {phone}",
+    "emailLabel": "Wyślij e-mail na {email}",
+    "mapLabel": "Pokaż {address} na mapie"
   },
   "cta": {
     "title": "Gotowi, by zacząć?",
@@ -71,19 +87,41 @@
     "action": "Zacznij"
   },
   "dataGrid": {
-    "permissionDenied": "Te rekordy widzi tylko osoba, która zamówiła prototyp.",
+    "permissionDenied": "Tej zmiany nie udało się zapisać. Zaloguj się ponownie i spróbuj jeszcze raz.",
     "loadError": "Nie udało się wczytać rekordów. Spróbuj ponownie za chwilę.",
     "addAction": "Dodaj {entity}",
     "saving": "Zapisywanie…",
     "listHeading": "Rekordy: {entity}",
-    "empty": "Na razie brak rekordów: {entity} — dodaj pierwszy powyżej.",
+    "empty": "Na razie brak rekordów: {entity} — dodaj pierwszy.",
     "remove": "Usuń",
     "yes": "Tak",
-    "no": "Nie"
+    "no": "Nie",
+    "addTitle": "Nowy rekord: {entity}",
+    "editTitle": "Edytuj rekord: {entity}",
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "confirmDelete": "Usunąć ten rekord? Tej operacji nie można cofnąć.",
+    "confirmDeleteAction": "Tak, usuń",
+    "searchLabel": "Szukaj w rekordach",
+    "all": "Wszystkie",
+    "noMatches": "Żaden rekord nie pasuje do wyszukiwania.",
+    "limitReached": "Osiągnięto limit {limit} rekordów w tym prototypie.",
+    "sortBy": "Sortuj według: {field}",
+    "viewTable": "Tabela",
+    "viewBoard": "Tablica",
+    "noValue": "Brak wartości",
+    "errorRequired": "Pole „{field}” jest wymagane.",
+    "errorType": "Pole „{field}” ma nieprawidłową wartość.",
+    "errorTooLong": "Pole „{field}” jest za długie.",
+    "errorOption": "Pole „{field}” musi być jedną z dostępnych opcji."
   },
   "dashboard": {
     "recordsLabel": "Rekordy: {entity}",
     "addedThisMonth": "Dodane w tym miesiącu",
+    "ownerMessages": "Wiadomości ({count})",
+    "ownerContact": "Dane kontaktowe",
     "trackedFields": "Śledzone pola"
   },
   "heroImage": {
@@ -98,5 +136,79 @@
     "failedRetry": "Nie udało się — próba nie przepadła",
     "unavailable": "Generowanie jest teraz niedostępne",
     "slow": "To trwa dłużej — odśwież stronę"
+  },
+  "inbox": {
+    "title": "Wiadomości",
+    "empty": "Na razie brak wiadomości. Wiadomości z formularza kontaktowego pojawią się tutaj.",
+    "ownerOnly": "Ta strona jest tylko dla właściciela prototypu.",
+    "notConfigured": "Wiadomości są dostępne w opublikowanym prototypie.",
+    "loadError": "Nie udało się wczytać wiadomości. Spróbuj ponownie za chwilę.",
+    "unread": "Nowa",
+    "reply": "Odpowiedz",
+    "back": "Wróć do przeglądu"
+  },
+  "howItWorks": {
+    "title": "Jak to działa"
+  },
+  "story": {
+    "chapters": "Rozdziały",
+    "chapter": "Rozdział {number}"
+  },
+  "copyRewrite": {
+    "open": "Edytuj teksty",
+    "title": "Przepisz teksty",
+    "description": "Napisz AI, jak przepisać tę stronę. Podgląd jest bezpłatny; użycie go ponownie publikuje stronę.",
+    "instructions": "Instrukcje dla AI",
+    "chars": "{count} / {max} znaków",
+    "tokens": "≈ {count} tokenów (szacunek)",
+    "reset": "Przywróć domyślne",
+    "fullPrompt": "Cały prompt",
+    "fullPromptEmpty": "Pojawi się po pierwszym podglądzie",
+    "promptSizes": "System: {system} znaków · Prompt: {user} znaków",
+    "draft": "Utwórz podgląd",
+    "drafting": "Piszę podgląd…",
+    "draftsLeft": "Pozostałe podglądy na dziś: {count}",
+    "limitReached": "Dzisiejsze podglądy wyczerpane — spróbuj jutro",
+    "slow": "To trwa dłużej — odśwież stronę",
+    "preview": "Podgląd",
+    "changedOf": "Zmienione teksty: {changed} z {total}",
+    "before": "Teraz",
+    "after": "Nowe",
+    "publishOwner": "Użyj — 1 kredyt",
+    "publishAdmin": "Opublikuj",
+    "publishingButton": "Publikuję…",
+    "publishing": "Publikuję: {stage}",
+    "published": "Opublikowano — odśwież stronę",
+    "reload": "Odśwież",
+    "buyCredits": "Kup kredyty",
+    "history": "Historia",
+    "kindDraft": "Podgląd",
+    "kindPublish": "Publikacja",
+    "metrics": {
+      "cost": "Koszt",
+      "tokensOut": "Tokeny wyjściowe",
+      "tokensIn": "Tokeny wejściowe",
+      "copyChars": "Znaki tekstu",
+      "eurPer1k": "Koszt za 1000 znaków",
+      "jsonOverhead": "Narzut JSON",
+      "changed": "Zmienione teksty",
+      "duration": "Czas",
+      "tokensOutShort": "{count} wyj."
+    },
+    "errors": {
+      "busy": "Coś już trwa — poczekaj chwilę",
+      "limit": "Dzisiejsze podglądy wyczerpane",
+      "noCredits": "Nie masz już kredytów",
+      "draftUnusable": "Tego podglądu nie można już użyć — utwórz nowy",
+      "vmUnreachable": "Fabryka jest niedostępna — spróbuj później",
+      "upstream": "AI nie odpowiedziała — spróbuj ponownie",
+      "invalidResponse": "AI zwróciła nieużyteczne teksty — spróbuj ponownie lub zmień instrukcje",
+      "staleDraft": "Teksty w międzyczasie się zmieniły — utwórz nowy podgląd",
+      "busyVm": "Fabryka jest zajęta — spróbuj za kilka minut",
+      "gate": "Nowa wersja nie przeszła kontroli — nic się nie zmieniło",
+      "pushFailed": "Publikacja nie została ukończona — nic nie pobrano",
+      "timeout": "Trwało to za długo — nic nie pobrano",
+      "generic": "Nie udało się — spróbuj ponownie"
+    }
   }
 }

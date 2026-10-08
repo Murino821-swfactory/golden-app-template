@@ -15,7 +15,8 @@
     "changeFontLabel": "Schrift ändern: {name} ({position} von {total})",
     "cart": "Warenkorb",
     "cartLabel": "Warenkorb, {count} Artikel",
-    "cartEmpty": "Dein Warenkorb ist leer"
+    "cartEmpty": "Dein Warenkorb ist leer",
+    "close": "Schließen"
   },
   "auth": {
     "signInTitle": "Anmelden",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Ihre App",
     "subtitle": "Gebaut mit dem Golden Stack",
-    "cta": "Loslegen"
+    "cta": "Loslegen",
+    "previewLabel": "App-Vorschau"
   },
   "features": {
     "title": "Funktionen",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Häufige Fragen",
-    "q1": "Platzhalterfrage — dieser Abschnitt hat noch kein Inhaltsschema.",
-    "a1": "Platzhalterantwort. Die eigenen Worte eines Prototyps stehen in prototype.config.json."
+    "title": "Häufige Fragen"
   },
   "contact": {
     "title": "Kontakt",
@@ -63,7 +63,23 @@
     "sending": "Wird gesendet…",
     "success": "Danke — Ihre Nachricht ist unterwegs. Wir melden uns in Kürze.",
     "error": "Beim Senden ist etwas schiefgelaufen. Bitte versuchen Sie es erneut.",
-    "notConfigured": "Das Kontaktformular ist in dieser Vorschau nicht eingerichtet."
+    "notConfigured": "Das Kontaktformular ist in dieser Vorschau nicht eingerichtet.",
+    "name": "Name (optional)",
+    "ownerEdit": "Kontaktdaten bearbeiten",
+    "ownerMessages": "Nachrichten ({count})",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "address": "Adresse",
+    "phone": "Telefon",
+    "emailField": "E-Mail",
+    "publicNotice": "Diese Angaben sieht jeder, der diese Seite besucht.",
+    "save": "Speichern",
+    "saving": "Wird gespeichert…",
+    "cancel": "Abbrechen",
+    "saveError": "Die Angaben konnten nicht gespeichert werden. Prüfen Sie die Felder und versuchen Sie es erneut.",
+    "callLabel": "{phone} anrufen",
+    "emailLabel": "E-Mail an {email} senden",
+    "mapLabel": "{address} auf der Karte anzeigen"
   },
   "cta": {
     "title": "Bereit loszulegen?",
@@ -71,19 +87,41 @@
     "action": "Loslegen"
   },
   "dataGrid": {
-    "permissionDenied": "Diese Einträge sieht nur, wer den Prototyp angefragt hat.",
+    "permissionDenied": "Diese Änderung wurde abgelehnt. Melden Sie sich erneut an und versuchen Sie es noch einmal.",
     "loadError": "Beim Laden Ihrer Einträge ist etwas schiefgelaufen. Bitte versuchen Sie es gleich noch einmal.",
     "addAction": "{entity} hinzufügen",
     "saving": "Wird gespeichert…",
     "listHeading": "Einträge: {entity}",
-    "empty": "Noch keine Einträge: {entity} – fügen Sie oben den ersten hinzu.",
+    "empty": "Noch keine Einträge: {entity} – fügen Sie den ersten hinzu.",
     "remove": "Entfernen",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "addTitle": "Neuer Eintrag: {entity}",
+    "editTitle": "Eintrag bearbeiten: {entity}",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "confirmDelete": "Diesen Eintrag löschen? Das lässt sich nicht rückgängig machen.",
+    "confirmDeleteAction": "Ja, löschen",
+    "searchLabel": "Einträge durchsuchen",
+    "all": "Alle",
+    "noMatches": "Kein Eintrag passt zu Ihrer Suche.",
+    "limitReached": "Sie haben das Limit von {limit} Einträgen in diesem Prototyp erreicht.",
+    "sortBy": "Sortieren nach: {field}",
+    "viewTable": "Tabelle",
+    "viewBoard": "Board",
+    "noValue": "Kein Wert",
+    "errorRequired": "„{field}“ ist ein Pflichtfeld.",
+    "errorType": "„{field}“ hat einen ungültigen Wert.",
+    "errorTooLong": "„{field}“ ist zu lang.",
+    "errorOption": "„{field}“ muss eine der angebotenen Optionen sein."
   },
   "dashboard": {
     "recordsLabel": "Einträge: {entity}",
     "addedThisMonth": "Diesen Monat hinzugefügt",
+    "ownerMessages": "Nachrichten ({count})",
+    "ownerContact": "Kontaktdaten",
     "trackedFields": "Erfasste Felder"
   },
   "heroImage": {
@@ -98,5 +136,79 @@
     "failedRetry": "Das hat nicht geklappt – dein Versuch bleibt erhalten",
     "unavailable": "Erzeugen ist gerade nicht verfügbar",
     "slow": "Das dauert länger – lade die Seite neu"
+  },
+  "inbox": {
+    "title": "Nachrichten",
+    "empty": "Noch keine Nachrichten. Nachrichten aus dem Kontaktformular erscheinen hier.",
+    "ownerOnly": "Diese Seite ist nur für den Inhaber des Prototyps.",
+    "notConfigured": "Nachrichten sind im veröffentlichten Prototyp verfügbar.",
+    "loadError": "Die Nachrichten konnten nicht geladen werden. Versuchen Sie es gleich noch einmal.",
+    "unread": "Neu",
+    "reply": "Antworten",
+    "back": "Zurück zur Übersicht"
+  },
+  "howItWorks": {
+    "title": "So funktioniert es"
+  },
+  "story": {
+    "chapters": "Kapitel",
+    "chapter": "Kapitel {number}"
+  },
+  "copyRewrite": {
+    "open": "Texte bearbeiten",
+    "title": "Texte neu schreiben",
+    "description": "Sagen Sie der KI, wie sie diese Seite umschreiben soll. Die Vorschau ist kostenlos; beim Übernehmen wird die Seite neu veröffentlicht.",
+    "instructions": "Anweisungen für die KI",
+    "chars": "{count} / {max} Zeichen",
+    "tokens": "≈ {count} Tokens (Schätzung)",
+    "reset": "Standard wiederherstellen",
+    "fullPrompt": "Gesamter Prompt",
+    "fullPromptEmpty": "Wird nach der ersten Vorschau angezeigt",
+    "promptSizes": "System: {system} Zeichen · Prompt: {user} Zeichen",
+    "draft": "Vorschau erstellen",
+    "drafting": "Vorschau wird geschrieben…",
+    "draftsLeft": "Heute noch {count} Vorschauen",
+    "limitReached": "Keine Vorschauen mehr für heute — morgen wieder",
+    "slow": "Das dauert länger — Seite neu laden",
+    "preview": "Vorschau",
+    "changedOf": "{changed} von {total} Texten geändert",
+    "before": "Jetzt",
+    "after": "Neu",
+    "publishOwner": "Übernehmen — 1 Credit",
+    "publishAdmin": "Veröffentlichen",
+    "publishingButton": "Wird veröffentlicht…",
+    "publishing": "Wird veröffentlicht: {stage}",
+    "published": "Veröffentlicht — Seite neu laden",
+    "reload": "Neu laden",
+    "buyCredits": "Credits kaufen",
+    "history": "Verlauf",
+    "kindDraft": "Vorschau",
+    "kindPublish": "Veröffentlichung",
+    "metrics": {
+      "cost": "Kosten",
+      "tokensOut": "Ausgabe-Tokens",
+      "tokensIn": "Eingabe-Tokens",
+      "copyChars": "Textzeichen",
+      "eurPer1k": "Kosten pro 1.000 Zeichen",
+      "jsonOverhead": "JSON-Overhead",
+      "changed": "Geänderte Texte",
+      "duration": "Dauer",
+      "tokensOutShort": "{count} Ausgabe"
+    },
+    "errors": {
+      "busy": "Es läuft bereits etwas — kurz warten",
+      "limit": "Keine Vorschauen mehr für heute",
+      "noCredits": "Sie haben keine Credits mehr",
+      "draftUnusable": "Diese Vorschau ist nicht mehr verwendbar — neue erstellen",
+      "vmUnreachable": "Die Fabrik ist nicht erreichbar — später erneut versuchen",
+      "upstream": "Die KI hat nicht geantwortet — erneut versuchen",
+      "invalidResponse": "Die KI lieferte unbrauchbare Texte — erneut versuchen oder Anweisungen anpassen",
+      "staleDraft": "Die Texte haben sich inzwischen geändert — neue Vorschau erstellen",
+      "busyVm": "Die Fabrik ist ausgelastet — in ein paar Minuten erneut versuchen",
+      "gate": "Die neue Version hat die Prüfungen nicht bestanden — nichts geändert",
+      "pushFailed": "Veröffentlichung nicht abgeschlossen — nichts berechnet",
+      "timeout": "Das hat zu lange gedauert — nichts berechnet",
+      "generic": "Hat nicht geklappt — erneut versuchen"
+    }
   }
 }
