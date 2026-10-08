@@ -22,6 +22,12 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `ContactSection` owns the stable `contact` anchor. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
+| Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
+| Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| "Edit texts" (copy rewrite) | `components/sections/copy-rewrite-panel.tsx`, `hooks/use-copy-rewrite.ts`, `lib/copy-rewrite.ts` — see "Copy rewrite" |
+| Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
+| SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
+| New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 
 ## Critical Rules for Fast Implementation
 
@@ -80,9 +86,14 @@ app/
     page.tsx             # Landing page — renders sections from SECTION_REGISTRY
     login/page.tsx       # Login page (already implemented)
     dashboard/page.tsx   # Signed-in page — blocks appear per prototype.config.json
+    messages/page.tsx    # The owner's inbox (contact-form messages), owner/founder only
 components/
-  sections/              # Landing sections: hero, features, pricing, testimonials, faq, contact, cta
+  sections/              # Landing sections: hero, features, howItWorks, pricing, testimonials, faq, contact, cta
                          #   + hero-image-controls.tsx (creator/founder buttons under the hero)
+                         #   + product-preview.tsx (sample records drawn in the hero)
+  patterns/data-grid/    # The grid: index.tsx, record-dialog.tsx (add/edit), board.tsx (boardBy view)
+  dashboard/stats.tsx    # KPI cards (patterns.dashboard.kpis, or total + this month)
+  owner/                 # owner-card-dialog.tsx (edit the public card), owner-links.tsx (dashboard)
   features/              # Pre-built feature components (checkin-toggle, streak-counter, calendar-grid)
   ui/                    # shadcn components (button, card, input, skeleton)
   auth/auth-guard.tsx    # Protects routes, redirects to /login
@@ -92,6 +103,13 @@ hooks/
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
+  records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
+  owner-contact.ts       # owner card: parse, links, /api/prototype-owner-contact client
+  messages.ts            # inbox: parse a message, which view to show
+  kpi.ts, board.ts       # dashboard numbers; records grouped by a select field
+  icons.ts               # ICON_IDS → Lucide components
+  faq-jsonld.ts          # FAQPage JSON-LD, `<` escaped
   utils.ts               # cn() for className merging
 messages/
   en.json + 7 more       # Chrome text, one bundle per id in LOCALES (en sk cs de pl hu fr es)
@@ -254,7 +272,7 @@ These are ready to use — just import and render:
 | `StreakCounter` | `@/components/features` | `currentStreak: number`, `label?: string` |
 | `CalendarGrid` | `@/components/features` | `checkedDates: Date[]`, `month?: Date` |
 | `ProgressRing` | `@/components/features` | `progress: number (0-100)`, `label?: string` |
-| `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` |
+| `StatCard` | `@/components/features` | `value: string`, `label: string`, `icon?: string` (the template passes no icon — no emoji) |
 
 ### Recipe 6: Add Dashboard Page (MOST COMMON)
 
@@ -287,10 +305,30 @@ Import from `@/components/ui/`:
 - `Input` — `<Input placeholder="..." />`
 - `Skeleton` — loading placeholder
 
-## Demo Mode
+## Data: every visitor's own sandbox (2026-09-29)
 
-`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`.
-Always use `getCollectionPath(collection)` — never hardcode collection names.
+`NEXT_PUBLIC_DEMO_SLUG` namespaces all Firestore under `demos/{slug}/...`. Always use
+`getCollectionPath(collection)` (or `lib/records.ts` paths) — never hardcode collection names.
+Every signed-in visitor of a prototype works on their OWN records — sw-factory spec
+`docs/superpowers/specs/2026-09-29-golden-template-v2-design.md` §4, rules in factory-web:
+
+- Records: `demos/{slug}/users/{uid}/records/{id}` = `{ values (≤ 12 keys), createdAt, updatedAt }`.
+  Counter: `demos/{slug}/users/{uid}` = `{ count, last }`. Without a slug (local dev):
+  `users/{uid}/…` (`lib/records.ts` `sandboxRoot`).
+- A create or delete is ONE batch: the record write plus `count ±1` naming it in `last`
+  (`buildCreateOps` / `buildDeleteOps`). The rules require both halves — change the op
+  shapes only together with factory-web's rules and their emulator tests.
+- `RECORD_LIMIT` = 200 per visitor per prototype; the grid shows a limit notice, and a
+  refused create at the cap reads as the limit, not a permission error (`writeErrorKind`).
+- A first visit (no counter yet) is seeded with `content.<locale>.dataGrid.sampleRecords`:
+  the first sample in a transaction that refuses when the counter exists (two tabs cannot
+  seed twice), the rest in batches. A counter at 0 means the visitor deleted every sample —
+  they are never re-seeded.
+- The prototype's owner cannot read visitors' records; the founder can read them.
+- **A visitor may write exactly two things:** their counter `users/{uid}` and
+  `users/{uid}/records/{id}`. Nothing else under `users/{uid}` is allowed — a new
+  collection there (e.g. `users/{uid}/notes`) passes CI here and is DENIED in production
+  until factory-web's rules and their emulator tests add it.
 
 ## Languages and routing
 
@@ -372,12 +410,52 @@ generate one; the founder any number; both may hide or show it. The server is fa
 - The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
   copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
+## Owner card and inbox (2026-09-29)
+
+The prototype's owner (verified wizard e-mail — the same definition as the hero image) and
+the founder can edit a public contact card and read contact-form messages. The server is
+factory-web (`prototypeOwnerContact`, `prototypeContact`).
+
+- Every visitor reads `<basePath>/owner-contact.json`. `public/owner-contact.json` ships as
+  `{}` — keep it, for the same reason as `hero-image.json` (no functions in the sandbox or CI).
+- `/api/prototype-owner-contact` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`: base path `/newapp/…` and a slug) — never from CI.
+- All five card fields are optional; a save replaces the whole card. The card's e-mail is
+  only displayed. A notification e-mail goes to the wizard address only after its owner
+  signed in with it on the prototype (the owner-controls status call records that proof) —
+  the wizard is anonymous, so the address alone proves nothing.
+- `/messages` lists `demos/{slug}/contactMessages` for the owner; opening one sets `readAt`.
+  Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
+  dashboard (renders nothing for anyone else).
+
+## Copy rewrite (2026-10-07)
+
+The prototype's creator (verified wizard e-mail) and the founder see an "Edit texts" button
+under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a preview (the
+factory's own content call — the same schema this repo publishes in
+`prototype.schema.json`), compare every text with the current one with the tokens, cost and
+characters of that one request, and use it: the factory commits the new copy to
+`demo/<slug>` and republishes the page (the creator pays one credit; the founder nothing).
+Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
+in the **sw-factory** repo.
+
+- `/api/prototype-copy` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`) — never from CI, and an anonymous visitor makes no request
+  (`tests/copy-rewrite.spec.ts`).
+- The panel's state table is `copyPanelView` (pure, tested); the dialog is the shared
+  `components/ui/dialog.tsx` (bottom sheet on phones). Texts: `copyRewrite` in all eight
+  `messages/*.json`.
+- A rewrite changes `content` only. `dataGrid.sampleRecords` are example DATA and are never
+  rewritten; `appName`, `patterns`, the theme and the languages never change.
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
-for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`,
-which binds each slug to the prototype's requester email (`demoOwnerEmail`) plus the
-founder — never re-add a copy here. A second copy of the same rule can only drift, and the
+for the shared demo tenant (`demos/{slug}/**`) are owned by `factory-web/firestore.rules`:
+the owner (`demoOwnerEmail`) plus the founder get `demos/{slug}/{coll}/{docId}` except
+`users`, and every signed-in visitor gets their own counter `demos/{slug}/users/{uid}` and
+`demos/{slug}/users/{uid}/records/{id}` — nothing else under `users/{uid}`. Never re-add a
+copy here. A second copy of the same rule can only drift, and the
 weaker one is the one that eventually deploys: this repo previously shipped one that
 granted read/write on every prototype's data to any signed-in user of any prototype,
 latent only because `deploy:production` is hosting-only here.
@@ -395,6 +473,9 @@ comes from weight, underline or a filled surface — never from a second hue.
 
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
+
+Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
+never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
 
 Use semantic tokens — they adapt to the customer's palette:
 - `bg-background`, `text-foreground` — main surface
@@ -419,3 +500,35 @@ npm run test:e2e         # Playwright smoke tests (must pass)
 3. For each file: read → make ALL changes → move to next file
 4. Run `npm run build` once at the end
 5. Done — no exploration, no extra reads, no refactoring
+
+## OTH-117 — landing stories and discovery (2026-10-03)
+
+`patterns.landing.presentation` is `story` by default; `document` opts out. Desktop
+with a fine pointer, at least 1024×700 and no reduced-motion preference gets a sticky
+stage driven by native scrolling. Chapter buttons support keyboard navigation;
+`#contact` reveals its chapter. The header height is measured, not assumed. Long
+chapters can scroll within their panel. Mobile, short viewports, reduced motion,
+print and no JavaScript retain the same server-rendered document.
+
+New `useCases` and `comparison` patterns each require their matching landing section
+and content slice in every locale. Their schemas describe when to choose them and
+forbid invented customer results or competitor claims. The exported menu is still
+consumed dynamically by the assembly harness; there is no second pattern registry.
+Pricing and testimonials remain locked.
+
+`NEXT_PUBLIC_SITE_ORIGIN` must be the real HTTP(S) origin without a path. The harness
+already supplies it for prototypes; factory-web supplies `https://tokenwise.sk` for
+`/demo/golden`. `NEXT_PUBLIC_BASE_PATH` remains separate. Canonical, localized OG/Twitter,
+hreflang including x-default, WebSite/WebPage JSON-LD, sitemap and generated llms.txt
+use the configured content. FAQ keeps its existing FAQPage JSON-LD. Login, dashboard
+and inbox receive noindex/nofollow and clear inherited public-page canonical/social
+metadata. Discovery excludes private sample records and unrendered sections. An
+unconfigured local build has relative URLs and an empty sitemap, rather than a made-up
+production host. No Organization, prices or ratings are fabricated from an app name.
+
+The root robots.txt controls an origin: the demo's subdirectory robots.txt is an export
+artifact, not an independent crawler policy. On tokenwise.sk the host robots allows all
+public paths. A custom deployment must publish these files at its own appropriate root.
+
+Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
+`npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.

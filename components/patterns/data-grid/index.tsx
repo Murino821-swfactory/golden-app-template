@@ -1,260 +1,191 @@
 "use client";
 
-import { useState, useEffect, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FirestoreError } from "firebase/firestore";
+import { ArrowDown, ArrowUp, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRecords, emptyValues, missingRequired } from "@/hooks/use-records";
-import type { EntityField } from "@/lib/prototype-config";
+import { useRecords } from "@/hooks/use-records";
+import { RECORD_LIMIT, filterRecords, formatValue, sortRecords, type EntityRecord, type SortKey } from "@/lib/records";
+import { cn } from "@/lib/utils";
+import { RecordDialog } from "./record-dialog";
+import { Board } from "./board";
+import { config } from "@/lib/prototype-config";
+import { getDemoSlug } from "@/lib/demo-slug";
 
 /**
- * data-grid — list of records plus a form to add one, both generated from the entity
- * declared in `prototype.config.json`.
+ * data-grid — the visitor's own records of the configured entity (spec 2026-09-29 §6.2).
  *
- * Mobile-first (golden rule 2): under `sm` each record is a card, because a 5-column table
- * on a 390px phone is unreadable. The table only appears where there is room for it.
+ * List first, form in a dialog: on a 390 px phone the records are the content and the form
+ * is an action. Under `sm` each record is a card button; from `sm` a real table whose
+ * headers sort. Search and the chips for the first select field filter in the browser —
+ * a visitor holds at most RECORD_LIMIT records.
  */
-
-function FieldInput({
-  field,
-  value,
-  onChange,
-}: {
-  field: EntityField;
-  value: unknown;
-  onChange: (v: unknown) => void;
-}) {
-  const id = `field-${field.key}`;
-
-  if (field.type === "boolean") {
-    return (
-      <label htmlFor={id} className="flex items-center gap-2 text-sm">
-        <input
-          id={id}
-          type="checkbox"
-          checked={Boolean(value)}
-          onChange={(e) => onChange(e.target.checked)}
-          className="size-4 rounded border-border accent-primary"
-        />
-        <span className="text-muted-foreground">{field.label}</span>
-      </label>
-    );
-  }
-
-  if (field.type === "select") {
-    return (
-      <div className="space-y-1.5">
-        <label htmlFor={id} className="text-sm text-muted-foreground">
-          {field.label}
-        </label>
-        <select
-          id={id}
-          value={String(value ?? "")}
-          onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-full rounded-md border border-border bg-background px-3 text-sm"
-        >
-          <option value="">—</option>
-          {(field.options ?? []).map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
-
-  const inputType =
-    field.type === "number" ? "number" : field.type === "date" ? "date" : "text";
-
-  return (
-    <div className="space-y-1.5">
-      <label htmlFor={id} className="text-sm text-muted-foreground">
-        {field.label}
-        {field.required && <span className="ml-1 text-primary">*</span>}
-      </label>
-      <Input
-        id={id}
-        type={inputType}
-        value={String(value ?? "")}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
-  );
-}
-
-function formatValue(field: EntityField, value: unknown, t: (key: string) => string): string {
-  if (value === undefined || value === null || value === "") return "—";
-  if (field.type === "boolean") return value ? t("yes") : t("no");
-  return String(value);
-}
-
 export function DataGrid() {
-  const { records, fields, entityLabel, loading, error, addRecord, removeRecord } =
-    useRecords();
+  const { records, fields, entityLabel, loading, error, count, atLimit, addRecord, updateRecord, removeRecord } = useRecords();
   const t = useTranslations("dataGrid");
-  const [values, setValues] = useState<Record<string, unknown>>(() =>
-    emptyValues(fields)
+  const [query, setQuery] = useState("");
+  const [chip, setChip] = useState<string | null>(null);
+  const [sort, setSort] = useState<SortKey>(null);
+  const [dialog, setDialog] = useState<{ record?: EntityRecord } | null>(null);
+
+  const chipField = fields.find((f) => f.type === "select");
+  const boardField = fields.find((f) => f.key === config.patterns.dataGrid?.boardBy && f.type === "select");
+  const viewKey = `grid-view:${getDemoSlug() ?? "local"}`;
+  const [view, setView] = useState<"table" | "board">(() => {
+    try {
+      return typeof window !== "undefined" && window.localStorage.getItem(viewKey) === "board" ? "board" : "table";
+    } catch {
+      return "table";
+    }
+  });
+  const chooseView = (next: "table" | "board") => {
+    setView(next);
+    try {
+      window.localStorage.setItem(viewKey, next);
+    } catch {
+      /* storage blocked (private mode, in-app browser): the choice lasts this visit */
+    }
+  };
+  const yesNo = { yes: t("yes"), no: t("no") };
+  const visible = useMemo(
+    () => sortRecords(filterRecords(records, fields, query, chipField && chip ? { key: chipField.key, value: chip } : null), fields, sort),
+    [records, fields, query, chip, chipField, sort]
   );
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
 
-  const missing = missingRequired(fields, values);
-
-  // The raw Firestore error (e.g. the composite-index URL a permission-denied response
-  // carries) is never shown to a visitor — see the rendered message below — but it still
-  // goes to the console so debugging keeps the detail.
   useEffect(() => {
     if (error) console.error("[data-grid] failed to load records:", error);
   }, [error]);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    setFormError(null);
-    try {
-      await addRecord(values);
-      setValues(emptyValues(fields));
-    } catch (err) {
-      // Same treatment as the load path: a Firestore error (e.g. the permission-denied a
-      // non-owner visitor gets, since the deployed rules only let the requester write) never
-      // reaches the visitor verbatim — only the validation error use-records.ts throws for a
-      // missing required field is our own message and safe to show as-is.
-      console.error("[data-grid] failed to add record:", err);
-      if (err instanceof FirestoreError) {
-        setFormError(err.code === "permission-denied" ? t("permissionDenied") : t("loadError"));
-      } else {
-        setFormError((err as Error).message);
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const nextSort = (key: string): SortKey =>
+    sort?.key !== key ? { key, dir: "asc" } : sort.dir === "asc" ? { key, dir: "desc" } : null;
 
   return (
-    <section data-pattern="data-grid" className="space-y-6">
-      <form
-        onSubmit={handleSubmit}
-        className="rounded-lg border border-border bg-card p-4 sm:p-6"
-      >
-        <h3 className="mb-4 text-lg font-medium">
-          {t("addAction", { entity: entityLabel.toLowerCase() })}
+    <section data-pattern="data-grid" className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-lg font-medium">
+          {t("listHeading", { entity: entityLabel })} <span className="text-muted-foreground">({count})</span>
         </h3>
+        <Button className="h-11" disabled={atLimit || loading} onClick={() => setDialog({})}>
+          <Plus className="size-4" aria-hidden />
+          <span className="sr-only sm:not-sr-only">{t("addAction", { entity: entityLabel.toLowerCase() })}</span>
+        </Button>
+      </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {fields.map((field) => (
-            <FieldInput
-              key={field.key}
-              field={field}
-              value={values[field.key]}
-              onChange={(v) => setValues((prev) => ({ ...prev, [field.key]: v }))}
-            />
+      {atLimit && <p className="rounded-lg border border-border bg-card p-3 text-sm" role="status">{t("limitReached", { limit: RECORD_LIMIT })}</p>}
+
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+        <label htmlFor="grid-search" className="sr-only">{t("searchLabel")}</label>
+        <Input id="grid-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)}
+          placeholder={t("searchLabel")} className="h-11 pl-9 text-base sm:text-sm" />
+      </div>
+
+      {boardField && (
+        <div className="inline-flex rounded-lg border border-border p-1" role="group" aria-label={boardField.label}>
+          {(["table", "board"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              aria-pressed={view === v}
+              onClick={() => chooseView(v)}
+              className={cn("min-h-11 rounded-md px-4 text-sm", view === v ? "bg-primary text-primary-foreground" : "text-muted-foreground")}
+            >
+              {v === "table" ? t("viewTable") : t("viewBoard")}
+            </button>
           ))}
         </div>
+      )}
 
-        {formError && (
-          <p className="mt-4 text-sm text-destructive" role="alert">
-            {formError}
-          </p>
-        )}
+      {chipField && (
+        <div className="flex flex-wrap gap-2" role="group" aria-label={chipField.label}>
+          {[null, ...(chipField.options ?? [])].map((opt) => (
+            <button key={opt ?? "__all"} type="button" aria-pressed={chip === opt} onClick={() => setChip(opt)}
+              className={cn(
+                "min-h-11 rounded-full border px-4 text-sm transition-colors motion-reduce:transition-none",
+                chip === opt ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:text-foreground"
+              )}>
+              {opt ?? t("all")}
+            </button>
+          ))}
+        </div>
+      )}
 
-        <Button
-          type="submit"
-          className="mt-5 w-full sm:w-auto"
-          disabled={submitting || missing.length > 0}
-        >
-          {submitting ? t("saving") : t("addAction", { entity: entityLabel.toLowerCase() })}
-        </Button>
-      </form>
+      {loading && (
+        <div className="space-y-2">
+          <Skeleton className="h-16 w-full" />
+          <Skeleton className="h-16 w-full" />
+        </div>
+      )}
 
-      <div>
-        <h3 className="mb-3 text-lg font-medium">
-          {t("listHeading", { entity: entityLabel })}{" "}
-          <span className="text-muted-foreground">({records.length})</span>
-        </h3>
+      {error && (
+        <p className="text-sm text-destructive" role="alert">
+          {error instanceof FirestoreError && error.code === "permission-denied" ? t("permissionDenied") : t("loadError")}
+        </p>
+      )}
 
-        {loading && (
-          <div className="space-y-2">
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-          </div>
-        )}
+      {!loading && !error && records.length === 0 && (
+        <p className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+          {t("empty", { entity: entityLabel.toLowerCase() })}
+        </p>
+      )}
 
-        {error && (
-          <p className="text-sm text-destructive" role="alert">
-            {error instanceof FirestoreError && error.code === "permission-denied"
-              ? t("permissionDenied")
-              : t("loadError")}
-          </p>
-        )}
+      {!loading && records.length > 0 && visible.length === 0 && (
+        <p className="p-4 text-center text-sm text-muted-foreground">{t("noMatches")}</p>
+      )}
 
-        {!loading && !error && records.length === 0 && (
-          <p className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-            {t("empty", { entity: entityLabel.toLowerCase() })}
-          </p>
-        )}
-
-        {/* Mobile: one card per record. */}
-        {!loading && records.length > 0 && (
+      {(!boardField || view === "table") && (
+        <>
+        {!loading && visible.length > 0 && (
           <ul className="space-y-3 sm:hidden">
-            {records.map((rec) => (
-              <li
-                key={rec.id}
-                className="rounded-lg border border-border bg-card p-4"
-              >
-                <dl className="space-y-1.5">
-                  {fields.map((field) => (
-                    <div key={field.key} className="flex justify-between gap-4 text-sm">
-                      <dt className="text-muted-foreground">{field.label}</dt>
-                      <dd className="text-right">{formatValue(field, rec.values[field.key], t)}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-3"
-                  onClick={() => void removeRecord(rec.id)}
-                >
-                  {t("remove")}
-                </Button>
+            {visible.map((rec) => (
+              <li key={rec.id}>
+                <button type="button" onClick={() => setDialog({ record: rec })}
+                  className="w-full rounded-lg border border-border bg-card p-4 text-left focus-visible:outline-2 focus-visible:outline-ring">
+                  <dl className="space-y-1.5">
+                    {fields.map((field) => (
+                      <div key={field.key} className="flex justify-between gap-4 text-sm">
+                        <dt className="text-muted-foreground">{field.label}</dt>
+                        <dd className="text-right">{formatValue(field, rec.values[field.key], yesNo)}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </button>
               </li>
             ))}
           </ul>
         )}
 
-        {/* Desktop: a real table, only where the width exists for it. */}
-        {!loading && records.length > 0 && (
+        {!loading && visible.length > 0 && (
           <div className="hidden overflow-x-auto rounded-lg border border-border sm:block">
             <table className="w-full text-sm">
               <thead className="border-b border-border bg-card">
                 <tr>
                   {fields.map((field) => (
-                    <th key={field.key} className="px-4 py-3 text-left font-medium">
-                      {field.label}
+                    <th key={field.key} scope="col"
+                      aria-sort={sort?.key === field.key ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}
+                      className="px-2 py-1 text-left font-medium">
+                      <button type="button" onClick={() => setSort(nextSort(field.key))}
+                        aria-label={t("sortBy", { field: field.label })}
+                        className="inline-flex min-h-11 items-center gap-1 px-2">
+                        {field.label}
+                        {sort?.key === field.key && (sort.dir === "asc" ? <ArrowUp className="size-3.5" aria-hidden /> : <ArrowDown className="size-3.5" aria-hidden />)}
+                      </button>
                     </th>
                   ))}
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
-                {records.map((rec) => (
+                {visible.map((rec) => (
                   <tr key={rec.id} className="border-b border-border last:border-0">
                     {fields.map((field) => (
-                      <td key={field.key} className="px-4 py-3">
-                        {formatValue(field, rec.values[field.key], t)}
-                      </td>
+                      <td key={field.key} className="px-4 py-3">{formatValue(field, rec.values[field.key], yesNo)}</td>
                     ))}
-                    <td className="px-4 py-3 text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => void removeRecord(rec.id)}
-                      >
-                        {t("remove")}
-                      </Button>
+                    <td className="px-2 py-1 text-right">
+                      <Button variant="ghost" className="h-11" onClick={() => setDialog({ record: rec })}>{t("edit")}</Button>
                     </td>
                   </tr>
                 ))}
@@ -262,7 +193,26 @@ export function DataGrid() {
             </table>
           </div>
         )}
-      </div>
+        </>
+      )}
+
+      {boardField && view === "board" && !loading && visible.length > 0 && (
+        <Board records={visible} fields={fields} boardField={boardField} onOpen={(record) => setDialog({ record })} />
+      )}
+
+      {dialog && (
+        <RecordDialog
+          key={dialog.record?.id ?? "new"}
+          open
+          onOpenChange={(open) => !open && setDialog(null)}
+          fields={fields}
+          entityLabel={entityLabel}
+          record={dialog.record}
+          count={count}
+          onSave={(values) => (dialog.record ? updateRecord(dialog.record.id, values) : addRecord(values))}
+          onDelete={dialog.record ? () => removeRecord(dialog.record!.id) : undefined}
+        />
+      )}
     </section>
   );
 }
