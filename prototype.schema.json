@@ -17,6 +17,12 @@
       "contactForm": {
         "purpose": "A contact form that captures a message and an email address. Pick it for services, consultancies and anything sold through a conversation rather than a signup."
       },
+      "useCases": {
+        "purpose": "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results."
+      },
+      "comparison": {
+        "purpose": "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices."
+      },
       "dataGrid": {
         "purpose": "A table of records the user adds, edits and filters. Pick it when the idea is about keeping track of things — an inventory, a catalogue, a register, a log of entries."
       },
@@ -29,6 +35,8 @@
         "hero",
         "features",
         "howItWorks",
+        "useCases",
+        "comparison",
         "faq",
         "contact",
         "cta"
@@ -40,6 +48,8 @@
         "cta": "cta",
         "faq": "landing",
         "howItWorks": "landing",
+        "useCases": "useCases",
+        "comparison": "comparison",
         "pricing": null,
         "testimonials": null
       }
@@ -69,6 +79,8 @@
               "hero",
               "features",
               "howItWorks",
+              "useCases",
+              "comparison",
               "pricing",
               "testimonials",
               "faq",
@@ -76,6 +88,14 @@
               "cta"
             ]
           }
+        },
+        "presentation": {
+          "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+          "type": "string",
+          "enum": [
+            "story",
+            "document"
+          ]
         }
       },
       "required": [
@@ -147,6 +167,18 @@
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
       "properties": {}
+    },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the useCases landing section and localized useCases copy."
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the comparison landing section and localized comparison copy."
     },
     "dataGrid": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -256,6 +288,110 @@
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "string",
       "minLength": 1
+    },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "items": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "situation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "title",
+              "situation",
+              "action"
+            ]
+          },
+          "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+        }
+      },
+      "required": [
+        "heading",
+        "items"
+      ]
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "beforeLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "afterLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "rows": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "before": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "after": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "topic",
+              "before",
+              "after"
+            ]
+          },
+          "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+        }
+      },
+      "required": [
+        "heading",
+        "beforeLabel",
+        "afterLabel",
+        "rows"
+      ]
     },
     "landing": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -623,6 +759,8 @@
                     "hero",
                     "features",
                     "howItWorks",
+                    "useCases",
+                    "comparison",
                     "pricing",
                     "testimonials",
                     "faq",
@@ -630,6 +768,14 @@
                     "cta"
                   ]
                 }
+              },
+              "presentation": {
+                "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+                "type": "string",
+                "enum": [
+                  "story",
+                  "document"
+                ]
               }
             },
             "required": [
@@ -797,6 +943,16 @@
               "center",
               "zoom"
             ]
+          },
+          "useCases": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the useCases landing section and localized useCases copy."
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the comparison landing section and localized comparison copy."
           }
         }
       },
@@ -1089,6 +1245,108 @@
               "required": [
                 "entityLabel",
                 "fieldLabels"
+              ]
+            },
+            "useCases": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "items": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "situation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "action": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "situation",
+                      "action"
+                    ]
+                  },
+                  "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+                }
+              },
+              "required": [
+                "heading",
+                "items"
+              ]
+            },
+            "comparison": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "beforeLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "afterLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "rows": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "topic": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "before": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "after": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "topic",
+                      "before",
+                      "after"
+                    ]
+                  },
+                  "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+                }
+              },
+              "required": [
+                "heading",
+                "beforeLabel",
+                "afterLabel",
+                "rows"
               ]
             }
           },

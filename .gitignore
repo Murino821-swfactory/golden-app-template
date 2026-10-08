@@ -50,3 +50,6 @@ next-env.d.ts
 
 # preview staging for basePath builds
 /.preview/
+
+# Generated from the public config by prebuild.
+/public/llms.txt
