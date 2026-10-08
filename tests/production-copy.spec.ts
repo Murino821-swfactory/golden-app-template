@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { parseProductionPrototypeConfig } from "../lib/prototype-config";
+import { parseProductionPrototypeConfig, sampleRecordIssues } from "../lib/prototype-config";
 
 const fresh = () => {
   const cfg = JSON.parse(readFileSync("fixtures/composed.config.json", "utf8"));
@@ -35,4 +35,23 @@ test("a presentation fallback contains customer copy and no unsupported controls
   const cfg = fresh(); cfg.patterns = { landing: { sections: ["hero", "features"] } };
   cfg.content.en = { description: "Reading diary for pupils", landing: { headline: "Reading diary", subheadline: "Keep notes about books you read", featuresHeading: "Your idea", features: [{ title: "Book notes", description: "Keep notes about books you read" }] } };
   expect(parseProductionPrototypeConfig(cfg).patterns.dataGrid).toBeUndefined();
+});
+test("inherited JavaScript properties cannot stand in for a customer field label", () => {
+  const cfg = fresh();
+  cfg.patterns.dataGrid.entity.fields[0].key = "constructor";
+  delete cfg.content.en.dataGrid.fieldLabels.name;
+  cfg.content.en.dataGrid.sampleRecords = cfg.content.en.dataGrid.sampleRecords.map((record: Record<string, unknown>) => {
+    const { name, ...rest } = record;
+    return { ...rest, constructor: name };
+  });
+  expect(() => parseProductionPrototypeConfig(cfg)).toThrow(/has no label/);
+  cfg.content.en.dataGrid.fieldLabels.constructor = "Component name";
+  expect(() => parseProductionPrototypeConfig(cfg)).not.toThrow();
+});
+test("inherited properties cannot stand in for a KPI label", () => {
+  const cfg = fresh(); cfg.patterns.dashboard.kpis = [{ id: "constructor", agg: "count", field: "*" }];
+  expect(() => parseProductionPrototypeConfig(cfg)).toThrow(/has no label/);
+});
+test("an absent optional record value remains absent even when its key is a native property", () => {
+  expect(sampleRecordIssues([{ key: "constructor", type: "text", required: false }], {})).toEqual([]);
 });

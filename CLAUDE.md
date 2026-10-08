@@ -62,6 +62,8 @@ checks records/auth/dashboard dependencies and unique field keys. Copy requireme
 published as `productionValidation`, `menu.sections.requiredCopy` and
 `menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
 The usual parser stays compatible with local starter fixtures and archived prototypes.
+Field/KPI labels and sample values are JSON own properties (`Object.hasOwn`); inherited
+JavaScript properties such as `constructor` never satisfy a required label or sample value.
 Tests: `tests/production-copy.spec.ts`; cross-repo decision:
 [prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
 
