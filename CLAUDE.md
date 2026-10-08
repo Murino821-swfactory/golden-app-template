@@ -48,6 +48,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| "Edit texts" (copy rewrite) | `components/sections/copy-rewrite-panel.tsx`, `hooks/use-copy-rewrite.ts`, `lib/copy-rewrite.ts` — see "Copy rewrite" |
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
@@ -450,6 +451,26 @@ factory-web (`prototypeOwnerContact`, `prototypeContact`).
 - `/messages` lists `demos/{slug}/contactMessages` for the owner; opening one sets `readAt`.
   Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
   dashboard (renders nothing for anyone else).
+
+## Copy rewrite (2026-10-07)
+
+The prototype's creator (verified wizard e-mail) and the founder see an "Edit texts" button
+under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a preview (the
+factory's own content call — the same schema this repo publishes in
+`prototype.schema.json`), compare every text with the current one with the tokens, cost and
+characters of that one request, and use it: the factory commits the new copy to
+`demo/<slug>` and republishes the page (the creator pays one credit; the founder nothing).
+Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
+in the **sw-factory** repo.
+
+- `/api/prototype-copy` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`) — never from CI, and an anonymous visitor makes no request
+  (`tests/copy-rewrite.spec.ts`).
+- The panel's state table is `copyPanelView` (pure, tested); the dialog is the shared
+  `components/ui/dialog.tsx` (bottom sheet on phones). Texts: `copyRewrite` in all eight
+  `messages/*.json`.
+- A rewrite changes `content` only. `dataGrid.sampleRecords` are example DATA and are never
+  rewritten; `appName`, `patterns`, the theme and the languages never change.
 
 ## Firestore rules — owned by factory-web, not here
 
