@@ -9,6 +9,13 @@ test("landing next step follows the configured action, including customer routes
   expect(landingActionHref({ landing: { sections: ["hero", "contact"] }, contactForm: {} })).toBe("#contact");
   expect(landingActionHref({ landing: { sections: ["hero"] }, authGoogle: {} })).toBe("/login");
   expect(landingActionHref({ landing: { sections: ["hero"] }, dashboard: {} })).toBe("/dashboard");
+  expect(landingActionHref({ landing: { sections: ["hero"] }, authGoogle: {}, cta: { href: "/app" } })).toBe("/login");
+  expect(landingActionHref({ landing: { sections: ["hero", "features", "cta"] }, cta: { href: "#start" } })).toBe("#chapter-features");
+  expect(landingActionHref({ landing: { sections: ["hero", "features"] }, cta: { href: "#features" } })).toBe("#chapter-features");
+  expect(landingActionHref({ landing: { sections: ["hero", "features"] }, cta: { href: "#chapter-features" } })).toBe("#chapter-features");
+  expect(landingActionHref({ landing: { sections: ["hero", "contact"] }, contactForm: {}, cta: { href: "#start" } })).toBe("#contact");
+  expect(landingActionHref({ landing: { sections: ["hero"] }, cta: { href: "#start" } })).toBeNull();
+  expect(landingActionHref({ landing: { sections: ["hero"] }, cta: { href: "https://example.com/join" } })).toBe("https://example.com/join");
   // An unused contact pattern does not mean that a contact section is rendered.
   expect(landingActionHref({ landing: { sections: ["hero"] }, contactForm: {} })).toBeNull();
 });

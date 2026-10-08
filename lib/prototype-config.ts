@@ -243,7 +243,12 @@ export const PATTERN_SCHEMAS = {
   /** Nothing to configure — Google sign-in is the same everywhere by design. */
   authGoogle: z.object({}),
   cta: z.object({
-    href: z.string().min(1),
+    href: z.string().min(1).describe(
+      "Use an existing destination: /login with authGoogle, /dashboard with dashboard, " +
+      "#contact when contact is a landing section, or #chapter-<section> for a rendered " +
+      "landing section (for example #chapter-features). Never invent /app, /signup, " +
+      "#start, download routes, or features not present in the template."
+    ),
   }),
   contactForm: z.object({}),
   useCases: z.object({}).describe("Requires the useCases landing section and localized useCases copy."),
