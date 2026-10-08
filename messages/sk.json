@@ -15,7 +15,8 @@
     "changeFontLabel": "Zmeniť písmo: {name} ({position} z {total})",
     "cart": "Košík",
     "cartLabel": "Košík, položiek: {count}",
-    "cartEmpty": "Košík je prázdny"
+    "cartEmpty": "Košík je prázdny",
+    "close": "Zavrieť"
   },
   "auth": {
     "signInTitle": "Prihlásenie",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Vaša aplikácia",
     "subtitle": "Postavené na Golden Stacku",
-    "cta": "Začať"
+    "cta": "Začať",
+    "previewLabel": "Ukážka aplikácie"
   },
   "features": {
     "title": "Funkcie",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Časté otázky",
-    "q1": "Zástupná otázka — táto sekcia zatiaľ nemá schému obsahu.",
-    "a1": "Zástupná odpoveď. Vlastné slová prototypu pochádzajú z prototype.config.json."
+    "title": "Časté otázky"
   },
   "contact": {
     "title": "Kontakt",
@@ -63,7 +63,23 @@
     "sending": "Odosiela sa…",
     "success": "Ďakujeme — vaša správa je na ceste. Čoskoro sa vám ozveme.",
     "error": "Správu sa nepodarilo odoslať. Skúste to znova.",
-    "notConfigured": "Kontaktný formulár nie je v tomto náhľade nastavený."
+    "notConfigured": "Kontaktný formulár nie je v tomto náhľade nastavený.",
+    "name": "Meno (nepovinné)",
+    "ownerEdit": "Upraviť kontaktné údaje",
+    "ownerMessages": "Správy ({count})",
+    "firstName": "Meno",
+    "lastName": "Priezvisko",
+    "address": "Adresa",
+    "phone": "Telefón",
+    "emailField": "E-mail",
+    "publicNotice": "Tieto údaje uvidí každý návštevník tejto stránky.",
+    "save": "Uložiť",
+    "saving": "Ukladá sa…",
+    "cancel": "Zrušiť",
+    "saveError": "Údaje sa nepodarilo uložiť. Skontrolujte polia a skúste to znova.",
+    "callLabel": "Zavolať na {phone}",
+    "emailLabel": "Poslať e-mail na {email}",
+    "mapLabel": "Zobraziť {address} na mape"
   },
   "cta": {
     "title": "Pustíme sa do toho?",
@@ -71,19 +87,41 @@
     "action": "Začať"
   },
   "dataGrid": {
-    "permissionDenied": "Tieto záznamy vidí len ten, kto si prototyp vyžiadal.",
+    "permissionDenied": "Túto zmenu sa nepodarilo uložiť. Prihláste sa znova a skúste to ešte raz.",
     "loadError": "Záznamy sa nepodarilo načítať. Skúste to o chvíľu znova.",
     "addAction": "Pridať {entity}",
     "saving": "Ukladá sa…",
     "listHeading": "Záznamy: {entity}",
-    "empty": "Zatiaľ žiadne záznamy: {entity} — pridajte prvý vyššie.",
+    "empty": "Zatiaľ žiadne záznamy: {entity} — pridajte prvý.",
     "remove": "Odstrániť",
     "yes": "Áno",
-    "no": "Nie"
+    "no": "Nie",
+    "addTitle": "Nový záznam: {entity}",
+    "editTitle": "Upraviť záznam: {entity}",
+    "edit": "Upraviť",
+    "save": "Uložiť",
+    "cancel": "Zrušiť",
+    "delete": "Vymazať",
+    "confirmDelete": "Vymazať tento záznam? Nedá sa to vrátiť späť.",
+    "confirmDeleteAction": "Áno, vymazať",
+    "searchLabel": "Hľadať v záznamoch",
+    "all": "Všetky",
+    "noMatches": "Hľadaniu nezodpovedá žiadny záznam.",
+    "limitReached": "Dosiahli ste limit {limit} záznamov v tomto prototype.",
+    "sortBy": "Zoradiť podľa: {field}",
+    "viewTable": "Tabuľka",
+    "viewBoard": "Nástenka",
+    "noValue": "Bez hodnoty",
+    "errorRequired": "Pole „{field}“ je povinné.",
+    "errorType": "Pole „{field}“ má neplatnú hodnotu.",
+    "errorTooLong": "Pole „{field}“ je príliš dlhé.",
+    "errorOption": "Pole „{field}“ musí byť jedna z ponúkaných možností."
   },
   "dashboard": {
     "recordsLabel": "Záznamy: {entity}",
     "addedThisMonth": "Pridané tento mesiac",
+    "ownerMessages": "Správy ({count})",
+    "ownerContact": "Kontaktné údaje",
     "trackedFields": "Sledované polia"
   },
   "heroImage": {
@@ -98,5 +136,79 @@
     "failedRetry": "Nepodarilo sa, pokus ti ostáva",
     "unavailable": "Generovanie teraz nie je dostupné",
     "slow": "Trvá to dlhšie — obnov stránku"
+  },
+  "inbox": {
+    "title": "Správy",
+    "empty": "Zatiaľ žiadne správy. Správy z kontaktného formulára sa zobrazia tu.",
+    "ownerOnly": "Táto stránka je len pre vlastníka prototypu.",
+    "notConfigured": "Správy sú dostupné v publikovanom prototype.",
+    "loadError": "Správy sa nepodarilo načítať. Skúste to o chvíľu znova.",
+    "unread": "Nová",
+    "reply": "Odpovedať",
+    "back": "Späť na prehľad"
+  },
+  "howItWorks": {
+    "title": "Ako to funguje"
+  },
+  "story": {
+    "chapters": "Kapitoly príbehu",
+    "chapter": "Kapitola {number}"
+  },
+  "copyRewrite": {
+    "open": "Upraviť texty",
+    "title": "Prepísať texty",
+    "description": "Napíš AI, ako má prepísať túto stránku. Náhľad je zadarmo; použitie stránku znova zverejní.",
+    "instructions": "Pokyny pre AI",
+    "chars": "{count} / {max} znakov",
+    "tokens": "≈ {count} tokenov (odhad)",
+    "reset": "Obnoviť predvolené",
+    "fullPrompt": "Celý prompt",
+    "fullPromptEmpty": "Zobrazí sa po prvom náhľade",
+    "promptSizes": "Systém: {system} znakov · Prompt: {user} znakov",
+    "draft": "Vytvoriť náhľad",
+    "drafting": "Píšem náhľad…",
+    "draftsLeft": "Dnes zostáva náhľadov: {count}",
+    "limitReached": "Dnešné náhľady sú minuté — skús zajtra",
+    "slow": "Trvá to dlhšie — obnov stránku",
+    "preview": "Náhľad",
+    "changedOf": "Zmenené texty: {changed} z {total}",
+    "before": "Teraz",
+    "after": "Nové",
+    "publishOwner": "Použiť — 1 kredit",
+    "publishAdmin": "Zverejniť",
+    "publishingButton": "Zverejňujem…",
+    "publishing": "Zverejňujem: {stage}",
+    "published": "Zverejnené — obnov stránku",
+    "reload": "Obnoviť",
+    "buyCredits": "Kúpiť kredity",
+    "history": "História",
+    "kindDraft": "Náhľad",
+    "kindPublish": "Zverejnenie",
+    "metrics": {
+      "cost": "Cena",
+      "tokensOut": "Výstupné tokeny",
+      "tokensIn": "Vstupné tokeny",
+      "copyChars": "Znaky textu",
+      "eurPer1k": "Cena za 1 000 znakov",
+      "jsonOverhead": "Réžia JSON",
+      "changed": "Zmenené texty",
+      "duration": "Čas",
+      "tokensOutShort": "{count} výstup"
+    },
+    "errors": {
+      "busy": "Už niečo beží — chvíľu počkaj",
+      "limit": "Dnešné náhľady sú minuté",
+      "noCredits": "Nemáš žiadne kredity",
+      "draftUnusable": "Tento náhľad sa už nedá použiť — vytvor nový",
+      "vmUnreachable": "Továreň je nedostupná — skús neskôr",
+      "upstream": "AI neodpovedala — skús znova",
+      "invalidResponse": "AI vrátila nepoužiteľné texty — skús znova alebo uprav pokyny",
+      "staleDraft": "Texty sa medzitým zmenili — vytvor nový náhľad",
+      "busyVm": "Továreň je zaneprázdnená — skús o pár minút",
+      "gate": "Nová verzia neprešla kontrolami — nič sa nezmenilo",
+      "pushFailed": "Zverejnenie sa nedokončilo — nič sa nestrhlo",
+      "timeout": "Trvalo to príliš dlho — nič sa nestrhlo",
+      "generic": "Nepodarilo sa — skús znova"
+    }
   }
 }
