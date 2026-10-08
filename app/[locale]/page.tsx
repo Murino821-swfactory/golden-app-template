@@ -7,6 +7,10 @@ import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FaqSection } from "@/components/sections/faq";
 import { ContactSection } from "@/components/sections/contact";
 import { CtaSection } from "@/components/sections/cta";
+import { UseCasesSection } from "@/components/sections/use-cases";
+import { ComparisonSection } from "@/components/sections/comparison";
+import { LandingStory } from "@/components/sections/landing-story";
+import { landingJsonLd } from "@/lib/seo";
 import { config } from "@/lib/prototype-config";
 
 // ONE source of truth for sections: prototype.config.json (P5). This used to also be
@@ -27,15 +31,19 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   faq: FaqSection,
   contact: ContactSection,
   cta: CtaSection,
+  useCases: UseCasesSection,
+  comparison: ComparisonSection,
 };
 
-export default function LandingPage() {
+export default async function LandingPage({ params }: { params: Promise<{ locale?: string }> }) {
+  const locale = (await params).locale ?? config.defaultLocale;
   return (
     <>
-      {SECTIONS.map((id) => {
+      <script data-site-jsonld type="application/ld+json" dangerouslySetInnerHTML={{ __html: landingJsonLd(locale) }} />
+      <LandingStory presentation={config.patterns.landing?.presentation} chapters={SECTIONS.map((id) => {
         const Section = SECTION_REGISTRY[id];
-        return Section ? <Section key={id} /> : null;
-      })}
+        return { id, content: Section ? <Section /> : null };
+      })} />
     </>
   );
 }
