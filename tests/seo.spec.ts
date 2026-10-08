@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { config, contentFor } from "../lib/prototype-config";
+import { config, contentFor, parsePrototypeConfig } from "../lib/prototype-config";
+import fullConfig from "../fixtures/full.config.json";
 import { llmsText, publicUrl, siteOrigin } from "../lib/seo";
 
 test("search and AI discovery use the rendered localized copy", async ({ page }) => {
@@ -42,8 +43,21 @@ test("private routes cannot inherit the landing canonical or index directive", a
 });
 
 test("GEO excludes unrendered sections and private sample records", () => {
-  const out = llmsText();
-  for (const record of contentFor(config).dataGrid?.sampleRecords ?? []) {
-    for (const value of Object.values(record)) if (typeof value === "string" && value.length > 10) expect(out).not.toContain(value);
+  // Private records can legitimately share words with public FAQ copy. Unique
+  // sentinels test the source of exported data without rejecting that public copy.
+  const source = parsePrototypeConfig(structuredClone(fullConfig));
+  source.patterns.landing!.sections = ["hero"];
+  for (const locale of source.locales) {
+    const copy = contentFor(source, locale);
+    copy.landing!.headline = `Public headline ${locale}`;
+    copy.landing!.features = [{ title: `HIDDEN_FEATURE_${locale}`, description: `HIDDEN_DESCRIPTION_${locale}` }];
+    copy.dataGrid!.sampleRecords = [{ name: `PRIVATE_SAMPLE_${locale}` }];
+  }
+  const out = llmsText(source);
+  for (const locale of source.locales) {
+    expect(out).toContain(`Public headline ${locale}`);
+    expect(out).not.toContain(`HIDDEN_FEATURE_${locale}`);
+    expect(out).not.toContain(`HIDDEN_DESCRIPTION_${locale}`);
+    expect(out).not.toContain(`PRIVATE_SAMPLE_${locale}`);
   }
 });
