@@ -1,6 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { config } from "../lib/prototype-config";
+import { config, contentFor } from "../lib/prototype-config";
 import { uiCopy } from "./ui-copy";
+
+const submitLabel = contentFor(config).contactForm?.submitLabel ?? uiCopy.contact.send!;
 
 // These tests exercise form behavior in the accessible document shell. Story navigation
 // and reaching this same form on desktop are covered in landing-story.spec.ts.
@@ -36,7 +38,7 @@ test.describe("contact form — no demo slug", () => {
     await expect(section.getByRole("status")).toContainText(uiCopy.contact.notConfigured!);
     await expect(section.locator("#contact-email")).toBeDisabled();
     await expect(section.locator("#contact-message")).toBeDisabled();
-    await expect(section.getByRole("button", { name: uiCopy.contact.send!, exact: true })).toBeDisabled();
+    await expect(section.getByRole("button", { name: submitLabel, exact: true })).toBeDisabled();
   });
 
   test("submitting issues no request", async ({ page }) => {
@@ -59,7 +61,7 @@ test.describe("contact form — no demo slug", () => {
     await section
       .locator("#contact-message")
       .fill("Testing that the disabled form sends nothing.", { force: true });
-    await section.getByRole("button", { name: uiCopy.contact.send!, exact: true }).click({ force: true });
+    await section.getByRole("button", { name: submitLabel, exact: true }).click({ force: true });
 
     // No success/error transition to await — the whole point is that nothing happens.
     // Give any (wrongly) in-flight request a chance to land before asserting its absence.
