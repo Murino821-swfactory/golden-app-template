@@ -1,43 +1,47 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { collection, doc, getDoc, getDocs, type Timestamp } from "firebase/firestore";
+import { getFirestoreInstance } from "@/lib/firebase";
+import { getDemoSlug } from "@/lib/demo-slug";
+import { applyOps, seedFirstSample } from "@/lib/records-firestore";
 import {
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-  Timestamp,
-} from "firebase/firestore";
-import { getFirestoreInstance, getCollectionPath } from "@/lib/firebase";
-import { useAuth } from "./use-auth";
+  RECORD_LIMIT,
+  buildCreateOps,
+  buildDeleteOps,
+  buildUpdateOps,
+  coerceValues,
+  recordsPath,
+  sandboxRoot,
+  shouldSeed,
+  sortByCreatedAtDesc,
+  type EntityRecord,
+  type ValueError,
+} from "@/lib/records";
 import { config, type EntityField } from "@/lib/prototype-config";
+import { useAuth } from "./use-auth";
 import { useContent, useEntityFields } from "./use-content";
 
+export { emptyValues, missingRequired, sortByCreatedAtDesc, type EntityRecord } from "@/lib/records";
+
 /**
- * use-records.ts — generic CRUD over whatever entity `prototype.config.json` declares.
+ * use-records.ts — the signed-in visitor's own records of this prototype's entity.
  *
- * This is what replaces "the Developer agent writes a hook per prototype". The shape of a
- * record is data (`patterns.dataGrid.entity.fields`), so one tested hook serves every
- * prototype instead of one untested hook per customer.
+ * Every visitor has a private sandbox, `demos/{slug}/users/{uid}/records` (factory-web
+ * rules; sw-factory spec 2026-09-29-golden-template-v2-design.md §4). A first visit is
+ * seeded with the config's `sampleRecords`, so the grid never opens empty. The shapes of the
+ * writes live in lib/records.ts; this hook only sequences them.
  *
- * Records are per-user (`where userId == uid`) within one prototype's own collection, and
- * in demo mode namespaced under `demos/{slug}/` by `getCollectionPath`. That does NOT by
- * itself stop one prototype from reading another's data — this repo ships no Firestore
- * rules of its own at all (see CLAUDE.md → "Firestore rules — owned by factory-web, not
- * here"). Cross-prototype isolation is enforced entirely by the DEPLOYED rules at
- * `factory-web/firestore.rules`, which bind `demos/{slug}/**` to the prototype's requester
- * email (`demoOwnerEmail`) plus the founder — not by anything in this file or this repo.
+ * Several components on one page call this hook (the dashboard's KPI cards and the grid).
+ * Two module-level pieces keep them honest: one seeding promise per sandbox, so both wait
+ * for the same seed instead of racing it, and a change signal, so a write in the grid
+ * refreshes the KPI cards too.
  */
 
-/** A record's own fields are dynamic; these four are always present. */
-export interface EntityRecord {
-  id: string;
-  userId: string;
-  createdAt: Date;
-  values: Record<string, unknown>;
+export class RecordValidationError extends Error {
+  constructor(public readonly errors: ValueError[]) {
+    super(`invalid record: ${errors.map((e) => `${e.key}:${e.code}`).join(", ")}`);
+  }
 }
 
 export interface UseRecordsReturn {
@@ -46,117 +50,95 @@ export interface UseRecordsReturn {
   entityLabel: string;
   loading: boolean;
   error: Error | null;
+  count: number;
+  atLimit: boolean;
   addRecord: (values: Record<string, unknown>) => Promise<void>;
+  updateRecord: (id: string, values: Record<string, unknown>) => Promise<void>;
   removeRecord: (id: string) => Promise<void>;
   refresh: () => Promise<void>;
 }
 
 const gridConfig = config.patterns.dataGrid;
+const seeding = new Map<string, Promise<void>>();
+const listeners = new Set<() => void>();
+const announceChange = () => listeners.forEach((fn) => fn());
 
-/** Empty form state derived from the configured fields — booleans start false, the rest "". */
-export function emptyValues(fields: EntityField[]): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
-  for (const field of fields) {
-    out[field.key] = field.type === "boolean" ? false : "";
+async function seedOnce(root: string, run: () => Promise<void>): Promise<void> {
+  let pending = seeding.get(root);
+  if (!pending) {
+    pending = run().catch((err) => console.warn("[records] seeding stopped:", err));
+    seeding.set(root, pending);
   }
-  return out;
-}
-
-/** Which configured fields are missing a value that `required` demands. Pure — unit-testable
- * without Firestore, and the form and the hook share one definition of "valid". */
-export function missingRequired(
-  fields: EntityField[],
-  values: Record<string, unknown>
-): string[] {
-  return fields
-    .filter((f) => f.required)
-    .filter((f) => {
-      const v = values[f.key];
-      return v === undefined || v === null || v === "";
-    })
-    .map((f) => f.key);
-}
-
-/**
- * Sorts mapped records by `createdAt`, newest first. Pure — unit-testable without Firestore.
- *
- * This sort happens in JS, not in the query, on purpose: the collection name is
- * `patterns.dataGrid.entity.key`, chosen by the model per prototype (this template ships
- * with `checkin`; the next prototype declares `trips`, `invoices`, whatever the customer's
- * entity is). A server-side `orderBy("createdAt", "desc")` combined with the existing
- * `where("userId", ...)` needs a composite index PER collection name, so the set of
- * required indexes is unbounded and none of them can be pre-declared. Do not move this sort
- * back into the query — a prototype's per-user record count is small enough that sorting
- * client-side is not a real cost, and putting it back reintroduces the missing-index crash.
- */
-export function sortByCreatedAtDesc(records: EntityRecord[]): EntityRecord[] {
-  return [...records].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  await pending;
 }
 
 export function useRecords(): UseRecordsReturn {
   const { user } = useAuth();
   const [records, setRecords] = useState<EntityRecord[]>([]);
+  const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Labels come from the language on screen, shapes from the config. `useEntityFields`
-  // returns a fresh array each render, so it is memoised on the locale-stable JSON of the
-  // labels — `fields` feeds the useCallback deps below and a new array every render would
-  // rebuild addRecord every render.
   const localisedFields = useEntityFields();
   const fieldsKey = JSON.stringify(localisedFields);
   const fields = useMemo<EntityField[]>(() => localisedFields, [fieldsKey]); // eslint-disable-line react-hooks/exhaustive-deps
-  const entityLabel = useContent().dataGrid?.entityLabel ?? "Record";
-  const collectionName = gridConfig?.entity.key ?? "records";
+  const content = useContent();
+  const entityLabel = content.dataGrid?.entityLabel ?? "Record";
+  const samplesKey = JSON.stringify(content.dataGrid?.sampleRecords ?? null);
+  const slug = getDemoSlug();
 
-  /**
-   * Pure fetch: returns data, touches no state. The mount effect applies the result only
-   * AFTER an await — React 19 rejects setState called synchronously inside an effect body.
-   */
-  const loadRecords = useCallback(async (): Promise<EntityRecord[]> => {
-    if (!user || !gridConfig) return [];
-
+  const load = useCallback(async (): Promise<{ records: EntityRecord[]; count: number }> => {
+    if (!user || !gridConfig) return { records: [], count: 0 };
     const db = getFirestoreInstance();
-    const ref = collection(db, getCollectionPath(collectionName));
-    const snap = await getDocs(query(ref, where("userId", "==", user.uid)));
+    const root = sandboxRoot(slug, user.uid);
+    const samples = JSON.parse(samplesKey) as Record<string, unknown>[] | null;
 
+    const counter = await getDoc(doc(db, root));
+    if (shouldSeed(counter.exists(), samples ?? undefined)) {
+      await seedOnce(root, async () => {
+        const newId = () => doc(collection(db, recordsPath(slug, user.uid))).id;
+        const [first, ...rest] = samples!;
+        const firstId = newId();
+        const seeded = await seedFirstSample(db, root, buildCreateOps(slug, user.uid, firstId, first!));
+        if (!seeded) return;
+        for (const sample of rest) await applyOps(db, buildCreateOps(slug, user.uid, newId(), sample));
+      });
+    }
+
+    const snap = await getDocs(collection(db, recordsPath(slug, user.uid)));
     const mapped = snap.docs.map((d) => {
-      const data = d.data() as {
-        userId: string;
-        createdAt?: Timestamp;
-        values?: Record<string, unknown>;
-      };
+      const data = d.data() as { createdAt?: Timestamp; values?: Record<string, unknown> };
       return {
         id: d.id,
-        userId: data.userId,
+        userId: user.uid,
         createdAt: data.createdAt?.toDate() ?? new Date(0),
         values: data.values ?? {},
       };
     });
+    return { records: sortByCreatedAtDesc(mapped), count: snap.size };
+  }, [user, slug, samplesKey]);
 
-    return sortByCreatedAtDesc(mapped);
-  }, [user, collectionName]);
-
-  /** Manual refetch — called from handlers and after writes, never from an effect body. */
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      setRecords(await loadRecords());
+      const result = await load();
+      setRecords(result.records);
+      setCount(result.count);
       setError(null);
     } catch (err) {
       setError(err as Error);
     } finally {
       setLoading(false);
     }
-  }, [loadRecords]);
+  }, [load]);
 
   useEffect(() => {
     let cancelled = false;
-
-    loadRecords()
-      .then((recs) => {
+    load()
+      .then((result) => {
         if (cancelled) return;
-        setRecords(recs);
+        setRecords(result.records);
+        setCount(result.count);
         setError(null);
       })
       .catch((err: unknown) => {
@@ -165,40 +147,45 @@ export function useRecords(): UseRecordsReturn {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
-
+    const onChange = () => void refresh();
+    listeners.add(onChange);
     return () => {
       cancelled = true;
+      listeners.delete(onChange);
     };
-  }, [loadRecords]);
+  }, [load, refresh]);
 
   const addRecord = useCallback(
-    async (values: Record<string, unknown>) => {
+    async (raw: Record<string, unknown>) => {
       if (!user || !gridConfig) return;
-
-      const missing = missingRequired(fields, values);
-      if (missing.length > 0) {
-        throw new Error(`Missing required: ${missing.join(", ")}`);
-      }
-
+      const { values, errors } = coerceValues(fields, raw);
+      if (errors.length > 0) throw new RecordValidationError(errors);
       const db = getFirestoreInstance();
-      await addDoc(collection(db, getCollectionPath(collectionName)), {
-        userId: user.uid,
-        createdAt: Timestamp.now(),
-        values,
-      });
-      await refresh();
+      const id = doc(collection(db, recordsPath(slug, user.uid))).id;
+      await applyOps(db, buildCreateOps(slug, user.uid, id, values));
+      announceChange();
     },
-    [user, fields, collectionName, refresh]
+    [user, fields, slug]
+  );
+
+  const updateRecord = useCallback(
+    async (id: string, raw: Record<string, unknown>) => {
+      if (!user || !gridConfig) return;
+      const { values, errors } = coerceValues(fields, raw);
+      if (errors.length > 0) throw new RecordValidationError(errors);
+      await applyOps(getFirestoreInstance(), buildUpdateOps(slug, user.uid, id, values));
+      announceChange();
+    },
+    [user, fields, slug]
   );
 
   const removeRecord = useCallback(
     async (id: string) => {
       if (!user || !gridConfig) return;
-      const db = getFirestoreInstance();
-      await deleteDoc(doc(db, getCollectionPath(collectionName), id));
-      await refresh();
+      await applyOps(getFirestoreInstance(), buildDeleteOps(slug, user.uid, id));
+      announceChange();
     },
-    [user, collectionName, refresh]
+    [user, slug]
   );
 
   return {
@@ -207,7 +194,10 @@ export function useRecords(): UseRecordsReturn {
     entityLabel,
     loading,
     error,
+    count,
+    atLimit: count >= RECORD_LIMIT,
     addRecord,
+    updateRecord,
     removeRecord,
     refresh,
   };
