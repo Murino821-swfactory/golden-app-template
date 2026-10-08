@@ -9,6 +9,7 @@ import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroOverlayBackground } from "@/lib/hero-overlay";
 import { cn } from "@/lib/utils";
 import { HeroImageControls } from "./hero-image-controls";
+import { CopyRewriteControls } from "./copy-rewrite-panel";
 import { ProductPreview } from "./product-preview";
 import { config } from "@/lib/prototype-config";
 import { landingActionHref } from "@/lib/landing-action";
@@ -91,6 +92,7 @@ export function HeroSection() {
         {hasPreview && <ProductPreview />}
       </div>
       <HeroImageControls hero={hero} />
+      <CopyRewriteControls />
     </section>
   );
 }

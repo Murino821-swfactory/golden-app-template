@@ -1,5 +1,5 @@
 import type { Metadata, MetadataRoute } from "next";
-import { config, contentFor } from "./prototype-config";
+import { config, contentFor, type PrototypeConfig } from "./prototype-config";
 import { localeHref } from "./locale-routing";
 
 /** The publisher supplies the real origin (the harness already does). Never infer a
@@ -75,13 +75,13 @@ export function publicSitemap(): MetadataRoute.Sitemap {
 
 /** Only text from sections that actually render. No prices, testimonials, private records
  * or model-created company identity. llms.txt is discovery content, not an access control. */
-export function llmsText(): string {
-  const sections = new Set(config.patterns.landing?.sections ?? []);
-  const lines = [`# ${config.appName}`, "", `> ${contentFor(config).description}`, "", "## Public pages", ""];
-  for (const locale of config.locales) {
-    const copy = contentFor(config, locale);
-    lines.push(`- [${config.appName} (${locale})](${publicUrl(locale)}): ${copy.description}`, "", `## ${locale}`, "");
-    if (sections.has("hero")) lines.push(copy.landing?.headline ?? config.appName, "", copy.landing?.subheadline ?? "", "");
+export function llmsText(source: PrototypeConfig = config): string {
+  const sections = new Set(source.patterns.landing?.sections ?? []);
+  const lines = [`# ${source.appName}`, "", `> ${contentFor(source).description}`, "", "## Public pages", ""];
+  for (const locale of source.locales) {
+    const copy = contentFor(source, locale);
+    lines.push(`- [${source.appName} (${locale})](${publicUrl(locale)}): ${copy.description}`, "", `## ${locale}`, "");
+    if (sections.has("hero")) lines.push(copy.landing?.headline ?? source.appName, "", copy.landing?.subheadline ?? "", "");
     if (sections.has("features")) for (const feature of copy.landing?.features ?? []) lines.push(`### ${feature.title}`, "", feature.description, "");
     if (sections.has("howItWorks")) for (const step of copy.landing?.howItWorks?.steps ?? []) lines.push(`### ${step.title}`, "", step.description, "");
     if (sections.has("useCases")) for (const item of copy.useCases?.items ?? []) lines.push(`### ${item.title}`, "", item.situation, "", item.action, "");
