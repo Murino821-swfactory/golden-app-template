@@ -18,7 +18,7 @@
       ]
     },
     "cta": {
-      "href": "#start"
+      "href": "#chapter-features"
     }
   },
   "content": {
@@ -96,7 +96,7 @@
       "cta": {
         "title": "Ready to play New game?",
         "subtitle": "Join gamers and tech enthusiasts already waiting for the world to open.",
-        "label": "Get early access"
+        "label": "Explore the game concept"
       }
     }
   }
