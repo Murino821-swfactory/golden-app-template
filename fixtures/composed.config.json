@@ -1,26 +1,70 @@
 {
   "appName": "Golden Template",
-  "locales": ["en"],
+  "locales": [
+    "en"
+  ],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "black-green-ruby-red" },
+  "theme": {
+    "colorScheme": "black-green-ruby-red"
+  },
   "patterns": {
-    "landing": { "sections": ["hero", "features", "contact", "cta"] },
+    "landing": {
+      "sections": [
+        "hero",
+        "features",
+        "useCases",
+        "comparison",
+        "howItWorks",
+        "faq",
+        "contact",
+        "cta"
+      ],
+      "presentation": "story"
+    },
     "dashboard": {},
     "authGoogle": {},
-    "cta": { "href": "/login" },
+    "cta": {
+      "href": "/login"
+    },
     "contactForm": {},
     "dataGrid": {
       "entity": {
         "key": "pattern",
         "fields": [
-          { "key": "name", "type": "text", "required": true },
-          { "key": "kind", "type": "select", "options": ["Page", "Control", "Data"] },
-          { "key": "addedOn", "type": "date" },
-          { "key": "selectable", "type": "boolean" }
+          {
+            "key": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "kind",
+            "type": "select",
+            "options": [
+              "Page",
+              "Control",
+              "Data"
+            ]
+          },
+          {
+            "key": "addedOn",
+            "type": "date"
+          },
+          {
+            "key": "selectable",
+            "type": "boolean"
+          }
         ]
       }
     },
-    "mapBase": { "center": { "lat": 48.669, "lng": 19.699 }, "zoom": 7 }
+    "mapBase": {
+      "center": {
+        "lat": 48.669,
+        "lng": 19.699
+      },
+      "zoom": 7
+    },
+    "useCases": {},
+    "comparison": {}
   },
   "content": {
     "en": {
@@ -44,11 +88,55 @@
             "title": "Sign-in that works",
             "description": "Google authentication and a route guard are part of the template, so a prototype has real accounts on day one."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "How do you try the prototype?",
+          "steps": [
+            {
+              "title": "Explore the landing",
+              "description": "Scroll through the chapters to see the enabled patterns."
+            },
+            {
+              "title": "Sign in with Google",
+              "description": "Open the dashboard with your own account."
+            },
+            {
+              "title": "Try your own records",
+              "description": "Add and edit records in your private sandbox."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "What should you know before trying it?",
+          "items": [
+            {
+              "question": "Is this generated code?",
+              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+            },
+            {
+              "question": "Where do the records live?",
+              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+            },
+            {
+              "question": "Does the page work on a phone?",
+              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+            }
+          ]
+        },
+        "featuresHeading": "What is already built?"
       },
-      "dashboard": { "title": "Pattern overview" },
-      "cta": { "label": "Sign in to see it" },
-      "contactForm": { "heading": "Ask about a prototype", "submitLabel": "Send" },
+      "dashboard": {
+        "title": "Pattern overview"
+      },
+      "cta": {
+        "label": "Sign in to see it",
+        "title": "Try the working patterns",
+        "subtitle": "Sign in to explore the dashboard and your own records."
+      },
+      "contactForm": {
+        "heading": "Ask about a prototype",
+        "submitLabel": "Send"
+      },
       "dataGrid": {
         "entityLabel": "Pattern",
         "fieldLabels": {
@@ -57,6 +145,43 @@
           "addedOn": "Added",
           "selectable": "Model may pick"
         }
+      },
+      "useCases": {
+        "heading": "What can you try here?",
+        "items": [
+          {
+            "title": "Explore a product idea",
+            "situation": "You want to see how reusable blocks form a working prototype.",
+            "action": "Read the landing, then sign in to open your own dashboard."
+          },
+          {
+            "title": "Work with sample records",
+            "situation": "You need a place to try a records workflow before committing to an idea.",
+            "action": "Add, edit and filter records in your own signed-in sandbox."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "How is the prototype assembled?",
+        "beforeLabel": "Custom implementation",
+        "afterLabel": "This template",
+        "rows": [
+          {
+            "topic": "Page content",
+            "before": "Write each section as a separate code change.",
+            "after": "Fill localized content in a validated JSON configuration."
+          },
+          {
+            "topic": "Product building blocks",
+            "before": "Implement authentication and record controls for each project.",
+            "after": "Enable existing Google sign-in, dashboard and records patterns."
+          },
+          {
+            "topic": "Finding the page",
+            "before": "Maintain separate text for the page and discovery files.",
+            "after": "Generate metadata, structured data and llms.txt from the page content."
+          }
+        ]
       }
     }
   }

@@ -15,7 +15,8 @@
     "changeFontLabel": "Betűtípus váltása: {name} ({position}/{total})",
     "cart": "Kosár",
     "cartLabel": "Kosár, {count} tétel",
-    "cartEmpty": "A kosár üres"
+    "cartEmpty": "A kosár üres",
+    "close": "Bezárás"
   },
   "auth": {
     "signInTitle": "Bejelentkezés",
@@ -26,7 +27,8 @@
   "landing": {
     "title": "Az Ön alkalmazása",
     "subtitle": "A Golden Stackre építve",
-    "cta": "Kezdés"
+    "cta": "Kezdés",
+    "previewLabel": "Alkalmazás előnézete"
   },
   "features": {
     "title": "Funkciók",
@@ -51,9 +53,7 @@
     "author2": "Example Name, Example Company"
   },
   "faq": {
-    "title": "Gyakori kérdések",
-    "q1": "Helykitöltő kérdés — ennek a szakasznak még nincs tartalomsémája.",
-    "a1": "Helykitöltő válasz. A prototípus saját szavai a prototype.config.json fájlból származnak."
+    "title": "Gyakori kérdések"
   },
   "contact": {
     "title": "Kapcsolat",
@@ -63,7 +63,23 @@
     "sending": "Küldés folyamatban…",
     "success": "Köszönjük — az üzenete úton van. Hamarosan jelentkezünk.",
     "error": "Az üzenet küldése nem sikerült. Kérjük, próbálja újra.",
-    "notConfigured": "A kapcsolatfelvételi űrlap nincs beállítva ebben az előnézetben."
+    "notConfigured": "A kapcsolatfelvételi űrlap nincs beállítva ebben az előnézetben.",
+    "name": "Név (nem kötelező)",
+    "ownerEdit": "Kapcsolati adatok szerkesztése",
+    "ownerMessages": "Üzenetek ({count})",
+    "firstName": "Keresztnév",
+    "lastName": "Vezetéknév",
+    "address": "Cím",
+    "phone": "Telefon",
+    "emailField": "E-mail",
+    "publicNotice": "Ezeket az adatokat mindenki látja, aki megnyitja ezt az oldalt.",
+    "save": "Mentés",
+    "saving": "Mentés…",
+    "cancel": "Mégse",
+    "saveError": "Az adatokat nem sikerült menteni. Ellenőrizze a mezőket, és próbálja újra.",
+    "callLabel": "{phone} hívása",
+    "emailLabel": "E-mail küldése ide: {email}",
+    "mapLabel": "{address} megjelenítése a térképen"
   },
   "cta": {
     "title": "Készen áll a kezdésre?",
@@ -71,19 +87,41 @@
     "action": "Kezdés"
   },
   "dataGrid": {
-    "permissionDenied": "Ezeket a rekordokat csak a prototípust kérő személy látja.",
+    "permissionDenied": "Ezt a módosítást nem sikerült menteni. Jelentkezzen be újra, és próbálja meg ismét.",
     "loadError": "A rekordok betöltése nem sikerült. Kérjük, próbálja újra hamarosan.",
     "addAction": "{entity} hozzáadása",
     "saving": "Mentés folyamatban…",
     "listHeading": "Rekordok: {entity}",
-    "empty": "Még nincs rekord: {entity} — adja hozzá az elsőt fent.",
+    "empty": "Még nincs rekord: {entity} — adja hozzá az elsőt.",
     "remove": "Eltávolítás",
     "yes": "Igen",
-    "no": "Nem"
+    "no": "Nem",
+    "addTitle": "Új rekord: {entity}",
+    "editTitle": "Rekord szerkesztése: {entity}",
+    "edit": "Szerkesztés",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "confirmDelete": "Törli ezt a rekordot? Ez nem vonható vissza.",
+    "confirmDeleteAction": "Igen, törlés",
+    "searchLabel": "Keresés a rekordok között",
+    "all": "Összes",
+    "noMatches": "Egyetlen rekord sem felel meg a keresésnek.",
+    "limitReached": "Elérte a prototípusban engedélyezett {limit} rekordot.",
+    "sortBy": "Rendezés: {field}",
+    "viewTable": "Táblázat",
+    "viewBoard": "Tábla",
+    "noValue": "Nincs érték",
+    "errorRequired": "A(z) „{field}” mező kötelező.",
+    "errorType": "A(z) „{field}” mező értéke érvénytelen.",
+    "errorTooLong": "A(z) „{field}” mező túl hosszú.",
+    "errorOption": "A(z) „{field}” mező értéke csak a felkínált lehetőségek egyike lehet."
   },
   "dashboard": {
     "recordsLabel": "Rekordok: {entity}",
     "addedThisMonth": "Ebben a hónapban hozzáadva",
+    "ownerMessages": "Üzenetek ({count})",
+    "ownerContact": "Kapcsolati adatok",
     "trackedFields": "Nyomon követett mezők"
   },
   "heroImage": {
@@ -98,5 +136,79 @@
     "failedRetry": "Nem sikerült – a próbálkozásod megmaradt",
     "unavailable": "A generálás most nem érhető el",
     "slow": "Ez tovább tart – töltsd újra az oldalt"
+  },
+  "inbox": {
+    "title": "Üzenetek",
+    "empty": "Még nincs üzenet. A kapcsolatfelvételi űrlapon küldött üzenetek itt jelennek meg.",
+    "ownerOnly": "Ez az oldal csak a prototípus tulajdonosának szól.",
+    "notConfigured": "Az üzenetek a közzétett prototípusban érhetők el.",
+    "loadError": "Az üzeneteket nem sikerült betölteni. Próbálja újra kicsit később.",
+    "unread": "Új",
+    "reply": "Válasz",
+    "back": "Vissza az áttekintéshez"
+  },
+  "howItWorks": {
+    "title": "Így működik"
+  },
+  "story": {
+    "chapters": "Fejezetek",
+    "chapter": "{number}. fejezet"
+  },
+  "copyRewrite": {
+    "open": "Szövegek szerkesztése",
+    "title": "Szövegek újraírása",
+    "description": "Írd le az MI-nek, hogyan írja át ezt az oldalt. Az előnézet ingyenes; a használata újra közzéteszi az oldalt.",
+    "instructions": "Utasítások az MI-nek",
+    "chars": "{count} / {max} karakter",
+    "tokens": "≈ {count} token (becslés)",
+    "reset": "Alapértelmezett visszaállítása",
+    "fullPrompt": "Teljes prompt",
+    "fullPromptEmpty": "Az első előnézet után jelenik meg",
+    "promptSizes": "Rendszer: {system} karakter · Prompt: {user} karakter",
+    "draft": "Előnézet készítése",
+    "drafting": "Az előnézet készül…",
+    "draftsLeft": "Mára maradt előnézet: {count}",
+    "limitReached": "A mai előnézetek elfogytak — próbáld holnap",
+    "slow": "Ez tovább tart — töltsd újra az oldalt",
+    "preview": "Előnézet",
+    "changedOf": "Módosított szövegek: {changed} / {total}",
+    "before": "Most",
+    "after": "Új",
+    "publishOwner": "Használom — 1 kredit",
+    "publishAdmin": "Közzététel",
+    "publishingButton": "Közzététel folyamatban…",
+    "publishing": "Közzététel: {stage}",
+    "published": "Közzétéve — töltsd újra az oldalt",
+    "reload": "Újratöltés",
+    "buyCredits": "Kredit vásárlása",
+    "history": "Előzmények",
+    "kindDraft": "Előnézet",
+    "kindPublish": "Közzététel",
+    "metrics": {
+      "cost": "Költség",
+      "tokensOut": "Kimeneti tokenek",
+      "tokensIn": "Bemeneti tokenek",
+      "copyChars": "Szöveg karakterei",
+      "eurPer1k": "Költség 1000 karakterenként",
+      "jsonOverhead": "JSON-többlet",
+      "changed": "Módosított szövegek",
+      "duration": "Idő",
+      "tokensOutShort": "{count} kimenet"
+    },
+    "errors": {
+      "busy": "Már fut valami — várj egy kicsit",
+      "limit": "A mai előnézetek elfogytak",
+      "noCredits": "Nincs több kredited",
+      "draftUnusable": "Ez az előnézet már nem használható — készíts újat",
+      "vmUnreachable": "A gyár nem érhető el — próbáld később",
+      "upstream": "Az MI nem válaszolt — próbáld újra",
+      "invalidResponse": "Az MI használhatatlan szövegeket adott — próbáld újra vagy módosítsd az utasításokat",
+      "staleDraft": "A szövegek időközben megváltoztak — készíts új előnézetet",
+      "busyVm": "A gyár foglalt — próbáld pár perc múlva",
+      "gate": "Az új verzió nem ment át az ellenőrzéseken — semmi sem változott",
+      "pushFailed": "A közzététel nem fejeződött be — nem vontunk le semmit",
+      "timeout": "Túl sokáig tartott — nem vontunk le semmit",
+      "generic": "Nem sikerült — próbáld újra"
+    }
   }
 }
