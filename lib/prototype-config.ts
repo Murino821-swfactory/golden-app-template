@@ -610,6 +610,53 @@ export const prototypeConfigSchema = z
 
 export type PrototypeConfig = z.infer<typeof prototypeConfigSchema>;
 
+/** Copy that would otherwise silently fall back to starter messages on a customer page.
+ * Published by emit-schema and enforced by the production gate from the same constants. */
+export const PRODUCTION_SECTION_COPY: Record<string, string[]> = {
+  hero: ["landing.headline", "landing.subheadline"],
+  features: ["landing.featuresHeading", "landing.features"],
+  howItWorks: ["landing.howItWorks.heading", "landing.howItWorks.steps"],
+  faq: ["landing.faq.heading", "landing.faq.items"],
+};
+export const PRODUCTION_PATTERN_COPY: Record<string, string[]> = {
+  cta: ["label", "title", "subtitle"],
+  contactForm: ["heading", "submitLabel", "intro"],
+  dashboard: ["title", "intro"],
+  dataGrid: ["entityLabel", "fieldLabels", "sampleRecords"],
+};
+
+export function parseProductionPrototypeConfig(input: unknown): PrototypeConfig {
+  const cfg = parsePrototypeConfig(input);
+  const issues: string[] = [];
+  const sections = cfg.patterns.landing?.sections ?? [];
+  if (!sections.includes("hero") || sections[0] !== "hero") issues.push("patterns.landing.sections: must start with hero");
+  if (sections.some(section => SECTION_COPY_SOURCE[section] === null)) issues.push("patterns.landing.sections: contains a section with no customer copy contract");
+  if (cfg.patterns.dataGrid && (!cfg.patterns.authGoogle || !cfg.patterns.dashboard)) issues.push("patterns.dataGrid: saved records require authGoogle and dashboard");
+  const fields = cfg.patterns.dataGrid?.entity.fields ?? [];
+  if (new Set(fields.map(field => field.key)).size !== fields.length) issues.push("patterns.dataGrid.entity.fields: keys must be unique");
+  for (const field of fields) if (!/^[a-z][a-zA-Z0-9_]*$/.test(field.key)) issues.push(`patterns.dataGrid.entity.fields: invalid key ${field.key}`);
+  for (const locale of cfg.locales) {
+    const block = cfg.content[locale];
+    const requirePath = (path: string) => {
+      const value = path.split(".").reduce<unknown>((node, key) => node && typeof node === "object" ? (node as Record<string, unknown>)[key] : undefined, block);
+      if (value === undefined || value === null || (typeof value === "string" && !value.trim()) || (Array.isArray(value) && !value.length)) issues.push(`content.${locale}.${path}: customer copy is required`);
+    };
+    for (const section of sections) for (const path of PRODUCTION_SECTION_COPY[section] ?? []) requirePath(path);
+    for (const [pattern, paths] of Object.entries(PRODUCTION_PATTERN_COPY)) {
+      if (cfg.patterns[pattern as PatternId]) for (const path of paths) requirePath(`${pattern}.${path}`);
+    }
+    const checkStrings = (value: unknown, path: string) => {
+      if (typeof value === "string" && !value.trim()) issues.push(`${path}: blank customer text`);
+      else if (Array.isArray(value)) value.forEach((item, index) => checkStrings(item, `${path}.${index}`));
+      else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) checkStrings(item, `${path}.${key}`);
+    };
+    checkStrings(block, `content.${locale}`);
+    if (block.description.length > 160) issues.push(`content.${locale}.description: at most 160 characters`);
+  }
+  if (issues.length) throw new Error(`Invalid production prototype copy:\n${issues.map(issue => `  - ${issue}`).join("\n")}`);
+  return cfg;
+}
+
 /**
  * Lift a pre-split config into the new shape.
  *

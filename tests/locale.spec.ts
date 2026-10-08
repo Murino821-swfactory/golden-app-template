@@ -92,7 +92,8 @@ test.describe("routing", () => {
     // The customer's own words, not just the chrome — the whole point of paying for a
     // second language. Both documents were identical before locale routing.
     const headline = contentFor(config, secondary!).landing?.headline;
-    if (headline) await expect(page.getByRole("heading", { name: headline })).toBeVisible();
+    // CTA copy may legitimately repeat the product name; only the hero H1 is this check.
+    if (headline) await expect(page.getByRole("heading", { level: 1, name: headline, exact: true })).toBeVisible();
   });
 
   test("both documents list every declared language as an alternate", async ({ page }) => {
