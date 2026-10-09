@@ -79,7 +79,15 @@
     "saveError": "Az adatokat nem sikerült menteni. Ellenőrizze a mezőket, és próbálja újra.",
     "callLabel": "{phone} hívása",
     "emailLabel": "E-mail küldése ide: {email}",
-    "mapLabel": "{address} megjelenítése a térképen"
+    "mapLabel": "{address} megjelenítése a térképen",
+    "phoneOptional": "Telefon (nem kötelező)",
+    "regarding": "Tárgy: {title}",
+    "clearRegarding": "Kérdezés konkrét ajánlat nélkül",
+    "headline": "Beosztás vagy szakma",
+    "bio": "Rólam",
+    "serviceArea": "Ahol dolgozom",
+    "website": "Weboldal",
+    "websiteLabel": "A(z) {url} weboldal megnyitása"
   },
   "cta": {
     "title": "Készen áll a kezdésre?",
@@ -145,7 +153,9 @@
     "loadError": "Az üzeneteket nem sikerült betölteni. Próbálja újra kicsit később.",
     "unread": "Új",
     "reply": "Válasz",
-    "back": "Vissza az áttekintéshez"
+    "back": "Vissza az áttekintéshez",
+    "regarding": "Tárgy: {title}",
+    "call": "Hívás"
   },
   "howItWorks": {
     "title": "Így működik"
@@ -210,5 +220,18 @@
       "timeout": "Túl sokáig tartott — nem vontunk le semmit",
       "generic": "Nem sikerült — próbáld újra"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Ár kérésre",
+    "perMonth": "{price} / hónap",
+    "status": {
+      "available": "Elérhető",
+      "reserved": "Lefoglalva",
+      "unavailable": "Nem elérhető"
+    },
+    "all": "Mind",
+    "filterLabel": "Ajánlatok szűrése",
+    "showMap": "Megjelenítés térképen",
+    "hideMap": "Térkép elrejtése"
   }
 }

@@ -10,6 +10,10 @@ test.describe("inbox logic", () => {
     expect(parseMessage("m2", { email: "a@b.sk", message: "x", name: "Alex", readAt: at, createdAt: at })?.read).toBe(true);
     expect(parseMessage("m2", { email: "a@b.sk", message: "x", name: "Alex", readAt: at, createdAt: at })?.name).toBe("Alex");
     expect(parseMessage("m3", { message: "no sender" })).toBeNull();
+    // Phone and the offer asked about (2026-10-09); a listing needs both id and title.
+    const withExtras = parseMessage("m4", { email: "a@b.sk", message: "x", phone: "+421 900", listingId: "offer-1", listingTitle: "Byt", createdAt: at });
+    expect(withExtras).toMatchObject({ phone: "+421 900", listing: { id: "offer-1", title: "Byt" } });
+    expect(parseMessage("m5", { email: "a@b.sk", message: "x", listingId: "offer-1", createdAt: at })).not.toHaveProperty("listing");
   });
   test("inboxView: not configured, checking, forbidden, ready — never a Firestore call for a stranger", () => {
     expect(inboxView({ available: false, role: undefined })).toBe("not-configured");

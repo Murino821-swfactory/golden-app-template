@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Skeleton } from "@/components/ui/skeleton";
 import { config } from "@/lib/prototype-config";
+import type { MapPoint } from "@/lib/listings";
 
 /**
  * map-base — an interactive MapLibre map centred where the config says.
@@ -11,8 +12,9 @@ import { config } from "@/lib/prototype-config";
  * Deliberately just the base map: container, dark CARTO tiles, zoom/attribution controls.
  * The propcheck original (`PriceMap.tsx`, 14 KB) is a hexagon price choropleth — that is
  * propcheck's analytics, not a generic map, so only the MapLibre shell is portable.
- * A points/routes layer is a later decision [founder 2026-09-12]; until then records live
- * in `data-grid` and the map demonstrates the capability.
+ * Points (2026-10-09): the offers of the `listings` pattern that carry a location are
+ * pinned on it, and the view fits them. A marker's popup is set with `setText`, never HTML —
+ * its title is model-written copy.
  *
  * MapLibre is loaded with a dynamic import inside an effect: it touches `window` at module
  * scope, so a static export (`output: "export"`) fails if it is imported at the top level.
@@ -20,7 +22,7 @@ import { config } from "@/lib/prototype-config";
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-export function MapBase() {
+export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -46,6 +48,19 @@ export function MapBase() {
           attributionControl: { compact: true },
         });
         instance.addControl(new maplibre.NavigationControl(), "top-right");
+        // The pin takes the palette's accent, so "Change colour" is the only thing that sets it.
+        const accent = getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || undefined;
+        for (const point of points) {
+          new maplibre.Marker({ color: accent })
+            .setLngLat([point.lng, point.lat])
+            .setPopup(new maplibre.Popup({ offset: 24 }).setText(point.label))
+            .addTo(instance);
+        }
+        if (points.length > 1) {
+          const bounds = new maplibre.LngLatBounds();
+          for (const point of points) bounds.extend([point.lng, point.lat]);
+          instance.fitBounds(bounds, { padding: 48, maxZoom: 15, duration: 0 });
+        }
         instance.on("load", () => {
           if (!cancelled) setReady(true);
         });
@@ -60,7 +75,7 @@ export function MapBase() {
       cancelled = true;
       map?.remove();
     };
-  }, [mapConfig]);
+  }, [mapConfig, points]);
 
   if (!mapConfig) return null;
 

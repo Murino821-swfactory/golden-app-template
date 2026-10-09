@@ -79,7 +79,15 @@
     "saveError": "The details could not be saved. Check the fields and try again.",
     "callLabel": "Call {phone}",
     "emailLabel": "Send an e-mail to {email}",
-    "mapLabel": "Show {address} on a map"
+    "mapLabel": "Show {address} on a map",
+    "phoneOptional": "Phone (optional)",
+    "regarding": "About: {title}",
+    "clearRegarding": "Ask without a specific offer",
+    "headline": "Role or profession",
+    "bio": "About me",
+    "serviceArea": "Where I work",
+    "website": "Website",
+    "websiteLabel": "Open the website {url}"
   },
   "cta": {
     "title": "Ready to get started?",
@@ -145,7 +153,9 @@
     "loadError": "Messages could not be loaded. Try again shortly.",
     "unread": "New",
     "reply": "Reply",
-    "back": "Back to dashboard"
+    "back": "Back to dashboard",
+    "regarding": "About: {title}",
+    "call": "Call"
   },
   "howItWorks": {
     "title": "How it works"
@@ -210,5 +220,18 @@
       "timeout": "It took too long — nothing was charged",
       "generic": "It didn't work — try again"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Price on request",
+    "perMonth": "{price} / month",
+    "status": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "unavailable": "Unavailable"
+    },
+    "all": "All",
+    "filterLabel": "Filter offers",
+    "showMap": "Show on map",
+    "hideMap": "Hide map"
   }
 }

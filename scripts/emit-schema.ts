@@ -22,6 +22,7 @@ import {
   prototypeConfigSchema,
   PRODUCTION_SECTION_COPY,
   PRODUCTION_PATTERN_COPY,
+  PRODUCTION_REQUIRED_PATTERNS,
 } from "../lib/prototype-config";
 
 // `io: "input"` describes what a producer must SEND. Without it, fields carrying a zod
@@ -59,6 +60,9 @@ const document = {
     // filtered down to English without being told.
     locales: [...LOCALES],
     requiredPatternCopy: PRODUCTION_PATTERN_COPY,
+    // Patterns a production (non-presentation) prototype must enable. The harness does not
+    // read this key; the production validator enforces it and names it in repair feedback.
+    requiredPatterns: [...PRODUCTION_REQUIRED_PATTERNS],
   },
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])

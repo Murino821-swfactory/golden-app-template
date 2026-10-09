@@ -9,6 +9,7 @@ import { ContactSection } from "@/components/sections/contact";
 import { CtaSection } from "@/components/sections/cta";
 import { UseCasesSection } from "@/components/sections/use-cases";
 import { ComparisonSection } from "@/components/sections/comparison";
+import { ListingsSection } from "@/components/sections/listings";
 import { LandingStory } from "@/components/sections/landing-story";
 import { landingJsonLd } from "@/lib/seo";
 import { config } from "@/lib/prototype-config";
@@ -33,6 +34,7 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   cta: CtaSection,
   useCases: UseCasesSection,
   comparison: ComparisonSection,
+  listings: ListingsSection,
 };
 
 export default async function LandingPage({ params }: { params: Promise<{ locale?: string }> }) {
