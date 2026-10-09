@@ -1,24 +1,24 @@
 /**
- * How opaque the palette's background is over the AI hero image.
+ * What is drawn over the AI hero image.
  *
- * Contrast over the image is NOT guaranteed, by founder decision (2026-09-25): the
- * palettes keep their text barely above WCAG AA (muted text 4.5–4.6 : 1), so a guarantee
- * against the worst pixel an image can contain (pure white) needs 86–97 % cover — the
- * image would be all but invisible. If a generated image and a palette read poorly
- * together, the visitor clicks "Change colour" and the overlay, which is drawn in
- * `var(--background)`, repaints with the next palette.
+ * Founder decision 2026-10-09: the image is shown FULLY visible — no even tint over it.
+ * (Until then a 75 % layer of the palette's background covered the whole image, which
+ * made it read as a dark smudge.) Contrast over the image is still NOT guaranteed
+ * (founder decision 2026-09-25); readability comes from a text shadow in the palette's
+ * background colour on the hero copy (`HERO_TEXT_SHADOW`), which covers only the glyph
+ * edges, and from "Change colour" when an image and a palette still read poorly together.
  *
- * The overlay is drawn in the active palette's background, so it follows "Change colour"
- * with no code, and a gradient into the same colour at the bottom lets the hero run into
- * the next section. Record: sw-factory docs/decisions/prototype-hero-image.md.
+ * The one remaining layer is a short fade into `var(--background)` across the bottom
+ * strip, so the hero runs into the next section without a hard edge. Both follow
+ * "Change colour" with no code. Record: sw-factory docs/decisions/prototype-hero-image.md.
  */
-export const HERO_OVERLAY_ALPHA = 0.75;
+export const HERO_FADE_START = 80;
 
-/** The overlay's CSS background, one layer per concern: the even tint, then the fade out. */
-export function heroOverlayBackground(alpha: number = HERO_OVERLAY_ALPHA): string {
-  const percent = Math.round(alpha * 100);
-  return [
-    "linear-gradient(to bottom, transparent 55%, var(--background) 100%)",
-    `linear-gradient(color-mix(in srgb, var(--background) ${percent}%, transparent), color-mix(in srgb, var(--background) ${percent}%, transparent))`,
-  ].join(", ");
+/** The overlay's CSS background: only the fade out of the bottom strip, no tint. */
+export function heroOverlayBackground(fadeStart: number = HERO_FADE_START): string {
+  return `linear-gradient(to bottom, transparent ${fadeStart}%, var(--background) 100%)`;
 }
+
+/** Applied to the hero copy only while an image is shown. */
+export const HERO_TEXT_SHADOW =
+  "0 1px 2px var(--background), 0 0 12px var(--background), 0 0 24px var(--background)";

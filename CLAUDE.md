@@ -417,9 +417,11 @@ generate one; the founder any number; both may hide or show it. The server is fa
   demo on tokenwise.sk/demo/golden has a slug but no such endpoint).
 - The hero `<section>` is full width; its content keeps the old `max-w-5xl` box, so with
   no image it looks as before. The image layer is absolute (moves nothing, CLS 0).
-- Readability over the image is not guaranteed (founder decision): the overlay is drawn in
-  `var(--background)` at `HERO_OVERLAY_ALPHA`, and a visitor who cannot read the text
-  clicks "Change colour".
+- The image is shown fully visible (founder decision 2026-10-09): no even tint over it,
+  only a fade into `var(--background)` across the bottom strip (`HERO_FADE_START`).
+  Readability over the image is still not guaranteed (founder decision 2026-09-25): the
+  hero copy gets `HERO_TEXT_SHADOW` in the palette's background while an image is shown,
+  and a visitor who cannot read the text clicks "Change colour".
 - The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
   copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
