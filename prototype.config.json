@@ -1,306 +1,488 @@
 {
-  "appName": "Golden App Template",
+  "appName": "integrácia openbanking system",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "burnt-orange-misty-ice-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
-        "contact",
+        "faq",
         "cta"
-      ],
-      "presentation": "story"
+      ]
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalExpenses",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "approvedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "approved"
+        },
+        {
+          "id": "avgAmount",
+          "field": "amount",
+          "agg": "avg"
+        }
+      ]
+    },
     "cta": {
       "href": "/login"
     },
-    "contactForm": {
-      "phone": "optional"
-    },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "expense",
         "fields": [
           {
-            "key": "name",
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "description",
             "type": "text",
+            "required": true
+          },
+          {
+            "key": "amount",
+            "type": "number",
             "required": true
           },
           {
             "key": "category",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "food",
+              "travel",
+              "office",
+              "software",
+              "other"
+            ],
+            "required": true
+          },
+          {
+            "key": "paymentType",
+            "type": "select",
+            "options": [
+              "card",
+              "cash",
+              "transfer"
             ]
           },
           {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "pending",
+              "approved",
+              "rejected"
+            ]
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "starter",
+        "business",
+        "enterprise"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "users"
         },
         {
-          "key": "rooms"
+          "key": "receiptsPerMonth"
         }
       ],
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
-          "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
-          }
-        },
-        {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "id": "plan-starter",
+          "category": "starter",
+          "price": 0,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "users": 1,
+            "receiptsPerMonth": 50
+          }
+        },
+        {
+          "id": "plan-business",
+          "category": "business",
+          "price": 29,
+          "pricePeriod": "month",
+          "attributes": {
+            "users": 5,
+            "receiptsPerMonth": 500
+          }
+        },
+        {
+          "id": "plan-enterprise",
+          "category": "enterprise",
+          "price": 79,
+          "pricePeriod": "month",
+          "attributes": {
+            "users": 25,
+            "receiptsPerMonth": 2000
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.1486,
+        "lng": 17.1077
+      },
+      "zoom": 12
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Track company card payments, scan receipts and manage complete business accounting — all in one place.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every company expense tracked and accounted",
+        "subheadline": "Business owners scan receipts, log card payments and close the books without switching between tools.",
+        "featuresHeading": "Everything your company accounting needs",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "credit-card",
+            "title": "Company Card Payments",
+            "description": "Log and categorise every card transaction as it happens, with no manual data entry needed."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "camera",
+            "title": "Receipt Scanning",
+            "description": "Photograph paper receipts and cash payment slips to capture the amount, date and category automatically."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "Reports & Predictions",
+            "description": "View monthly expense summaries and spending forecasts to keep your budget on track."
+          },
+          {
+            "icon": "file-text",
+            "title": "Full Accounting",
+            "description": "Record and classify every transaction so your books are always ready for your accountant or tax return."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "From receipt to record in seconds",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Log in with your Google account to access your company's expense workspace."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add an expense",
+              "description": "Enter a card payment manually or photograph a receipt to scan it straight into the register."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Categorise",
+              "description": "Assign the expense to the right category and payment type, then set its approval status."
+            },
+            {
+              "title": "Review & export",
+              "description": "Check your dashboard for totals and trends, then export the data for your accountant."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Common questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Can I scan cash receipts?",
+              "answer": "Yes — photograph any paper receipt or cash payment block and the system records the amount, date and description for you."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "How are company card payments tracked?",
+              "answer": "You can log card transactions manually; each entry is linked to a category and approval status in your expense register."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Can I generate expense reports?",
+              "answer": "The dashboard shows a live summary of your expenses. Filter by category, payment type or status and export the data at any time."
+            },
+            {
+              "question": "Is my data private?",
+              "answer": "Your expense records are tied to your Google account and visible only to you and the people you explicitly authorise."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Expense Dashboard",
+        "intro": "An overview of your company expenses — totals, approval statuses and spending trends at a glance.",
+        "kpiLabels": {
+          "totalExpenses": "Total Expenses",
+          "approvedShare": "Approved",
+          "avgAmount": "Average Amount"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Sign in and start",
+        "title": "Take control of company spending",
+        "subtitle": "Sign in with Google and start logging, scanning and reporting your business expenses today."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Expense",
         "fieldLabels": {
-          "name": "Name",
+          "date": "Date",
+          "description": "Description",
+          "amount": "Amount (€)",
           "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "paymentType": "Payment Type",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "date": "2026-10-01",
+            "description": "Office supplies",
+            "amount": 45.8,
+            "category": "office",
+            "paymentType": "card",
+            "status": "approved"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "date": "2026-09-28",
+            "description": "Client lunch",
+            "amount": 62.5,
+            "category": "food",
+            "paymentType": "cash",
+            "status": "pending"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "date": "2026-09-15",
+            "description": "Train tickets",
+            "amount": 28,
+            "category": "travel",
+            "paymentType": "card",
+            "status": "approved"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Plans & Modules",
+        "intro": "Choose the plan that fits your business. Scan receipts, manage company cards and close your books — at the scale you need.",
+        "notice": "These plans are illustrative examples; the owner will publish current pricing before going live.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "starter": "Starter",
+          "business": "Business",
+          "enterprise": "Enterprise"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "users": "Users",
+          "receiptsPerMonth": "Receipts / month"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "plan-starter": {
+            "title": "Starter Plan",
+            "summary": "Track personal and small-business expenses with receipt scanning and basic reporting, free of charge.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "1 user",
+              "50 receipts per month",
+              "Basic reporting"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "plan-business": {
+            "title": "Business Plan",
+            "summary": "Full expense management for small teams: company card tracking, receipt scanning and monthly expense reports.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Up to 5 users",
+              "500 receipts per month",
+              "Spending predictions"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "plan-enterprise": {
+            "title": "Enterprise Plan",
+            "summary": "Complete accounting for larger companies with a full ledger, advanced predictions and priority support.",
+            "highlights": [
+              "Up to 25 users",
+              "2 000 receipts per month",
+              "Full accounting export"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "Evidujte firemné platby kartou, skenujte bločky a spravujte kompletné účtovníctvo — všetko na jednom mieste.",
+      "landing": {
+        "headline": "Každý firemný výdavok evidovaný a zaúčtovaný",
+        "subheadline": "Podnikatelia skenujú bločky, evidujú platby kartou a uzatvárajú účtovníctvo bez prepínania medzi nástrojmi.",
+        "featuresHeading": "Všetko, čo vaše firemné účtovníctvo potrebuje",
+        "features": [
+          {
+            "icon": "credit-card",
+            "title": "Platby firemnou kartou",
+            "description": "Zaznamenajte a zatrieďte každú transakciu kartou ihneď bez nutnosti ručného zadávania údajov."
+          },
+          {
+            "icon": "camera",
+            "title": "Skenovanie bločkov",
+            "description": "Odfotografujte papierový bloček alebo doklad o platbe v hotovosti a systém zachytí sumu, dátum a kategóriu."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Reporty a predikcie",
+            "description": "Sledujte mesačné prehľady výdavkov a predpovede čerpania rozpočtu, aby ste mali financie pod kontrolou."
+          },
+          {
+            "icon": "file-text",
+            "title": "Kompletné účtovníctvo",
+            "description": "Zaznamenajte a klasifikujte každú transakciu, aby boli vaše záznamy vždy pripravené pre účtovníka."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Od bločka k záznamu za niekoľko sekúnd",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa svojím Google účtom a vstúpte do pracovného priestoru výdavkov vašej firmy."
+            },
+            {
+              "title": "Pridajte výdavok",
+              "description": "Zadajte transakciu kartou ručne alebo odfotografujte bloček a naskenujte ho priamo do registra."
+            },
+            {
+              "title": "Kategorizujte",
+              "description": "Priraďte výdavok správnej kategórii a spôsobu platby, potom nastavte stav schválenia."
+            },
+            {
+              "title": "Skontrolujte a exportujte",
+              "description": "Pozrite si prehľad na dashboarde a exportujte dáta pre svojho účtovníka alebo daňové priznanie."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Môžem skenovať bločky z hotovostných platieb?",
+              "answer": "Áno — odfotografujte akýkoľvek papierový bloček alebo doklad a systém zapíše sumu, dátum a popis za vás."
+            },
+            {
+              "question": "Ako sa evidujú platby firemnou kartou?",
+              "answer": "Transakcie kartou zadávate ručne; každá je priradená ku kategórii a stavu schválenia v registri výdavkov."
+            },
+            {
+              "question": "Môžem generovať reporty výdavkov?",
+              "answer": "Dashboard zobrazuje živý prehľad vašich výdavkov. Filtrujte podľa kategórie, spôsobu platby alebo stavu a kedykoľvek exportujte dáta."
+            },
+            {
+              "question": "Sú moje dáta v bezpečí?",
+              "answer": "Záznamy výdavkov sú viazané na váš Google účet a viditeľné iba vám a osobám, ktoré sami autorizujete."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Prehľad výdavkov",
+        "intro": "Prehľad firemných výdavkov — celkové sumy, stavy schválenia a trendy čerpania na prvý pohľad.",
+        "kpiLabels": {
+          "totalExpenses": "Celkom výdavkov",
+          "approvedShare": "Schválené",
+          "avgAmount": "Priemerná suma"
+        }
+      },
+      "cta": {
+        "label": "Prihlásiť sa a začať",
+        "title": "Majte firemné výdavky pod kontrolou",
+        "subtitle": "Prihláste sa Google účtom a začnite evidovať, skenovať a reportovať firemné výdavky ešte dnes."
+      },
+      "dataGrid": {
+        "entityLabel": "Výdavok",
+        "fieldLabels": {
+          "date": "Dátum",
+          "description": "Popis",
+          "amount": "Suma (€)",
+          "category": "Kategória",
+          "paymentType": "Spôsob platby",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "date": "2026-10-01",
+            "description": "Kancelárske potreby",
+            "amount": 45.8,
+            "category": "office",
+            "paymentType": "card",
+            "status": "approved"
+          },
+          {
+            "date": "2026-09-28",
+            "description": "Obed s klientom",
+            "amount": 62.5,
+            "category": "food",
+            "paymentType": "cash",
+            "status": "pending"
+          },
+          {
+            "date": "2026-09-15",
+            "description": "Cestovné lístky",
+            "amount": 28,
+            "category": "travel",
+            "paymentType": "card",
+            "status": "approved"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Plány a moduly",
+        "intro": "Vyberte si plán pre vašu firmu. Skenujte bločky, spravujte firemné karty a uzatvárajte účtovníctvo — v rozsahu, ktorý potrebujete.",
+        "notice": "Tieto plány sú ilustratívne príklady; aktuálne ceny zverejní prevádzkovateľ pred spustením.",
+        "categoryLabels": {
+          "starter": "Štartér",
+          "business": "Business",
+          "enterprise": "Enterprise"
+        },
+        "attributeLabels": {
+          "users": "Používatelia",
+          "receiptsPerMonth": "Bločky / mesiac"
+        },
+        "items": {
+          "plan-starter": {
+            "title": "Štartér",
+            "summary": "Evidujte osobné a malé firemné výdavky so skenovaním bločkov a základným reportingom — bezplatne.",
+            "highlights": [
+              "1 používateľ",
+              "50 bločkov za mesiac",
+              "Základný reporting"
+            ]
+          },
+          "plan-business": {
+            "title": "Business plán",
+            "summary": "Kompletná správa výdavkov pre malé tímy: sledovanie firemných kariet, skenovanie bločkov a mesačné reporty.",
+            "highlights": [
+              "Až 5 používateľov",
+              "500 bločkov za mesiac",
+              "Predikcie čerpania"
+            ]
+          },
+          "plan-enterprise": {
+            "title": "Enterprise plán",
+            "summary": "Kompletné účtovníctvo pre väčšie firmy s plnou účtovnou knihou, pokročilými predikciami a prioritnou podporou.",
+            "highlights": [
+              "Až 25 používateľov",
+              "2 000 bločkov za mesiac",
+              "Export účtovníctva"
+            ]
+          }
+        }
       }
     }
   }
