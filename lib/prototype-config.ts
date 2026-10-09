@@ -153,7 +153,7 @@ export function sampleRecordIssues(
   const known = new Set(fields.map((f) => f.key));
   for (const key of Object.keys(sample)) if (!known.has(key)) issues.push(`unknown field "${key}"`);
   for (const field of fields) {
-    const v = sample[field.key];
+    const v = Object.hasOwn(sample, field.key) ? sample[field.key] : undefined;
     if (v === undefined || v === "") {
       if (field.required) issues.push(`required field "${field.key}" is missing`);
       continue;
@@ -570,7 +570,7 @@ export const prototypeConfigSchema = z
       // the column header falls back to a machine key like `created_at`.
       const labels = block.dataGrid?.fieldLabels ?? {};
       for (const field of fields) {
-        if (!labels[field.key]) {
+        if (!Object.hasOwn(labels, field.key) || !labels[field.key]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dataGrid", "fieldLabels", field.key],
@@ -597,7 +597,7 @@ export const prototypeConfigSchema = z
         }
       });
       for (const kpi of kpis) {
-        if (!block.dashboard?.kpiLabels?.[kpi.id]) {
+        if (!block.dashboard?.kpiLabels || !Object.hasOwn(block.dashboard.kpiLabels, kpi.id) || !block.dashboard.kpiLabels[kpi.id]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dashboard", "kpiLabels", kpi.id],

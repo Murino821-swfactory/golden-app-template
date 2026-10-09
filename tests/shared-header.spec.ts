@@ -4,6 +4,7 @@ import { join, relative, resolve } from "node:path";
 import { FONT_FAMILIES, FONT_IDS, nextFontId } from "@tokenwise/shared-ui/theming";
 import sharedUiPackage from "../packages/shared-ui/package.json";
 import { config } from "../lib/prototype-config";
+import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
 
 /**
  * The header is `@tokenwise/shared-ui`'s (sw-factory spec 2026-09-25-shared-header-design.md).
@@ -27,7 +28,7 @@ function sources(dir: string): string[] {
 }
 
 function fontButton(page: Page) {
-  return page.getByRole("banner").getByRole("button", { name: /^Change font/ });
+  return page.getByRole("banner").getByRole("button", { name: labelPrefix(uiCopy.common.changeFontLabel!.split("{name}")[0]!) });
 }
 
 // AC 1. Stated as landmarks, not as "no <header> in the source": a <header> inside <main>
@@ -80,7 +81,7 @@ test.describe("at 390px", () => {
       el.querySelector("span")!.textContent =
         "An Extremely Long Customer Application Name That Keeps Going And Going";
     });
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeInViewport({ ratio: 1 });
+    await expect(page.getByRole("button", { name: uiCopy.common.openMenu! })).toBeInViewport({ ratio: 1 });
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth
     );
@@ -90,13 +91,13 @@ test.describe("at 390px", () => {
   test("font and languages live in the menu, and Escape returns focus to the toggle", async ({ page }) => {
     await page.goto("./");
     await expect(fontButton(page)).toBeHidden();
-    const toggle = page.getByRole("button", { name: "Open menu" });
+    const toggle = page.getByRole("button", { name: uiCopy.common.openMenu! });
     await toggle.click();
-    const dialog = page.getByRole("dialog", { name: "Menu" });
+    const dialog = page.getByRole("dialog", { name: uiCopy.common.menu! });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("button", { name: /^Change font/ })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: labelPrefix(uiCopy.common.changeFontLabel!.split("{name}")[0]!) })).toBeVisible();
     if (config.locales.length > 1) {
-      await expect(dialog.getByRole("navigation", { name: "Language" })).toBeVisible();
+      await expect(dialog.getByRole("navigation", { name: uiCopy.common.language! })).toBeVisible();
     }
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
@@ -128,10 +129,10 @@ test.describe("font", () => {
 
   test("its accessible name says which face is on screen and where it sits", async ({ page }) => {
     await page.goto("./");
-    await expect(fontButton(page)).toHaveAttribute("aria-label", "Change font: Inter (2 of 10)");
+    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: "Inter", position: 2, total: FONT_IDS.length }));
     await fontButton(page).click();
     const next = FONT_FAMILIES.find((f) => f.id === nextFontId("inter"))!;
-    await expect(fontButton(page)).toHaveAttribute("aria-label", `Change font: ${next.name} (3 of 10)`);
+    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: next.name, position: 3, total: FONT_IDS.length }));
   });
 
   test("the choice survives a reload and is in place before the header is parsed", async ({ page }) => {
@@ -185,8 +186,8 @@ test("the header is styled, not bare markup (the package's classes were compiled
 
 test("the cart is always there and says it is empty", async ({ page }) => {
   await page.goto("./");
-  const cart = page.getByRole("banner").getByRole("button", { name: "Cart, 0 items" });
+  const cart = page.getByRole("banner").getByRole("button", { name: formatLabel(uiCopy.common.cartLabel!, { count: 0 }) });
   await expect(cart).toBeVisible();
   await cart.click();
-  await expect(page.getByRole("status").filter({ hasText: "Your cart is empty" })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: uiCopy.common.cartEmpty! })).toBeVisible();
 });

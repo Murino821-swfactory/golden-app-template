@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { LOCALES, config, contentFor } from "../lib/prototype-config";
+import { uiCopy, labelPrefix } from "./ui-copy";
 import { localePath, routeFromPathname } from "../lib/locale-routing";
 
 /**
@@ -133,11 +134,11 @@ test.describe("routing", () => {
     await page.goto("./login");
     // The shared header (2026-09-25): `EN ▾` opens the list on a wide screen; below 640px
     // the languages live in the menu. Either way the target is a real link with hreflang.
-    const openMenu = page.getByRole("button", { name: "Open menu" });
+    const openMenu = page.getByRole("button", { name: uiCopy.common.openMenu! });
     if (await openMenu.isVisible()) {
       await openMenu.click();
     } else {
-      await page.getByRole("banner").getByRole("button", { name: /^Language/ }).click();
+      await page.getByRole("banner").getByRole("button", { name: labelPrefix(`${uiCopy.common.language!}:`) }).click();
     }
     await page.locator(`a[hreflang="${secondary!}"]:visible`).click();
 
@@ -155,7 +156,7 @@ test("a single-language prototype renders no switcher at all", async ({ page }) 
   await page.goto("./");
   // Not "hidden" — absent. A control offering one choice is chrome with nothing behind it.
   // By name: the header also carries tokenwise.sk's nav (founder decision 2026-09-28).
-  await expect(page.getByRole("navigation", { name: "Language" })).toHaveCount(0);
+  await expect(page.getByRole("navigation", { name: uiCopy.common.language! })).toHaveCount(0);
 });
 
 test("the Change colour button speaks the page's language", async ({ page }) => {

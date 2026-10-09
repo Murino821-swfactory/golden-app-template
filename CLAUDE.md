@@ -62,6 +62,8 @@ checks records/auth/dashboard dependencies and unique field keys. Copy requireme
 published as `productionValidation`, `menu.sections.requiredCopy` and
 `menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
 The usual parser stays compatible with local starter fixtures and archived prototypes.
+Field/KPI labels and sample values are JSON own properties (`Object.hasOwn`); inherited
+JavaScript properties such as `constructor` never satisfy a required label or sample value.
 Tests: `tests/production-copy.spec.ts`; cross-repo decision:
 [prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
 
@@ -542,3 +544,7 @@ public paths. A custom deployment must publish these files at its own appropriat
 
 Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
 `npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.
+
+Prototype export browser gates read chrome, login and contact labels from the configured
+default locale bundle. They must not require English controls on a Slovak-first export.
+The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
