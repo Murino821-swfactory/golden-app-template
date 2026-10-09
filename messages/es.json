@@ -79,7 +79,15 @@
     "saveError": "No se han podido guardar los datos. Revisa los campos e inténtalo de nuevo.",
     "callLabel": "Llamar al {phone}",
     "emailLabel": "Enviar un correo a {email}",
-    "mapLabel": "Ver {address} en el mapa"
+    "mapLabel": "Ver {address} en el mapa",
+    "phoneOptional": "Teléfono (opcional)",
+    "regarding": "Sobre: {title}",
+    "clearRegarding": "Preguntar sin una oferta concreta",
+    "headline": "Cargo o profesión",
+    "bio": "Sobre mí",
+    "serviceArea": "Dónde trabajo",
+    "website": "Sitio web",
+    "websiteLabel": "Abrir el sitio {url}"
   },
   "cta": {
     "title": "¿Listo para empezar?",
@@ -145,7 +153,9 @@
     "loadError": "No se han podido cargar los mensajes. Inténtalo de nuevo en un momento.",
     "unread": "Nuevo",
     "reply": "Responder",
-    "back": "Volver al panel"
+    "back": "Volver al panel",
+    "regarding": "Sobre: {title}",
+    "call": "Llamar"
   },
   "howItWorks": {
     "title": "Cómo funciona"
@@ -210,5 +220,18 @@
       "timeout": "Tardó demasiado — no se cobró nada",
       "generic": "No funcionó — inténtalo de nuevo"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Precio a consultar",
+    "perMonth": "{price} / mes",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado",
+      "unavailable": "No disponible"
+    },
+    "all": "Todo",
+    "filterLabel": "Filtrar ofertas",
+    "showMap": "Ver en el mapa",
+    "hideMap": "Ocultar mapa"
   }
 }

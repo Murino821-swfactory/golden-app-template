@@ -79,7 +79,15 @@
     "saveError": "Die Angaben konnten nicht gespeichert werden. Prüfen Sie die Felder und versuchen Sie es erneut.",
     "callLabel": "{phone} anrufen",
     "emailLabel": "E-Mail an {email} senden",
-    "mapLabel": "{address} auf der Karte anzeigen"
+    "mapLabel": "{address} auf der Karte anzeigen",
+    "phoneOptional": "Telefon (optional)",
+    "regarding": "Betrifft: {title}",
+    "clearRegarding": "Ohne bestimmtes Angebot fragen",
+    "headline": "Funktion oder Beruf",
+    "bio": "Über mich",
+    "serviceArea": "Wo ich tätig bin",
+    "website": "Website",
+    "websiteLabel": "Website {url} öffnen"
   },
   "cta": {
     "title": "Bereit loszulegen?",
@@ -145,7 +153,9 @@
     "loadError": "Die Nachrichten konnten nicht geladen werden. Versuchen Sie es gleich noch einmal.",
     "unread": "Neu",
     "reply": "Antworten",
-    "back": "Zurück zur Übersicht"
+    "back": "Zurück zur Übersicht",
+    "regarding": "Betrifft: {title}",
+    "call": "Anrufen"
   },
   "howItWorks": {
     "title": "So funktioniert es"
@@ -210,5 +220,18 @@
       "timeout": "Das hat zu lange gedauert — nichts berechnet",
       "generic": "Hat nicht geklappt — erneut versuchen"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Preis auf Anfrage",
+    "perMonth": "{price} / Monat",
+    "status": {
+      "available": "Verfügbar",
+      "reserved": "Reserviert",
+      "unavailable": "Nicht verfügbar"
+    },
+    "all": "Alle",
+    "filterLabel": "Angebote filtern",
+    "showMap": "Auf der Karte zeigen",
+    "hideMap": "Karte ausblenden"
   }
 }

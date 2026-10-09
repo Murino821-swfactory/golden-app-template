@@ -10,6 +10,7 @@ import { useInbox } from "@/hooks/use-inbox";
 import { useOwnerRole } from "@/hooks/use-owner-role";
 import { localePath } from "@/lib/locale-routing";
 import { inboxView, replyHref } from "@/lib/messages";
+import { telHref } from "@/lib/owner-contact";
 import { config } from "@/lib/prototype-config";
 
 function Inbox() {
@@ -61,6 +62,16 @@ function Inbox() {
                 </summary>
                 <div className="space-y-3 pb-4">
                   {m.name && <p className="text-sm text-muted-foreground">{m.email}</p>}
+                  {m.phone && (
+                    <p className="text-sm">
+                      <a className="inline-flex min-h-11 items-center hover:underline" href={telHref(m.phone)} aria-label={`${t("call")} ${m.phone}`}>
+                        {m.phone}
+                      </a>
+                    </p>
+                  )}
+                  {m.listing && (
+                    <p data-inbox-listing className="text-sm font-medium">{t("regarding", { title: m.listing.title })}</p>
+                  )}
                   <p className="whitespace-pre-wrap text-sm">{m.message}</p>
                   <Button asChild variant="outline" className="h-11">
                     <a href={replyHref(m, config.appName)}>{t("reply")}</a>

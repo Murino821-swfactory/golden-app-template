@@ -28,6 +28,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
 
 ## Critical Rules for Fast Implementation
 
@@ -548,3 +549,35 @@ Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
 Prototype export browser gates read chrome, login and contact labels from the configured
 default locale bundle. They must not require English controls on a Slovak-first export.
 The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
+
+## Listings, required patterns, phone and profile (2026-10-09)
+
+Founder decision for the Realitná únia SR presentation; the patterns are generic, not
+real-estate specific. Record: sw-factory `docs/decisions/2026-10-09-listings-pattern.md`.
+
+- **`listings` (phase A)** — a public catalogue of offers: `patterns.listings` holds
+  categories (keys), up to four numeric attributes with optional units, an ISO currency and
+  3–12 items (id, category, price, `pricePeriod`, status, attribute values, optional
+  location); `content.<locale>.listings` holds heading, intro, the illustrative `notice`,
+  labels and each item's title/summary/highlights, plus `inquireLabel`. The offers are
+  ILLUSTRATIVE and static (no Firestore, no rules change); an owner-managed catalogue
+  with photos is phase B. The pattern and the `listings` landing section are enabled
+  together. Offers are kept out of llms.txt and JSON-LD — discovery must not present
+  example offers as facts.
+- **Map:** offers with a location are pinned on `mapBase` (dashboard) and, on the landing,
+  on a map mounted only after "Show on map": loading third-party tiles on page load would
+  put a network dependency into every prototype's console-clean smoke gate.
+- **Required patterns:** `parseProductionPrototypeConfig` refuses a composition without
+  `listings`, `mapBase`, `dashboard` and `authGoogle` (`PRODUCTION_REQUIRED_PATTERNS`,
+  published as `menu.requiredPatterns`; each purpose says "ALWAYS enable"). The harness is
+  unchanged: its bounded repair receives the validator's message. A presentation-only
+  config (landing + cta — the factory's brief fallback) is exempt (`isPresentationOnly`),
+  or a rejected answer would leave no publishable prototype at all.
+- **Contact form:** `patterns.contactForm.phone` = `hidden` (default) | `optional` |
+  `required`. "Ask about this offer" on a card selects it (`lib/listing-inquiry.ts`) and the
+  form sends `listingId` + `listingTitle`. factory-web `prototypeContact` validates and
+  stores both, and the owner's inbox and e-mail show them.
+- **Profile:** the owner card gains `headline`, `bio`, `serviceArea` and `website`
+  (https only, checked on the server and again at render). The owner types them; no model
+  writes the card. factory-web must be deployed first — an older server refuses a card
+  with these fields.

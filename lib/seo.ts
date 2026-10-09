@@ -74,7 +74,8 @@ export function publicSitemap(): MetadataRoute.Sitemap {
 }
 
 /** Only text from sections that actually render. No prices, testimonials, private records
- * or model-created company identity. llms.txt is discovery content, not an access control. */
+ * or model-created company identity — and no `listings`: those offers are illustrative
+ * until the owner publishes real ones, and discovery must not present them as facts. llms.txt is discovery content, not an access control. */
 export function llmsText(source: PrototypeConfig = config): string {
   const sections = new Set(source.patterns.landing?.sections ?? []);
   const lines = [`# ${source.appName}`, "", `> ${contentFor(source).description}`, "", "## Public pages", ""];

@@ -79,7 +79,15 @@
     "saveError": "Údaje se nepodařilo uložit. Zkontrolujte pole a zkuste to znovu.",
     "callLabel": "Zavolat na {phone}",
     "emailLabel": "Poslat e-mail na {email}",
-    "mapLabel": "Zobrazit {address} na mapě"
+    "mapLabel": "Zobrazit {address} na mapě",
+    "phoneOptional": "Telefon (nepovinné)",
+    "regarding": "Ohledně: {title}",
+    "clearRegarding": "Zeptat se bez konkrétní nabídky",
+    "headline": "Pozice nebo profese",
+    "bio": "O mně",
+    "serviceArea": "Kde působím",
+    "website": "Web",
+    "websiteLabel": "Otevřít web {url}"
   },
   "cta": {
     "title": "Pustíme se do toho?",
@@ -145,7 +153,9 @@
     "loadError": "Zprávy se nepodařilo načíst. Zkuste to za chvíli znovu.",
     "unread": "Nová",
     "reply": "Odpovědět",
-    "back": "Zpět na přehled"
+    "back": "Zpět na přehled",
+    "regarding": "Ohledně: {title}",
+    "call": "Zavolat"
   },
   "howItWorks": {
     "title": "Jak to funguje"
@@ -210,5 +220,18 @@
       "timeout": "Trvalo to příliš dlouho — nic se nestrhlo",
       "generic": "Nepodařilo se — zkuste znovu"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Cena na vyžádání",
+    "perMonth": "{price} / měsíc",
+    "status": {
+      "available": "Dostupné",
+      "reserved": "Rezervováno",
+      "unavailable": "Nedostupné"
+    },
+    "all": "Vše",
+    "filterLabel": "Filtrovat nabídky",
+    "showMap": "Zobrazit na mapě",
+    "hideMap": "Skrýt mapu"
   }
 }

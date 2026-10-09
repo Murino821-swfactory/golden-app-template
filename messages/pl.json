@@ -79,7 +79,15 @@
     "saveError": "Nie udało się zapisać danych. Sprawdź pola i spróbuj ponownie.",
     "callLabel": "Zadzwoń pod {phone}",
     "emailLabel": "Wyślij e-mail na {email}",
-    "mapLabel": "Pokaż {address} na mapie"
+    "mapLabel": "Pokaż {address} na mapie",
+    "phoneOptional": "Telefon (opcjonalnie)",
+    "regarding": "Dotyczy: {title}",
+    "clearRegarding": "Zapytaj bez konkretnej oferty",
+    "headline": "Stanowisko lub zawód",
+    "bio": "O mnie",
+    "serviceArea": "Gdzie działam",
+    "website": "Strona WWW",
+    "websiteLabel": "Otwórz stronę {url}"
   },
   "cta": {
     "title": "Gotowi, by zacząć?",
@@ -145,7 +153,9 @@
     "loadError": "Nie udało się wczytać wiadomości. Spróbuj ponownie za chwilę.",
     "unread": "Nowa",
     "reply": "Odpowiedz",
-    "back": "Wróć do przeglądu"
+    "back": "Wróć do przeglądu",
+    "regarding": "Dotyczy: {title}",
+    "call": "Zadzwoń"
   },
   "howItWorks": {
     "title": "Jak to działa"
@@ -210,5 +220,18 @@
       "timeout": "Trwało to za długo — nic nie pobrano",
       "generic": "Nie udało się — spróbuj ponownie"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Cena na zapytanie",
+    "perMonth": "{price} / miesiąc",
+    "status": {
+      "available": "Dostępne",
+      "reserved": "Zarezerwowane",
+      "unavailable": "Niedostępne"
+    },
+    "all": "Wszystkie",
+    "filterLabel": "Filtruj oferty",
+    "showMap": "Pokaż na mapie",
+    "hideMap": "Ukryj mapę"
   }
 }

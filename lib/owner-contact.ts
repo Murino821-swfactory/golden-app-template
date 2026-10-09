@@ -7,7 +7,20 @@
  * (`ownerActionsAvailable`) — same rule as the hero image.
  */
 export const OWNER_CONTACT_API = "/api/prototype-owner-contact";
-export const OWNER_CARD_FIELDS = ["firstName", "lastName", "address", "phone", "email"] as const;
+/** The owner's public profile: the contact card plus a role, a short bio, where they work
+ * and a website (2026-10-09). Same list and limits as factory-web `owner-contact-core.ts`;
+ * the owner types every field, no model writes it. */
+export const OWNER_CARD_FIELDS = [
+  "firstName",
+  "lastName",
+  "address",
+  "phone",
+  "email",
+  "headline",
+  "bio",
+  "serviceArea",
+  "website",
+] as const;
 export type OwnerCardField = (typeof OWNER_CARD_FIELDS)[number];
 export type OwnerCard = Partial<Record<OwnerCardField, string>>;
 export type OwnerRole = "owner" | "admin";
@@ -34,6 +47,21 @@ export function fullName(card: OwnerCard): string | null {
   const name = [card.firstName, card.lastName].filter(Boolean).join(" ");
   return name || null;
 }
+
+/** The card's website as a link, or null: only `https:` reaches an href, whatever the
+ * stored value — the server checks the same, this is the second guard at render time. */
+export function websiteHref(website: string | undefined): string | null {
+  if (!website) return null;
+  try {
+    const url = new URL(website);
+    return url.protocol === "https:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The website as a visitor reads it: host and path, no scheme. */
+export const websiteText = (href: string) => href.replace(/^https:\/\//, "").replace(/\/$/, "");
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^+0-9]/g, "")}`;
 
