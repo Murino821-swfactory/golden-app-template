@@ -58,6 +58,8 @@ export const SECTION_IDS = [
   "hero",
   "features",
   "howItWorks",
+  "useCases",
+  "comparison",
   "pricing",
   "testimonials",
   "faq",
@@ -151,7 +153,7 @@ export function sampleRecordIssues(
   const known = new Set(fields.map((f) => f.key));
   for (const key of Object.keys(sample)) if (!known.has(key)) issues.push(`unknown field "${key}"`);
   for (const field of fields) {
-    const v = sample[field.key];
+    const v = Object.hasOwn(sample, field.key) ? sample[field.key] : undefined;
     if (v === undefined || v === "") {
       if (field.required) issues.push(`required field "${field.key}" is missing`);
       continue;
@@ -226,6 +228,7 @@ export type Feature = z.infer<typeof featureSchema>;
 export const PATTERN_SCHEMAS = {
   landing: z.object({
     sections: z.array(z.enum(SECTION_IDS)).min(1),
+    presentation: z.enum(["story", "document"]).optional().describe("Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages."),
   }),
   dashboard: z.object({
     kpis: z
@@ -240,9 +243,16 @@ export const PATTERN_SCHEMAS = {
   /** Nothing to configure — Google sign-in is the same everywhere by design. */
   authGoogle: z.object({}),
   cta: z.object({
-    href: z.string().min(1),
+    href: z.string().min(1).describe(
+      "Use an existing destination: /login with authGoogle, /dashboard with dashboard, " +
+      "#contact when contact is a landing section, or #chapter-<section> for a rendered " +
+      "landing section (for example #chapter-features). Never invent /app, /signup, " +
+      "#start, download routes, or features not present in the template."
+    ),
   }),
   contactForm: z.object({}),
+  useCases: z.object({}).describe("Requires the useCases landing section and localized useCases copy."),
+  comparison: z.object({}).describe("Requires the comparison landing section and localized comparison copy."),
   dataGrid: z.object({
     entity: z.object({
       key: z.string().min(1),
@@ -291,6 +301,8 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
   contactForm:
     "A contact form that captures a message and an email address. Pick it for services, " +
     "consultancies and anything sold through a conversation rather than a signup.",
+  useCases: "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results.",
+  comparison: "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices.",
   dataGrid:
     "A table of records the user adds, edits and filters. Pick it when the idea is about " +
     "keeping track of things — an inventory, a catalogue, a register, a log of entries.",
@@ -304,6 +316,24 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
  * `mapBase` say nothing of their own, so they have no content slice at all.
  */
 export const CONTENT_SCHEMAS = {
+  useCases: z.object({
+    heading: z.string().min(1).max(80),
+    items: z.array(z.object({
+      title: z.string().min(1).max(60),
+      situation: z.string().min(1).max(180),
+      action: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."),
+  }),
+  comparison: z.object({
+    heading: z.string().min(1).max(80),
+    beforeLabel: z.string().min(1).max(40),
+    afterLabel: z.string().min(1).max(40),
+    rows: z.array(z.object({
+      topic: z.string().min(1).max(60),
+      before: z.string().min(1).max(180),
+      after: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."),
+  }),
   landing: z.object({
     /** Optional: the template must stay buildable before any content agent has run, and
      * the sections fall back to `messages/*.json` placeholders for local dev. */
@@ -386,6 +416,8 @@ export const SECTION_COPY_SOURCE: Record<SectionId, ContentPatternId | null> = {
   cta: "cta",
   faq: "landing",
   howItWorks: "landing",
+  useCases: "useCases",
+  comparison: "comparison",
   pricing: null,
   testimonials: null,
 };
@@ -405,6 +437,8 @@ const CONTENT_REQUIRED_FOR: readonly ContentPatternId[] = [
   "cta",
   "contactForm",
   "dataGrid",
+  "useCases",
+  "comparison",
 ];
 
 /** Meta description, per language. Required, not optional: golden rule 3 (SEO+GEO) makes
@@ -422,6 +456,8 @@ const localeContentSchema = z.object({
   cta: CONTENT_SCHEMAS.cta.optional(),
   contactForm: CONTENT_SCHEMAS.contactForm.optional(),
   dataGrid: CONTENT_SCHEMAS.dataGrid.optional(),
+  useCases: CONTENT_SCHEMAS.useCases.optional(),
+  comparison: CONTENT_SCHEMAS.comparison.optional(),
 });
 
 export type LocaleContent = z.infer<typeof localeContentSchema>;
@@ -454,10 +490,21 @@ export const prototypeConfigSchema = z
       contactForm: PATTERN_SCHEMAS.contactForm.optional(),
       dataGrid: PATTERN_SCHEMAS.dataGrid.optional(),
       mapBase: PATTERN_SCHEMAS.mapBase.optional(),
+      useCases: PATTERN_SCHEMAS.useCases.optional(),
+      comparison: PATTERN_SCHEMAS.comparison.optional(),
     }),
     content: z.record(z.string(), localeContentSchema),
   })
   .superRefine((cfg, ctx) => {
+    const sections = cfg.patterns.landing?.sections ?? [];
+    if (new Set(sections).size !== sections.length) {
+      ctx.addIssue({ code: "custom", path: ["patterns", "landing", "sections"], message: "Landing sections must be unique" });
+    }
+    for (const pattern of ["useCases", "comparison"] as const) {
+      if (Boolean(cfg.patterns[pattern]) !== sections.includes(pattern)) {
+        ctx.addIssue({ code: "custom", path: ["patterns", pattern], message: `${pattern} pattern and landing section must be enabled together` });
+      }
+    }
     if (!cfg.locales.includes(cfg.defaultLocale)) {
       ctx.addIssue({
         code: "custom",
@@ -523,7 +570,7 @@ export const prototypeConfigSchema = z
       // the column header falls back to a machine key like `created_at`.
       const labels = block.dataGrid?.fieldLabels ?? {};
       for (const field of fields) {
-        if (!labels[field.key]) {
+        if (!Object.hasOwn(labels, field.key) || !labels[field.key]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dataGrid", "fieldLabels", field.key],
@@ -550,7 +597,7 @@ export const prototypeConfigSchema = z
         }
       });
       for (const kpi of kpis) {
-        if (!block.dashboard?.kpiLabels?.[kpi.id]) {
+        if (!block.dashboard?.kpiLabels || !Object.hasOwn(block.dashboard.kpiLabels, kpi.id) || !block.dashboard.kpiLabels[kpi.id]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dashboard", "kpiLabels", kpi.id],
@@ -562,6 +609,53 @@ export const prototypeConfigSchema = z
   });
 
 export type PrototypeConfig = z.infer<typeof prototypeConfigSchema>;
+
+/** Copy that would otherwise silently fall back to starter messages on a customer page.
+ * Published by emit-schema and enforced by the production gate from the same constants. */
+export const PRODUCTION_SECTION_COPY: Record<string, string[]> = {
+  hero: ["landing.headline", "landing.subheadline"],
+  features: ["landing.featuresHeading", "landing.features"],
+  howItWorks: ["landing.howItWorks.heading", "landing.howItWorks.steps"],
+  faq: ["landing.faq.heading", "landing.faq.items"],
+};
+export const PRODUCTION_PATTERN_COPY: Record<string, string[]> = {
+  cta: ["label", "title", "subtitle"],
+  contactForm: ["heading", "submitLabel", "intro"],
+  dashboard: ["title", "intro"],
+  dataGrid: ["entityLabel", "fieldLabels", "sampleRecords"],
+};
+
+export function parseProductionPrototypeConfig(input: unknown): PrototypeConfig {
+  const cfg = parsePrototypeConfig(input);
+  const issues: string[] = [];
+  const sections = cfg.patterns.landing?.sections ?? [];
+  if (!sections.includes("hero") || sections[0] !== "hero") issues.push("patterns.landing.sections: must start with hero");
+  if (sections.some(section => SECTION_COPY_SOURCE[section] === null)) issues.push("patterns.landing.sections: contains a section with no customer copy contract");
+  if (cfg.patterns.dataGrid && (!cfg.patterns.authGoogle || !cfg.patterns.dashboard)) issues.push("patterns.dataGrid: saved records require authGoogle and dashboard");
+  const fields = cfg.patterns.dataGrid?.entity.fields ?? [];
+  if (new Set(fields.map(field => field.key)).size !== fields.length) issues.push("patterns.dataGrid.entity.fields: keys must be unique");
+  for (const field of fields) if (!/^[a-z][a-zA-Z0-9_]*$/.test(field.key)) issues.push(`patterns.dataGrid.entity.fields: invalid key ${field.key}`);
+  for (const locale of cfg.locales) {
+    const block = cfg.content[locale];
+    const requirePath = (path: string) => {
+      const value = path.split(".").reduce<unknown>((node, key) => node && typeof node === "object" ? (node as Record<string, unknown>)[key] : undefined, block);
+      if (value === undefined || value === null || (typeof value === "string" && !value.trim()) || (Array.isArray(value) && !value.length)) issues.push(`content.${locale}.${path}: customer copy is required`);
+    };
+    for (const section of sections) for (const path of PRODUCTION_SECTION_COPY[section] ?? []) requirePath(path);
+    for (const [pattern, paths] of Object.entries(PRODUCTION_PATTERN_COPY)) {
+      if (cfg.patterns[pattern as PatternId]) for (const path of paths) requirePath(`${pattern}.${path}`);
+    }
+    const checkStrings = (value: unknown, path: string) => {
+      if (typeof value === "string" && !value.trim()) issues.push(`${path}: blank customer text`);
+      else if (Array.isArray(value)) value.forEach((item, index) => checkStrings(item, `${path}.${index}`));
+      else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) checkStrings(item, `${path}.${key}`);
+    };
+    checkStrings(block, `content.${locale}`);
+    if (block.description.length > 160) issues.push(`content.${locale}.description: at most 160 characters`);
+  }
+  if (issues.length) throw new Error(`Invalid production prototype copy:\n${issues.map(issue => `  - ${issue}`).join("\n")}`);
+  return cfg;
+}
 
 /**
  * Lift a pre-split config into the new shape.

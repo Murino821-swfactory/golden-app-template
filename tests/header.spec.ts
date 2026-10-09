@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { COLOR_SCHEME_IDS, PALETTES, nextSchemeId, rolesFor } from "@tokenwise/shared-ui/theming";
 import { LOCALES, config } from "../lib/prototype-config";
+import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
 
 /**
  * The header is the only chrome every prototype shows on every page, so it is also the
@@ -18,7 +19,7 @@ import { LOCALES, config } from "../lib/prototype-config";
 const START = config.theme.colorScheme;
 
 function changeColour(page: Page) {
-  return page.getByRole("banner").getByRole("button", { name: /^Change colour/ });
+  return page.getByRole("banner").getByRole("button", { name: labelPrefix(uiCopy.common.changeColour!) });
 }
 
 function readBackground(page: Page): Promise<string> {
@@ -29,7 +30,7 @@ function readBackground(page: Page): Promise<string> {
 
 function labelFor(id: (typeof COLOR_SCHEME_IDS)[number]): string {
   const position = COLOR_SCHEME_IDS.indexOf(id) + 1;
-  return `Change colour — ${PALETTES[id].name}, ${position} of ${COLOR_SCHEME_IDS.length}`;
+  return formatLabel(uiCopy.common.changeColourLabel!, { name: PALETTES[id].name, position, total: COLOR_SCHEME_IDS.length });
 }
 
 const SITE = "https://tokenwise.sk";
@@ -66,8 +67,8 @@ test.describe("header identity", () => {
   test("on a phone the same nav is in the menu", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("./");
-    await page.getByRole("button", { name: "Open menu" }).click();
-    const dialog = page.getByRole("dialog", { name: "Menu" });
+    await page.getByRole("button", { name: uiCopy.common.openMenu! }).click();
+    const dialog = page.getByRole("dialog", { name: uiCopy.common.menu! });
     await expect(dialog.getByRole("link", { name: "Articles", exact: true })).toHaveAttribute("href", `${SITE}/articles`);
     await expect(dialog.getByRole("link", { name: "Contact", exact: true })).toHaveAttribute("href", `${SITE}/?scene=9`);
   });
@@ -199,15 +200,15 @@ test.describe("icon-only controls", () => {
       const bar = page.getByRole("banner");
 
       await expect(changeColour(page)).toHaveText("");
-      await expect(bar.getByRole("button", { name: /^Cart/ })).toHaveText("");
+      await expect(bar.getByRole("button", { name: labelPrefix(uiCopy.common.cart!) })).toHaveText("");
       if (width >= 1024) {
         // "Aa" is the icon, set in the face on screen; the face's name is only in the label.
-        const font = bar.getByRole("button", { name: /^Change font: / });
+        const font = bar.getByRole("button", { name: labelPrefix(uiCopy.common.changeFontLabel!.split("{name}")[0]!) });
         await expect(font).toHaveText("Aa");
       }
       if (config.patterns.authGoogle) {
-        const signIn = bar.getByRole("link", { name: "Sign in", exact: true });
-        await expect(signIn).toHaveAttribute("aria-label", "Sign in");
+        const signIn = bar.getByRole("link", { name: uiCopy.common.signIn!, exact: true });
+        await expect(signIn).toHaveAttribute("aria-label", uiCopy.common.signIn!);
         await expect(signIn).toHaveText("");
       }
     });
@@ -220,7 +221,7 @@ test.describe("sign-in control", () => {
     test.skip(Boolean(config.patterns.authGoogle), "authGoogle enabled in this config");
     await page.goto("./");
     await expect(
-      page.getByRole("banner").getByRole("link", { name: /sign in/i })
+      page.getByRole("banner").getByRole("link", { name: uiCopy.common.signIn!, exact: true })
     ).toHaveCount(0);
   });
 });

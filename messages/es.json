@@ -149,5 +149,66 @@
   },
   "howItWorks": {
     "title": "Cómo funciona"
+  },
+  "story": {
+    "chapters": "Capítulos",
+    "chapter": "Capítulo {number}"
+  },
+  "copyRewrite": {
+    "open": "Editar textos",
+    "title": "Reescribir los textos",
+    "description": "Dile a la IA cómo reescribir esta página. La vista previa es gratis; usarla vuelve a publicar la página.",
+    "instructions": "Instrucciones para la IA",
+    "chars": "{count} / {max} caracteres",
+    "tokens": "≈ {count} tokens (estimación)",
+    "reset": "Restaurar predeterminado",
+    "fullPrompt": "Prompt completo",
+    "fullPromptEmpty": "Se muestra tras la primera vista previa",
+    "promptSizes": "Sistema: {system} caracteres · Prompt: {user} caracteres",
+    "draft": "Crear vista previa",
+    "drafting": "Escribiendo la vista previa…",
+    "draftsLeft": "Vistas previas restantes hoy: {count}",
+    "limitReached": "No quedan vistas previas hoy — inténtalo mañana",
+    "slow": "Está tardando más — recarga la página",
+    "preview": "Vista previa",
+    "changedOf": "{changed} de {total} textos cambiados",
+    "before": "Ahora",
+    "after": "Nuevo",
+    "publishOwner": "Usar — 1 crédito",
+    "publishAdmin": "Publicar",
+    "publishingButton": "Publicando…",
+    "publishing": "Publicando: {stage}",
+    "published": "Publicado — recarga la página",
+    "reload": "Recargar",
+    "buyCredits": "Comprar créditos",
+    "history": "Historial",
+    "kindDraft": "Vista previa",
+    "kindPublish": "Publicación",
+    "metrics": {
+      "cost": "Coste",
+      "tokensOut": "Tokens de salida",
+      "tokensIn": "Tokens de entrada",
+      "copyChars": "Caracteres de texto",
+      "eurPer1k": "Coste por 1.000 caracteres",
+      "jsonOverhead": "Sobrecarga JSON",
+      "changed": "Textos cambiados",
+      "duration": "Tiempo",
+      "tokensOutShort": "{count} de salida"
+    },
+    "errors": {
+      "busy": "Ya hay algo en curso — espera un momento",
+      "limit": "No quedan vistas previas hoy",
+      "noCredits": "No te quedan créditos",
+      "draftUnusable": "Esta vista previa ya no se puede usar — crea una nueva",
+      "vmUnreachable": "La fábrica no está disponible — inténtalo más tarde",
+      "upstream": "La IA no respondió — inténtalo de nuevo",
+      "invalidResponse": "La IA devolvió textos inservibles — inténtalo de nuevo o ajusta las instrucciones",
+      "staleDraft": "Los textos cambiaron mientras tanto — crea una nueva vista previa",
+      "busyVm": "La fábrica está ocupada — inténtalo en unos minutos",
+      "gate": "La nueva versión no pasó los controles — no ha cambiado nada",
+      "pushFailed": "La publicación no se completó — no se cobró nada",
+      "timeout": "Tardó demasiado — no se cobró nada",
+      "generic": "No funcionó — inténtalo de nuevo"
+    }
   }
 }

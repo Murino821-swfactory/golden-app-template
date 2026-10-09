@@ -25,10 +25,10 @@ import { resolve } from "node:path";
 
 async function main() {
   try {
-    const target = process.argv[2] ?? resolve(__dirname, "../prototype.config.json");
+    const target = process.argv.slice(2).find(arg => !arg.startsWith("--")) ?? resolve(__dirname, "../prototype.config.json");
     const rawConfig = JSON.parse(readFileSync(target, "utf-8"));
-    const { parsePrototypeConfig } = await import("../lib/prototype-config");
-    const config = parsePrototypeConfig(rawConfig);
+    const { parsePrototypeConfig, parseProductionPrototypeConfig } = await import("../lib/prototype-config");
+    const config = process.argv.includes("--production") ? parseProductionPrototypeConfig(rawConfig) : parsePrototypeConfig(rawConfig);
     const enabled = (Object.keys(config.patterns) as Array<keyof typeof config.patterns>).filter(
       (k) => config.patterns[k] !== undefined
     );

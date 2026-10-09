@@ -40,6 +40,8 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "app/[locale]/login/page.tsx",
   ],
   cta: ["components/sections/cta.tsx"],
+  useCases: ["components/sections/use-cases.tsx"],
+  comparison: ["components/sections/comparison.tsx"],
   contactForm: [
     "components/sections/contact.tsx",
     "lib/owner-contact.ts",

@@ -62,6 +62,9 @@ apps.tokenwise.sk). Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expe
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| "Edit texts" (copy rewrite) | `components/sections/copy-rewrite-panel.tsx`, `hooks/use-copy-rewrite.ts`, `lib/copy-rewrite.ts` — see "Copy rewrite" |
+| Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
+| SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 
 ## Critical Rules for Fast Implementation
@@ -89,6 +92,18 @@ merged grid fields from `useEntityFields()` (`hooks/use-content.ts`), both of wh
 A pattern is enabled iff its **`patterns`** slice exists. zod then requires the matching
 content slice in **every** declared locale, so a language can never be offered and then
 render blank.
+
+New customer creation uses `npm run validate:config -- --production` before building.
+`parseProductionPrototypeConfig` requires customer text for every rendered section and
+pattern in every locale, rejects blank text and unsupported placeholder sections, and
+checks records/auth/dashboard dependencies and unique field keys. Copy requirements are
+published as `productionValidation`, `menu.sections.requiredCopy` and
+`menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
+The usual parser stays compatible with local starter fixtures and archived prototypes.
+Field/KPI labels and sample values are JSON own properties (`Object.hasOwn`); inherited
+JavaScript properties such as `constructor` never satisfy a required label or sample value.
+Tests: `tests/production-copy.spec.ts`; cross-repo decision:
+[prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
 
 Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
 still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
@@ -463,6 +478,26 @@ factory-web (`prototypeOwnerContact`, `prototypeContact`).
   Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
   dashboard (renders nothing for anyone else).
 
+## Copy rewrite (2026-10-07)
+
+The prototype's creator (verified wizard e-mail) and the founder see an "Edit texts" button
+under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a preview (the
+factory's own content call — the same schema this repo publishes in
+`prototype.schema.json`), compare every text with the current one with the tokens, cost and
+characters of that one request, and use it: the factory commits the new copy to
+`demo/<slug>` and republishes the page (the creator pays one credit; the founder nothing).
+Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
+in the **sw-factory** repo.
+
+- `/api/prototype-copy` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`) — never from CI, and an anonymous visitor makes no request
+  (`tests/copy-rewrite.spec.ts`).
+- The panel's state table is `copyPanelView` (pure, tested); the dialog is the shared
+  `components/ui/dialog.tsx` (bottom sheet on phones). Texts: `copyRewrite` in all eight
+  `messages/*.json`.
+- A rewrite changes `content` only. `dataGrid.sampleRecords` are example DATA and are never
+  rewritten; `appName`, `patterns`, the theme and the languages never change.
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -515,3 +550,39 @@ npm run test:e2e         # Playwright smoke tests (must pass)
 3. For each file: read → make ALL changes → move to next file
 4. Run `npm run build` once at the end
 5. Done — no exploration, no extra reads, no refactoring
+
+## OTH-117 — landing stories and discovery (2026-10-03)
+
+`patterns.landing.presentation` is `story` by default; `document` opts out. Desktop
+with a fine pointer, at least 1024×700 and no reduced-motion preference gets a sticky
+stage driven by native scrolling. Chapter buttons support keyboard navigation;
+`#contact` reveals its chapter. The header height is measured, not assumed. Long
+chapters can scroll within their panel. Mobile, short viewports, reduced motion,
+print and no JavaScript retain the same server-rendered document.
+
+New `useCases` and `comparison` patterns each require their matching landing section
+and content slice in every locale. Their schemas describe when to choose them and
+forbid invented customer results or competitor claims. The exported menu is still
+consumed dynamically by the assembly harness; there is no second pattern registry.
+Pricing and testimonials remain locked.
+
+`NEXT_PUBLIC_SITE_ORIGIN` must be the real HTTP(S) origin without a path. The harness
+already supplies it for prototypes; factory-web supplies `https://tokenwise.sk` for
+`/demo/golden`. `NEXT_PUBLIC_BASE_PATH` remains separate. Canonical, localized OG/Twitter,
+hreflang including x-default, WebSite/WebPage JSON-LD, sitemap and generated llms.txt
+use the configured content. FAQ keeps its existing FAQPage JSON-LD. Login, dashboard
+and inbox receive noindex/nofollow and clear inherited public-page canonical/social
+metadata. Discovery excludes private sample records and unrendered sections. An
+unconfigured local build has relative URLs and an empty sitemap, rather than a made-up
+production host. No Organization, prices or ratings are fabricated from an app name.
+
+The root robots.txt controls an origin: the demo's subdirectory robots.txt is an export
+artifact, not an independent crawler policy. On tokenwise.sk the host robots allows all
+public paths. A custom deployment must publish these files at its own appropriate root.
+
+Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
+`npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.
+
+Prototype export browser gates read chrome, login and contact labels from the configured
+default locale bundle. They must not require English controls on a Slovak-first export.
+The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
