@@ -32,6 +32,9 @@ export interface ResearchCopy {
     next: string;
     previous: string;
     source: string;
+    merito: string;
+    why: string;
+    logged: string;
   };
   stats: { title: string; form: string; nature: string; region: string };
   memo: {
@@ -91,6 +94,9 @@ const en: ResearchCopy = {
     next: "Next page",
     previous: "Previous page",
     source: "Sources: InfoSúd (Ministry of Justice) and NS SR OpenData",
+    merito: "Qualification (merito): ",
+    why: "Why: ",
+    logged: "We keep your searches and their results for 180 days to measure and improve search quality.",
   },
   stats: {
     title: "InfoSúd metadata distribution",
@@ -102,7 +108,7 @@ const en: ResearchCopy = {
     label: "What happened",
     placeholder:
       "e.g. At night the accused broke the window of a parked car and took the radio and a laptop worth about €900.",
-    privacy: "Leave out names, dates of birth and addresses. What you type is not stored unless you save the memo to a case.",
+    privacy: "Leave out names, dates of birth and addresses. We keep what you type and what was found for 180 days to measure and improve search quality.",
     counter: (n, max) => `${n} / ${max}`,
     tooShort: (min) => `Describe the facts in at least ${min} characters.`,
     submit: "Write the memo",
@@ -172,6 +178,9 @@ const sk: ResearchCopy = {
     next: "Ďalšia strana",
     previous: "Predchádzajúca strana",
     source: "Zdroje: InfoSúd (Ministerstvo spravodlivosti SR) a NS SR OpenData",
+    merito: "Kvalifikácia (merito): ",
+    why: "Prečo: ",
+    logged: "Hľadania a ich výsledky uchovávame 180 dní, aby sme mohli merať a zlepšovať kvalitu vyhľadávania.",
   },
   stats: {
     title: "Rozdelenie metadát InfoSúdu",
@@ -183,7 +192,7 @@ const sk: ResearchCopy = {
     label: "Čo sa stalo",
     placeholder:
       "napr. Obvinený v noci rozbil okno zaparkovaného auta a vzal z neho autorádio a notebook v hodnote asi 900 €.",
-    privacy: "Neuvádzajte mená, dátumy narodenia ani adresy. Napísaný text sa neukladá, kým rešerš neuložíte do prípadu.",
+    privacy: "Neuvádzajte mená, dátumy narodenia ani adresy. Zadanie a nájdené výsledky uchovávame 180 dní, aby sme mohli merať a zlepšovať kvalitu vyhľadávania.",
     counter: (n, max) => `${n} / ${max}`,
     tooShort: (min) => `Opíšte skutok aspoň ${min} znakmi.`,
     submit: "Napísať rešerš",

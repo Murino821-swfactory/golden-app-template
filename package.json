@@ -17,7 +17,8 @@
     "deploy:production": "npm run build && firebase deploy --only hosting",
     "preview": "node scripts/preview.mjs",
     "test:packages": "npm test --workspaces --if-present",
-    "test:law-expert": "playwright test --config=playwright.law-expert.config.ts"
+    "test:law-expert": "playwright test --config=playwright.law-expert.config.ts",
+    "prebuild": "tsx scripts/build-discovery.ts"
   },
   "dependencies": {
     "@tokenwise/shared-ui": "0.3.0",

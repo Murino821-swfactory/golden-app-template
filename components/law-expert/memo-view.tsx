@@ -50,8 +50,9 @@ function Part({
   );
 }
 
-export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: ResearchCopy; locale: string }) {
+export function MemoView({ memo, copy, locale, onOpenPdf }: { memo: MemoResponse; copy: ResearchCopy; locale: string; onOpenPdf?: (id: string, rank: number) => void }) {
   const sk = locale === "sk";
+  const reasons = new Map((memo.ranking ?? []).map(r => [r.id, r.reason]));
   const [open, setOpen] = useState<OpenQuote>(null);
   const sections = memo.memo ? groupMemo(memo.memo.blocks) : [];
   const hasUnsupported = sections.some((s) => s.parts.some((p) => p.unsupported));
@@ -60,7 +61,13 @@ export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: Res
   return (
     <div className="space-y-8">
       <Coverage values={memo.coverage} sk={sk} />
-      {!!memo.queries?.length && <p className="text-sm text-muted-foreground">{sk ? "Použité dopyty: " : "Queries used: "}{memo.queries.join(" · ")}</p>}
+      {memo.plan ? <div className="space-y-1 text-sm text-muted-foreground">
+        {memo.plan.issue && <p>{sk ? "Právna otázka: " : "Legal question: "}{memo.plan.issue}</p>}
+        {!!memo.plan.queries.length && <p>{sk ? "Hľadané výrazy: " : "Search expressions: "}{memo.plan.queries.join(" · ")}</p>}
+        {!!memo.plan.sections.length && <p>{sk ? "Hľadané paragrafy: " : "Sections searched: "}{memo.plan.sections.map(s => `§ ${s.section}${s.heading ? ` ${s.heading}` : ""}`).join(" · ")}</p>}
+      </div> : !!memo.queries?.length && <p className="text-sm text-muted-foreground">{sk ? "Použité dopyty: " : "Queries used: "}{memo.queries.join(" · ")}</p>}
+      {memo.rankingStatus === "failed" && <p role="status" className="text-sm">{sk ? "Zoradenie podľa právnej otázky sa nepodarilo; rozhodnutia sú v poradí, v akom ich našlo viac hľadaní." : "Ranking by legal question failed; decisions are ordered by how many searches found them."}</p>}
+      {memo.rankingStatus === "empty" && <p role="status" className="text-sm">{sk ? "Model nenašiel rozhodnutie jednoznačne k vašej otázke; zobrazujeme najbližšie nájdené." : "The model found no decision clearly on your question; the nearest ones found are shown."}</p>}
       {!!memo.unreadableCount && <p role="status" className="text-sm">{sk ? `Nepodarilo sa prečítať ${memo.unreadableCount} dokumentov.` : `${memo.unreadableCount} documents could not be read.`}</p>}
       {memo.comparisonStatus && memo.comparisonStatus !== "ok" && <p role="status">{sk ? "Podobnosť sa nepodarilo podložiť overenou pasážou. Nižšie sú kandidáti, nie potvrdené podobné prípady." : "Similarity could not be supported by a verified passage. The documents below are candidates, not confirmed similar cases."}</p>}
       {!!memo.comparisons?.length && <section className="space-y-4">
@@ -169,7 +176,7 @@ export function MemoView({ memo, copy, locale }: { memo: MemoResponse; copy: Res
           <ol className="space-y-3">
             {memo.sources.map((s, i) => (
               <li key={s.id}>
-                <DecisionCard hit={s} copy={copy} number={i + 1} ecli={s.ecli} truncated={s.truncated} />
+                <DecisionCard hit={s} copy={copy} number={i + 1} ecli={s.ecli} truncated={s.truncated} reason={reasons.get(s.id)} onOpenPdf={() => onOpenPdf?.(s.id, i)} />
               </li>
             ))}
           </ol>

@@ -6,7 +6,7 @@ import { localePath } from "@/lib/locale-routing";
 import type { ResearchSnapshot } from "@/lib/law-expert/saved";
 import { useResearchServices } from "./services";
 
-export function SaveResearch({ snapshot }: { snapshot: ResearchSnapshot }) {
+export function SaveResearch({ snapshot, onSaved }: { snapshot: ResearchSnapshot; onSaved?: () => void }) {
   const sk = snapshot.locale === "sk", { store } = useResearchServices();
   const [title, setTitle] = useState((snapshot.facts || snapshot.filters.q || (sk ? "Rešerš rozhodnutí" : "Decision research")).slice(0, 120));
   const [state, setState] = useState<"idle" | "saving" | "saved" | "failed">("idle");
@@ -15,7 +15,7 @@ export function SaveResearch({ snapshot }: { snapshot: ResearchSnapshot }) {
   return <form onSubmit={async e => {
     e.preventDefault(); if (state === "saving" || !title.trim()) return;
     setState("saving"); id.current ??= crypto.randomUUID();
-    try { await store.save(id.current, title, snapshot); setState("saved"); }
+    try { await store.save(id.current, title, snapshot); setState("saved"); onSaved?.(); }
     catch { setState("failed"); }
   }} className="space-y-3 rounded-lg border border-border bg-card p-4">
     <label className="block space-y-1 text-sm"><span>{sk ? "Názov rešerše" : "Research title"}</span>

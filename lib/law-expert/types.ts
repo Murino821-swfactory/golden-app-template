@@ -35,6 +35,8 @@ export interface DecisionHit {
   nature: string[];
   snippet: Segment[];
   pdfUrl: string | null;
+  /** NS SR: the decision's main qualification, e.g. "§ 208/1a, 3d Tr.zák.". */
+  merito?: string;
 }
 
 export interface SearchResponse {
@@ -47,6 +49,37 @@ export interface SearchResponse {
   items: DecisionHit[];
   facets: Facets;
   source: { name: string; updated: string };
+  /** The stored search-log record; feedback on these results refers to it. */
+  searchId?: string;
+  /** The section searched, its official heading, and whether the typed words belong to it. */
+  paragraphInfo?: ParagraphInfo;
+  /** Words without a section: sections whose heading holds them. */
+  sectionSuggestions?: SectionRef[];
+  /** An empty first page: wider searches that do have results, with their counts. */
+  suggestions?: SearchSuggestion[];
+}
+
+export interface SectionRef {
+  section: string;
+  heading: string;
+}
+
+export interface ParagraphInfo {
+  section: string;
+  /** Official heading (Slov-Lex); null for a number the Criminal Code does not have. */
+  heading: string | null;
+  /** Every typed word is in the heading; false flags words that belong to another section. */
+  wordsMatchHeading: boolean;
+  suggested: SectionRef[];
+}
+
+export type SuggestionReason = "court" | "lawArea" | "dates" | "regionForm" | "withoutSection" | "withoutWords" | "suggestedSection";
+
+export interface SearchSuggestion {
+  reason: SuggestionReason;
+  filters: SearchFilters;
+  total: number;
+  section?: SectionRef;
 }
 
 export type Locale = "en" | "sk";
@@ -98,6 +131,12 @@ export interface SearchFilters {
   source?: "all" | "infosud" | "nsud";
   /** Internal source page size; not accepted from HTTP clients. */
   size?: number;
+  /**
+   * Internal: a search a person runs and reads directly. It checks that a concept's words stand
+   * together in NS SR texts, and an empty first page offers wider searches. Research runs leave
+   * both to the model's ranking.
+   */
+  manual?: boolean;
 }
 
 export interface SourceCoverage {
@@ -106,8 +145,21 @@ export interface SourceCoverage {
   total?: number;
   /** A bounded source window or missing details; not exhaustive results. */
   limited?: boolean;
-  /** NS SR: section reference was intersected in the text index and checked in each detail. */
-  paragraphText?: string;
+  /**
+   * How the source was asked: InfoSúd `fulltext`; NS SR `merito` (section in the main
+   * qualification), `text` (word index), `file` (file number/ECLI) or `all` (filters only).
+   */
+  method?: "fulltext" | "merito" | "text" | "file" | "all";
+  /** The section searched, when one was. */
+  section?: string;
+  /** NS SR's text index holds only decisions up to ~8.6 kB: long decisions are missing. */
+  shortOnly?: boolean;
+  /** A source list stopped at its 1,000-ID ceiling. */
+  capped?: boolean;
+  /** NS SR section search with words: candidates, how many were read, how many held the words. */
+  candidates?: number;
+  scanned?: number;
+  matched?: number;
 }
 
 export interface Comparison {
@@ -126,9 +178,30 @@ export interface ResearchInput {
   includeMemo?: boolean;
 }
 
+export interface ResearchPlanView {
+  /** Slovak search expressions the model wrote, in the forms courts use. */
+  queries: string[];
+  /** Criminal Code sections searched, each from the Slov-Lex table. */
+  sections: SectionRef[];
+  /** The legal question the candidates were ranked against. */
+  issue: string;
+}
+
+export interface RankedSource {
+  id: string;
+  relevance: "high" | "medium" | "low";
+  /** The model's short reason; judged from metadata, merito and a passage only. */
+  reason: string;
+}
+
 export interface MemoResponse {
   qualification: Qualification[];
   queries?: string[];
+  plan?: ResearchPlanView;
+  /** The model's ranking of the fused candidates; what was read follows it. */
+  ranking?: RankedSource[];
+  rankingStatus?: "ok" | "empty" | "failed";
+  searchId?: string;
   coverage?: SourceCoverage[];
   comparisons?: Comparison[];
   comparisonStatus?: "ok" | "failed" | "unverified";

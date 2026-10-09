@@ -8,6 +8,8 @@ import {
   factsState,
   caseRecordValues,
   safePdfUrl,
+  coverageLine,
+  suggestionLabel,
   FACTS_MIN,
   FACTS_MAX,
 } from "../lib/law-expert/view";
@@ -185,5 +187,27 @@ test.describe("safePdfUrl", () => {
     expect(safePdfUrl("javascript:alert(1)")).toBeNull();
     expect(safePdfUrl("https://evil.example/content/public/item/x")).toBeNull();
     expect(safePdfUrl(null)).toBeNull();
+  });
+});
+
+test.describe("coverageLine — never 'searched, nothing' without the reason", () => {
+  test("NS SR section search names the merito and the words it checked", () => {
+    expect(coverageLine({ provider: "nsud", status: "ok", total: 0, method: "merito", section: "208", candidates: 168, scanned: 40, matched: 0, limited: true }, true))
+      .toBe("NS SR: prehľadaný; § 208 v hlavnej kvalifikácii rozhodnutia (merito); slová overené v 40 z 168 rozhodnutí, zhoda 0");
+  });
+  test("NS SR text search admits it covers shorter decisions only, and a capped list says so", () => {
+    const line = coverageLine({ provider: "nsud", status: "ok", total: 21, method: "text", shortOnly: true, capped: true, limited: true }, false);
+    expect(line).toContain("covers shorter decisions only"); expect(line).toContain("at most 1,000 records");
+  });
+  test("failures and exclusions keep their plain wording", () => {
+    expect(coverageLine({ provider: "infosud", status: "failed" }, true)).toBe("InfoSúd: výpadok — výsledky sú neúplné");
+    expect(coverageLine({ provider: "nsud", status: "ok", total: 5, limited: true }, true)).toBe("NS SR: prehľadaný; len časť výsledkov bola dostupná");
+  });
+});
+
+test.describe("suggestionLabel", () => {
+  test("says what the wider search drops, and how many results it has", () => {
+    expect(suggestionLabel({ reason: "withoutSection", filters: { q: "x" }, total: 1234 }, true)).toBe("Len slová, bez § (1\u00a0234)");
+    expect(suggestionLabel({ reason: "suggestedSection", filters: { paragraph: "352" }, total: 26, section: { section: "352", heading: "Falšovanie" } }, false)).toBe("§ 352 — Falšovanie (26)");
   });
 });

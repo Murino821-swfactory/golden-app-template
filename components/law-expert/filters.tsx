@@ -1,8 +1,11 @@
 "use client";
 import type { SearchFilters } from "@/lib/law-expert/types";
 import { COURT_TYPES, REGIONS, FORMS } from "@/lib/law-expert/copy";
+import { useSectionHeadings } from "./sections";
 const fieldClass = "min-w-0 w-full h-11 rounded-md border border-border bg-background px-3 text-base sm:text-sm";
 export function Filters({ value, onChange, sk, disabled = false }: { value: SearchFilters; onChange: (v: SearchFilters) => void; sk: boolean; disabled?: boolean }) {
+  const headings = useSectionHeadings();
+  const section = value.paragraph?.trim().toLowerCase();
   function set(key: keyof SearchFilters, v: string) {
     const next = { ...value, [key]: v || undefined, page: 0 };
     onChange(next);
@@ -27,11 +30,14 @@ export function Filters({ value, onChange, sk, disabled = false }: { value: Sear
         ["paragraph", sk ? "§ Trestného zákona" : "Criminal Code §", "text"],
       ] as [keyof SearchFilters, string, string][]).map(([key, label, type]) => <label key={key} className="min-w-0 space-y-1 text-sm">
         <span>{label}</span><input aria-label={label} type={type} value={String(value[key] ?? "")} maxLength={key === "paragraph" ? 4 : 120} onChange={e => set(key, e.target.value)} className={fieldClass} />
+        {key === "paragraph" && section && Object.keys(headings).length > 0 && <span className="block text-xs text-muted-foreground" aria-live="polite">
+          {headings[section] ? `§ ${section}: ${headings[section]}` : (sk ? "Trestný zákon taký paragraf nemá." : "The Criminal Code has no such section.")}
+        </span>}
       </label>)}
     </div>
     <p className="text-xs text-muted-foreground">{sk
-      ? "Bez dátumu sa hľadá aj v starších rozhodnutiach. InfoSúd filtruje § podľa metadát; NS SR hľadá jeho textovú zmienku v rozhodnutí, ktorá nemusí patriť k Trestnému zákonu. NS SR nepodporuje kraj, formu ani samostatné rodinné právo; tieto filtre ho vyradia."
-      : "No date limit includes older decisions. InfoSúd filters § by metadata; NS SR searches the section reference in decision text, which may cite another law. NS SR does not support region, form or a separate family-law category; these filters exclude that source."}</p>
+      ? "Bez dátumu sa hľadá aj v starších rozhodnutiach. Paragraf sa v InfoSúde hľadá v texte rozhodnutí, v NS SR v hlavnej kvalifikácii rozhodnutia (merito). Číslo s § môžete napísať aj medzi slová. NS SR nepodporuje kraj, formu ani samostatné rodinné právo; tieto filtre ho vyradia."
+      : "No date limit includes older decisions. A section is searched in InfoSúd decision text and in the NS SR decision's main qualification (merito). You can also type it with § among the words. NS SR does not support region, form or a separate family-law category; these filters exclude that source."}</p>
     <button type="button" onClick={() => onChange({ source: "all" })} className="min-h-11 text-sm underline">{sk ? "Zrušiť obmedzenia" : "Clear limits"}</button>
   </fieldset>;
 }
