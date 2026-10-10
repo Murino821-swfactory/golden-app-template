@@ -7,7 +7,7 @@
         "purpose": "The public page every visitor lands on. Always enabled — every other pattern sits behind auth or below the fold, so a prototype without it opens on nothing."
       },
       "dashboard": {
-        "purpose": "A signed-in home screen summarising the user's own data, with the map of offers. ALWAYS enable it together with authGoogle; add dataGrid and kpis when the idea describes something people return to and track over time."
+        "purpose": "A signed-in home screen summarising the user's own data, and the map of offers when mapBase is enabled. ALWAYS enable it together with authGoogle; add dataGrid and kpis when the idea describes something people return to and track over time."
       },
       "authGoogle": {
         "purpose": "Google sign-in plus a route guard. Always enable it with dashboard, which is reachable only after sign-in; it also serves personal data, saved work or anything 'my'."
@@ -28,10 +28,10 @@
         "purpose": "A table of records the user adds, edits and filters. Pick it when the idea is about keeping track of things — an inventory, a catalogue, a register, a log of entries."
       },
       "listings": {
-        "purpose": "A public catalogue of what the business offers — properties, products, services, courses, vehicles, venues — as cards with category, price, key numbers and a status, filterable by category. Visitors can open the offers on a map and ask about one through the contact form. ALWAYS enable it, with its landing section: every prototype presents what it offers. The offers are illustrative until the owner publishes real ones, so say so in the notice."
+        "purpose": "A public catalogue of what the business offers — properties, products, services, courses, vehicles, venues — as cards with category, price, key numbers and a status, filterable by category. Visitors can ask about one through the contact form, and open the offers on a map when mapBase is enabled. ALWAYS enable it, with its landing section: every prototype presents what it offers. The offers are illustrative until the owner publishes real ones, so say so in the notice."
       },
       "mapBase": {
-        "purpose": "A map centred on the place the idea serves, with every offer that has a location pinned on it. ALWAYS enable it: choose the centre and zoom of the city or region the idea names, or the customer's country when it names none."
+        "purpose": "A map centred on the place the idea serves, with every offer that has a location pinned on it. Pick it only when place is part of the idea itself, not merely mentioned — offers that stand somewhere or are visited (properties, venues, rentals), routes, coverage, territory. Leave it out otherwise: a map with nothing to pin is noise. When picked, choose the centre and zoom of the city or region the idea names, or the customer's country when it names none."
       }
     },
     "sections": {
@@ -123,7 +123,6 @@
     },
     "requiredPatterns": [
       "listings",
-      "mapBase",
       "dashboard",
       "authGoogle"
     ]
@@ -416,7 +415,7 @@
                 }
               },
               "location": {
-                "description": "Where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it.",
+                "description": "Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it.",
                 "type": "object",
                 "properties": {
                   "lat": {
@@ -1353,7 +1352,7 @@
                       }
                     },
                     "location": {
-                      "description": "Where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it.",
+                      "description": "Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it.",
                       "type": "object",
                       "properties": {
                         "lat": {

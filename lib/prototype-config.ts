@@ -350,7 +350,7 @@ export const PATTERN_SCHEMAS = {
         location: z.object({
           lat: z.number().min(-90).max(90),
           lng: z.number().min(-180).max(180),
-        }).optional().describe("Where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it."),
+        }).optional().describe("Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it."),
       }))
       .min(3)
       .max(12)
@@ -383,9 +383,9 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
     "The public page every visitor lands on. Always enabled — every other pattern sits " +
     "behind auth or below the fold, so a prototype without it opens on nothing.",
   dashboard:
-    "A signed-in home screen summarising the user's own data, with the map of offers. " +
-    "ALWAYS enable it together with authGoogle; add dataGrid and kpis when the idea " +
-    "describes something people return to and track over time.",
+    "A signed-in home screen summarising the user's own data, and the map of offers when " +
+    "mapBase is enabled. ALWAYS enable it together with authGoogle; add dataGrid and kpis " +
+    "when the idea describes something people return to and track over time.",
   authGoogle:
     "Google sign-in plus a route guard. Always enable it with dashboard, which is reachable " +
     "only after sign-in; it also serves personal data, saved work or anything 'my'.",
@@ -402,14 +402,17 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
   listings:
     "A public catalogue of what the business offers — properties, products, services, " +
     "courses, vehicles, venues — as cards with category, price, key numbers and a status, " +
-    "filterable by category. Visitors can open the offers on a map and ask about one " +
-    "through the contact form. ALWAYS enable it, with its landing section: every " +
+    "filterable by category. Visitors can ask about one through the contact form, and " +
+    "open the offers on a map when mapBase is enabled. ALWAYS enable it, with its landing section: every " +
     "prototype presents what it offers. The offers are illustrative until the owner " +
     "publishes real ones, so say so in the notice.",
   mapBase:
     "A map centred on the place the idea serves, with every offer that has a location " +
-    "pinned on it. ALWAYS enable it: choose the centre and zoom of the city or region the " +
-    "idea names, or the customer's country when it names none.",
+    "pinned on it. Pick it only when place is part of the idea itself, not merely mentioned " +
+    "— offers that stand somewhere or are visited (properties, venues, rentals), routes, " +
+    "coverage, territory. Leave it out otherwise: a map with nothing to pin is noise. When " +
+    "picked, choose the centre and zoom of the city or region the idea names, or the " +
+    "customer's country when it names none.",
 };
 
 /**
@@ -761,13 +764,16 @@ export const PRODUCTION_PATTERN_COPY: Record<string, string[]> = {
 };
 
 /**
- * Patterns every new customer prototype carries (founder decision 2026-10-09): the offers,
- * the map they are pinned on, and the signed-in dashboard that shows that map — which is
- * reachable only through sign-in, hence authGoogle. The model is told so in each pattern's
- * purpose; this list is what turns that request into a gate the bounded repair can name.
- * Published as `menu.requiredPatterns`.
+ * Patterns every new customer prototype carries (founder decision 2026-10-09): the offers
+ * and the signed-in dashboard — which is reachable only through sign-in, hence authGoogle.
+ * The model is told so in each pattern's purpose; this list is what turns that request into
+ * a gate the bounded repair can name. Published as `menu.requiredPatterns`.
+ *
+ * `mapBase` was on this list until 2026-10-10 (founder): a map belongs only where place is
+ * part of the idea, so it is the model's choice like every other optional pattern.
+ * Record: sw-factory docs/decisions/2026-10-09-listings-pattern.md (addendum).
  */
-export const PRODUCTION_REQUIRED_PATTERNS: readonly PatternId[] = ["listings", "mapBase", "dashboard", "authGoogle"];
+export const PRODUCTION_REQUIRED_PATTERNS: readonly PatternId[] = ["listings", "dashboard", "authGoogle"];
 
 /**
  * A concept presentation: landing (and its CTA) and nothing else. This is what the factory

@@ -77,6 +77,16 @@ test.describe("required patterns (production)", () => {
     expect(() => parseProductionPrototypeConfig(production())).not.toThrow();
   });
 
+  // Founder decision 2026-10-10: the map is the model's choice, not a requirement — a
+  // reading diary has no place to pin. Its offers then carry no location either.
+  test("the map is optional: a composition without mapBase passes", () => {
+    const cfg = production();
+    delete cfg.patterns.mapBase;
+    for (const item of cfg.patterns.listings.items) delete item.location;
+    expect(PRODUCTION_REQUIRED_PATTERNS).not.toContain("mapBase");
+    expect(() => parseProductionPrototypeConfig(cfg)).not.toThrow();
+  });
+
   for (const id of PRODUCTION_REQUIRED_PATTERNS) {
     test(`production refuses a composition without ${id}`, () => {
       const cfg = production();
