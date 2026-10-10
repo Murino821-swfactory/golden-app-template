@@ -233,5 +233,18 @@
     "filterLabel": "Filtrovat nabídky",
     "showMap": "Zobrazit na mapě",
     "hideMap": "Skrýt mapu"
+  },
+  "map": {
+    "title": "Interaktivní mapa",
+    "loadError": "Mapu se nepodařilo načíst.",
+    "zoomIn": "Přiblížit",
+    "zoomOut": "Oddálit",
+    "resetBearing": "Natočit na sever",
+    "toggleAttribution": "Zobrazit zdroje mapy",
+    "marker": "Bod na mapě",
+    "popupClose": "Zavřít bublinu",
+    "gestureMobile": "Mapu posouvejte dvěma prsty",
+    "gestureWindows": "Mapu přiblížíte pomocí Ctrl + kolečko",
+    "gestureMac": "Mapu přiblížíte pomocí ⌘ + kolečko"
   }
 }

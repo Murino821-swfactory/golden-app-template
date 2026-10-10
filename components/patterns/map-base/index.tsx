@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Skeleton } from "@/components/ui/skeleton";
 import { config } from "@/lib/prototype-config";
@@ -18,14 +19,35 @@ import type { MapPoint } from "@/lib/listings";
  *
  * MapLibre is loaded with a dynamic import inside an effect: it touches `window` at module
  * scope, so a static export (`output: "export"`) fails if it is imported at the top level.
+ *
+ * Phones (2026-10-10): `cooperativeGestures` — one finger scrolls the page past the map,
+ * two fingers move it; without it a finger landing on the map trapped the page scroll.
+ * MapLibre's own strings (controls, markers, that hint) come from the `map` block of
+ * `messages/*.json` through its `locale` option, so nothing on the map is English on a
+ * Slovak page. A style that never loads (CARTO down, no network) fires `error` before
+ * `load`; it ends in the message instead of an endless skeleton.
  */
 
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
+  const t = useTranslations("map");
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  // Read once: a language switch is a new document, and a new object here would rebuild the map.
+  const [locale] = useState<Record<string, string>>(() => ({
+    "Map.Title": t("title"),
+    "Marker.Title": t("marker"),
+    "Popup.Close": t("popupClose"),
+    "NavigationControl.ZoomIn": t("zoomIn"),
+    "NavigationControl.ZoomOut": t("zoomOut"),
+    "NavigationControl.ResetBearing": t("resetBearing"),
+    "AttributionControl.ToggleAttribution": t("toggleAttribution"),
+    "CooperativeGesturesHandler.MobileHelpText": t("gestureMobile"),
+    "CooperativeGesturesHandler.WindowsHelpText": t("gestureWindows"),
+    "CooperativeGesturesHandler.MacHelpText": t("gestureMac"),
+  }));
 
   const mapConfig = config.patterns.mapBase;
 
@@ -34,6 +56,7 @@ export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
 
     let map: { remove: () => void } | null = null;
     let cancelled = false;
+    let loaded = false;
 
     void (async () => {
       try {
@@ -46,6 +69,8 @@ export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
           center: [mapConfig.center.lng, mapConfig.center.lat],
           zoom: mapConfig.zoom,
           attributionControl: { compact: true },
+          cooperativeGestures: true,
+          locale,
         });
         instance.addControl(new maplibre.NavigationControl(), "top-right");
         // The pin takes the palette's accent, so "Change colour" is the only thing that sets it.
@@ -62,7 +87,14 @@ export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
           instance.fitBounds(bounds, { padding: 48, maxZoom: 15, duration: 0 });
         }
         instance.on("load", () => {
+          loaded = true;
           if (!cancelled) setReady(true);
+        });
+        // After `load`, an error is one tile; before it, the map has nothing to draw.
+        instance.on("error", (e) => {
+          if (loaded || cancelled) return;
+          console.error("[map-base] the map style failed to load:", e.error);
+          setFailed(true);
         });
         map = instance;
       } catch (err) {
@@ -75,7 +107,7 @@ export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
       cancelled = true;
       map?.remove();
     };
-  }, [mapConfig, points]);
+  }, [mapConfig, points, locale]);
 
   if (!mapConfig) return null;
 
@@ -85,15 +117,15 @@ export function MapBase({ points = [] }: { points?: readonly MapPoint[] }) {
         <div
           ref={containerRef}
           className="h-[320px] w-full sm:h-[480px]"
-          aria-label="Interactive map"
+          aria-label={t("title")}
           role="application"
         />
         {!ready && !failed && (
           <Skeleton className="absolute inset-0" />
         )}
         {failed && (
-          <div className="absolute inset-0 flex items-center justify-center p-6 text-center text-sm text-muted-foreground">
-            The map could not be loaded.
+          <div className="absolute inset-0 flex items-center justify-center bg-card p-6 text-center text-sm text-muted-foreground">
+            {t("loadError")}
           </div>
         )}
       </div>

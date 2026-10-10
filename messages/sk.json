@@ -233,5 +233,18 @@
     "filterLabel": "Filtrovať ponuky",
     "showMap": "Zobraziť na mape",
     "hideMap": "Skryť mapu"
+  },
+  "map": {
+    "title": "Interaktívna mapa",
+    "loadError": "Mapu sa nepodarilo načítať.",
+    "zoomIn": "Priblížiť",
+    "zoomOut": "Oddialiť",
+    "resetBearing": "Natočiť na sever",
+    "toggleAttribution": "Zobraziť zdroje mapy",
+    "marker": "Bod na mape",
+    "popupClose": "Zavrieť bublinu",
+    "gestureMobile": "Mapu posúvajte dvoma prstami",
+    "gestureWindows": "Mapu priblížite pomocou Ctrl + koliesko",
+    "gestureMac": "Mapu priblížite pomocou ⌘ + koliesko"
   }
 }

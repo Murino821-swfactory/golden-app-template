@@ -77,6 +77,16 @@ test.describe("required patterns (production)", () => {
     expect(() => parseProductionPrototypeConfig(production())).not.toThrow();
   });
 
+  // Founder decision 2026-10-10: the map is the model's choice, not a requirement — a
+  // reading diary has no place to pin. Its offers then carry no location either.
+  test("the map is optional: a composition without mapBase passes", () => {
+    const cfg = production();
+    delete cfg.patterns.mapBase;
+    for (const item of cfg.patterns.listings.items) delete item.location;
+    expect(PRODUCTION_REQUIRED_PATTERNS).not.toContain("mapBase");
+    expect(() => parseProductionPrototypeConfig(cfg)).not.toThrow();
+  });
+
   for (const id of PRODUCTION_REQUIRED_PATTERNS) {
     test(`production refuses a composition without ${id}`, () => {
       const cfg = production();
@@ -193,6 +203,29 @@ test.describe("listings section", () => {
     expect(tiles).toBe(false);
     await expect(page.locator('[data-section="listings"] [data-pattern="map-base"]')).toHaveCount(0);
     await expect(page.locator('[data-section="listings"]').getByRole("button", { name: (uiCopy.listings as unknown as Record<string, string>).showMap })).toBeVisible();
+  });
+
+  // The tiles are refused here on purpose: the factory runs this suite in a sandbox without
+  // network, and a style that never loads must end in a message, not an endless skeleton.
+  test("the map speaks the page's language and says so when it cannot load", async ({ page }) => {
+    test.skip(!config.patterns.mapBase || !config.patterns.listings?.items.some((i) => i.location), "no offer on a map");
+    await page.route(/basemaps\.cartocdn\.com/, (route) => route.abort());
+    for (const locale of config.locales) {
+      const bundle = JSON.parse(readFileSync(`messages/${locale}.json`, "utf8")) as Record<string, Record<string, string>>;
+      const map = bundle.map!;
+      await page.goto(locale === config.defaultLocale ? "./" : `./${locale}`);
+      const section = page.locator('[data-section="listings"]');
+      await section.getByRole("button", { name: bundle.listings!.showMap! }).click();
+      const region = section.locator('[data-pattern="map-base"]');
+      await expect(region.getByRole("application", { name: map.title! })).toBeAttached();
+      await expect(region.getByText(map.loadError!, { exact: true })).toBeVisible();
+      // MapLibre builds its own controls only where the browser has WebGL; there they must
+      // speak the page's language too, and ask for two fingers so one finger scrolls the page.
+      if ((await region.locator(".maplibregl-canvas").count()) > 0) {
+        await expect(region.locator(".maplibregl-canvas"), locale).toHaveAttribute("aria-label", map.title!);
+        await expect(region.locator(".maplibregl-mobile-message"), locale).toHaveText(map.gestureMobile!);
+      }
+    }
   });
 
   test("asking about an offer carries it into the contact form, and it can be removed", async ({ page }) => {

@@ -233,5 +233,18 @@
     "filterLabel": "Filtruj oferty",
     "showMap": "Pokaż na mapie",
     "hideMap": "Ukryj mapę"
+  },
+  "map": {
+    "title": "Interaktywna mapa",
+    "loadError": "Nie udało się wczytać mapy.",
+    "zoomIn": "Przybliż",
+    "zoomOut": "Oddal",
+    "resetBearing": "Obróć na północ",
+    "toggleAttribution": "Pokaż źródła mapy",
+    "marker": "Znacznik na mapie",
+    "popupClose": "Zamknij dymek",
+    "gestureMobile": "Przesuwaj mapę dwoma palcami",
+    "gestureWindows": "Przybliżaj mapę za pomocą Ctrl + kółko",
+    "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
   }
 }
