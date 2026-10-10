@@ -233,5 +233,18 @@
     "filterLabel": "Filtrar ofertas",
     "showMap": "Ver en el mapa",
     "hideMap": "Ocultar mapa"
+  },
+  "map": {
+    "title": "Mapa interactivo",
+    "loadError": "No se ha podido cargar el mapa.",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "resetBearing": "Orientar al norte",
+    "toggleAttribution": "Mostrar fuentes del mapa",
+    "marker": "Marcador del mapa",
+    "popupClose": "Cerrar la ventana",
+    "gestureMobile": "Usa dos dedos para mover el mapa",
+    "gestureWindows": "Usa Ctrl + rueda para hacer zoom",
+    "gestureMac": "Usa ⌘ + rueda para hacer zoom"
   }
 }

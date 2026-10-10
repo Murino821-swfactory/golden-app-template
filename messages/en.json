@@ -233,5 +233,18 @@
     "filterLabel": "Filter offers",
     "showMap": "Show on map",
     "hideMap": "Hide map"
+  },
+  "map": {
+    "title": "Interactive map",
+    "loadError": "The map could not be loaded.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetBearing": "Reset bearing to north",
+    "toggleAttribution": "Toggle attribution",
+    "marker": "Map marker",
+    "popupClose": "Close popup",
+    "gestureMobile": "Use two fingers to move the map",
+    "gestureWindows": "Use Ctrl + scroll to zoom the map",
+    "gestureMac": "Use ⌘ + scroll to zoom the map"
   }
 }

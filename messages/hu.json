@@ -233,5 +233,18 @@
     "filterLabel": "Ajánlatok szűrése",
     "showMap": "Megjelenítés térképen",
     "hideMap": "Térkép elrejtése"
+  },
+  "map": {
+    "title": "Interaktív térkép",
+    "loadError": "A térképet nem sikerült betölteni.",
+    "zoomIn": "Nagyítás",
+    "zoomOut": "Kicsinyítés",
+    "resetBearing": "Északra igazítás",
+    "toggleAttribution": "Térképforrások megjelenítése",
+    "marker": "Térképjelölő",
+    "popupClose": "Buborék bezárása",
+    "gestureMobile": "A térképet két ujjal mozgassa",
+    "gestureWindows": "Nagyításhoz használja a Ctrl + görgőt",
+    "gestureMac": "Nagyításhoz használja a ⌘ + görgőt"
   }
 }

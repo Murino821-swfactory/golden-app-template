@@ -233,5 +233,18 @@
     "filterLabel": "Filtrer les offres",
     "showMap": "Voir sur la carte",
     "hideMap": "Masquer la carte"
+  },
+  "map": {
+    "title": "Carte interactive",
+    "loadError": "La carte n'a pas pu être chargée.",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "resetBearing": "Réorienter vers le nord",
+    "toggleAttribution": "Afficher les sources de la carte",
+    "marker": "Repère sur la carte",
+    "popupClose": "Fermer la bulle",
+    "gestureMobile": "Utilisez deux doigts pour déplacer la carte",
+    "gestureWindows": "Utilisez Ctrl + molette pour zoomer",
+    "gestureMac": "Utilisez ⌘ + molette pour zoomer"
   }
 }
