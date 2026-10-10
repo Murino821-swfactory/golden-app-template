@@ -246,5 +246,8 @@
     "gestureMobile": "Przesuwaj mapę dwoma palcami",
     "gestureWindows": "Przybliżaj mapę za pomocą Ctrl + kółko",
     "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
+  },
+  "footer": {
+    "generatedBy": "Wygenerowane przez Tokenwise AI"
   }
 }
