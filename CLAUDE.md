@@ -566,11 +566,15 @@ real-estate specific. Record: sw-factory `docs/decisions/2026-10-09-listings-pat
   with photos is phase B. The pattern and the `listings` landing section are enabled
   together. Offers are kept out of llms.txt and JSON-LD — discovery must not present
   example offers as facts.
-- **Map:** offers with a location are pinned on `mapBase` (dashboard) and, on the landing,
-  on a map mounted only after "Show on map": loading third-party tiles on page load would
-  put a network dependency into every prototype's console-clean smoke gate.
+- **Map:** when `mapBase` is enabled, offers with a location are pinned on it (dashboard)
+  and, on the landing, on a map mounted only after "Show on map": loading third-party tiles
+  on page load would put a network dependency into every prototype's console-clean smoke
+  gate. The map is optional (founder 2026-10-10): the model picks it only when place is
+  part of the idea; without it, offers carry no location. Its texts — the template's and
+  MapLibre's own controls — come from `map` in all 8 `messages/*.json`; one finger scrolls
+  the page past it (`cooperativeGestures`); a style that never loads shows `map.loadError`.
 - **Required patterns:** `parseProductionPrototypeConfig` refuses a composition without
-  `listings`, `mapBase`, `dashboard` and `authGoogle` (`PRODUCTION_REQUIRED_PATTERNS`,
+  `listings`, `dashboard` and `authGoogle` (`PRODUCTION_REQUIRED_PATTERNS`,
   published as `menu.requiredPatterns`; each purpose says "ALWAYS enable"). The harness is
   unchanged: its bounded repair receives the validator's message. A presentation-only
   config (landing + cta — the factory's brief fallback) is exempt (`isPresentationOnly`),
