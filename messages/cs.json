@@ -246,5 +246,8 @@
     "gestureMobile": "Mapu posouvejte dvěma prsty",
     "gestureWindows": "Mapu přiblížíte pomocí Ctrl + kolečko",
     "gestureMac": "Mapu přiblížíte pomocí ⌘ + kolečko"
+  },
+  "footer": {
+    "generatedBy": "Vytvořeno pomocí Tokenwise AI"
   }
 }

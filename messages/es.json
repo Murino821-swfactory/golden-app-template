@@ -246,5 +246,8 @@
     "gestureMobile": "Usa dos dedos para mover el mapa",
     "gestureWindows": "Usa Ctrl + rueda para hacer zoom",
     "gestureMac": "Usa ⌘ + rueda para hacer zoom"
+  },
+  "footer": {
+    "generatedBy": "Generado por Tokenwise AI"
   }
 }

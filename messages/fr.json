@@ -246,5 +246,8 @@
     "gestureMobile": "Utilisez deux doigts pour déplacer la carte",
     "gestureWindows": "Utilisez Ctrl + molette pour zoomer",
     "gestureMac": "Utilisez ⌘ + molette pour zoomer"
+  },
+  "footer": {
+    "generatedBy": "Généré par Tokenwise AI"
   }
 }

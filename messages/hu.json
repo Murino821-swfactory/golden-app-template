@@ -246,5 +246,8 @@
     "gestureMobile": "A térképet két ujjal mozgassa",
     "gestureWindows": "Nagyításhoz használja a Ctrl + görgőt",
     "gestureMac": "Nagyításhoz használja a ⌘ + görgőt"
+  },
+  "footer": {
+    "generatedBy": "A Tokenwise AI által generálva"
   }
 }
