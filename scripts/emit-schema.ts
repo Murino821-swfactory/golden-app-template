@@ -20,6 +20,9 @@ import {
   SECTION_COPY_SOURCE,
   modelSelectableSections,
   prototypeConfigSchema,
+  PRODUCTION_SECTION_COPY,
+  PRODUCTION_PATTERN_COPY,
+  PRODUCTION_REQUIRED_PATTERNS,
 } from "../lib/prototype-config";
 
 // `io: "input"` describes what a producer must SEND. Without it, fields carrying a zod
@@ -32,6 +35,7 @@ const toJson = (schema: z.ZodType) => z.toJSONSchema(schema, { io: "input" });
 // both in the content prompt, so asking for one shape and enforcing another is impossible
 // by construction.
 const document = {
+  productionValidation: true,
   $schema: "https://json-schema.org/draft/2020-12/schema",
   // The MENU: what there is to choose from, and what to choose on. `patterns` and
   // `content` below describe the shape of an answer; none of it says what a pattern is
@@ -46,6 +50,7 @@ const document = {
     sections: {
       selectable: modelSelectableSections(),
       copySource: SECTION_COPY_SOURCE,
+      requiredCopy: PRODUCTION_SECTION_COPY,
     },
     // The languages this template can actually render — one id per `messages/*.json`.
     // It is here, in the MENU, rather than only inside `root.locales`'s enum because the
@@ -54,6 +59,10 @@ const document = {
     // omitted `hu`, which the wizard does — so a customer who picked Hungarian was
     // filtered down to English without being told.
     locales: [...LOCALES],
+    requiredPatternCopy: PRODUCTION_PATTERN_COPY,
+    // Patterns a production (non-presentation) prototype must enable. The harness does not
+    // read this key; the production validator enforces it and names it in repair feedback.
+    requiredPatterns: [...PRODUCTION_REQUIRED_PATTERNS],
   },
   patterns: Object.fromEntries(
     Object.entries(PATTERN_SCHEMAS).map(([id, schema]) => [id, toJson(schema)])

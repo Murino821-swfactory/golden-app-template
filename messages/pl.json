@@ -79,7 +79,15 @@
     "saveError": "Nie udało się zapisać danych. Sprawdź pola i spróbuj ponownie.",
     "callLabel": "Zadzwoń pod {phone}",
     "emailLabel": "Wyślij e-mail na {email}",
-    "mapLabel": "Pokaż {address} na mapie"
+    "mapLabel": "Pokaż {address} na mapie",
+    "phoneOptional": "Telefon (opcjonalnie)",
+    "regarding": "Dotyczy: {title}",
+    "clearRegarding": "Zapytaj bez konkretnej oferty",
+    "headline": "Stanowisko lub zawód",
+    "bio": "O mnie",
+    "serviceArea": "Gdzie działam",
+    "website": "Strona WWW",
+    "websiteLabel": "Otwórz stronę {url}"
   },
   "cta": {
     "title": "Gotowi, by zacząć?",
@@ -145,7 +153,9 @@
     "loadError": "Nie udało się wczytać wiadomości. Spróbuj ponownie za chwilę.",
     "unread": "Nowa",
     "reply": "Odpowiedz",
-    "back": "Wróć do przeglądu"
+    "back": "Wróć do przeglądu",
+    "regarding": "Dotyczy: {title}",
+    "call": "Zadzwoń"
   },
   "howItWorks": {
     "title": "Jak to działa"
@@ -174,13 +184,13 @@
     "changedOf": "Zmienione teksty: {changed} z {total}",
     "before": "Teraz",
     "after": "Nowe",
-    "publishOwner": "Użyj — 1 kredyt",
+    "publishOwner": "Użyj — 1,1 mln tokenów",
     "publishAdmin": "Opublikuj",
     "publishingButton": "Publikuję…",
     "publishing": "Publikuję: {stage}",
     "published": "Opublikowano — odśwież stronę",
     "reload": "Odśwież",
-    "buyCredits": "Kup kredyty",
+    "buyTokens": "Kup tokeny",
     "history": "Historia",
     "kindDraft": "Podgląd",
     "kindPublish": "Publikacja",
@@ -198,7 +208,7 @@
     "errors": {
       "busy": "Coś już trwa — poczekaj chwilę",
       "limit": "Dzisiejsze podglądy wyczerpane",
-      "noCredits": "Nie masz już kredytów",
+      "noTokens": "Nie masz wystarczająco tokenów",
       "draftUnusable": "Tego podglądu nie można już użyć — utwórz nowy",
       "vmUnreachable": "Fabryka jest niedostępna — spróbuj później",
       "upstream": "AI nie odpowiedziała — spróbuj ponownie",
@@ -210,5 +220,34 @@
       "timeout": "Trwało to za długo — nic nie pobrano",
       "generic": "Nie udało się — spróbuj ponownie"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Cena na zapytanie",
+    "perMonth": "{price} / miesiąc",
+    "status": {
+      "available": "Dostępne",
+      "reserved": "Zarezerwowane",
+      "unavailable": "Niedostępne"
+    },
+    "all": "Wszystkie",
+    "filterLabel": "Filtruj oferty",
+    "showMap": "Pokaż na mapie",
+    "hideMap": "Ukryj mapę"
+  },
+  "map": {
+    "title": "Interaktywna mapa",
+    "loadError": "Nie udało się wczytać mapy.",
+    "zoomIn": "Przybliż",
+    "zoomOut": "Oddal",
+    "resetBearing": "Obróć na północ",
+    "toggleAttribution": "Pokaż źródła mapy",
+    "marker": "Znacznik na mapie",
+    "popupClose": "Zamknij dymek",
+    "gestureMobile": "Przesuwaj mapę dwoma palcami",
+    "gestureWindows": "Przybliżaj mapę za pomocą Ctrl + kółko",
+    "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
+  },
+  "footer": {
+    "generatedBy": "Wygenerowane przez Tokenwise AI"
   }
 }

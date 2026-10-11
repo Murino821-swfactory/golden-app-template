@@ -79,7 +79,15 @@
     "saveError": "Les informations n'ont pas pu être enregistrées. Vérifiez les champs et réessayez.",
     "callLabel": "Appeler le {phone}",
     "emailLabel": "Envoyer un e-mail à {email}",
-    "mapLabel": "Afficher {address} sur une carte"
+    "mapLabel": "Afficher {address} sur une carte",
+    "phoneOptional": "Téléphone (facultatif)",
+    "regarding": "Objet : {title}",
+    "clearRegarding": "Demander sans offre précise",
+    "headline": "Fonction ou métier",
+    "bio": "À propos de moi",
+    "serviceArea": "Où j’interviens",
+    "website": "Site web",
+    "websiteLabel": "Ouvrir le site {url}"
   },
   "cta": {
     "title": "Prêt à commencer ?",
@@ -145,7 +153,9 @@
     "loadError": "Impossible de charger les messages. Réessayez dans un instant.",
     "unread": "Nouveau",
     "reply": "Répondre",
-    "back": "Retour au tableau de bord"
+    "back": "Retour au tableau de bord",
+    "regarding": "Objet : {title}",
+    "call": "Appeler"
   },
   "howItWorks": {
     "title": "Comment ça marche"
@@ -174,13 +184,13 @@
     "changedOf": "{changed} textes modifiés sur {total}",
     "before": "Actuel",
     "after": "Nouveau",
-    "publishOwner": "Utiliser — 1 crédit",
+    "publishOwner": "Utiliser — 1,1 M de tokens",
     "publishAdmin": "Publier",
     "publishingButton": "Publication…",
     "publishing": "Publication : {stage}",
     "published": "Publié — rechargez la page",
     "reload": "Recharger",
-    "buyCredits": "Acheter des crédits",
+    "buyTokens": "Acheter des tokens",
     "history": "Historique",
     "kindDraft": "Aperçu",
     "kindPublish": "Publication",
@@ -198,7 +208,7 @@
     "errors": {
       "busy": "Une opération est déjà en cours — patientez",
       "limit": "Plus d'aperçus aujourd'hui",
-      "noCredits": "Vous n'avez plus de crédits",
+      "noTokens": "Vous n'avez pas assez de tokens",
       "draftUnusable": "Cet aperçu n'est plus utilisable — créez-en un nouveau",
       "vmUnreachable": "L'usine est injoignable — réessayez plus tard",
       "upstream": "L'IA n'a pas répondu — réessayez",
@@ -210,5 +220,34 @@
       "timeout": "Cela a pris trop de temps — rien n'a été débité",
       "generic": "Cela n'a pas fonctionné — réessayez"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Prix sur demande",
+    "perMonth": "{price} / mois",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Réservé",
+      "unavailable": "Indisponible"
+    },
+    "all": "Tout",
+    "filterLabel": "Filtrer les offres",
+    "showMap": "Voir sur la carte",
+    "hideMap": "Masquer la carte"
+  },
+  "map": {
+    "title": "Carte interactive",
+    "loadError": "La carte n'a pas pu être chargée.",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "resetBearing": "Réorienter vers le nord",
+    "toggleAttribution": "Afficher les sources de la carte",
+    "marker": "Repère sur la carte",
+    "popupClose": "Fermer la bulle",
+    "gestureMobile": "Utilisez deux doigts pour déplacer la carte",
+    "gestureWindows": "Utilisez Ctrl + molette pour zoomer",
+    "gestureMac": "Utilisez ⌘ + molette pour zoomer"
+  },
+  "footer": {
+    "generatedBy": "Généré par Tokenwise AI"
   }
 }
