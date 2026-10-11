@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
+import { uiCopy } from "./ui-copy";
 
 /**
  * Smoke suite asserts the CUSTOMER'S app, not this template's identity.
@@ -62,7 +63,7 @@ test.describe("Smoke tests", () => {
   test("login page accessible", async ({ page }) => {
     test.skip(!config.patterns.authGoogle, "authGoogle pattern not enabled in this config");
     await page.goto("./login");
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: uiCopy.auth.signInButton!, exact: true })).toBeVisible();
   });
 
   test("URL section params cannot override the section lock", async ({ page }) => {

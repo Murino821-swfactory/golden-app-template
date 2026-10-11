@@ -16,6 +16,7 @@
         "comparison",
         "howItWorks",
         "faq",
+        "listings",
         "contact",
         "cta"
       ],
@@ -26,7 +27,9 @@
     "cta": {
       "href": "/login"
     },
-    "contactForm": {},
+    "contactForm": {
+      "phone": "optional"
+    },
     "dataGrid": {
       "entity": {
         "key": "pattern",
@@ -64,7 +67,66 @@
       "zoom": 7
     },
     "useCases": {},
-    "comparison": {}
+    "comparison": {},
+    "listings": {
+      "categories": [
+        "apartment",
+        "house",
+        "office"
+      ],
+      "attributes": [
+        {
+          "key": "area",
+          "unit": "m²"
+        },
+        {
+          "key": "rooms"
+        }
+      ],
+      "currency": "EUR",
+      "items": [
+        {
+          "id": "offer-1",
+          "category": "apartment",
+          "price": 189000,
+          "attributes": {
+            "area": 68,
+            "rooms": 3
+          },
+          "location": {
+            "lat": 48.1486,
+            "lng": 17.1077
+          }
+        },
+        {
+          "id": "offer-2",
+          "category": "house",
+          "price": 315000,
+          "status": "reserved",
+          "attributes": {
+            "area": 142,
+            "rooms": 5
+          },
+          "location": {
+            "lat": 48.7164,
+            "lng": 21.2611
+          }
+        },
+        {
+          "id": "offer-3",
+          "category": "office",
+          "price": 1450,
+          "pricePeriod": "month",
+          "attributes": {
+            "area": 95
+          },
+          "location": {
+            "lat": 49.2231,
+            "lng": 18.7394
+          }
+        }
+      ]
+    }
   },
   "content": {
     "en": {
@@ -182,6 +244,43 @@
             "after": "Generate metadata, structured data and llms.txt from the page content."
           }
         ]
+      },
+      "listings": {
+        "heading": "What is on offer",
+        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
+        "notice": "These offers are illustrative examples, not a live offer.",
+        "categoryLabels": {
+          "apartment": "Apartment",
+          "house": "House",
+          "office": "Office"
+        },
+        "attributeLabels": {
+          "area": "Area",
+          "rooms": "Rooms"
+        },
+        "items": {
+          "offer-1": {
+            "title": "Three-room flat near the centre",
+            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "highlights": [
+              "Balcony",
+              "Lift"
+            ]
+          },
+          "offer-2": {
+            "title": "Family house with a garden",
+            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "highlights": [
+              "Garden",
+              "Garage"
+            ]
+          },
+          "offer-3": {
+            "title": "Office floor for a small team",
+            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          }
+        },
+        "inquireLabel": "Ask about this offer"
       }
     }
   }

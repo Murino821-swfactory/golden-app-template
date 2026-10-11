@@ -52,6 +52,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
 
 ## Critical Rules for Fast Implementation
 
@@ -78,6 +79,18 @@ merged grid fields from `useEntityFields()` (`hooks/use-content.ts`), both of wh
 A pattern is enabled iff its **`patterns`** slice exists. zod then requires the matching
 content slice in **every** declared locale, so a language can never be offered and then
 render blank.
+
+New customer creation uses `npm run validate:config -- --production` before building.
+`parseProductionPrototypeConfig` requires customer text for every rendered section and
+pattern in every locale, rejects blank text and unsupported placeholder sections, and
+checks records/auth/dashboard dependencies and unique field keys. Copy requirements are
+published as `productionValidation`, `menu.sections.requiredCopy` and
+`menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
+The usual parser stays compatible with local starter fixtures and archived prototypes.
+Field/KPI labels and sample values are JSON own properties (`Object.hasOwn`); inherited
+JavaScript properties such as `constructor` never satisfy a required label or sample value.
+Tests: `tests/production-copy.spec.ts`; cross-repo decision:
+[prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
 
 Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
 still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
@@ -428,9 +441,11 @@ generate one; the founder any number; both may hide or show it. The server is fa
   demo on tokenwise.sk/demo/golden has a slug but no such endpoint).
 - The hero `<section>` is full width; its content keeps the old `max-w-5xl` box, so with
   no image it looks as before. The image layer is absolute (moves nothing, CLS 0).
-- Readability over the image is not guaranteed (founder decision): the overlay is drawn in
-  `var(--background)` at `HERO_OVERLAY_ALPHA`, and a visitor who cannot read the text
-  clicks "Change colour".
+- The image is shown fully visible (founder decision 2026-10-09): no even tint over it,
+  only a fade into `var(--background)` across the bottom strip (`HERO_FADE_START`).
+  Readability over the image is still not guaranteed (founder decision 2026-09-25): the
+  hero copy gets `HERO_TEXT_SHADOW` in the palette's background while an image is shown,
+  and a visitor who cannot read the text clicks "Change colour".
 - The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
   copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
@@ -459,7 +474,7 @@ under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a pr
 factory's own content call — the same schema this repo publishes in
 `prototype.schema.json`), compare every text with the current one with the tokens, cost and
 characters of that one request, and use it: the factory commits the new copy to
-`demo/<slug>` and republishes the page (the creator pays one credit; the founder nothing).
+`demo/<slug>` and republishes the page (the creator pays 1.1M tokens from their tokenwise wallet; the founder nothing).
 Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
 in the **sw-factory** repo.
 
@@ -556,3 +571,43 @@ public paths. A custom deployment must publish these files at its own appropriat
 
 Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
 `npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.
+
+Prototype export browser gates read chrome, login and contact labels from the configured
+default locale bundle. They must not require English controls on a Slovak-first export.
+The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
+
+## Listings, required patterns, phone and profile (2026-10-09)
+
+Founder decision for the Realitná únia SR presentation; the patterns are generic, not
+real-estate specific. Record: sw-factory `docs/decisions/2026-10-09-listings-pattern.md`.
+
+- **`listings` (phase A)** — a public catalogue of offers: `patterns.listings` holds
+  categories (keys), up to four numeric attributes with optional units, an ISO currency and
+  3–12 items (id, category, price, `pricePeriod`, status, attribute values, optional
+  location); `content.<locale>.listings` holds heading, intro, the illustrative `notice`,
+  labels and each item's title/summary/highlights, plus `inquireLabel`. The offers are
+  ILLUSTRATIVE and static (no Firestore, no rules change); an owner-managed catalogue
+  with photos is phase B. The pattern and the `listings` landing section are enabled
+  together. Offers are kept out of llms.txt and JSON-LD — discovery must not present
+  example offers as facts.
+- **Map:** when `mapBase` is enabled, offers with a location are pinned on it (dashboard)
+  and, on the landing, on a map mounted only after "Show on map": loading third-party tiles
+  on page load would put a network dependency into every prototype's console-clean smoke
+  gate. The map is optional (founder 2026-10-10): the model picks it only when place is
+  part of the idea; without it, offers carry no location. Its texts — the template's and
+  MapLibre's own controls — come from `map` in all 8 `messages/*.json`; one finger scrolls
+  the page past it (`cooperativeGestures`); a style that never loads shows `map.loadError`.
+- **Required patterns:** `parseProductionPrototypeConfig` refuses a composition without
+  `listings`, `dashboard` and `authGoogle` (`PRODUCTION_REQUIRED_PATTERNS`,
+  published as `menu.requiredPatterns`; each purpose says "ALWAYS enable"). The harness is
+  unchanged: its bounded repair receives the validator's message. A presentation-only
+  config (landing + cta — the factory's brief fallback) is exempt (`isPresentationOnly`),
+  or a rejected answer would leave no publishable prototype at all.
+- **Contact form:** `patterns.contactForm.phone` = `hidden` (default) | `optional` |
+  `required`. "Ask about this offer" on a card selects it (`lib/listing-inquiry.ts`) and the
+  form sends `listingId` + `listingTitle`. factory-web `prototypeContact` validates and
+  stores both, and the owner's inbox and e-mail show them.
+- **Profile:** the owner card gains `headline`, `bio`, `serviceArea` and `website`
+  (https only, checked on the server and again at render). The owner types them; no model
+  writes the card. factory-web must be deployed first — an older server refuses a card
+  with these fields.
