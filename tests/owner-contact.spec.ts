@@ -7,6 +7,8 @@ import {
   parseOwnerCard,
   parseOwnerStatus,
   telHref,
+  websiteHref,
+  websiteText,
 } from "../lib/owner-contact";
 
 test("telHref keeps only what a dialler understands", () => {
@@ -18,8 +20,8 @@ test("mapsHref encodes the address", () => {
   expect(mapsHref("Hlavná 1, Košice")).toBe("https://www.google.com/maps/search/?api=1&query=Hlavn%C3%A1%201%2C%20Ko%C5%A1ice");
 });
 
-test("parseOwnerCard keeps the five fields, non-empty strings only", () => {
-  expect(parseOwnerCard({ firstName: "Jana", phone: "", email: 5, website: "x", address: "A 1" })).toEqual({
+test("parseOwnerCard keeps the card fields, non-empty strings only", () => {
+  expect(parseOwnerCard({ firstName: "Jana", phone: "", email: 5, fax: "x", address: "A 1" })).toEqual({
     firstName: "Jana",
     address: "A 1",
   });
@@ -49,4 +51,17 @@ test("owner actions exist only on a published prototype with a slug", () => {
   expect(ownerActionsAvailable("", "unbroken")).toBe(false);
   expect(ownerActionsAvailable("/demo/golden", "golden")).toBe(false);
   expect(ownerActionsAvailable("/newapp/unbroken", null)).toBe(false);
+});
+
+test("profile fields (2026-10-09): parsed like the card, website linked only over https", () => {
+  expect(parseOwnerCard({ headline: "Maklérka", bio: "Pomáham s predajom.", serviceArea: "Bratislava", website: "https://firma.sk/" })).toEqual({
+    headline: "Maklérka",
+    bio: "Pomáham s predajom.",
+    serviceArea: "Bratislava",
+    website: "https://firma.sk/",
+  });
+  expect(websiteHref("https://firma.sk/jana")).toBe("https://firma.sk/jana");
+  for (const bad of [undefined, "", "http://firma.sk", "javascript:alert(1)", "firma.sk"]) expect(websiteHref(bad)).toBeNull();
+  expect(websiteText("https://firma.sk/")).toBe("firma.sk");
+  expect(websiteText("https://firma.sk/jana")).toBe("firma.sk/jana");
 });
