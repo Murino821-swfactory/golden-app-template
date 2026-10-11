@@ -79,7 +79,15 @@
     "saveError": "Az adatokat nem sikerült menteni. Ellenőrizze a mezőket, és próbálja újra.",
     "callLabel": "{phone} hívása",
     "emailLabel": "E-mail küldése ide: {email}",
-    "mapLabel": "{address} megjelenítése a térképen"
+    "mapLabel": "{address} megjelenítése a térképen",
+    "phoneOptional": "Telefon (nem kötelező)",
+    "regarding": "Tárgy: {title}",
+    "clearRegarding": "Kérdezés konkrét ajánlat nélkül",
+    "headline": "Beosztás vagy szakma",
+    "bio": "Rólam",
+    "serviceArea": "Ahol dolgozom",
+    "website": "Weboldal",
+    "websiteLabel": "A(z) {url} weboldal megnyitása"
   },
   "cta": {
     "title": "Készen áll a kezdésre?",
@@ -145,7 +153,9 @@
     "loadError": "Az üzeneteket nem sikerült betölteni. Próbálja újra kicsit később.",
     "unread": "Új",
     "reply": "Válasz",
-    "back": "Vissza az áttekintéshez"
+    "back": "Vissza az áttekintéshez",
+    "regarding": "Tárgy: {title}",
+    "call": "Hívás"
   },
   "howItWorks": {
     "title": "Így működik"
@@ -174,13 +184,13 @@
     "changedOf": "Módosított szövegek: {changed} / {total}",
     "before": "Most",
     "after": "Új",
-    "publishOwner": "Használom — 1 kredit",
+    "publishOwner": "Használom — 1,1M token",
     "publishAdmin": "Közzététel",
     "publishingButton": "Közzététel folyamatban…",
     "publishing": "Közzététel: {stage}",
     "published": "Közzétéve — töltsd újra az oldalt",
     "reload": "Újratöltés",
-    "buyCredits": "Kredit vásárlása",
+    "buyTokens": "Token vásárlása",
     "history": "Előzmények",
     "kindDraft": "Előnézet",
     "kindPublish": "Közzététel",
@@ -198,7 +208,7 @@
     "errors": {
       "busy": "Már fut valami — várj egy kicsit",
       "limit": "A mai előnézetek elfogytak",
-      "noCredits": "Nincs több kredited",
+      "noTokens": "Nincs elég tokened",
       "draftUnusable": "Ez az előnézet már nem használható — készíts újat",
       "vmUnreachable": "A gyár nem érhető el — próbáld később",
       "upstream": "Az MI nem válaszolt — próbáld újra",
@@ -210,5 +220,34 @@
       "timeout": "Túl sokáig tartott — nem vontunk le semmit",
       "generic": "Nem sikerült — próbáld újra"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Ár kérésre",
+    "perMonth": "{price} / hónap",
+    "status": {
+      "available": "Elérhető",
+      "reserved": "Lefoglalva",
+      "unavailable": "Nem elérhető"
+    },
+    "all": "Mind",
+    "filterLabel": "Ajánlatok szűrése",
+    "showMap": "Megjelenítés térképen",
+    "hideMap": "Térkép elrejtése"
+  },
+  "map": {
+    "title": "Interaktív térkép",
+    "loadError": "A térképet nem sikerült betölteni.",
+    "zoomIn": "Nagyítás",
+    "zoomOut": "Kicsinyítés",
+    "resetBearing": "Északra igazítás",
+    "toggleAttribution": "Térképforrások megjelenítése",
+    "marker": "Térképjelölő",
+    "popupClose": "Buborék bezárása",
+    "gestureMobile": "A térképet két ujjal mozgassa",
+    "gestureWindows": "Nagyításhoz használja a Ctrl + görgőt",
+    "gestureMac": "Nagyításhoz használja a ⌘ + görgőt"
+  },
+  "footer": {
+    "generatedBy": "A Tokenwise AI által generálva"
   }
 }

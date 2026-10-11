@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Mail, MapPin, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,23 +12,35 @@ import { useContent } from "@/hooks/use-content";
 import { useOwnerCard } from "@/hooks/use-owner-card";
 import { useOwnerRole } from "@/hooks/use-owner-role";
 import { getDemoSlug } from "@/lib/demo-slug";
+import { selectInquiry, useInquiryTarget } from "@/lib/listing-inquiry";
+import { config } from "@/lib/prototype-config";
 import { localePath } from "@/lib/locale-routing";
-import { cardIsEmpty, fullName, mapsHref, telHref, type OwnerCard } from "@/lib/owner-contact";
+import { cardIsEmpty, fullName, mapsHref, telHref, websiteHref, websiteText, type OwnerCard } from "@/lib/owner-contact";
 import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 /**
- * The owner's public card (sw-factory spec 2026-09-29-golden-template-v2 §6.3): only the
- * fields the owner filled in, each one a link a phone can act on.
+ * The owner's public profile (sw-factory spec 2026-09-29-golden-template-v2 §6.3, profile
+ * fields 2026-10-09): only the fields the owner filled in; contact lines are links a phone
+ * can act on.
  */
 function OwnerCardView({ card }: { card: OwnerCard }) {
   const t = useTranslations("contact");
   const name = fullName(card);
+  const website = websiteHref(card.website);
   const link = "flex min-h-11 items-center gap-3 break-words hover:underline";
   return (
     <address data-owner-card className="rounded-lg border border-border bg-card p-5 text-sm not-italic">
       {name && <p className="text-base font-semibold">{name}</p>}
+      {card.headline && <p data-owner-headline className="text-muted-foreground">{card.headline}</p>}
+      {card.bio && <p data-owner-bio className="mt-3 whitespace-pre-line">{card.bio}</p>}
+      {card.serviceArea && (
+        <p className="mt-3">
+          <span className="text-muted-foreground">{t("serviceArea")}: </span>
+          {card.serviceArea}
+        </p>
+      )}
       <ul className="mt-2 space-y-1">
         {card.address && (
           <li>
@@ -60,10 +72,26 @@ function OwnerCardView({ card }: { card: OwnerCard }) {
             </a>
           </li>
         )}
+        {website && (
+          <li>
+            <a
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer nofollow ugc"
+              className={link}
+              aria-label={t("websiteLabel", { url: websiteText(website) })}
+            >
+              <Globe aria-hidden className="size-4 shrink-0 text-primary" />
+              {websiteText(website)}
+            </a>
+          </li>
+        )}
       </ul>
     </address>
   );
 }
+
+const phoneMode = config.patterns.contactForm?.phone ?? "hidden";
 
 export function ContactSection() {
   const t = useTranslations("contact");
@@ -76,7 +104,9 @@ export function ContactSection() {
   const hasCard = !cardIsEmpty(card);
   const [editing, setEditing] = useState(false);
 
+  const inquiry = useInquiryTarget();
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState(""); // honeypot — see the hidden wrapper below
@@ -107,10 +137,15 @@ export function ContactSection() {
           message,
           website,
           ...(name.trim() ? { name: name.trim() } : {}),
+          ...(phoneMode !== "hidden" && phone.trim() ? { phone: phone.trim() } : {}),
+          // The offer the visitor chose on a listing card; its title is sent as shown, so
+          // the owner reads what the visitor read.
+          ...(inquiry ? { listingId: inquiry.id, listingTitle: inquiry.title } : {}),
         }),
       });
       const body = (await res.json().catch(() => null)) as { ok?: boolean } | null;
       if (!res.ok || !body?.ok) throw new Error(`prototype-contact responded ${res.status}`);
+      selectInquiry(null);
       setStatus("success");
     } catch (err) {
       console.error("[contact] failed to send:", err);
@@ -151,6 +186,15 @@ export function ContactSection() {
               </p>
             )}
 
+            {inquiry && (
+              <p data-contact-regarding className="mb-4 flex items-center justify-between gap-2 rounded-md border border-primary px-3 py-2 text-sm">
+                <span className="min-w-0 break-words">{t("regarding", { title: inquiry.title })}</span>
+                <Button type="button" variant="ghost" size="icon" className="size-11 shrink-0" aria-label={t("clearRegarding")} onClick={() => selectInquiry(null)}>
+                  <X aria-hidden className="size-4" />
+                </Button>
+              </p>
+            )}
+
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               {/* A disabled fieldset disables every descendant control regardless of the
                   `contents` display below — that propagation is standard HTML form
@@ -185,6 +229,25 @@ export function ContactSection() {
                   onChange={(event) => setEmail(event.target.value)}
                 />
               </div>
+              {phoneMode !== "hidden" && (
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="contact-phone" className="text-sm font-medium">
+                    {phoneMode === "required" ? t("phone") : t("phoneOptional")}
+                  </label>
+                  <Input
+                    id="contact-phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    maxLength={30}
+                    className="h-11 text-base sm:text-sm"
+                    required={phoneMode === "required"}
+                    value={phone}
+                    onChange={(event) => setPhone(event.target.value)}
+                  />
+                </div>
+              )}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="contact-message" className="text-sm font-medium">
                   {t("message")}

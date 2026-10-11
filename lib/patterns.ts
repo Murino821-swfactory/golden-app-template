@@ -64,5 +64,10 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "components/patterns/data-grid/board.tsx",
     "lib/board.ts",
   ],
+  listings: [
+    "components/sections/listings.tsx",
+    "lib/listings.ts",
+    "lib/listing-inquiry.ts",
+  ],
   mapBase: ["components/patterns/map-base/index.tsx"],
 };
