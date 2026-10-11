@@ -130,10 +130,10 @@ export function CopyRewriteControls() {
             <p aria-live="polite" className="min-h-5 text-center text-sm">
               {view.message ? t(view.message.key, view.message.values) : ""}
             </p>
-            {copy.actionError === "no-credits" && copy.pricingUrl && (
+            {copy.actionError === "no-tokens" && copy.pricingUrl && (
               <Button asChild variant="link" className="h-11">
                 <a href={copy.pricingUrl} target="_blank" rel="noopener noreferrer">
-                  {t("buyCredits")}
+                  {t("buyTokens")}
                 </a>
               </Button>
             )}
