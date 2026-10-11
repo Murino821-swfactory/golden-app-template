@@ -1,306 +1,594 @@
 {
-  "appName": "Golden App Template",
+  "appName": "integrácia openbanking system",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "burnt-orange-misty-ice-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
+        "faq",
         "contact",
         "cta"
       ],
-      "presentation": "story"
+      "presentation": "document"
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {
-      "phone": "optional"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalExpenses",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "totalAmount",
+          "field": "amount",
+          "agg": "sum"
+        },
+        {
+          "id": "reconciledShare",
+          "field": "status",
+          "agg": "share",
+          "value": "reconciled"
+        }
+      ]
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "expense",
         "fields": [
           {
-            "key": "name",
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "description",
             "type": "text",
+            "required": true
+          },
+          {
+            "key": "amount",
+            "type": "number",
             "required": true
           },
           {
             "key": "category",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "cards",
+              "cash",
+              "invoice"
+            ],
+            "required": true
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "pending",
+              "booked",
+              "reconciled"
             ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "corporateCards",
+        "cashScanning",
+        "invoicing",
+        "reporting"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "transactions"
         },
         {
-          "key": "rooms"
+          "key": "users"
         }
       ],
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
-          "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
-          }
-        },
-        {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "id": "cards-starter",
+          "category": "corporateCards",
+          "price": 29,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "transactions": 200,
+            "users": 3
+          }
+        },
+        {
+          "id": "cards-pro",
+          "category": "corporateCards",
+          "price": 59,
+          "pricePeriod": "month",
+          "attributes": {
+            "transactions": 1000,
+            "users": 10
+          }
+        },
+        {
+          "id": "scan-basic",
+          "category": "cashScanning",
+          "price": 19,
+          "pricePeriod": "month",
+          "attributes": {
+            "transactions": 150,
+            "users": 2
+          }
+        },
+        {
+          "id": "scan-pro",
+          "category": "cashScanning",
+          "price": 39,
+          "pricePeriod": "month",
+          "attributes": {
+            "transactions": 500,
+            "users": 10
+          }
+        },
+        {
+          "id": "full-accounting",
+          "category": "invoicing",
+          "price": 89,
+          "pricePeriod": "month",
+          "attributes": {
+            "transactions": 2000,
+            "users": 20
+          }
+        },
+        {
+          "id": "reporting-advanced",
+          "category": "reporting",
+          "price": 49,
+          "pricePeriod": "month",
+          "attributes": {
+            "transactions": 500,
+            "users": 5
           }
         }
       ]
+    },
+    "contactForm": {
+      "phone": "optional"
+    },
+    "cta": {
+      "href": "/login"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Track corporate card payments, scan cash receipts and close your books — all connected through open banking.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every company expense tracked from card to closing",
+        "subheadline": "For finance managers who need one place to record corporate cards, scan cash receipts and produce accounting reports.",
+        "featuresHeading": "Built around how your company actually pays",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "credit-card",
+            "title": "Corporate Card Tracking",
+            "description": "See every card transaction as it posts and assign it to the right cost centre without manual entry."
+          },
+          {
+            "icon": "camera",
+            "title": "Cash Receipt Scanning",
+            "description": "Photograph a paper receipt and the system reads the amount, date and vendor for you to confirm."
+          },
+          {
+            "icon": "building-2",
+            "title": "Open Banking Sync",
+            "description": "Connect your company account via PSD2 and pull bank transactions automatically each day."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Invoice Matching",
+            "description": "Pair incoming invoices to payments already in the ledger without manual searching through rows."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "Spend Reports & Predictions",
+            "description": "Generate period reports and view projected outflows based on recurring expenses and scheduled invoices."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Full Audit Trail",
+            "description": "Every entry carries a timestamp and payment source so your accountant can trace any transaction."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "From first payment to closed books",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Connect your bank",
+              "description": "Link your company bank account via the open-banking API — no manual file imports or CSV uploads needed."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Capture every payment",
+              "description": "Scan a cash receipt with your phone or let corporate card transactions sync automatically into the ledger."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Categorise and approve",
+              "description": "Assign each expense a cost category and approve it to move it into the accounting ledger for reconciliation."
+            },
+            {
+              "title": "Report and close",
+              "description": "Export period reports or pass the full ledger to your accountant with a complete audit trail attached."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Frequently asked questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Which banks does the open-banking connection support?",
+              "answer": "The system uses the PSD2 open-banking standard. Any bank that exposes a PSD2-compliant API can be connected. Check with your bank whether their open-banking API is currently live."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can several employees scan receipts and use corporate cards?",
+              "answer": "Yes. Each employee signs in with their own account. Their submissions appear in the company admin view, where they can be approved or returned for correction."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "How accurate is the receipt scanning?",
+              "answer": "The scanner reads amount, date and vendor from a clear photograph. You review the result before it is saved, so no entry enters the ledger without your confirmation."
+            },
+            {
+              "question": "Is my company's financial data stored securely?",
+              "answer": "All data is encrypted in transit and at rest. Access requires Google sign-in, and each account sees only its own company's records."
+            },
+            {
+              "question": "Can I export data for my accountant?",
+              "answer": "Yes. You can export the expense ledger and period reports. The export includes the original payment source, category and approval status for every entry."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Expense Dashboard",
+        "intro": "A live overview of your company's spending across corporate cards, cash payments and invoices.",
+        "kpiLabels": {
+          "totalExpenses": "Total entries",
+          "totalAmount": "Total amount (€)",
+          "reconciledShare": "Reconciled"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Expense",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "date": "Date",
+          "description": "Description",
+          "amount": "Amount (€)",
+          "category": "Payment type",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "date": "2026-09-25",
+            "description": "Team lunch — Novák canteen",
+            "amount": 87.5,
+            "category": "cash",
+            "status": "reconciled"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "date": "2026-10-03",
+            "description": "Office supplies — Bratislava branch",
+            "amount": 124,
+            "category": "cards",
+            "status": "booked"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "date": "2026-10-08",
+            "description": "Supplier invoice — Aritex s.r.o.",
+            "amount": 1450,
+            "category": "invoice",
+            "status": "pending"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Service modules",
+        "intro": "Choose the modules your company needs. Each can be activated separately or combined into a complete accounting setup.",
+        "notice": "These are illustrative module examples; contact us for current pricing and availability.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "corporateCards": "Corporate Cards",
+          "cashScanning": "Cash Scanning",
+          "invoicing": "Invoicing & Accounting",
+          "reporting": "Reporting & Analytics"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "transactions": "Transactions / month",
+          "users": "Users included"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "cards-starter": {
+            "title": "Cards Starter",
+            "summary": "Track up to 200 monthly card transactions across up to 3 users. Ideal for small teams with a single shared corporate card.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Real-time card sync",
+              "Cost-centre tagging",
+              "Monthly export"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "cards-pro": {
+            "title": "Cards Pro",
+            "summary": "Handle up to 1 000 card transactions per month for up to 10 users, with multi-card support and approval workflows.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Multi-card support",
+              "Approval workflow",
+              "Custom categories"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "scan-basic": {
+            "title": "Cash Scan Basic",
+            "summary": "Scan up to 150 cash receipts per month for up to 2 users. Amounts and vendors are read automatically from a photo.",
+            "highlights": [
+              "Photo capture",
+              "Auto-read vendor & amount",
+              "Draft before saving"
+            ]
+          },
+          "scan-pro": {
+            "title": "Cash Scan Pro",
+            "summary": "Process up to 500 receipts per month for up to 10 users with batch scanning and instant categorisation.",
+            "highlights": [
+              "Batch scanning",
+              "Instant categorisation",
+              "Full audit log"
+            ]
+          },
+          "full-accounting": {
+            "title": "Full Accounting Suite",
+            "summary": "Complete ledger management for up to 2 000 transactions and 20 users, with open-banking sync, invoice matching and period close.",
+            "highlights": [
+              "Open banking sync",
+              "Invoice matching",
+              "Period close & export"
+            ]
+          },
+          "reporting-advanced": {
+            "title": "Reporting & Predictions",
+            "summary": "Generate custom spend reports and projected outflow forecasts based on recurring expenses and scheduled invoices.",
+            "highlights": [
+              "Custom date ranges",
+              "Category breakdown",
+              "Outflow forecasts"
+            ]
           }
         },
-        "inquireLabel": "Ask about this offer"
+        "inquireLabel": "Ask about this module"
+      },
+      "contactForm": {
+        "heading": "Get in touch",
+        "submitLabel": "Send message",
+        "intro": "Have a question about a module or need a custom setup? Send a message and we will get back to you."
+      },
+      "cta": {
+        "label": "Sign in and start tracking",
+        "title": "Take control of every company expense",
+        "subtitle": "Sign in with your Google account and connect your bank account in minutes."
+      }
+    },
+    "sk": {
+      "description": "Sledujte firemné karty, skenujte pokladničné bloky a uzatvárajte účtovníctvo — všetko prepojené cez open banking.",
+      "landing": {
+        "headline": "Každý firemný výdavok evidovaný od karty po uzávierku",
+        "subheadline": "Pre finančných manažérov, ktorí potrebujú jedno miesto na evidenciu kariet, skenovanie hotovostných blokov a prípravu účtovných výkazov.",
+        "featuresHeading": "Navrhnuté podľa toho, ako vaša firma skutočne platí",
+        "features": [
+          {
+            "icon": "credit-card",
+            "title": "Evidencia firemných kariet",
+            "description": "Sledujte každú kartovú transakciu v reálnom čase a priraďte ju ku správnemu nákladovému stredisku."
+          },
+          {
+            "icon": "camera",
+            "title": "Skenovanie blokov",
+            "description": "Odfotografujte pokladničný blok a systém automaticky načíta sumu, dátum a dodávateľa."
+          },
+          {
+            "icon": "building-2",
+            "title": "Synchronizácia cez open banking",
+            "description": "Prepojte firemný účet cez PSD2 a bankové transakcie sa budú sťahovať automaticky každý deň."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Párovanie faktúr",
+            "description": "Spárujte prijaté faktúry s platbami v denníku bez ručného prehľadávania riadkov."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Výkazy a predikcie výdavkov",
+            "description": "Generujte periodické výkazy a sledujte predpokladané výdavky podľa opakujúcich sa položiek."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Kompletná história pohybov",
+            "description": "Každý záznam nesie časovú pečiatku a zdroj platby, takže účtovník vie dohľadať ľubovoľnú transakciu."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Od prvej platby po uzavretú knihu",
+          "steps": [
+            {
+              "title": "Prepojte bankový účet",
+              "description": "Pripojte firemný bankový účet cez open-banking API — bez ručného importu súborov ani CSV tabuliek."
+            },
+            {
+              "title": "Zachyťte každú platbu",
+              "description": "Naskenujte hotovostný blok telefónom alebo nechajte transakcie kartou synchronizovať automaticky do denníka."
+            },
+            {
+              "title": "Kategorizujte a schvaľte",
+              "description": "Priraďte výdavku kategóriu nákladov a schváľte ho na zaúčtovanie do účtovného denníka."
+            },
+            {
+              "title": "Reportujte a uzavreli",
+              "description": "Exportujte periodické výkazy alebo odošlite celý denník účtovníkovi s kompletnou históriou pohybov."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Ktoré banky open-banking pripojenie podporuje?",
+              "answer": "Systém využíva štandard PSD2. Prepojiť možno každú banku, ktorá sprístupňuje PSD2-kompatibilné API. Overte si u svojej banky, či je ich open-banking API aktívne."
+            },
+            {
+              "question": "Môže viac zamestnancov skenovať bloky a používať firemné karty?",
+              "answer": "Áno. Každý zamestnanec sa prihlasuje vlastným účtom. Ich výdavky vidí firemný administrátor, ktorý ich môže schváliť alebo vrátiť na opravu."
+            },
+            {
+              "question": "Aká je presnosť skenovania blokov?",
+              "answer": "Skener načíta sumu, dátum a dodávateľa z ostrého odfotografovania. Výsledok si pred uložením skontrolujete, takže do denníka nevstúpi žiadny záznam bez vášho potvrdenia."
+            },
+            {
+              "question": "Sú finančné dáta mojej firmy bezpečne uložené?",
+              "answer": "Všetky dáta sú šifrované pri prenose aj v uložisku. Prístup vyžaduje prihlásenie cez Google a každý účet vidí iba dáta svojej firmy."
+            },
+            {
+              "question": "Môžem exportovať dáta pre účtovníka?",
+              "answer": "Áno. Môžete exportovať účtovný denník aj periodické výkazy. Export obsahuje pôvodný zdroj platby, kategóriu a stav schválenia pre každý záznam."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Prehľad výdavkov",
+        "intro": "Živý prehľad firemných výdavkov cez karty, hotovostné platby a faktúry.",
+        "kpiLabels": {
+          "totalExpenses": "Celkový počet záznamov",
+          "totalAmount": "Celková suma (€)",
+          "reconciledShare": "Zaúčtované"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Výdavok",
+        "fieldLabels": {
+          "date": "Dátum",
+          "description": "Popis",
+          "amount": "Suma (€)",
+          "category": "Typ platby",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "date": "2026-09-25",
+            "description": "Firemný obed — jedáleň Novák",
+            "amount": 87.5,
+            "category": "cash",
+            "status": "reconciled"
+          },
+          {
+            "date": "2026-10-03",
+            "description": "Kancelárske potreby — pobočka Bratislava",
+            "amount": 124,
+            "category": "cards",
+            "status": "booked"
+          },
+          {
+            "date": "2026-10-08",
+            "description": "Faktúra dodávateľa — Aritex s.r.o.",
+            "amount": 1450,
+            "category": "invoice",
+            "status": "pending"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Servisné moduly",
+        "intro": "Vyberte moduly, ktoré vaša firma potrebuje. Každý možno aktivovať samostatne alebo ich spojiť do kompletného účtovného riešenia.",
+        "notice": "Tieto moduly sú ilustračné príklady; kontaktujte nás pre aktuálne ceny a dostupnosť.",
+        "categoryLabels": {
+          "corporateCards": "Firemné karty",
+          "cashScanning": "Skenovanie hotovosti",
+          "invoicing": "Fakturácia a účtovníctvo",
+          "reporting": "Reporty a analytika"
+        },
+        "attributeLabels": {
+          "transactions": "Transakcie / mesiac",
+          "users": "Počet používateľov"
+        },
+        "items": {
+          "cards-starter": {
+            "title": "Karty Štart",
+            "summary": "Evidujte až 200 kartových transakcií mesačne pre až 3 používateľov. Vhodné pre malé tímy s jednou zdieľanou firemnou kartou.",
+            "highlights": [
+              "Synchronizácia v reálnom čase",
+              "Priradenie nákladových stredísk",
+              "Mesačný export"
+            ]
+          },
+          "cards-pro": {
+            "title": "Karty Pro",
+            "summary": "Spravujte až 1 000 kartových transakcií mesačne pre až 10 používateľov vrátane podpory viacerých kariet a schvaľovacích procesov.",
+            "highlights": [
+              "Podpora viacerých kariet",
+              "Schvaľovací proces",
+              "Vlastné kategórie"
+            ]
+          },
+          "scan-basic": {
+            "title": "Skenovanie blokov Základ",
+            "summary": "Skenujte až 150 hotovostných blokov mesačne pre až 2 používateľov. Suma a dodávateľ sa načítajú automaticky z fotografie.",
+            "highlights": [
+              "Fotografické zachytenie",
+              "Automatické načítanie údajov",
+              "Náhľad pred uložením"
+            ]
+          },
+          "scan-pro": {
+            "title": "Skenovanie blokov Pro",
+            "summary": "Spracujte až 500 blokov mesačne pre až 10 používateľov s dávkovým skenovaním a okamžitou kategorizáciou.",
+            "highlights": [
+              "Dávkové skenovanie",
+              "Okamžitá kategorizácia",
+              "Kompletný audit log"
+            ]
+          },
+          "full-accounting": {
+            "title": "Kompletné účtovníctvo",
+            "summary": "Správa celého účtovného denníka pre až 2 000 transakcií a 20 používateľov so synchronizáciou cez open banking a periodickou uzávierkou.",
+            "highlights": [
+              "Synchronizácia cez open banking",
+              "Párovanie faktúr",
+              "Periodická uzávierka a export"
+            ]
+          },
+          "reporting-advanced": {
+            "title": "Reporty a predikcie",
+            "summary": "Generujte vlastné výkazy výdavkov a predpovede odtoku finančných prostriedkov na základe opakujúcich sa výdavkov a plánovaných faktúr.",
+            "highlights": [
+              "Vlastné časové rozsahy",
+              "Rozpad podľa kategórie",
+              "Predikcie odtoku"
+            ]
+          }
+        },
+        "inquireLabel": "Opýtať sa na modul"
+      },
+      "contactForm": {
+        "heading": "Napíšte nám",
+        "submitLabel": "Odoslať správu",
+        "intro": "Máte otázku k modulu alebo potrebujete individuálne riešenie? Napíšte nám a ozveme sa vám."
+      },
+      "cta": {
+        "label": "Prihlásiť sa a začať evidovať",
+        "title": "Prevezmite kontrolu nad každým firemným výdavkom",
+        "subtitle": "Prihláste sa Google účtom a prepojte firemný bankový účet za pár minút."
       }
     }
   }
