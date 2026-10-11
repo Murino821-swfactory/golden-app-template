@@ -79,7 +79,15 @@
     "saveError": "Údaje sa nepodarilo uložiť. Skontrolujte polia a skúste to znova.",
     "callLabel": "Zavolať na {phone}",
     "emailLabel": "Poslať e-mail na {email}",
-    "mapLabel": "Zobraziť {address} na mape"
+    "mapLabel": "Zobraziť {address} na mape",
+    "phoneOptional": "Telefón (nepovinné)",
+    "regarding": "Ohľadom: {title}",
+    "clearRegarding": "Pýtať sa bez konkrétnej ponuky",
+    "headline": "Pozícia alebo profesia",
+    "bio": "O mne",
+    "serviceArea": "Kde pôsobím",
+    "website": "Web",
+    "websiteLabel": "Otvoriť web {url}"
   },
   "cta": {
     "title": "Pustíme sa do toho?",
@@ -145,7 +153,9 @@
     "loadError": "Správy sa nepodarilo načítať. Skúste to o chvíľu znova.",
     "unread": "Nová",
     "reply": "Odpovedať",
-    "back": "Späť na prehľad"
+    "back": "Späť na prehľad",
+    "regarding": "Ohľadom: {title}",
+    "call": "Zavolať"
   },
   "howItWorks": {
     "title": "Ako to funguje"
@@ -174,13 +184,13 @@
     "changedOf": "Zmenené texty: {changed} z {total}",
     "before": "Teraz",
     "after": "Nové",
-    "publishOwner": "Použiť — 1 kredit",
+    "publishOwner": "Použiť — 1,1M tokenov",
     "publishAdmin": "Zverejniť",
     "publishingButton": "Zverejňujem…",
     "publishing": "Zverejňujem: {stage}",
     "published": "Zverejnené — obnov stránku",
     "reload": "Obnoviť",
-    "buyCredits": "Kúpiť kredity",
+    "buyTokens": "Kúpiť tokeny",
     "history": "História",
     "kindDraft": "Náhľad",
     "kindPublish": "Zverejnenie",
@@ -198,7 +208,7 @@
     "errors": {
       "busy": "Už niečo beží — chvíľu počkaj",
       "limit": "Dnešné náhľady sú minuté",
-      "noCredits": "Nemáš žiadne kredity",
+      "noTokens": "Nemáš dosť tokenov",
       "draftUnusable": "Tento náhľad sa už nedá použiť — vytvor nový",
       "vmUnreachable": "Továreň je nedostupná — skús neskôr",
       "upstream": "AI neodpovedala — skús znova",
@@ -210,5 +220,34 @@
       "timeout": "Trvalo to príliš dlho — nič sa nestrhlo",
       "generic": "Nepodarilo sa — skús znova"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Cena na vyžiadanie",
+    "perMonth": "{price} / mesiac",
+    "status": {
+      "available": "Dostupné",
+      "reserved": "Rezervované",
+      "unavailable": "Nedostupné"
+    },
+    "all": "Všetko",
+    "filterLabel": "Filtrovať ponuky",
+    "showMap": "Zobraziť na mape",
+    "hideMap": "Skryť mapu"
+  },
+  "map": {
+    "title": "Interaktívna mapa",
+    "loadError": "Mapu sa nepodarilo načítať.",
+    "zoomIn": "Priblížiť",
+    "zoomOut": "Oddialiť",
+    "resetBearing": "Natočiť na sever",
+    "toggleAttribution": "Zobraziť zdroje mapy",
+    "marker": "Bod na mape",
+    "popupClose": "Zavrieť bublinu",
+    "gestureMobile": "Mapu posúvajte dvoma prstami",
+    "gestureWindows": "Mapu priblížite pomocou Ctrl + koliesko",
+    "gestureMac": "Mapu priblížite pomocou ⌘ + koliesko"
+  },
+  "footer": {
+    "generatedBy": "Vytvorené pomocou Tokenwise AI"
   }
 }

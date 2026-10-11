@@ -79,7 +79,15 @@
     "saveError": "No se han podido guardar los datos. Revisa los campos e inténtalo de nuevo.",
     "callLabel": "Llamar al {phone}",
     "emailLabel": "Enviar un correo a {email}",
-    "mapLabel": "Ver {address} en el mapa"
+    "mapLabel": "Ver {address} en el mapa",
+    "phoneOptional": "Teléfono (opcional)",
+    "regarding": "Sobre: {title}",
+    "clearRegarding": "Preguntar sin una oferta concreta",
+    "headline": "Cargo o profesión",
+    "bio": "Sobre mí",
+    "serviceArea": "Dónde trabajo",
+    "website": "Sitio web",
+    "websiteLabel": "Abrir el sitio {url}"
   },
   "cta": {
     "title": "¿Listo para empezar?",
@@ -145,7 +153,9 @@
     "loadError": "No se han podido cargar los mensajes. Inténtalo de nuevo en un momento.",
     "unread": "Nuevo",
     "reply": "Responder",
-    "back": "Volver al panel"
+    "back": "Volver al panel",
+    "regarding": "Sobre: {title}",
+    "call": "Llamar"
   },
   "howItWorks": {
     "title": "Cómo funciona"
@@ -174,13 +184,13 @@
     "changedOf": "{changed} de {total} textos cambiados",
     "before": "Ahora",
     "after": "Nuevo",
-    "publishOwner": "Usar — 1 crédito",
+    "publishOwner": "Usar — 1,1 M tokens",
     "publishAdmin": "Publicar",
     "publishingButton": "Publicando…",
     "publishing": "Publicando: {stage}",
     "published": "Publicado — recarga la página",
     "reload": "Recargar",
-    "buyCredits": "Comprar créditos",
+    "buyTokens": "Comprar tokens",
     "history": "Historial",
     "kindDraft": "Vista previa",
     "kindPublish": "Publicación",
@@ -198,7 +208,7 @@
     "errors": {
       "busy": "Ya hay algo en curso — espera un momento",
       "limit": "No quedan vistas previas hoy",
-      "noCredits": "No te quedan créditos",
+      "noTokens": "No tienes suficientes tokens",
       "draftUnusable": "Esta vista previa ya no se puede usar — crea una nueva",
       "vmUnreachable": "La fábrica no está disponible — inténtalo más tarde",
       "upstream": "La IA no respondió — inténtalo de nuevo",
@@ -210,5 +220,34 @@
       "timeout": "Tardó demasiado — no se cobró nada",
       "generic": "No funcionó — inténtalo de nuevo"
     }
+  },
+  "listings": {
+    "priceOnRequest": "Precio a consultar",
+    "perMonth": "{price} / mes",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado",
+      "unavailable": "No disponible"
+    },
+    "all": "Todo",
+    "filterLabel": "Filtrar ofertas",
+    "showMap": "Ver en el mapa",
+    "hideMap": "Ocultar mapa"
+  },
+  "map": {
+    "title": "Mapa interactivo",
+    "loadError": "No se ha podido cargar el mapa.",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "resetBearing": "Orientar al norte",
+    "toggleAttribution": "Mostrar fuentes del mapa",
+    "marker": "Marcador del mapa",
+    "popupClose": "Cerrar la ventana",
+    "gestureMobile": "Usa dos dedos para mover el mapa",
+    "gestureWindows": "Usa Ctrl + rueda para hacer zoom",
+    "gestureMac": "Usa ⌘ + rueda para hacer zoom"
+  },
+  "footer": {
+    "generatedBy": "Generado por Tokenwise AI"
   }
 }
