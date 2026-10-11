@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Realitný maklér",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,67 +13,83 @@
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
-        "howItWorks",
-        "faq",
         "listings",
         "contact",
         "cta"
       ],
-      "presentation": "story"
+      "presentation": "document"
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalInquiries",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "newInquiries",
+          "field": "status",
+          "agg": "share",
+          "value": "new"
+        },
+        {
+          "id": "closedInquiries",
+          "field": "status",
+          "agg": "share",
+          "value": "closed"
+        }
+      ]
     },
     "contactForm": {
-      "phone": "optional"
+      "phone": "required"
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "inquiry",
         "fields": [
           {
-            "key": "name",
+            "key": "propertyName",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "clientName",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "clientPhone",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "clientEmail",
+            "type": "text"
+          },
+          {
+            "key": "receivedDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "new",
+              "inProgress",
+              "closed"
+            ],
+            "required": true
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
         "apartment",
         "house",
-        "office"
+        "land"
       ],
       "attributes": [
         {
@@ -86,221 +103,459 @@
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
+          "id": "apt-1",
           "category": "apartment",
           "price": 189000,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "area": 65,
+            "rooms": 2
           },
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 48.1436,
+            "lng": 17.1075
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "id": "apt-2",
+          "category": "apartment",
+          "price": 215000,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 142,
-            "rooms": 5
+            "area": 82,
+            "rooms": 3
           },
           "location": {
-            "lat": 48.7164,
+            "lat": 48.138,
+            "lng": 17.15
+          }
+        },
+        {
+          "id": "apt-3",
+          "category": "apartment",
+          "price": 95000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 42,
+            "rooms": 1
+          },
+          "location": {
+            "lat": 48.7163,
             "lng": 21.2611
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "house-1",
+          "category": "house",
+          "price": 320000,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 95
+            "area": 145,
+            "rooms": 4
           },
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 48.2186,
+            "lng": 17.3719
+          }
+        },
+        {
+          "id": "house-2",
+          "category": "house",
+          "price": 285000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 180,
+            "rooms": 5
+          },
+          "location": {
+            "lat": 48.377,
+            "lng": 17.587
+          }
+        },
+        {
+          "id": "land-1",
+          "category": "land",
+          "price": 45000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 850
+          },
+          "location": {
+            "lat": 48.4344,
+            "lng": 17.0194
+          }
+        },
+        {
+          "id": "land-2",
+          "category": "land",
+          "price": 68000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 1200
+          },
+          "location": {
+            "lat": 48.3312,
+            "lng": 17.3073
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.7,
+        "lng": 19.5
+      },
+      "zoom": 8
+    },
+    "cta": {
+      "href": "#contact"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Realitný maklér – browse apartments, houses and plots on an interactive map and send an inquiry directly from the listing card.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Find your next home on the map",
+        "subheadline": "Property seekers in Slovakia browse available apartments, houses and plots on a live map and send their inquiry in one click.",
+        "featuresHeading": "Everything you need to find a property",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Properties on the map",
+            "description": "Every listing is pinned on an interactive map so you can see exactly where each property stands."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "funnel",
+            "title": "Filter by type and price",
+            "description": "Narrow results to apartments, houses or plots and set a price range to see only what fits your budget."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "message-square",
+            "title": "Inquire from the card",
+            "description": "Send a question about a specific property from its card — the broker receives your name, phone number and the property title by email."
+          },
+          {
+            "icon": "briefcase",
+            "title": "Broker dashboard",
+            "description": "After sign-in the broker sees all current listings and incoming inquiries in one place, with no need to switch between tools."
           }
-        ],
-        "howItWorks": {
-          "heading": "How do you try the prototype?",
-          "steps": [
-            {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
-            },
-            {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "What should you know before trying it?",
-          "items": [
-            {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
-            },
-            {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
-            },
-            {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
-            }
-          ]
-        },
-        "featuresHeading": "What is already built?"
+        ]
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "title": "Broker dashboard",
+        "intro": "An overview of all your current listings and incoming client inquiries in one place.",
+        "kpiLabels": {
+          "totalInquiries": "Total inquiries",
+          "newInquiries": "New inquiries",
+          "closedInquiries": "Closed"
+        }
       },
       "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "heading": "Send us an inquiry",
+        "submitLabel": "Send inquiry",
+        "intro": "Tell us which property interests you and leave your contact details — we will get back to you as soon as possible."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Inquiry",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "propertyName": "Property",
+          "clientName": "Client name",
+          "clientPhone": "Phone",
+          "clientEmail": "Email",
+          "receivedDate": "Date received",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "propertyName": "2-room apartment, Bratislava Old Town",
+            "clientName": "Martin Kováč",
+            "clientPhone": "+421 900 111 222",
+            "clientEmail": "m.kovac@example.com",
+            "receivedDate": "2026-10-08",
+            "status": "new"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "propertyName": "Family house, Senec",
+            "clientName": "Jana Novotná",
+            "clientPhone": "+421 900 333 444",
+            "clientEmail": "j.novotna@example.com",
+            "receivedDate": "2026-09-25",
+            "status": "inProgress"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "propertyName": "Building plot, Modra area",
+            "clientName": "Peter Horváth",
+            "clientPhone": "+421 900 555 666",
+            "clientEmail": "p.horvath@example.com",
+            "receivedDate": "2026-09-15",
+            "status": "closed"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Current property listings",
+        "intro": "Browse our available apartments, houses and building plots across Slovakia. Click any card to learn more or send an inquiry directly.",
+        "notice": "These listings are illustrative examples — contact us to see the agency's actual live offers.",
         "categoryLabels": {
           "apartment": "Apartment",
           "house": "House",
-          "office": "Office"
+          "land": "Plot"
         },
         "attributeLabels": {
           "area": "Area",
           "rooms": "Rooms"
         },
+        "inquireLabel": "Send inquiry",
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "apt-1": {
+            "title": "2-room apartment, Bratislava Old Town",
+            "summary": "Bright two-room apartment on the third floor of a well-maintained building in the historic centre, with a balcony overlooking a quiet courtyard.",
             "highlights": [
               "Balcony",
-              "Lift"
+              "Third floor",
+              "City centre",
+              "Available immediately"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "apt-2": {
+            "title": "3-room apartment, Bratislava Ružinov",
+            "summary": "Spacious three-room flat in a popular residential district close to schools, shops and public transport, with a parking space included.",
+            "highlights": [
+              "Parking included",
+              "Near schools",
+              "Loggia",
+              "Energy class B"
+            ]
+          },
+          "apt-3": {
+            "title": "1-room apartment, Košice city centre",
+            "summary": "Compact one-room apartment fully renovated in 2024, suitable for a young professional or as a buy-to-let investment in eastern Slovakia.",
+            "highlights": [
+              "Fully renovated",
+              "City centre",
+              "Low service charges",
+              "Available now"
+            ]
+          },
+          "house-1": {
+            "title": "Family house, Senec",
+            "summary": "Detached four-bedroom house with a garden and garage on a quiet residential street, a short drive from Bratislava.",
             "highlights": [
               "Garden",
-              "Garage"
+              "Garage",
+              "Quiet street",
+              "Near motorway"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "house-2": {
+            "title": "Family house, Trnava",
+            "summary": "Generous five-bedroom house with a large garden, ideal for a family looking for space within easy reach of the city centre.",
+            "highlights": [
+              "Large garden",
+              "Five bedrooms",
+              "Solar panels",
+              "Double garage"
+            ]
+          },
+          "land-1": {
+            "title": "Building plot, Malacky area",
+            "summary": "Flat building plot with planning permission for a family house; all utilities available at the plot boundary and access road in place.",
+            "highlights": [
+              "Planning permission",
+              "Utilities on boundary",
+              "Flat terrain",
+              "Access road"
+            ]
+          },
+          "land-2": {
+            "title": "Building plot, Modra area",
+            "summary": "Attractive plot in a green residential zone near vineyards, suitable for a family house or a countryside retreat.",
+            "highlights": [
+              "Green surroundings",
+              "Near vineyards",
+              "Quiet zone",
+              "Utilities nearby"
+            ]
           }
+        }
+      },
+      "cta": {
+        "label": "Get in touch",
+        "title": "Interested in a property?",
+        "subtitle": "Send us an inquiry and our broker will contact you with all the details you need."
+      }
+    },
+    "sk": {
+      "description": "Realitný maklér – prezerajte byty, domy a pozemky na interaktívnej mape a pošlite dopyt priamo z karty ponuky.",
+      "landing": {
+        "headline": "Nájdite si bývanie na mape",
+        "subheadline": "Záujemcovia o nehnuteľnosti na Slovensku prezerajú dostupné byty, domy a pozemky na živej mape a pošlú dopyt jedným kliknutím.",
+        "featuresHeading": "Všetko pre nájdenie aj prezentáciu nehnuteľností",
+        "features": [
+          {
+            "icon": "map-pin",
+            "title": "Ponuky na mape",
+            "description": "Každá ponuka je vyznačená na interaktívnej mape, takže presne vidíte, kde sa nehnuteľnosť nachádza."
+          },
+          {
+            "icon": "funnel",
+            "title": "Filter podľa typu a ceny",
+            "description": "Zobrazíte si len byty, domy alebo pozemky v cenovom rozsahu, ktorý vám vyhovuje."
+          },
+          {
+            "icon": "message-square",
+            "title": "Dopyt priamo z karty",
+            "description": "Pošlite otázku k vybranej nehnuteľnosti priamo z jej karty – maklér dostane vaše meno, telefón a názov ponuky e-mailom."
+          },
+          {
+            "icon": "briefcase",
+            "title": "Prehľad pre makléra",
+            "description": "Po prihlásení maklér vidí všetky aktuálne ponuky a prichádzajúce dopyty na jednom mieste bez prepínania medzi nástrojmi."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Prehľad makléra",
+        "intro": "Prehľad všetkých aktuálnych ponúk a prichádzajúcich dopytov klientov na jednom mieste.",
+        "kpiLabels": {
+          "totalInquiries": "Celkovo dopytov",
+          "newInquiries": "Nové dopyty",
+          "closedInquiries": "Uzavreté"
+        }
+      },
+      "contactForm": {
+        "heading": "Pošlite nám dopyt",
+        "submitLabel": "Odoslať dopyt",
+        "intro": "Napíšte, ktorá nehnuteľnosť vás zaujíma, a zanechajte kontaktné údaje – ozveme sa vám čo najskôr."
+      },
+      "dataGrid": {
+        "entityLabel": "Dopyt",
+        "fieldLabels": {
+          "propertyName": "Nehnuteľnosť",
+          "clientName": "Meno klienta",
+          "clientPhone": "Telefón",
+          "clientEmail": "E-mail",
+          "receivedDate": "Dátum prijatia",
+          "status": "Stav"
         },
-        "inquireLabel": "Ask about this offer"
+        "sampleRecords": [
+          {
+            "propertyName": "2-izbový byt, Bratislava Staré Mesto",
+            "clientName": "Martin Kováč",
+            "clientPhone": "+421 900 111 222",
+            "clientEmail": "m.kovac@example.com",
+            "receivedDate": "2026-10-08",
+            "status": "new"
+          },
+          {
+            "propertyName": "Rodinný dom, Senec",
+            "clientName": "Jana Novotná",
+            "clientPhone": "+421 900 333 444",
+            "clientEmail": "j.novotna@example.com",
+            "receivedDate": "2026-09-25",
+            "status": "inProgress"
+          },
+          {
+            "propertyName": "Stavebný pozemok, okolie Modry",
+            "clientName": "Peter Horváth",
+            "clientPhone": "+421 900 555 666",
+            "clientEmail": "p.horvath@example.com",
+            "receivedDate": "2026-09-15",
+            "status": "closed"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Aktuálne ponuky nehnuteľností",
+        "intro": "Prezerajte dostupné byty, domy a stavebné pozemky po celom Slovensku. Kliknite na kartu, dozviete sa viac alebo hneď pošlite dopyt.",
+        "notice": "Zobrazené ponuky sú ilustračné príklady — kontaktujte nás pre aktuálne ponuky kancelárie.",
+        "categoryLabels": {
+          "apartment": "Byt",
+          "house": "Dom",
+          "land": "Pozemok"
+        },
+        "attributeLabels": {
+          "area": "Plocha",
+          "rooms": "Izby"
+        },
+        "inquireLabel": "Poslať dopyt",
+        "items": {
+          "apt-1": {
+            "title": "2-izbový byt, Bratislava Staré Mesto",
+            "summary": "Svetlý dvojizbový byt na treťom poschodí dobre udržiavaného domu v historickom centre s balkónom s výhľadom do tichého dvora.",
+            "highlights": [
+              "Balkón",
+              "Tretie poschodie",
+              "Centrum mesta",
+              "Voľný ihneď"
+            ]
+          },
+          "apt-2": {
+            "title": "3-izbový byt, Bratislava Ružinov",
+            "summary": "Priestranný trojizbový byt v obľúbenej rezidenčnej štvrti s blízkosťou škôl, obchodov a MHD, parkovanie v cene.",
+            "highlights": [
+              "Parkovanie v cene",
+              "Blízko škôl",
+              "Lodžia",
+              "Energetická trieda B"
+            ]
+          },
+          "apt-3": {
+            "title": "1-izbový byt, Košice centrum",
+            "summary": "Kompaktný jednoizbový byt kompletne zrekonštruovaný v roku 2024, vhodný pre mladého profesionála alebo ako investičná nehnuteľnosť.",
+            "highlights": [
+              "Kompletná rekonštrukcia",
+              "Centrum mesta",
+              "Nízke poplatky",
+              "Voľný ihneď"
+            ]
+          },
+          "house-1": {
+            "title": "Rodinný dom, Senec",
+            "summary": "Samostatne stojaci štvorizbový dom so záhradou a garážou na tichej ulici, krátka vzdialenosť autom od Bratislavy.",
+            "highlights": [
+              "Záhrada",
+              "Garáž",
+              "Tichá ulica",
+              "Blízko diaľnice"
+            ]
+          },
+          "house-2": {
+            "title": "Rodinný dom, Trnava",
+            "summary": "Veľkorysý päťizbový dom s rozľahlou záhradou ideálny pre rodinu, ktorá hľadá priestor v dosahu centra mesta.",
+            "highlights": [
+              "Veľká záhrada",
+              "Päť izieb",
+              "Solárne panely",
+              "Dvojgaráž"
+            ]
+          },
+          "land-1": {
+            "title": "Stavebný pozemok, okolie Malaciek",
+            "summary": "Rovný stavebný pozemok so stavebným povolením pre rodinný dom, všetky inžinierske siete privedené na hranicu pozemku.",
+            "highlights": [
+              "Stavebné povolenie",
+              "Siete na hranici",
+              "Rovný terén",
+              "Prístupová cesta"
+            ]
+          },
+          "land-2": {
+            "title": "Stavebný pozemok, okolie Modry",
+            "summary": "Atraktívny pozemok v zelenej rezidenčnej zóne pri viniciach, vhodný pre rodinný dom alebo víkendové bývanie.",
+            "highlights": [
+              "Zelené okolie",
+              "Blízko viníc",
+              "Tichá zóna",
+              "Siete v blízkosti"
+            ]
+          }
+        }
+      },
+      "cta": {
+        "label": "Kontaktujte nás",
+        "title": "Máte záujem o nehnuteľnosť?",
+        "subtitle": "Pošlite dopyt a náš maklér vás kontaktuje so všetkými informáciami, ktoré potrebujete."
       }
     }
   }
