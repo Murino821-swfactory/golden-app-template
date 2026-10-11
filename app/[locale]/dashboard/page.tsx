@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { OwnerLinks } from "@/components/owner/owner-links";
 import { DataGrid } from "@/components/patterns/data-grid";
@@ -7,6 +8,7 @@ import { MapBase } from "@/components/patterns/map-base";
 import { useContent } from "@/hooks/use-content";
 import { DashboardStats } from "@/components/dashboard/stats";
 import { config } from "@/lib/prototype-config";
+import { listingCards, listingPoints } from "@/lib/listings";
 
 /**
  * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
@@ -17,7 +19,13 @@ const hasGrid = config.patterns.dataGrid !== undefined;
 const hasMap = config.patterns.mapBase !== undefined;
 
 function DashboardContent() {
-  const dashboard = useContent().dashboard;
+  const content = useContent();
+  const dashboard = content.dashboard;
+  const listings = config.patterns.listings;
+  const points = useMemo(
+    () => (listings ? listingPoints(listingCards(listings, content.listings)) : []),
+    [listings, content.listings]
+  );
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
@@ -30,7 +38,7 @@ function DashboardContent() {
       <OwnerLinks />
 
       {hasGrid && <DashboardStats />}
-      {hasMap && <MapBase />}
+      {hasMap && <MapBase points={points} />}
       {hasGrid && <DataGrid />}
     </div>
   );
