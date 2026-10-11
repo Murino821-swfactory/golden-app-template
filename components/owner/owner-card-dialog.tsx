@@ -4,15 +4,21 @@ import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { OwnerCard, OwnerCardField } from "@/lib/owner-contact";
 
-const FIELDS: Array<{ key: OwnerCardField; autoComplete: string; type: string; max: number }> = [
+// Limits mirror factory-web `owner-contact-core.ts` LIMITS — the server refuses longer.
+const FIELDS: Array<{ key: OwnerCardField; autoComplete: string; type: string; max: number; multiline?: boolean }> = [
   { key: "firstName", autoComplete: "given-name", type: "text", max: 60 },
   { key: "lastName", autoComplete: "family-name", type: "text", max: 60 },
+  { key: "headline", autoComplete: "organization-title", type: "text", max: 80 },
+  { key: "bio", autoComplete: "off", type: "text", max: 600, multiline: true },
+  { key: "serviceArea", autoComplete: "off", type: "text", max: 120 },
   { key: "address", autoComplete: "street-address", type: "text", max: 200 },
   { key: "phone", autoComplete: "tel", type: "tel", max: 30 },
   { key: "email", autoComplete: "email", type: "email", max: 200 },
+  { key: "website", autoComplete: "url", type: "url", max: 200 },
 ];
 const LABEL_KEY: Record<OwnerCardField, string> = {
   firstName: "firstName",
@@ -20,6 +26,10 @@ const LABEL_KEY: Record<OwnerCardField, string> = {
   address: "address",
   phone: "phone",
   email: "emailField",
+  headline: "headline",
+  bio: "bio",
+  serviceArea: "serviceArea",
+  website: "website",
 };
 
 export function OwnerCardDialog({
@@ -68,15 +78,27 @@ export function OwnerCardDialog({
           {FIELDS.map((f) => (
             <div key={f.key} className="space-y-1.5">
               <label htmlFor={`owner-${f.key}`} className="text-sm text-muted-foreground">{t(LABEL_KEY[f.key])}</label>
-              <Input
-                id={`owner-${f.key}`}
-                type={f.type}
-                autoComplete={f.autoComplete}
-                maxLength={f.max}
-                className="h-11 text-base sm:text-sm"
-                value={values[f.key] ?? ""}
-                onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.value }))}
-              />
+              {f.multiline ? (
+                <Textarea
+                  id={`owner-${f.key}`}
+                  rows={4}
+                  maxLength={f.max}
+                  className="text-base sm:text-sm"
+                  value={values[f.key] ?? ""}
+                  onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                />
+              ) : (
+                <Input
+                  id={`owner-${f.key}`}
+                  type={f.type}
+                  autoComplete={f.autoComplete}
+                  maxLength={f.max}
+                  placeholder={f.key === "website" ? "https://" : undefined}
+                  className="h-11 text-base sm:text-sm"
+                  value={values[f.key] ?? ""}
+                  onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.value }))}
+                />
+              )}
             </div>
           ))}
           {error && <p className="text-sm text-destructive" role="alert">{t("saveError")}</p>}
