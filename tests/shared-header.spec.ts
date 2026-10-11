@@ -184,10 +184,12 @@ test("the header is styled, not bare markup (the package's classes were compiled
   expect(logoFont).toContain("Big Shoulders");
 });
 
-test("the cart is always there and says it is empty", async ({ page }) => {
+test("the cart is always there and opens tokenwise.sk's token window", async ({ page }) => {
+  // The one place tokens are bought (sw-factory decision 2026-10-11-token-pricing.md §5).
+  await page.route("https://tokenwise.sk/**", (route) => route.fulfill({ status: 200, contentType: "text/html", body: "<title>token window</title>" }));
   await page.goto("./");
   const cart = page.getByRole("banner").getByRole("button", { name: formatLabel(uiCopy.common.cartLabel!, { count: 0 }) });
   await expect(cart).toBeVisible();
   await cart.click();
-  await expect(page.getByRole("status").filter({ hasText: uiCopy.common.cartEmpty! })).toBeVisible();
+  await page.waitForURL("https://tokenwise.sk/pricing?buy=1");
 });

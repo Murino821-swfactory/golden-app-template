@@ -82,7 +82,7 @@ test.describe("copy rewrite: parsing and state", () => {
   });
 
   test("server codes map to the panel's messages; gate failures share one", () => {
-    expect(errorKey("no-credits")).toBe("noCredits");
+    expect(errorKey("no-tokens")).toBe("noTokens");
     expect(errorKey("gate-smoke")).toBe("gate");
     expect(errorKey("stale-draft")).toBe("staleDraft");
     expect(errorKey("internal")).toBe("generic");
@@ -106,7 +106,7 @@ test.describe("copy rewrite: parsing and state", () => {
     expect(publishing.message).toEqual({ key: "publishing", values: { stage: "build" } });
   });
 
-  test("a usable preview offers publishing — for a credit to the creator, free to the founder", () => {
+  test("a usable preview offers publishing — for tokens to the creator, free to the founder", () => {
     const latestDraft = parseCopyStatus({ role: "owner", latestDraft: DRAFT })!.latestDraft;
     expect(view({ status: status({ latestDraft }) })).toMatchObject({
       showPreview: true,
@@ -131,7 +131,7 @@ test.describe("copy rewrite: parsing and state", () => {
     const failed = { ...done, status: "failed" as const, code: "stale-draft" };
     expect(view({ status: status({ latestDraft, latestPublish: failed }) }).message).toEqual({ key: "errors.staleDraft" });
 
-    expect(view({ actionError: "no-credits" }).message).toEqual({ key: "errors.noCredits" });
+    expect(view({ actionError: "no-tokens" }).message).toEqual({ key: "errors.noTokens" });
     expect(view({ timedOut: true, actionError: "busy" }).message).toEqual({ key: "slow" });
   });
 });

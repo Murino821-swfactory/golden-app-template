@@ -450,7 +450,7 @@ under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a pr
 factory's own content call — the same schema this repo publishes in
 `prototype.schema.json`), compare every text with the current one with the tokens, cost and
 characters of that one request, and use it: the factory commits the new copy to
-`demo/<slug>` and republishes the page (the creator pays one credit; the founder nothing).
+`demo/<slug>` and republishes the page (the creator pays 1.1M tokens from their tokenwise wallet; the founder nothing).
 Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
 in the **sw-factory** repo.
 
