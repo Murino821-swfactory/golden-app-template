@@ -6,6 +6,7 @@ import {
   parseStatus,
   type HeroControlsInput,
 } from "../lib/hero-image";
+import { HERO_FADE_START, heroOverlayBackground } from "../lib/hero-overlay";
 
 /**
  * The AI hero background (sw-factory spec 2026-09-25-prototype-hero-image-design.md).
@@ -87,6 +88,13 @@ test.describe("heroControlsView", () => {
       buttons: [],
     });
   });
+});
+
+test("overlay: no tint over the image, only a fade across the bottom strip (founder 2026-10-09)", () => {
+  const css = heroOverlayBackground();
+  expect(css).not.toContain("color-mix");
+  expect(css).toBe(`linear-gradient(to bottom, transparent ${HERO_FADE_START}%, var(--background) 100%)`);
+  expect(HERO_FADE_START).toBeGreaterThanOrEqual(75);
 });
 
 test.describe("hero-image response parsers", () => {
