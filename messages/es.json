@@ -79,7 +79,15 @@
     "saveError": "No se han podido guardar los datos. Revisa los campos e inténtalo de nuevo.",
     "callLabel": "Llamar al {phone}",
     "emailLabel": "Enviar un correo a {email}",
-    "mapLabel": "Ver {address} en el mapa"
+    "mapLabel": "Ver {address} en el mapa",
+    "phoneOptional": "Teléfono (opcional)",
+    "regarding": "Sobre: {title}",
+    "clearRegarding": "Preguntar sin una oferta concreta",
+    "headline": "Cargo o profesión",
+    "bio": "Sobre mí",
+    "serviceArea": "Dónde trabajo",
+    "website": "Sitio web",
+    "websiteLabel": "Abrir el sitio {url}"
   },
   "cta": {
     "title": "¿Listo para empezar?",
@@ -145,9 +153,101 @@
     "loadError": "No se han podido cargar los mensajes. Inténtalo de nuevo en un momento.",
     "unread": "Nuevo",
     "reply": "Responder",
-    "back": "Volver al panel"
+    "back": "Volver al panel",
+    "regarding": "Sobre: {title}",
+    "call": "Llamar"
   },
   "howItWorks": {
     "title": "Cómo funciona"
+  },
+  "story": {
+    "chapters": "Capítulos",
+    "chapter": "Capítulo {number}"
+  },
+  "copyRewrite": {
+    "open": "Editar textos",
+    "title": "Reescribir los textos",
+    "description": "Dile a la IA cómo reescribir esta página. La vista previa es gratis; usarla vuelve a publicar la página.",
+    "instructions": "Instrucciones para la IA",
+    "chars": "{count} / {max} caracteres",
+    "tokens": "≈ {count} tokens (estimación)",
+    "reset": "Restaurar predeterminado",
+    "fullPrompt": "Prompt completo",
+    "fullPromptEmpty": "Se muestra tras la primera vista previa",
+    "promptSizes": "Sistema: {system} caracteres · Prompt: {user} caracteres",
+    "draft": "Crear vista previa",
+    "drafting": "Escribiendo la vista previa…",
+    "draftsLeft": "Vistas previas restantes hoy: {count}",
+    "limitReached": "No quedan vistas previas hoy — inténtalo mañana",
+    "slow": "Está tardando más — recarga la página",
+    "preview": "Vista previa",
+    "changedOf": "{changed} de {total} textos cambiados",
+    "before": "Ahora",
+    "after": "Nuevo",
+    "publishOwner": "Usar — 1,1 M tokens",
+    "publishAdmin": "Publicar",
+    "publishingButton": "Publicando…",
+    "publishing": "Publicando: {stage}",
+    "published": "Publicado — recarga la página",
+    "reload": "Recargar",
+    "buyTokens": "Comprar tokens",
+    "history": "Historial",
+    "kindDraft": "Vista previa",
+    "kindPublish": "Publicación",
+    "metrics": {
+      "cost": "Coste",
+      "tokensOut": "Tokens de salida",
+      "tokensIn": "Tokens de entrada",
+      "copyChars": "Caracteres de texto",
+      "eurPer1k": "Coste por 1.000 caracteres",
+      "jsonOverhead": "Sobrecarga JSON",
+      "changed": "Textos cambiados",
+      "duration": "Tiempo",
+      "tokensOutShort": "{count} de salida"
+    },
+    "errors": {
+      "busy": "Ya hay algo en curso — espera un momento",
+      "limit": "No quedan vistas previas hoy",
+      "noTokens": "No tienes suficientes tokens",
+      "draftUnusable": "Esta vista previa ya no se puede usar — crea una nueva",
+      "vmUnreachable": "La fábrica no está disponible — inténtalo más tarde",
+      "upstream": "La IA no respondió — inténtalo de nuevo",
+      "invalidResponse": "La IA devolvió textos inservibles — inténtalo de nuevo o ajusta las instrucciones",
+      "staleDraft": "Los textos cambiaron mientras tanto — crea una nueva vista previa",
+      "busyVm": "La fábrica está ocupada — inténtalo en unos minutos",
+      "gate": "La nueva versión no pasó los controles — no ha cambiado nada",
+      "pushFailed": "La publicación no se completó — no se cobró nada",
+      "timeout": "Tardó demasiado — no se cobró nada",
+      "generic": "No funcionó — inténtalo de nuevo"
+    }
+  },
+  "listings": {
+    "priceOnRequest": "Precio a consultar",
+    "perMonth": "{price} / mes",
+    "status": {
+      "available": "Disponible",
+      "reserved": "Reservado",
+      "unavailable": "No disponible"
+    },
+    "all": "Todo",
+    "filterLabel": "Filtrar ofertas",
+    "showMap": "Ver en el mapa",
+    "hideMap": "Ocultar mapa"
+  },
+  "map": {
+    "title": "Mapa interactivo",
+    "loadError": "No se ha podido cargar el mapa.",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "resetBearing": "Orientar al norte",
+    "toggleAttribution": "Mostrar fuentes del mapa",
+    "marker": "Marcador del mapa",
+    "popupClose": "Cerrar la ventana",
+    "gestureMobile": "Usa dos dedos para mover el mapa",
+    "gestureWindows": "Usa Ctrl + rueda para hacer zoom",
+    "gestureMac": "Usa ⌘ + rueda para hacer zoom"
+  },
+  "footer": {
+    "generatedBy": "Generado por Tokenwise AI"
   }
 }

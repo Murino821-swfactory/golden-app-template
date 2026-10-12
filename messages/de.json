@@ -79,7 +79,15 @@
     "saveError": "Die Angaben konnten nicht gespeichert werden. Prüfen Sie die Felder und versuchen Sie es erneut.",
     "callLabel": "{phone} anrufen",
     "emailLabel": "E-Mail an {email} senden",
-    "mapLabel": "{address} auf der Karte anzeigen"
+    "mapLabel": "{address} auf der Karte anzeigen",
+    "phoneOptional": "Telefon (optional)",
+    "regarding": "Betrifft: {title}",
+    "clearRegarding": "Ohne bestimmtes Angebot fragen",
+    "headline": "Funktion oder Beruf",
+    "bio": "Über mich",
+    "serviceArea": "Wo ich tätig bin",
+    "website": "Website",
+    "websiteLabel": "Website {url} öffnen"
   },
   "cta": {
     "title": "Bereit loszulegen?",
@@ -145,9 +153,101 @@
     "loadError": "Die Nachrichten konnten nicht geladen werden. Versuchen Sie es gleich noch einmal.",
     "unread": "Neu",
     "reply": "Antworten",
-    "back": "Zurück zur Übersicht"
+    "back": "Zurück zur Übersicht",
+    "regarding": "Betrifft: {title}",
+    "call": "Anrufen"
   },
   "howItWorks": {
     "title": "So funktioniert es"
+  },
+  "story": {
+    "chapters": "Kapitel",
+    "chapter": "Kapitel {number}"
+  },
+  "copyRewrite": {
+    "open": "Texte bearbeiten",
+    "title": "Texte neu schreiben",
+    "description": "Sagen Sie der KI, wie sie diese Seite umschreiben soll. Die Vorschau ist kostenlos; beim Übernehmen wird die Seite neu veröffentlicht.",
+    "instructions": "Anweisungen für die KI",
+    "chars": "{count} / {max} Zeichen",
+    "tokens": "≈ {count} Tokens (Schätzung)",
+    "reset": "Standard wiederherstellen",
+    "fullPrompt": "Gesamter Prompt",
+    "fullPromptEmpty": "Wird nach der ersten Vorschau angezeigt",
+    "promptSizes": "System: {system} Zeichen · Prompt: {user} Zeichen",
+    "draft": "Vorschau erstellen",
+    "drafting": "Vorschau wird geschrieben…",
+    "draftsLeft": "Heute noch {count} Vorschauen",
+    "limitReached": "Keine Vorschauen mehr für heute — morgen wieder",
+    "slow": "Das dauert länger — Seite neu laden",
+    "preview": "Vorschau",
+    "changedOf": "{changed} von {total} Texten geändert",
+    "before": "Jetzt",
+    "after": "Neu",
+    "publishOwner": "Übernehmen — 1,1 Mio. Tokens",
+    "publishAdmin": "Veröffentlichen",
+    "publishingButton": "Wird veröffentlicht…",
+    "publishing": "Wird veröffentlicht: {stage}",
+    "published": "Veröffentlicht — Seite neu laden",
+    "reload": "Neu laden",
+    "buyTokens": "Tokens kaufen",
+    "history": "Verlauf",
+    "kindDraft": "Vorschau",
+    "kindPublish": "Veröffentlichung",
+    "metrics": {
+      "cost": "Kosten",
+      "tokensOut": "Ausgabe-Tokens",
+      "tokensIn": "Eingabe-Tokens",
+      "copyChars": "Textzeichen",
+      "eurPer1k": "Kosten pro 1.000 Zeichen",
+      "jsonOverhead": "JSON-Overhead",
+      "changed": "Geänderte Texte",
+      "duration": "Dauer",
+      "tokensOutShort": "{count} Ausgabe"
+    },
+    "errors": {
+      "busy": "Es läuft bereits etwas — kurz warten",
+      "limit": "Keine Vorschauen mehr für heute",
+      "noTokens": "Sie haben nicht genug Tokens",
+      "draftUnusable": "Diese Vorschau ist nicht mehr verwendbar — neue erstellen",
+      "vmUnreachable": "Die Fabrik ist nicht erreichbar — später erneut versuchen",
+      "upstream": "Die KI hat nicht geantwortet — erneut versuchen",
+      "invalidResponse": "Die KI lieferte unbrauchbare Texte — erneut versuchen oder Anweisungen anpassen",
+      "staleDraft": "Die Texte haben sich inzwischen geändert — neue Vorschau erstellen",
+      "busyVm": "Die Fabrik ist ausgelastet — in ein paar Minuten erneut versuchen",
+      "gate": "Die neue Version hat die Prüfungen nicht bestanden — nichts geändert",
+      "pushFailed": "Veröffentlichung nicht abgeschlossen — nichts berechnet",
+      "timeout": "Das hat zu lange gedauert — nichts berechnet",
+      "generic": "Hat nicht geklappt — erneut versuchen"
+    }
+  },
+  "listings": {
+    "priceOnRequest": "Preis auf Anfrage",
+    "perMonth": "{price} / Monat",
+    "status": {
+      "available": "Verfügbar",
+      "reserved": "Reserviert",
+      "unavailable": "Nicht verfügbar"
+    },
+    "all": "Alle",
+    "filterLabel": "Angebote filtern",
+    "showMap": "Auf der Karte zeigen",
+    "hideMap": "Karte ausblenden"
+  },
+  "map": {
+    "title": "Interaktive Karte",
+    "loadError": "Die Karte konnte nicht geladen werden.",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "resetBearing": "Nach Norden ausrichten",
+    "toggleAttribution": "Kartenquellen anzeigen",
+    "marker": "Kartenmarkierung",
+    "popupClose": "Popup schließen",
+    "gestureMobile": "Verschieben Sie die Karte mit zwei Fingern",
+    "gestureWindows": "Zoomen Sie mit Strg + Mausrad",
+    "gestureMac": "Zoomen Sie mit ⌘ + Mausrad"
+  },
+  "footer": {
+    "generatedBy": "Erstellt von Tokenwise AI"
   }
 }

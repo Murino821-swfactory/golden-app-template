@@ -79,7 +79,15 @@
     "saveError": "Údaje se nepodařilo uložit. Zkontrolujte pole a zkuste to znovu.",
     "callLabel": "Zavolat na {phone}",
     "emailLabel": "Poslat e-mail na {email}",
-    "mapLabel": "Zobrazit {address} na mapě"
+    "mapLabel": "Zobrazit {address} na mapě",
+    "phoneOptional": "Telefon (nepovinné)",
+    "regarding": "Ohledně: {title}",
+    "clearRegarding": "Zeptat se bez konkrétní nabídky",
+    "headline": "Pozice nebo profese",
+    "bio": "O mně",
+    "serviceArea": "Kde působím",
+    "website": "Web",
+    "websiteLabel": "Otevřít web {url}"
   },
   "cta": {
     "title": "Pustíme se do toho?",
@@ -145,9 +153,101 @@
     "loadError": "Zprávy se nepodařilo načíst. Zkuste to za chvíli znovu.",
     "unread": "Nová",
     "reply": "Odpovědět",
-    "back": "Zpět na přehled"
+    "back": "Zpět na přehled",
+    "regarding": "Ohledně: {title}",
+    "call": "Zavolat"
   },
   "howItWorks": {
     "title": "Jak to funguje"
+  },
+  "story": {
+    "chapters": "Kapitoly příběhu",
+    "chapter": "Kapitola {number}"
+  },
+  "copyRewrite": {
+    "open": "Upravit texty",
+    "title": "Přepsat texty",
+    "description": "Napište AI, jak má tuto stránku přepsat. Náhled je zdarma; použití stránku znovu zveřejní.",
+    "instructions": "Pokyny pro AI",
+    "chars": "{count} / {max} znaků",
+    "tokens": "≈ {count} tokenů (odhad)",
+    "reset": "Obnovit výchozí",
+    "fullPrompt": "Celý prompt",
+    "fullPromptEmpty": "Zobrazí se po prvním náhledu",
+    "promptSizes": "Systém: {system} znaků · Prompt: {user} znaků",
+    "draft": "Vytvořit náhled",
+    "drafting": "Píšu náhled…",
+    "draftsLeft": "Dnes zbývá náhledů: {count}",
+    "limitReached": "Dnešní náhledy jsou vyčerpané — zkuste zítra",
+    "slow": "Trvá to déle — obnovte stránku",
+    "preview": "Náhled",
+    "changedOf": "Změněné texty: {changed} z {total}",
+    "before": "Nyní",
+    "after": "Nové",
+    "publishOwner": "Použít — 1,1M tokenů",
+    "publishAdmin": "Zveřejnit",
+    "publishingButton": "Zveřejňuji…",
+    "publishing": "Zveřejňuji: {stage}",
+    "published": "Zveřejněno — obnovte stránku",
+    "reload": "Obnovit",
+    "buyTokens": "Koupit tokeny",
+    "history": "Historie",
+    "kindDraft": "Náhled",
+    "kindPublish": "Zveřejnění",
+    "metrics": {
+      "cost": "Cena",
+      "tokensOut": "Výstupní tokeny",
+      "tokensIn": "Vstupní tokeny",
+      "copyChars": "Znaky textu",
+      "eurPer1k": "Cena za 1 000 znaků",
+      "jsonOverhead": "Režie JSON",
+      "changed": "Změněné texty",
+      "duration": "Čas",
+      "tokensOutShort": "{count} výstup"
+    },
+    "errors": {
+      "busy": "Už něco běží — chvíli počkejte",
+      "limit": "Dnešní náhledy jsou vyčerpané",
+      "noTokens": "Nemáte dost tokenů",
+      "draftUnusable": "Tento náhled už nelze použít — vytvořte nový",
+      "vmUnreachable": "Továrna není dostupná — zkuste později",
+      "upstream": "AI neodpověděla — zkuste znovu",
+      "invalidResponse": "AI vrátila nepoužitelné texty — zkuste znovu nebo upravte pokyny",
+      "staleDraft": "Texty se mezitím změnily — vytvořte nový náhled",
+      "busyVm": "Továrna je vytížená — zkuste za pár minut",
+      "gate": "Nová verze neprošla kontrolami — nic se nezměnilo",
+      "pushFailed": "Zveřejnění se nedokončilo — nic se nestrhlo",
+      "timeout": "Trvalo to příliš dlouho — nic se nestrhlo",
+      "generic": "Nepodařilo se — zkuste znovu"
+    }
+  },
+  "listings": {
+    "priceOnRequest": "Cena na vyžádání",
+    "perMonth": "{price} / měsíc",
+    "status": {
+      "available": "Dostupné",
+      "reserved": "Rezervováno",
+      "unavailable": "Nedostupné"
+    },
+    "all": "Vše",
+    "filterLabel": "Filtrovat nabídky",
+    "showMap": "Zobrazit na mapě",
+    "hideMap": "Skrýt mapu"
+  },
+  "map": {
+    "title": "Interaktivní mapa",
+    "loadError": "Mapu se nepodařilo načíst.",
+    "zoomIn": "Přiblížit",
+    "zoomOut": "Oddálit",
+    "resetBearing": "Natočit na sever",
+    "toggleAttribution": "Zobrazit zdroje mapy",
+    "marker": "Bod na mapě",
+    "popupClose": "Zavřít bublinu",
+    "gestureMobile": "Mapu posouvejte dvěma prsty",
+    "gestureWindows": "Mapu přiblížíte pomocí Ctrl + kolečko",
+    "gestureMac": "Mapu přiblížíte pomocí ⌘ + kolečko"
+  },
+  "footer": {
+    "generatedBy": "Vytvořeno pomocí Tokenwise AI"
   }
 }

@@ -1,26 +1,132 @@
 {
   "appName": "Golden Template",
-  "locales": ["en"],
+  "locales": [
+    "en"
+  ],
   "defaultLocale": "en",
-  "theme": { "colorScheme": "black-green-ruby-red" },
+  "theme": {
+    "colorScheme": "black-green-ruby-red"
+  },
   "patterns": {
-    "landing": { "sections": ["hero", "features", "contact", "cta"] },
+    "landing": {
+      "sections": [
+        "hero",
+        "features",
+        "useCases",
+        "comparison",
+        "howItWorks",
+        "faq",
+        "listings",
+        "contact",
+        "cta"
+      ],
+      "presentation": "story"
+    },
     "dashboard": {},
     "authGoogle": {},
-    "cta": { "href": "/login" },
-    "contactForm": {},
+    "cta": {
+      "href": "/login"
+    },
+    "contactForm": {
+      "phone": "optional"
+    },
     "dataGrid": {
       "entity": {
         "key": "pattern",
         "fields": [
-          { "key": "name", "type": "text", "required": true },
-          { "key": "kind", "type": "select", "options": ["Page", "Control", "Data"] },
-          { "key": "addedOn", "type": "date" },
-          { "key": "selectable", "type": "boolean" }
+          {
+            "key": "name",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "kind",
+            "type": "select",
+            "options": [
+              "Page",
+              "Control",
+              "Data"
+            ]
+          },
+          {
+            "key": "addedOn",
+            "type": "date"
+          },
+          {
+            "key": "selectable",
+            "type": "boolean"
+          }
         ]
       }
     },
-    "mapBase": { "center": { "lat": 48.669, "lng": 19.699 }, "zoom": 7 }
+    "mapBase": {
+      "center": {
+        "lat": 48.669,
+        "lng": 19.699
+      },
+      "zoom": 7
+    },
+    "useCases": {},
+    "comparison": {},
+    "listings": {
+      "categories": [
+        "apartment",
+        "house",
+        "office"
+      ],
+      "attributes": [
+        {
+          "key": "area",
+          "unit": "m²"
+        },
+        {
+          "key": "rooms"
+        }
+      ],
+      "currency": "EUR",
+      "items": [
+        {
+          "id": "offer-1",
+          "category": "apartment",
+          "price": 189000,
+          "attributes": {
+            "area": 68,
+            "rooms": 3
+          },
+          "location": {
+            "lat": 48.1486,
+            "lng": 17.1077
+          }
+        },
+        {
+          "id": "offer-2",
+          "category": "house",
+          "price": 315000,
+          "status": "reserved",
+          "attributes": {
+            "area": 142,
+            "rooms": 5
+          },
+          "location": {
+            "lat": 48.7164,
+            "lng": 21.2611
+          }
+        },
+        {
+          "id": "offer-3",
+          "category": "office",
+          "price": 1450,
+          "pricePeriod": "month",
+          "attributes": {
+            "area": 95
+          },
+          "location": {
+            "lat": 49.2231,
+            "lng": 18.7394
+          }
+        }
+      ]
+    }
   },
   "content": {
     "en": {
@@ -44,11 +150,55 @@
             "title": "Sign-in that works",
             "description": "Google authentication and a route guard are part of the template, so a prototype has real accounts on day one."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "How do you try the prototype?",
+          "steps": [
+            {
+              "title": "Explore the landing",
+              "description": "Scroll through the chapters to see the enabled patterns."
+            },
+            {
+              "title": "Sign in with Google",
+              "description": "Open the dashboard with your own account."
+            },
+            {
+              "title": "Try your own records",
+              "description": "Add and edit records in your private sandbox."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "What should you know before trying it?",
+          "items": [
+            {
+              "question": "Is this generated code?",
+              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+            },
+            {
+              "question": "Where do the records live?",
+              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+            },
+            {
+              "question": "Does the page work on a phone?",
+              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+            }
+          ]
+        },
+        "featuresHeading": "What is already built?"
       },
-      "dashboard": { "title": "Pattern overview" },
-      "cta": { "label": "Sign in to see it" },
-      "contactForm": { "heading": "Ask about a prototype", "submitLabel": "Send" },
+      "dashboard": {
+        "title": "Pattern overview"
+      },
+      "cta": {
+        "label": "Sign in to see it",
+        "title": "Try the working patterns",
+        "subtitle": "Sign in to explore the dashboard and your own records."
+      },
+      "contactForm": {
+        "heading": "Ask about a prototype",
+        "submitLabel": "Send"
+      },
       "dataGrid": {
         "entityLabel": "Pattern",
         "fieldLabels": {
@@ -57,6 +207,80 @@
           "addedOn": "Added",
           "selectable": "Model may pick"
         }
+      },
+      "useCases": {
+        "heading": "What can you try here?",
+        "items": [
+          {
+            "title": "Explore a product idea",
+            "situation": "You want to see how reusable blocks form a working prototype.",
+            "action": "Read the landing, then sign in to open your own dashboard."
+          },
+          {
+            "title": "Work with sample records",
+            "situation": "You need a place to try a records workflow before committing to an idea.",
+            "action": "Add, edit and filter records in your own signed-in sandbox."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "How is the prototype assembled?",
+        "beforeLabel": "Custom implementation",
+        "afterLabel": "This template",
+        "rows": [
+          {
+            "topic": "Page content",
+            "before": "Write each section as a separate code change.",
+            "after": "Fill localized content in a validated JSON configuration."
+          },
+          {
+            "topic": "Product building blocks",
+            "before": "Implement authentication and record controls for each project.",
+            "after": "Enable existing Google sign-in, dashboard and records patterns."
+          },
+          {
+            "topic": "Finding the page",
+            "before": "Maintain separate text for the page and discovery files.",
+            "after": "Generate metadata, structured data and llms.txt from the page content."
+          }
+        ]
+      },
+      "listings": {
+        "heading": "What is on offer",
+        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
+        "notice": "These offers are illustrative examples, not a live offer.",
+        "categoryLabels": {
+          "apartment": "Apartment",
+          "house": "House",
+          "office": "Office"
+        },
+        "attributeLabels": {
+          "area": "Area",
+          "rooms": "Rooms"
+        },
+        "items": {
+          "offer-1": {
+            "title": "Three-room flat near the centre",
+            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "highlights": [
+              "Balcony",
+              "Lift"
+            ]
+          },
+          "offer-2": {
+            "title": "Family house with a garden",
+            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "highlights": [
+              "Garden",
+              "Garage"
+            ]
+          },
+          "offer-3": {
+            "title": "Office floor for a small team",
+            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          }
+        },
+        "inquireLabel": "Ask about this offer"
       }
     }
   }
