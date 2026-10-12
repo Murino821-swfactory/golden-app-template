@@ -1,4 +1,5 @@
 {
+  "productionValidation": true,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "menu": {
     "patterns": {
@@ -6,10 +7,10 @@
         "purpose": "The public page every visitor lands on. Always enabled — every other pattern sits behind auth or below the fold, so a prototype without it opens on nothing."
       },
       "dashboard": {
-        "purpose": "A signed-in home screen summarising the user's own data. Pick it when the idea describes something people return to and track over time, rather than read once."
+        "purpose": "A signed-in home screen summarising the user's own data, and the map of offers when mapBase is enabled. ALWAYS enable it together with authGoogle; add dataGrid and kpis when the idea describes something people return to and track over time."
       },
       "authGoogle": {
-        "purpose": "Google sign-in plus a route guard. Pick it whenever the idea implies personal data, saved work or anything described as 'my' — accounts, history, preferences."
+        "purpose": "Google sign-in plus a route guard. Always enable it with dashboard, which is reachable only after sign-in; it also serves personal data, saved work or anything 'my'."
       },
       "cta": {
         "purpose": "A closing call-to-action band on the landing page. Pick it when the idea has one obvious next step for a visitor: book, request, subscribe, start a trial."
@@ -17,11 +18,20 @@
       "contactForm": {
         "purpose": "A contact form that captures a message and an email address. Pick it for services, consultancies and anything sold through a conversation rather than a signup."
       },
+      "useCases": {
+        "purpose": "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results."
+      },
+      "comparison": {
+        "purpose": "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices."
+      },
       "dataGrid": {
         "purpose": "A table of records the user adds, edits and filters. Pick it when the idea is about keeping track of things — an inventory, a catalogue, a register, a log of entries."
       },
+      "listings": {
+        "purpose": "A public catalogue of what the business offers — properties, products, services, courses, vehicles, venues — as cards with category, price, key numbers and a status, filterable by category. Visitors can ask about one through the contact form, and open the offers on a map when mapBase is enabled. ALWAYS enable it, with its landing section: every prototype presents what it offers. The offers are illustrative until the owner publishes real ones, so say so in the notice."
+      },
       "mapBase": {
-        "purpose": "A map with points the user can place and inspect. Pick it only when location is part of the idea itself, not merely mentioned — routes, venues, coverage, territory."
+        "purpose": "A map centred on the place the idea serves, with every offer that has a location pinned on it. Pick it only when place is part of the idea itself, not merely mentioned — offers that stand somewhere or are visited (properties, venues, rentals), routes, coverage, territory. Leave it out otherwise: a map with nothing to pin is noise. When picked, choose the centre and zoom of the city or region the idea names, or the customer's country when it names none."
       }
     },
     "sections": {
@@ -29,6 +39,9 @@
         "hero",
         "features",
         "howItWorks",
+        "useCases",
+        "comparison",
+        "listings",
         "faq",
         "contact",
         "cta"
@@ -40,8 +53,34 @@
         "cta": "cta",
         "faq": "landing",
         "howItWorks": "landing",
+        "useCases": "useCases",
+        "comparison": "comparison",
+        "listings": "listings",
         "pricing": null,
         "testimonials": null
+      },
+      "requiredCopy": {
+        "hero": [
+          "landing.headline",
+          "landing.subheadline"
+        ],
+        "features": [
+          "landing.featuresHeading",
+          "landing.features"
+        ],
+        "howItWorks": [
+          "landing.howItWorks.heading",
+          "landing.howItWorks.steps"
+        ],
+        "faq": [
+          "landing.faq.heading",
+          "landing.faq.items"
+        ],
+        "listings": [
+          "listings.heading",
+          "listings.intro",
+          "listings.notice"
+        ]
       }
     },
     "locales": [
@@ -53,6 +92,39 @@
       "hu",
       "fr",
       "es"
+    ],
+    "requiredPatternCopy": {
+      "listings": [
+        "heading",
+        "intro",
+        "notice",
+        "categoryLabels",
+        "items"
+      ],
+      "cta": [
+        "label",
+        "title",
+        "subtitle"
+      ],
+      "contactForm": [
+        "heading",
+        "submitLabel",
+        "intro"
+      ],
+      "dashboard": [
+        "title",
+        "intro"
+      ],
+      "dataGrid": [
+        "entityLabel",
+        "fieldLabels",
+        "sampleRecords"
+      ]
+    },
+    "requiredPatterns": [
+      "listings",
+      "dashboard",
+      "authGoogle"
     ]
   },
   "patterns": {
@@ -69,6 +141,9 @@
               "hero",
               "features",
               "howItWorks",
+              "useCases",
+              "comparison",
+              "listings",
               "pricing",
               "testimonials",
               "faq",
@@ -76,6 +151,14 @@
               "cta"
             ]
           }
+        },
+        "presentation": {
+          "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+          "type": "string",
+          "enum": [
+            "story",
+            "document"
+          ]
         }
       },
       "required": [
@@ -136,7 +219,8 @@
       "properties": {
         "href": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "description": "Use an existing destination: /login with authGoogle, /dashboard with dashboard, #contact when contact is a landing section, or #chapter-<section> for a rendered landing section (for example #chapter-features). Never invent /app, /signup, #start, download routes, or features not present in the template."
         }
       },
       "required": [
@@ -146,7 +230,29 @@
     "contactForm": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
-      "properties": {}
+      "properties": {
+        "phone": {
+          "description": "Ask the visitor for a phone number: optional (or required) when the business calls leads back — property, trades, health, local services. Omit to ask only for an e-mail.",
+          "type": "string",
+          "enum": [
+            "hidden",
+            "optional",
+            "required"
+          ]
+        }
+      }
+    },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the useCases landing section and localized useCases copy."
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {},
+      "description": "Requires the comparison landing section and localized comparison copy."
     },
     "dataGrid": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -216,6 +322,133 @@
         "entity"
       ]
     },
+    "listings": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "categories": {
+          "minItems": 1,
+          "maxItems": 8,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-zA-Z0-9]{0,39}$"
+          },
+          "description": "camelCase keys of the kinds of offer, e.g. apartment, house, office. Their labels go in content.<locale>.listings.categoryLabels."
+        },
+        "attributes": {
+          "description": "Up to four NUMERIC facts every card shows, e.g. area, rooms, capacity. Labels go in content.<locale>.listings.attributeLabels. Text facts belong in an item's highlights.",
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-zA-Z0-9]{0,39}$"
+              },
+              "unit": {
+                "description": "A unit that reads the same in every language, e.g. m², km, kg. Omit for counts.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8
+              }
+            },
+            "required": [
+              "key"
+            ]
+          }
+        },
+        "currency": {
+          "description": "ISO 4217 code of the prices, e.g. EUR. Required when any item has a price.",
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "items": {
+          "minItems": 3,
+          "maxItems": 12,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+                "description": "Stable lowercase id, e.g. offer-1. Titles go in content.<locale>.listings.items.<id>."
+              },
+              "category": {
+                "type": "string",
+                "pattern": "^[a-z][a-zA-Z0-9]{0,39}$",
+                "description": "One of categories."
+              },
+              "price": {
+                "description": "Omit when the price is on request.",
+                "type": "number",
+                "minimum": 0
+              },
+              "pricePeriod": {
+                "description": "month for rent or a subscription; omit (once) for a sale.",
+                "type": "string",
+                "enum": [
+                  "once",
+                  "month"
+                ]
+              },
+              "status": {
+                "description": "Omit for available.",
+                "type": "string",
+                "enum": [
+                  "available",
+                  "reserved",
+                  "unavailable"
+                ]
+              },
+              "attributes": {
+                "description": "Values for the declared attribute keys.",
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "location": {
+                "description": "Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it.",
+                "type": "object",
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "lng": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  }
+                },
+                "required": [
+                  "lat",
+                  "lng"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "category"
+            ]
+          },
+          "description": "Three to twelve ILLUSTRATIVE offers the owner later replaces with real ones: plausible for the idea and region, never a real address, building, person, company or phone number."
+        }
+      },
+      "required": [
+        "categories",
+        "items"
+      ],
+      "description": "Requires the listings landing section and localized listings copy."
+    },
     "mapBase": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -256,6 +489,110 @@
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "string",
       "minLength": 1
+    },
+    "useCases": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "items": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "situation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "title",
+              "situation",
+              "action"
+            ]
+          },
+          "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+        }
+      },
+      "required": [
+        "heading",
+        "items"
+      ]
+    },
+    "comparison": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "beforeLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "afterLabel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "rows": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "before": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              },
+              "after": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 180
+              }
+            },
+            "required": [
+              "topic",
+              "before",
+              "after"
+            ]
+          },
+          "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+        }
+      },
+      "required": [
+        "heading",
+        "beforeLabel",
+        "afterLabel",
+        "rows"
+      ]
     },
     "landing": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -498,6 +835,99 @@
         "submitLabel"
       ]
     },
+    "listings": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "intro": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "notice": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "description": "One sentence telling visitors these offers are illustrative examples, not a live offer."
+        },
+        "categoryLabels": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "description": "A label for each patterns.listings.categories key."
+        },
+        "attributeLabels": {
+          "description": "A label for each patterns.listings.attributes[].key.",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        },
+        "items": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "highlights": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                }
+              }
+            },
+            "required": [
+              "title",
+              "summary"
+            ]
+          },
+          "description": "Copy for each patterns.listings.items[].id. No invented addresses, people, companies, ratings or guarantees."
+        },
+        "inquireLabel": {
+          "description": "Button on each card that opens the contact form about that offer. Required when the contact section is rendered.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "heading",
+        "notice",
+        "categoryLabels",
+        "items"
+      ]
+    },
     "dataGrid": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -623,6 +1053,9 @@
                     "hero",
                     "features",
                     "howItWorks",
+                    "useCases",
+                    "comparison",
+                    "listings",
                     "pricing",
                     "testimonials",
                     "faq",
@@ -630,6 +1063,14 @@
                     "cta"
                   ]
                 }
+              },
+              "presentation": {
+                "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+                "type": "string",
+                "enum": [
+                  "story",
+                  "document"
+                ]
               }
             },
             "required": [
@@ -687,7 +1128,8 @@
             "properties": {
               "href": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "description": "Use an existing destination: /login with authGoogle, /dashboard with dashboard, #contact when contact is a landing section, or #chapter-<section> for a rendered landing section (for example #chapter-features). Never invent /app, /signup, #start, download routes, or features not present in the template."
               }
             },
             "required": [
@@ -696,7 +1138,17 @@
           },
           "contactForm": {
             "type": "object",
-            "properties": {}
+            "properties": {
+              "phone": {
+                "description": "Ask the visitor for a phone number: optional (or required) when the business calls leads back — property, trades, health, local services. Omit to ask only for an e-mail.",
+                "type": "string",
+                "enum": [
+                  "hidden",
+                  "optional",
+                  "required"
+                ]
+              }
+            }
           },
           "dataGrid": {
             "type": "object",
@@ -797,6 +1249,142 @@
               "center",
               "zoom"
             ]
+          },
+          "useCases": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the useCases landing section and localized useCases copy."
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {},
+            "description": "Requires the comparison landing section and localized comparison copy."
+          },
+          "listings": {
+            "type": "object",
+            "properties": {
+              "categories": {
+                "minItems": 1,
+                "maxItems": 8,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-zA-Z0-9]{0,39}$"
+                },
+                "description": "camelCase keys of the kinds of offer, e.g. apartment, house, office. Their labels go in content.<locale>.listings.categoryLabels."
+              },
+              "attributes": {
+                "description": "Up to four NUMERIC facts every card shows, e.g. area, rooms, capacity. Labels go in content.<locale>.listings.attributeLabels. Text facts belong in an item's highlights.",
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-zA-Z0-9]{0,39}$"
+                    },
+                    "unit": {
+                      "description": "A unit that reads the same in every language, e.g. m², km, kg. Omit for counts.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 8
+                    }
+                  },
+                  "required": [
+                    "key"
+                  ]
+                }
+              },
+              "currency": {
+                "description": "ISO 4217 code of the prices, e.g. EUR. Required when any item has a price.",
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              "items": {
+                "minItems": 3,
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9-]{0,39}$",
+                      "description": "Stable lowercase id, e.g. offer-1. Titles go in content.<locale>.listings.items.<id>."
+                    },
+                    "category": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-zA-Z0-9]{0,39}$",
+                      "description": "One of categories."
+                    },
+                    "price": {
+                      "description": "Omit when the price is on request.",
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "pricePeriod": {
+                      "description": "month for rent or a subscription; omit (once) for a sale.",
+                      "type": "string",
+                      "enum": [
+                        "once",
+                        "month"
+                      ]
+                    },
+                    "status": {
+                      "description": "Omit for available.",
+                      "type": "string",
+                      "enum": [
+                        "available",
+                        "reserved",
+                        "unavailable"
+                      ]
+                    },
+                    "attributes": {
+                      "description": "Values for the declared attribute keys.",
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "location": {
+                      "description": "Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it.",
+                      "type": "object",
+                      "properties": {
+                        "lat": {
+                          "type": "number",
+                          "minimum": -90,
+                          "maximum": 90
+                        },
+                        "lng": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        }
+                      },
+                      "required": [
+                        "lat",
+                        "lng"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "category"
+                  ]
+                },
+                "description": "Three to twelve ILLUSTRATIVE offers the owner later replaces with real ones: plausible for the idea and region, never a real address, building, person, company or phone number."
+              }
+            },
+            "required": [
+              "categories",
+              "items"
+            ],
+            "description": "Requires the listings landing section and localized listings copy."
           }
         }
       },
@@ -1089,6 +1677,200 @@
               "required": [
                 "entityLabel",
                 "fieldLabels"
+              ]
+            },
+            "useCases": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "items": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "situation": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "action": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "situation",
+                      "action"
+                    ]
+                  },
+                  "description": "Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."
+                }
+              },
+              "required": [
+                "heading",
+                "items"
+              ]
+            },
+            "comparison": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "beforeLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "afterLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "rows": {
+                  "minItems": 2,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "topic": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      },
+                      "before": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      },
+                      "after": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 180
+                      }
+                    },
+                    "required": [
+                      "topic",
+                      "before",
+                      "after"
+                    ]
+                  },
+                  "description": "Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."
+                }
+              },
+              "required": [
+                "heading",
+                "beforeLabel",
+                "afterLabel",
+                "rows"
+              ]
+            },
+            "listings": {
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 80
+                },
+                "intro": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "notice": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "description": "One sentence telling visitors these offers are illustrative examples, not a live offer."
+                },
+                "categoryLabels": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  },
+                  "description": "A label for each patterns.listings.categories key."
+                },
+                "attributeLabels": {
+                  "description": "A label for each patterns.listings.attributes[].key.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 40
+                  }
+                },
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "summary": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 300
+                      },
+                      "highlights": {
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 60
+                        }
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "summary"
+                    ]
+                  },
+                  "description": "Copy for each patterns.listings.items[].id. No invented addresses, people, companies, ratings or guarantees."
+                },
+                "inquireLabel": {
+                  "description": "Button on each card that opens the contact form about that offer. Required when the contact section is rendered.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                }
+              },
+              "required": [
+                "heading",
+                "notice",
+                "categoryLabels",
+                "items"
               ]
             }
           },

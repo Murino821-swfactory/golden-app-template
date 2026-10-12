@@ -40,6 +40,8 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "app/[locale]/login/page.tsx",
   ],
   cta: ["components/sections/cta.tsx"],
+  useCases: ["components/sections/use-cases.tsx"],
+  comparison: ["components/sections/comparison.tsx"],
   contactForm: [
     "components/sections/contact.tsx",
     "lib/owner-contact.ts",
@@ -61,6 +63,11 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "lib/records-firestore.ts",
     "components/patterns/data-grid/board.tsx",
     "lib/board.ts",
+  ],
+  listings: [
+    "components/sections/listings.tsx",
+    "lib/listings.ts",
+    "lib/listing-inquiry.ts",
   ],
   mapBase: ["components/patterns/map-base/index.tsx"],
 };

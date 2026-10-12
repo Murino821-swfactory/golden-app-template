@@ -248,6 +248,14 @@ function countMatches(regex: RegExp, text: string): number {
   return n;
 }
 
+/** Every taxonomy skill a text names, in taxonomy order — what the candidate importer
+ * fills the skills field with. Keyword fallback is not used here: a CV with no known
+ * skill simply yields none. */
+export function detectSkills(text: string): Skill[] {
+  const norm = normalize(text);
+  return COMPILED.filter(({ regex }) => countMatches(regex, norm) > 0).map(({ skill }) => skill);
+}
+
 // ── Must-have vs nice-to-have ─────────────────────────────────────────────────────────
 
 const PREFERRED_MARKER =

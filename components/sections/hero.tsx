@@ -6,9 +6,10 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
-import { heroOverlayBackground } from "@/lib/hero-overlay";
+import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { cn } from "@/lib/utils";
 import { HeroImageControls } from "./hero-image-controls";
+import { CopyRewriteControls } from "./copy-rewrite-panel";
 import { ProductPreview } from "./product-preview";
 import { config } from "@/lib/prototype-config";
 import { landingActionHref } from "@/lib/landing-action";
@@ -76,6 +77,7 @@ export function HeroSection() {
             "flex flex-col items-center gap-6 text-center",
             hasPreview && "lg:items-start lg:text-left"
           )}
+          style={hero.src ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <p data-app-name className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
             {config.appName}
@@ -91,6 +93,7 @@ export function HeroSection() {
         {hasPreview && <ProductPreview />}
       </div>
       <HeroImageControls hero={hero} />
+      <CopyRewriteControls />
     </section>
   );
 }

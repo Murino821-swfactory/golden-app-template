@@ -1,0 +1,75 @@
+
+> golden-app-template@0.1.0 prebuild
+> node scripts/stage-cv-readers.mjs && tsx scripts/build-discovery.ts
+
+llms.txt generated from configured public content
+
+> golden-app-template@0.1.0 build
+> next build
+
+▲ Next.js 16.3.4 (Turbopack)
+✓ Running next.config.ts took 41ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1536ms
+  Running TypeScript ...
+  Finished TypeScript in 3.5s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/33) ...
+  Generating static pages using 7 workers (8/33) 
+  Generating static pages using 7 workers (16/33) 
+  Generating static pages using 7 workers (24/33) 
+✓ Generating static pages using 7 workers (33/33) in 664ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├   /[locale]
+│ └ ● /sk
+├   /[locale]/analyze
+│ └ ● /sk/analyze
+├   /[locale]/dashboard
+│ └ ● /sk/dashboard
+├   /[locale]/login
+│ └ ● /sk/login
+├   /[locale]/messages
+│ └ ● /sk/messages
+├   /[locale]/workspace
+│ └ ● /sk/workspace
+├   /[locale]/workspace/candidates
+│ └ ● /sk/workspace/candidates
+├   /[locale]/workspace/clients
+│ └ ● /sk/workspace/clients
+├   /[locale]/workspace/interviews
+│ └ ● /sk/workspace/interviews
+├   /[locale]/workspace/jobs
+│ └ ● /sk/workspace/jobs
+├   /[locale]/workspace/matcher
+│ └ ● /sk/workspace/matcher
+├   /[locale]/workspace/pipeline
+│ └ ● /sk/workspace/pipeline
+├   /[locale]/workspace/reports
+│ └ ● /sk/workspace/reports
+├   /[locale]/workspace/settings
+│ └ ● /sk/workspace/settings
+├ ○ /analyze
+├ ○ /dashboard
+├ ○ /login
+├ ○ /messages
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+├ ○ /workspace
+├ ○ /workspace/candidates
+├ ○ /workspace/clients
+├ ○ /workspace/interviews
+├ ○ /workspace/jobs
+├ ○ /workspace/matcher
+├ ○ /workspace/pipeline
+├ ○ /workspace/reports
+└ ○ /workspace/settings
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+

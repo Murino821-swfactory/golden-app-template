@@ -11,23 +11,46 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 
 ## This prototype — cv-matcher (branch `demo/cv-matcher`)
 
-This branch is one customer's app, not the template. Code specific to it:
+This branch is one customer's app, not the template: a browser-only **recruiting
+workspace** for solo headhunters and small agencies (2026-10-12), grown around the original
+CV ↔ job matcher. Product doc with research, decisions and the demo script:
+`docs/RECRUITING_WORKSPACE.md`. Code specific to it:
 
 | What | Where |
 |---|---|
-| CV ↔ job posting matcher (OTH-85) — public page, no sign-in | `app/[locale]/analyze/page.tsx` (bare path: re-export in `app/(default)/analyze/`) → `components/features/cv-matcher.tsx` |
+| Workspace routes `/workspace`, `/workspace/{pipeline,candidates,jobs,clients,interviews,matcher,reports,settings}` (bare path re-exports in `app/(default)/workspace/`) | `app/[locale]/workspace/**` → shell `components/recruiting/shell.tsx` (sidebar ≥ `lg`, tab bar + "More" below, search) |
+| Data: clients, jobs, candidates, applications (stage history), interviews (scorecards), placements, tasks, activities, settings | `lib/recruiting/model.ts`; store in localStorage `cv-matcher:workspace:v1` (`store.ts`, `useSyncExternalStore`, cross-tab sync); demo seed `seed.ts` (EN/SK, dates relative to now) |
+| Every change (move/reject/place/consent/anonymize…) and its timeline entry | `lib/recruiting/actions.ts` — views never mutate the workspace themselves |
+| KPIs, attention list, funnel, time to fill, days in stage, sources, fees, pipeline value | `lib/recruiting/metrics.ts` (pure) |
+| Views and drawers | `components/recruiting/{overview,pipeline,candidates,jobs,clients,interviews,reports,settings,matcher}.tsx`, shared `application-drawer.tsx`, `interview-dialog.tsx`, `placement-dialog.tsx`, primitives `ui.tsx`, `shared.tsx` |
+| Every string, EN default + SK (typed against EN) | `lib/recruiting/copy.ts` |
+| CV import → candidate fields (name, contacts, skills via the taxonomy) | `lib/recruiting/extract.ts`, `detectSkills` in `lib/cv-analyzer.ts` |
+| `.ics`, CSV, JSON exports | `lib/recruiting/export.ts` |
+| Landing: own hero + closing band with the two Gemini illustrations (`public/images/*.webp`) | `components/sections/recruiting-hero.tsx`, `recruiting-cta.tsx`, registered in `app/[locale]/page.tsx`; the rest is the template's, from `prototype.config.json` (`useCases`, `comparison`, `howItWorks`, `faq`, `contact`) |
+| CV ↔ job matcher (OTH-85) — now the workspace's matcher page; `/analyze` keeps working | `components/recruiting/matcher.tsx` → `components/features/cv-matcher.tsx` (controlled mode via `value`/`onChange`/`onResult`) |
 | Matching engine: skill taxonomy + aliases (EN/SK), must-have vs nice-to-have, score, advice, samples | `lib/cv-analyzer.ts` |
-| Every string it shows or exports (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
-| Job title library (OTH-104 / OTH-114): ten AI/Data/AWS starters, search, use, custom CRUD | `lib/job-library.ts`, `components/features/job-library.tsx`, `tests/job-library.spec.ts` |
-| Tests | `tests/cv-analyzer.spec.ts` (logic, no page), `tests/cv-matcher.spec.ts` (UI) |
+| Matcher strings (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
+| Job title library (OTH-104 / OTH-114): ten AI/Data/AWS starters, custom CRUD; also loads a posting into a new job | `lib/job-library.ts`, `components/features/job-library.tsx` |
+| CV file parsing (OTH-103): PDF/DOC/DOCX in the browser | `lib/cv-file-parser.ts`, `cv-doc-parser.ts`, `components/features/cv-import.tsx` |
+| Tests | `tests/recruiting-logic.spec.ts` (seed, metrics, extract, exports, actions — no page), `tests/recruiting.spec.ts` (workspace UI, EN/SK, phone), `tests/cv-analyzer.spec.ts`, `tests/cv-matcher.spec.ts`, `tests/job-library.spec.ts`, `tests/cv-import.spec.ts` |
 
-The matcher also renders on `/dashboard`; the landing CTA (`patterns.cta.href`) points to
-`/analyze`. Everything runs in the browser — no Firestore, no API. Custom job roles persist in versioned browser localStorage (`cv-matcher:job-library:v1`),
-not across accounts/devices. Default descriptions are curated EN/SK starting points, not
-a measured popularity ranking. Selecting a role does not replace the posting until
-**Use role description** is clicked, and never changes the CV. See `docs/JOB_LIBRARY.md`.
-A new skill is one row
-in `TAXONOMY`; aliases are lowercase without diacritics.
+Rules that keep the branch coherent:
+
+- **Nothing leaves the browser.** No Firestore for the workspace (factory-web's rules allow
+  visitors only `users/{uid}/records`), no API. `/dashboard` (auth) redirects to `/workspace`.
+- **The six stages are fixed** (`STAGES` in `model.ts`); their names are copy. Every report
+  depends on comparable stages.
+- **Status colours are fixed** (emerald/amber/rose/sky in `components/recruiting/ui.tsx`);
+  everything else uses the palette tokens so "Change colour" repaints the whole app.
+- **Copy goes in `lib/recruiting/copy.ts`**, both languages, never in a component.
+- **Template merges:** this branch carries the template's `main` as of 2026-10-12 (merge
+  commit resolved `package.json` — prebuild runs `stage-cv-readers` *and* `build-discovery`,
+  `maplibre-gl` pinned to 5 — the lockfile, `.gitignore`, `globals.css`). `app/[locale]/page.tsx`
+  (section registry) and `app/[locale]/{analyze,dashboard}/page.tsx` are the only template
+  files this branch overrides; expect conflicts there on the next refresh and keep this
+  branch's side.
+- The AI hero-image controls are not rendered on this landing (static illustrations instead);
+  the "Edit texts" panel is.
 
 ## Quick Reference — Which Files to Edit
 
@@ -44,7 +67,11 @@ in `TAXONOMY`; aliases are lowercase without diacritics.
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
+| "Edit texts" (copy rewrite) | `components/sections/copy-rewrite-panel.tsx`, `hooks/use-copy-rewrite.ts`, `lib/copy-rewrite.ts` — see "Copy rewrite" |
+| Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
+| SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
 
 ## Critical Rules for Fast Implementation
 
@@ -71,6 +98,18 @@ merged grid fields from `useEntityFields()` (`hooks/use-content.ts`), both of wh
 A pattern is enabled iff its **`patterns`** slice exists. zod then requires the matching
 content slice in **every** declared locale, so a language can never be offered and then
 render blank.
+
+New customer creation uses `npm run validate:config -- --production` before building.
+`parseProductionPrototypeConfig` requires customer text for every rendered section and
+pattern in every locale, rejects blank text and unsupported placeholder sections, and
+checks records/auth/dashboard dependencies and unique field keys. Copy requirements are
+published as `productionValidation`, `menu.sections.requiredCopy` and
+`menu.requiredPatternCopy` by `npm run schema`; keep the committed schema in sync.
+The usual parser stays compatible with local starter fixtures and archived prototypes.
+Field/KPI labels and sample values are JSON own properties (`Object.hasOwn`); inherited
+JavaScript properties such as `constructor` never satisfy a required label or sample value.
+Tests: `tests/production-copy.spec.ts`; cross-repo decision:
+[prototype content delivery](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-08-prototype-content-delivery.md).
 
 Configs written before the split (copy inside `patterns`, no `locales`/`content`) are
 still accepted: `migrateLegacyConfig` lifts them into `content.en`. That adapter exists
@@ -421,9 +460,11 @@ generate one; the founder any number; both may hide or show it. The server is fa
   demo on tokenwise.sk/demo/golden has a slug but no such endpoint).
 - The hero `<section>` is full width; its content keeps the old `max-w-5xl` box, so with
   no image it looks as before. The image layer is absolute (moves nothing, CLS 0).
-- Readability over the image is not guaranteed (founder decision): the overlay is drawn in
-  `var(--background)` at `HERO_OVERLAY_ALPHA`, and a visitor who cannot read the text
-  clicks "Change colour".
+- The image is shown fully visible (founder decision 2026-10-09): no even tint over it,
+  only a fade into `var(--background)` across the bottom strip (`HERO_FADE_START`).
+  Readability over the image is still not guaranteed (founder decision 2026-09-25): the
+  hero copy gets `HERO_TEXT_SHADOW` in the palette's background while an image is shown,
+  and a visitor who cannot read the text clicks "Change colour".
 - The controls' state table is `heroControlsView` (pure, `tests/hero-image.spec.ts`); new
   copy goes into the `heroImage` block of all 8 `messages/*.json`.
 
@@ -444,6 +485,26 @@ factory-web (`prototypeOwnerContact`, `prototypeContact`).
 - `/messages` lists `demos/{slug}/contactMessages` for the owner; opening one sets `readAt`.
   Entry points: the owner controls in the contact section and `<OwnerLinks />` on the
   dashboard (renders nothing for anyone else).
+
+## Copy rewrite (2026-10-07)
+
+The prototype's creator (verified wizard e-mail) and the founder see an "Edit texts" button
+under the hero. In the panel they edit the INSTRUCTIONS for the AI, ask for a preview (the
+factory's own content call — the same schema this repo publishes in
+`prototype.schema.json`), compare every text with the current one with the tokens, cost and
+characters of that one request, and use it: the factory commits the new copy to
+`demo/<slug>` and republishes the page (the creator pays 1.1M tokens from their tokenwise wallet; the founder nothing).
+Server: factory-web `prototypeCopy`; spec `docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md`
+in the **sw-factory** repo.
+
+- `/api/prototype-copy` is called only for a signed-in user on a published prototype
+  (`ownerActionsAvailable`) — never from CI, and an anonymous visitor makes no request
+  (`tests/copy-rewrite.spec.ts`).
+- The panel's state table is `copyPanelView` (pure, tested); the dialog is the shared
+  `components/ui/dialog.tsx` (bottom sheet on phones). Texts: `copyRewrite` in all eight
+  `messages/*.json`.
+- A rewrite changes `content` only. `dataGrid.sampleRecords` are example DATA and are never
+  rewritten; `appName`, `patterns`, the theme and the languages never change.
 
 ## Firestore rules — owned by factory-web, not here
 
@@ -497,3 +558,75 @@ npm run test:e2e         # Playwright smoke tests (must pass)
 3. For each file: read → make ALL changes → move to next file
 4. Run `npm run build` once at the end
 5. Done — no exploration, no extra reads, no refactoring
+
+## OTH-117 — landing stories and discovery (2026-10-03)
+
+`patterns.landing.presentation` is `story` by default; `document` opts out. Desktop
+with a fine pointer, at least 1024×700 and no reduced-motion preference gets a sticky
+stage driven by native scrolling. Chapter buttons support keyboard navigation;
+`#contact` reveals its chapter. The header height is measured, not assumed. Long
+chapters can scroll within their panel. Mobile, short viewports, reduced motion,
+print and no JavaScript retain the same server-rendered document.
+
+New `useCases` and `comparison` patterns each require their matching landing section
+and content slice in every locale. Their schemas describe when to choose them and
+forbid invented customer results or competitor claims. The exported menu is still
+consumed dynamically by the assembly harness; there is no second pattern registry.
+Pricing and testimonials remain locked.
+
+`NEXT_PUBLIC_SITE_ORIGIN` must be the real HTTP(S) origin without a path. The harness
+already supplies it for prototypes; factory-web supplies `https://tokenwise.sk` for
+`/demo/golden`. `NEXT_PUBLIC_BASE_PATH` remains separate. Canonical, localized OG/Twitter,
+hreflang including x-default, WebSite/WebPage JSON-LD, sitemap and generated llms.txt
+use the configured content. FAQ keeps its existing FAQPage JSON-LD. Login, dashboard
+and inbox receive noindex/nofollow and clear inherited public-page canonical/social
+metadata. Discovery excludes private sample records and unrendered sections. An
+unconfigured local build has relative URLs and an empty sitemap, rather than a made-up
+production host. No Organization, prices or ratings are fabricated from an app name.
+
+The root robots.txt controls an origin: the demo's subdirectory robots.txt is an export
+artifact, not an independent crawler policy. On tokenwise.sk the host robots allows all
+public paths. A custom deployment must publish these files at its own appropriate root.
+
+Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
+`npm run test:packages`, and the existing Playwright matrix plus story/pattern/SEO tests.
+
+Prototype export browser gates read chrome, login and contact labels from the configured
+default locale bundle. They must not require English controls on a Slovak-first export.
+The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
+
+## Listings, required patterns, phone and profile (2026-10-09)
+
+Founder decision for the Realitná únia SR presentation; the patterns are generic, not
+real-estate specific. Record: sw-factory `docs/decisions/2026-10-09-listings-pattern.md`.
+
+- **`listings` (phase A)** — a public catalogue of offers: `patterns.listings` holds
+  categories (keys), up to four numeric attributes with optional units, an ISO currency and
+  3–12 items (id, category, price, `pricePeriod`, status, attribute values, optional
+  location); `content.<locale>.listings` holds heading, intro, the illustrative `notice`,
+  labels and each item's title/summary/highlights, plus `inquireLabel`. The offers are
+  ILLUSTRATIVE and static (no Firestore, no rules change); an owner-managed catalogue
+  with photos is phase B. The pattern and the `listings` landing section are enabled
+  together. Offers are kept out of llms.txt and JSON-LD — discovery must not present
+  example offers as facts.
+- **Map:** when `mapBase` is enabled, offers with a location are pinned on it (dashboard)
+  and, on the landing, on a map mounted only after "Show on map": loading third-party tiles
+  on page load would put a network dependency into every prototype's console-clean smoke
+  gate. The map is optional (founder 2026-10-10): the model picks it only when place is
+  part of the idea; without it, offers carry no location. Its texts — the template's and
+  MapLibre's own controls — come from `map` in all 8 `messages/*.json`; one finger scrolls
+  the page past it (`cooperativeGestures`); a style that never loads shows `map.loadError`.
+- **Required patterns:** `parseProductionPrototypeConfig` refuses a composition without
+  `listings`, `dashboard` and `authGoogle` (`PRODUCTION_REQUIRED_PATTERNS`,
+  published as `menu.requiredPatterns`; each purpose says "ALWAYS enable"). The harness is
+  unchanged: its bounded repair receives the validator's message. A presentation-only
+  config (landing + cta — the factory's brief fallback) is exempt (`isPresentationOnly`),
+  or a rejected answer would leave no publishable prototype at all.
+- **Contact form:** `patterns.contactForm.phone` = `hidden` (default) | `optional` |
+  `required`. "Ask about this offer" on a card selects it (`lib/listing-inquiry.ts`) and the
+  form sends `listingId` + `listingTitle`. factory-web `prototypeContact` validates and
+  stores both, and the owner's inbox and e-mail show them.
+- **Profile:** the owner card gains `headline`, `bio`, `serviceArea` and `website`
+  (https only, checked on the server and again at render). The owner types them; no model
+  writes the card. factory-web must be deployed first — an older server refuses a card
+  with these fields.

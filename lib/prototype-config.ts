@@ -58,6 +58,9 @@ export const SECTION_IDS = [
   "hero",
   "features",
   "howItWorks",
+  "useCases",
+  "comparison",
+  "listings",
   "pricing",
   "testimonials",
   "faq",
@@ -92,6 +95,14 @@ export const ICON_IDS = [
   "building-2", "briefcase", "route", "timer", "scale", "gavel", "globe", "tag",
 ] as const;
 export type IconId = (typeof ICON_IDS)[number];
+
+/** Whether an offer can still be taken. Labels are chrome (`messages/*.json` → `listings`),
+ * because the three states read the same in every prototype. */
+export const LISTING_STATUSES = ["available", "reserved", "unavailable"] as const;
+
+/** A key a model names (a category, an attribute): camelCase, so it can never collide with
+ * a JavaScript property such as `constructor` once it is used to look up a label. */
+const listingKeySchema = z.string().regex(/^[a-z][a-zA-Z0-9]{0,39}$/);
 
 /**
  * A field's SHAPE. Its human label is copy and lives in `content[locale].dataGrid`.
@@ -151,7 +162,7 @@ export function sampleRecordIssues(
   const known = new Set(fields.map((f) => f.key));
   for (const key of Object.keys(sample)) if (!known.has(key)) issues.push(`unknown field "${key}"`);
   for (const field of fields) {
-    const v = sample[field.key];
+    const v = Object.hasOwn(sample, field.key) ? sample[field.key] : undefined;
     if (v === undefined || v === "") {
       if (field.required) issues.push(`required field "${field.key}" is missing`);
       continue;
@@ -209,6 +220,52 @@ export function kpiIssues(kpis: readonly Kpi[], fields: readonly EntityFieldShap
 
 export type Feature = z.infer<typeof featureSchema>;
 
+export type ListingsPattern = z.infer<typeof PATTERN_SCHEMAS.listings>;
+export type ListingsCopy = z.infer<typeof CONTENT_SCHEMAS.listings>;
+
+/** Why the offers could not be rendered as declared. Pure. */
+export function listingStructureIssues(listings: ListingsPattern): string[] {
+  const issues: string[] = [];
+  const categories = new Set(listings.categories);
+  if (categories.size !== listings.categories.length) issues.push("categories must be unique");
+  const attributeKeys = (listings.attributes ?? []).map((a) => a.key);
+  if (new Set(attributeKeys).size !== attributeKeys.length) issues.push("attribute keys must be unique");
+  const ids = new Set<string>();
+  for (const item of listings.items) {
+    if (ids.has(item.id)) issues.push(`item id "${item.id}" is used twice`);
+    ids.add(item.id);
+    if (!categories.has(item.category)) issues.push(`item "${item.id}": category "${item.category}" is not one of categories`);
+    if (item.price !== undefined && !listings.currency) issues.push(`item "${item.id}" has a price but listings.currency is missing`);
+    for (const key of Object.keys(item.attributes ?? {})) {
+      if (!attributeKeys.includes(key)) issues.push(`item "${item.id}": attribute "${key}" is not declared in attributes`);
+    }
+  }
+  return issues;
+}
+
+/** Why one language's copy cannot label every offer. `Object.hasOwn`, never `in`: a key
+ * such as `constructor` must not find a label on the prototype chain. Pure. */
+export function listingCopyIssues(listings: ListingsPattern, copy: ListingsCopy | undefined): string[] {
+  if (!copy) return [];
+  const issues: string[] = [];
+  const has = (record: Record<string, unknown> | undefined, key: string) =>
+    record !== undefined && Object.hasOwn(record, key) && Boolean(record[key]);
+  for (const key of listings.categories) {
+    if (!has(copy.categoryLabels, key)) issues.push(`category "${key}" has no label`);
+  }
+  for (const { key } of listings.attributes ?? []) {
+    if (!has(copy.attributeLabels, key)) issues.push(`attribute "${key}" has no label`);
+  }
+  const ids = new Set(listings.items.map((item) => item.id));
+  for (const id of ids) {
+    if (!has(copy.items, id)) issues.push(`item "${id}" has no copy`);
+  }
+  for (const id of Object.keys(copy.items)) {
+    if (!ids.has(id)) issues.push(`copy for item "${id}", which is not in patterns.listings.items`);
+  }
+  return issues;
+}
+
 /**
  * STRUCTURE, per pattern. This file is the ONLY source of truth for what a pattern is:
  * `npm run schema` publishes it as `prototype.schema.json` and the harness reads that out
@@ -226,6 +283,7 @@ export type Feature = z.infer<typeof featureSchema>;
 export const PATTERN_SCHEMAS = {
   landing: z.object({
     sections: z.array(z.enum(SECTION_IDS)).min(1),
+    presentation: z.enum(["story", "document"]).optional().describe("Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages."),
   }),
   dashboard: z.object({
     kpis: z
@@ -240,9 +298,21 @@ export const PATTERN_SCHEMAS = {
   /** Nothing to configure — Google sign-in is the same everywhere by design. */
   authGoogle: z.object({}),
   cta: z.object({
-    href: z.string().min(1),
+    href: z.string().min(1).describe(
+      "Use an existing destination: /login with authGoogle, /dashboard with dashboard, " +
+      "#contact when contact is a landing section, or #chapter-<section> for a rendered " +
+      "landing section (for example #chapter-features). Never invent /app, /signup, " +
+      "#start, download routes, or features not present in the template."
+    ),
   }),
-  contactForm: z.object({}),
+  contactForm: z.object({
+    phone: z
+      .enum(["hidden", "optional", "required"])
+      .optional()
+      .describe("Ask the visitor for a phone number: optional (or required) when the business calls leads back — property, trades, health, local services. Omit to ask only for an e-mail."),
+  }),
+  useCases: z.object({}).describe("Requires the useCases landing section and localized useCases copy."),
+  comparison: z.object({}).describe("Requires the comparison landing section and localized comparison copy."),
   dataGrid: z.object({
     entity: z.object({
       key: z.string().min(1),
@@ -254,6 +324,38 @@ export const PATTERN_SCHEMAS = {
       .optional()
       .describe("Key of a select field that is a workflow stage (a status). Adds a board view grouped by its options. Omit when no field is a stage."),
   }),
+  listings: z.object({
+    categories: z
+      .array(listingKeySchema)
+      .min(1)
+      .max(8)
+      .describe("camelCase keys of the kinds of offer, e.g. apartment, house, office. Their labels go in content.<locale>.listings.categoryLabels."),
+    attributes: z
+      .array(z.object({
+        key: listingKeySchema,
+        unit: z.string().min(1).max(8).optional().describe("A unit that reads the same in every language, e.g. m², km, kg. Omit for counts."),
+      }))
+      .max(4)
+      .optional()
+      .describe("Up to four NUMERIC facts every card shows, e.g. area, rooms, capacity. Labels go in content.<locale>.listings.attributeLabels. Text facts belong in an item's highlights."),
+    currency: z.string().regex(/^[A-Z]{3}$/).optional().describe("ISO 4217 code of the prices, e.g. EUR. Required when any item has a price."),
+    items: z
+      .array(z.object({
+        id: z.string().regex(/^[a-z0-9][a-z0-9-]{0,39}$/).describe("Stable lowercase id, e.g. offer-1. Titles go in content.<locale>.listings.items.<id>."),
+        category: listingKeySchema.describe("One of categories."),
+        price: z.number().nonnegative().optional().describe("Omit when the price is on request."),
+        pricePeriod: z.enum(["once", "month"]).optional().describe("month for rent or a subscription; omit (once) for a sale."),
+        status: z.enum(LISTING_STATUSES).optional().describe("Omit for available."),
+        attributes: z.record(z.string(), z.number().nonnegative()).optional().describe("Values for the declared attribute keys."),
+        location: z.object({
+          lat: z.number().min(-90).max(90),
+          lng: z.number().min(-180).max(180),
+        }).optional().describe("Only when mapBase is enabled: where the offer is, near mapBase.center. Give one whenever the offer has a place; the map pins it. Omit it without a map — nothing shows it."),
+      }))
+      .min(3)
+      .max(12)
+      .describe("Three to twelve ILLUSTRATIVE offers the owner later replaces with real ones: plausible for the idea and region, never a real address, building, person, company or phone number."),
+  }).describe("Requires the listings landing section and localized listings copy."),
   mapBase: z.object({
     center: z.object({
       lat: z.number().min(-90).max(90),
@@ -281,22 +383,36 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
     "The public page every visitor lands on. Always enabled — every other pattern sits " +
     "behind auth or below the fold, so a prototype without it opens on nothing.",
   dashboard:
-    "A signed-in home screen summarising the user's own data. Pick it when the idea " +
-    "describes something people return to and track over time, rather than read once.",
+    "A signed-in home screen summarising the user's own data, and the map of offers when " +
+    "mapBase is enabled. ALWAYS enable it together with authGoogle; add dataGrid and kpis " +
+    "when the idea describes something people return to and track over time.",
   authGoogle:
-    "Google sign-in plus a route guard. Pick it whenever the idea implies personal data, " +
-    "saved work or anything described as 'my' — accounts, history, preferences.",
+    "Google sign-in plus a route guard. Always enable it with dashboard, which is reachable " +
+    "only after sign-in; it also serves personal data, saved work or anything 'my'.",
   cta: "A closing call-to-action band on the landing page. Pick it when the idea has one " +
     "obvious next step for a visitor: book, request, subscribe, start a trial.",
   contactForm:
     "A contact form that captures a message and an email address. Pick it for services, " +
     "consultancies and anything sold through a conversation rather than a signup.",
+  useCases: "Concrete situations where the product helps. Pick when the idea names distinct audiences or jobs; describe their actions, without invented customers or results.",
+  comparison: "A side-by-side comparison of the current workflow and the proposed workflow. Pick when the idea explicitly describes an alternative; never invent competitor claims, savings or prices.",
   dataGrid:
     "A table of records the user adds, edits and filters. Pick it when the idea is about " +
     "keeping track of things — an inventory, a catalogue, a register, a log of entries.",
+  listings:
+    "A public catalogue of what the business offers — properties, products, services, " +
+    "courses, vehicles, venues — as cards with category, price, key numbers and a status, " +
+    "filterable by category. Visitors can ask about one through the contact form, and " +
+    "open the offers on a map when mapBase is enabled. ALWAYS enable it, with its landing section: every " +
+    "prototype presents what it offers. The offers are illustrative until the owner " +
+    "publishes real ones, so say so in the notice.",
   mapBase:
-    "A map with points the user can place and inspect. Pick it only when location is " +
-    "part of the idea itself, not merely mentioned — routes, venues, coverage, territory.",
+    "A map centred on the place the idea serves, with every offer that has a location " +
+    "pinned on it. Pick it only when place is part of the idea itself, not merely mentioned " +
+    "— offers that stand somewhere or are visited (properties, venues, rentals), routes, " +
+    "coverage, territory. Leave it out otherwise: a map with nothing to pin is noise. When " +
+    "picked, choose the centre and zoom of the city or region the idea names, or the " +
+    "customer's country when it names none.",
 };
 
 /**
@@ -304,6 +420,24 @@ export const PATTERN_PURPOSE: Record<PatternId, string> = {
  * `mapBase` say nothing of their own, so they have no content slice at all.
  */
 export const CONTENT_SCHEMAS = {
+  useCases: z.object({
+    heading: z.string().min(1).max(80),
+    items: z.array(z.object({
+      title: z.string().min(1).max(60),
+      situation: z.string().min(1).max(180),
+      action: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Situations and actions supported by the idea. No invented customer names, endorsements or measured outcomes."),
+  }),
+  comparison: z.object({
+    heading: z.string().min(1).max(80),
+    beforeLabel: z.string().min(1).max(40),
+    afterLabel: z.string().min(1).max(40),
+    rows: z.array(z.object({
+      topic: z.string().min(1).max(60),
+      before: z.string().min(1).max(180),
+      after: z.string().min(1).max(180),
+    })).min(2).max(4).describe("Compare only facts supplied in the idea. No fabricated percentages, prices, competitor capabilities or performance promises."),
+  }),
   landing: z.object({
     /** Optional: the template must stay buildable before any content agent has run, and
      * the sections fall back to `messages/*.json` placeholders for local dev. */
@@ -347,6 +481,21 @@ export const CONTENT_SCHEMAS = {
     submitLabel: z.string().min(1),
     intro: z.string().min(1).max(160).optional(),
   }),
+  listings: z.object({
+    heading: z.string().min(1).max(80),
+    intro: z.string().min(1).max(200).optional(),
+    notice: z.string().min(1).max(160).describe("One sentence telling visitors these offers are illustrative examples, not a live offer."),
+    categoryLabels: z.record(z.string(), z.string().min(1).max(40)).describe("A label for each patterns.listings.categories key."),
+    attributeLabels: z.record(z.string(), z.string().min(1).max(40)).optional().describe("A label for each patterns.listings.attributes[].key."),
+    items: z
+      .record(z.string(), z.object({
+        title: z.string().min(1).max(80),
+        summary: z.string().min(1).max(300),
+        highlights: z.array(z.string().min(1).max(60)).max(4).optional(),
+      }))
+      .describe("Copy for each patterns.listings.items[].id. No invented addresses, people, companies, ratings or guarantees."),
+    inquireLabel: z.string().min(1).max(40).optional().describe("Button on each card that opens the contact form about that offer. Required when the contact section is rendered."),
+  }),
   dataGrid: z.object({
     entityLabel: z.string().min(1),
     /** One label per field key in `patterns.dataGrid.entity.fields`. Checked below. */
@@ -386,6 +535,9 @@ export const SECTION_COPY_SOURCE: Record<SectionId, ContentPatternId | null> = {
   cta: "cta",
   faq: "landing",
   howItWorks: "landing",
+  useCases: "useCases",
+  comparison: "comparison",
+  listings: "listings",
   pricing: null,
   testimonials: null,
 };
@@ -405,6 +557,9 @@ const CONTENT_REQUIRED_FOR: readonly ContentPatternId[] = [
   "cta",
   "contactForm",
   "dataGrid",
+  "useCases",
+  "comparison",
+  "listings",
 ];
 
 /** Meta description, per language. Required, not optional: golden rule 3 (SEO+GEO) makes
@@ -422,6 +577,9 @@ const localeContentSchema = z.object({
   cta: CONTENT_SCHEMAS.cta.optional(),
   contactForm: CONTENT_SCHEMAS.contactForm.optional(),
   dataGrid: CONTENT_SCHEMAS.dataGrid.optional(),
+  useCases: CONTENT_SCHEMAS.useCases.optional(),
+  comparison: CONTENT_SCHEMAS.comparison.optional(),
+  listings: CONTENT_SCHEMAS.listings.optional(),
 });
 
 export type LocaleContent = z.infer<typeof localeContentSchema>;
@@ -454,10 +612,22 @@ export const prototypeConfigSchema = z
       contactForm: PATTERN_SCHEMAS.contactForm.optional(),
       dataGrid: PATTERN_SCHEMAS.dataGrid.optional(),
       mapBase: PATTERN_SCHEMAS.mapBase.optional(),
+      useCases: PATTERN_SCHEMAS.useCases.optional(),
+      comparison: PATTERN_SCHEMAS.comparison.optional(),
+      listings: PATTERN_SCHEMAS.listings.optional(),
     }),
     content: z.record(z.string(), localeContentSchema),
   })
   .superRefine((cfg, ctx) => {
+    const sections = cfg.patterns.landing?.sections ?? [];
+    if (new Set(sections).size !== sections.length) {
+      ctx.addIssue({ code: "custom", path: ["patterns", "landing", "sections"], message: "Landing sections must be unique" });
+    }
+    for (const pattern of ["useCases", "comparison", "listings"] as const) {
+      if (Boolean(cfg.patterns[pattern]) !== sections.includes(pattern)) {
+        ctx.addIssue({ code: "custom", path: ["patterns", pattern], message: `${pattern} pattern and landing section must be enabled together` });
+      }
+    }
     if (!cfg.locales.includes(cfg.defaultLocale)) {
       ctx.addIssue({
         code: "custom",
@@ -485,6 +655,13 @@ export const prototypeConfigSchema = z
           path: ["content", locale],
           message: `content block for "${locale}", which is not a declared locale`,
         });
+      }
+    }
+
+    const listings = cfg.patterns.listings;
+    if (listings) {
+      for (const message of listingStructureIssues(listings)) {
+        ctx.addIssue({ code: "custom", path: ["patterns", "listings"], message });
       }
     }
 
@@ -523,7 +700,7 @@ export const prototypeConfigSchema = z
       // the column header falls back to a machine key like `created_at`.
       const labels = block.dataGrid?.fieldLabels ?? {};
       for (const field of fields) {
-        if (!labels[field.key]) {
+        if (!Object.hasOwn(labels, field.key) || !labels[field.key]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dataGrid", "fieldLabels", field.key],
@@ -543,6 +720,12 @@ export const prototypeConfigSchema = z
           });
         }
       }
+      if (listings) {
+        for (const message of listingCopyIssues(listings, block.listings)) {
+          ctx.addIssue({ code: "custom", path: ["content", locale, "listings"], message: `${message} in "${locale}"` });
+        }
+      }
+
       // Sample records must be records the grid could have stored.
       block.dataGrid?.sampleRecords?.forEach((sample, i) => {
         for (const message of sampleRecordIssues(fields, sample)) {
@@ -550,7 +733,7 @@ export const prototypeConfigSchema = z
         }
       });
       for (const kpi of kpis) {
-        if (!block.dashboard?.kpiLabels?.[kpi.id]) {
+        if (!block.dashboard?.kpiLabels || !Object.hasOwn(block.dashboard.kpiLabels, kpi.id) || !block.dashboard.kpiLabels[kpi.id]) {
           ctx.addIssue({
             code: "custom",
             path: ["content", locale, "dashboard", "kpiLabels", kpi.id],
@@ -562,6 +745,85 @@ export const prototypeConfigSchema = z
   });
 
 export type PrototypeConfig = z.infer<typeof prototypeConfigSchema>;
+
+/** Copy that would otherwise silently fall back to starter messages on a customer page.
+ * Published by emit-schema and enforced by the production gate from the same constants. */
+export const PRODUCTION_SECTION_COPY: Record<string, string[]> = {
+  hero: ["landing.headline", "landing.subheadline"],
+  features: ["landing.featuresHeading", "landing.features"],
+  howItWorks: ["landing.howItWorks.heading", "landing.howItWorks.steps"],
+  faq: ["landing.faq.heading", "landing.faq.items"],
+  listings: ["listings.heading", "listings.intro", "listings.notice"],
+};
+export const PRODUCTION_PATTERN_COPY: Record<string, string[]> = {
+  listings: ["heading", "intro", "notice", "categoryLabels", "items"],
+  cta: ["label", "title", "subtitle"],
+  contactForm: ["heading", "submitLabel", "intro"],
+  dashboard: ["title", "intro"],
+  dataGrid: ["entityLabel", "fieldLabels", "sampleRecords"],
+};
+
+/**
+ * Patterns every new customer prototype carries (founder decision 2026-10-09): the offers
+ * and the signed-in dashboard — which is reachable only through sign-in, hence authGoogle.
+ * The model is told so in each pattern's purpose; this list is what turns that request into
+ * a gate the bounded repair can name. Published as `menu.requiredPatterns`.
+ *
+ * `mapBase` was on this list until 2026-10-10 (founder): a map belongs only where place is
+ * part of the idea, so it is the model's choice like every other optional pattern.
+ * Record: sw-factory docs/decisions/2026-10-09-listings-pattern.md (addendum).
+ */
+export const PRODUCTION_REQUIRED_PATTERNS: readonly PatternId[] = ["listings", "dashboard", "authGoogle"];
+
+/**
+ * A concept presentation: landing (and its CTA) and nothing else. This is what the factory
+ * publishes when every model answer was rejected (sw-factory `briefFallback`, decision
+ * 2026-10-08-prototype-content-delivery) — it deliberately claims no offers, accounts or
+ * records, so the required patterns above do not apply to it. Pure.
+ */
+export function isPresentationOnly(cfg: Pick<PrototypeConfig, "patterns">): boolean {
+  return (Object.keys(cfg.patterns) as PatternId[])
+    .filter((id) => cfg.patterns[id] !== undefined)
+    .every((id) => id === "landing" || id === "cta");
+}
+
+export function parseProductionPrototypeConfig(input: unknown): PrototypeConfig {
+  const cfg = parsePrototypeConfig(input);
+  const issues: string[] = [];
+  if (!isPresentationOnly(cfg)) {
+    for (const id of PRODUCTION_REQUIRED_PATTERNS) {
+      if (cfg.patterns[id] === undefined) issues.push(`patterns.${id}: every prototype must enable it (${PATTERN_PURPOSE[id]})`);
+    }
+  }
+  const sections = cfg.patterns.landing?.sections ?? [];
+  if (!sections.includes("hero") || sections[0] !== "hero") issues.push("patterns.landing.sections: must start with hero");
+  if (sections.some(section => SECTION_COPY_SOURCE[section] === null)) issues.push("patterns.landing.sections: contains a section with no customer copy contract");
+  if (cfg.patterns.dataGrid && (!cfg.patterns.authGoogle || !cfg.patterns.dashboard)) issues.push("patterns.dataGrid: saved records require authGoogle and dashboard");
+  const fields = cfg.patterns.dataGrid?.entity.fields ?? [];
+  if (new Set(fields.map(field => field.key)).size !== fields.length) issues.push("patterns.dataGrid.entity.fields: keys must be unique");
+  for (const field of fields) if (!/^[a-z][a-zA-Z0-9_]*$/.test(field.key)) issues.push(`patterns.dataGrid.entity.fields: invalid key ${field.key}`);
+  for (const locale of cfg.locales) {
+    const block = cfg.content[locale];
+    const requirePath = (path: string) => {
+      const value = path.split(".").reduce<unknown>((node, key) => node && typeof node === "object" ? (node as Record<string, unknown>)[key] : undefined, block);
+      if (value === undefined || value === null || (typeof value === "string" && !value.trim()) || (Array.isArray(value) && !value.length)) issues.push(`content.${locale}.${path}: customer copy is required`);
+    };
+    for (const section of sections) for (const path of PRODUCTION_SECTION_COPY[section] ?? []) requirePath(path);
+    for (const [pattern, paths] of Object.entries(PRODUCTION_PATTERN_COPY)) {
+      if (cfg.patterns[pattern as PatternId]) for (const path of paths) requirePath(`${pattern}.${path}`);
+    }
+    const checkStrings = (value: unknown, path: string) => {
+      if (typeof value === "string" && !value.trim()) issues.push(`${path}: blank customer text`);
+      else if (Array.isArray(value)) value.forEach((item, index) => checkStrings(item, `${path}.${index}`));
+      else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) checkStrings(item, `${path}.${key}`);
+    };
+    if (cfg.patterns.listings && sections.includes("contact")) requirePath("listings.inquireLabel");
+    checkStrings(block, `content.${locale}`);
+    if (block.description.length > 160) issues.push(`content.${locale}.description: at most 160 characters`);
+  }
+  if (issues.length) throw new Error(`Invalid production prototype copy:\n${issues.map(issue => `  - ${issue}`).join("\n")}`);
+  return cfg;
+}
 
 /**
  * Lift a pre-split config into the new shape.

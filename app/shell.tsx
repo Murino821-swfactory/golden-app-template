@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { config, contentFor } from "@/lib/prototype-config";
-import { localeHref } from "@/lib/locale-routing";
+import { config } from "@/lib/prototype-config";
+import { landingMetadata } from "@/lib/seo";
 import { ThemeBootstrap } from "@tokenwise/shared-ui";
 
 /**
@@ -42,22 +42,7 @@ import { ThemeBootstrap } from "@tokenwise/shared-ui";
  * get no alternates at all, because a lone hreflang pointing at itself says nothing.
  */
 export function metadataFor(locale: string): Metadata {
-  const multilingual = config.locales.length > 1;
-
-  return {
-    title: config.appName,
-    description: contentFor(config, locale).description,
-    alternates: {
-      canonical: localeHref(locale),
-      ...(multilingual
-        ? {
-            languages: Object.fromEntries(
-              config.locales.map((id) => [id, localeHref(id)])
-            ),
-          }
-        : {}),
-    },
-  };
+  return landingMetadata(locale);
 }
 
 export async function PrototypeShell({

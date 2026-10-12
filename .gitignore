@@ -51,4 +51,6 @@ next-env.d.ts
 # preview staging for basePath builds
 /.preview/
 
+# Staged pdf.js assets (prebuild) and the discovery file generated from the public config.
 /public/cv-readers/
+/public/llms.txt
