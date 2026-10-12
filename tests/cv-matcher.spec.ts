@@ -5,8 +5,9 @@ import { resolve } from "node:path";
 const fixture = (extension: string) => resolve(`tests/fixtures/cv/resume.${extension}`);
 
 /**
- * OTH-85 — the CV matcher on its public page. The export is what ships, so this runs
- * against `out/` like the rest of the suite. English is the build's locale.
+ * OTH-85 — the CV matcher on its public page, which since the workspace redesign is the
+ * workspace's matcher (`/analyze` stays as the original URL). The export is what ships, so
+ * this runs against `out/` like the rest of the suite. English is the build's locale.
  */
 
 test.describe("CV matcher", () => {
@@ -15,7 +16,7 @@ test.describe("CV matcher", () => {
   });
 
   test("starts empty and says what to do", async ({ page }) => {
-    await expect(page.getByRole("heading", { level: 1, name: "Match a CV to a job" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "CV ↔ job matcher" })).toBeVisible();
     await expect(page.getByText("Paste both texts, or load a sample")).toBeVisible();
   });
 
@@ -156,9 +157,8 @@ test.describe("CV matcher", () => {
   });
 });
 
-test("the landing CTA opens the analyzer instead of a missing page", async ({ page }) => {
-  await page.goto("./");
-  await page.getByRole("link", { name: "Analyze your first CV" }).first().click();
-  await expect(page).toHaveURL(/\/analyze\/?$/);
-  await expect(page.getByRole("heading", { level: 1, name: "Match a CV to a job" })).toBeVisible();
+test("the original analyzer URL still opens the matcher", async ({ page }) => {
+  await page.goto("./analyze");
+  await expect(page.getByRole("heading", { level: 1, name: "CV ↔ job matcher" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Load sample: Frontend Developer" })).toBeVisible();
 });

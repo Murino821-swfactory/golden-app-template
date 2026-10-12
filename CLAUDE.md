@@ -11,23 +11,46 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 
 ## This prototype — cv-matcher (branch `demo/cv-matcher`)
 
-This branch is one customer's app, not the template. Code specific to it:
+This branch is one customer's app, not the template: a browser-only **recruiting
+workspace** for solo headhunters and small agencies (2026-10-12), grown around the original
+CV ↔ job matcher. Product doc with research, decisions and the demo script:
+`docs/RECRUITING_WORKSPACE.md`. Code specific to it:
 
 | What | Where |
 |---|---|
-| CV ↔ job posting matcher (OTH-85) — public page, no sign-in | `app/[locale]/analyze/page.tsx` (bare path: re-export in `app/(default)/analyze/`) → `components/features/cv-matcher.tsx` |
+| Workspace routes `/workspace`, `/workspace/{pipeline,candidates,jobs,clients,interviews,matcher,reports,settings}` (bare path re-exports in `app/(default)/workspace/`) | `app/[locale]/workspace/**` → shell `components/recruiting/shell.tsx` (sidebar ≥ `lg`, tab bar + "More" below, search) |
+| Data: clients, jobs, candidates, applications (stage history), interviews (scorecards), placements, tasks, activities, settings | `lib/recruiting/model.ts`; store in localStorage `cv-matcher:workspace:v1` (`store.ts`, `useSyncExternalStore`, cross-tab sync); demo seed `seed.ts` (EN/SK, dates relative to now) |
+| Every change (move/reject/place/consent/anonymize…) and its timeline entry | `lib/recruiting/actions.ts` — views never mutate the workspace themselves |
+| KPIs, attention list, funnel, time to fill, days in stage, sources, fees, pipeline value | `lib/recruiting/metrics.ts` (pure) |
+| Views and drawers | `components/recruiting/{overview,pipeline,candidates,jobs,clients,interviews,reports,settings,matcher}.tsx`, shared `application-drawer.tsx`, `interview-dialog.tsx`, `placement-dialog.tsx`, primitives `ui.tsx`, `shared.tsx` |
+| Every string, EN default + SK (typed against EN) | `lib/recruiting/copy.ts` |
+| CV import → candidate fields (name, contacts, skills via the taxonomy) | `lib/recruiting/extract.ts`, `detectSkills` in `lib/cv-analyzer.ts` |
+| `.ics`, CSV, JSON exports | `lib/recruiting/export.ts` |
+| Landing: own hero + closing band with the two Gemini illustrations (`public/images/*.webp`) | `components/sections/recruiting-hero.tsx`, `recruiting-cta.tsx`, registered in `app/[locale]/page.tsx`; the rest is the template's, from `prototype.config.json` (`useCases`, `comparison`, `howItWorks`, `faq`, `contact`) |
+| CV ↔ job matcher (OTH-85) — now the workspace's matcher page; `/analyze` keeps working | `components/recruiting/matcher.tsx` → `components/features/cv-matcher.tsx` (controlled mode via `value`/`onChange`/`onResult`) |
 | Matching engine: skill taxonomy + aliases (EN/SK), must-have vs nice-to-have, score, advice, samples | `lib/cv-analyzer.ts` |
-| Every string it shows or exports (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
-| Job title library (OTH-104 / OTH-114): ten AI/Data/AWS starters, search, use, custom CRUD | `lib/job-library.ts`, `components/features/job-library.tsx`, `tests/job-library.spec.ts` |
-| Tests | `tests/cv-analyzer.spec.ts` (logic, no page), `tests/cv-matcher.spec.ts` (UI) |
+| Matcher strings (EN default, SK), Markdown report | `lib/cv-matcher-copy.ts` |
+| Job title library (OTH-104 / OTH-114): ten AI/Data/AWS starters, custom CRUD; also loads a posting into a new job | `lib/job-library.ts`, `components/features/job-library.tsx` |
+| CV file parsing (OTH-103): PDF/DOC/DOCX in the browser | `lib/cv-file-parser.ts`, `cv-doc-parser.ts`, `components/features/cv-import.tsx` |
+| Tests | `tests/recruiting-logic.spec.ts` (seed, metrics, extract, exports, actions — no page), `tests/recruiting.spec.ts` (workspace UI, EN/SK, phone), `tests/cv-analyzer.spec.ts`, `tests/cv-matcher.spec.ts`, `tests/job-library.spec.ts`, `tests/cv-import.spec.ts` |
 
-The matcher also renders on `/dashboard`; the landing CTA (`patterns.cta.href`) points to
-`/analyze`. Everything runs in the browser — no Firestore, no API. Custom job roles persist in versioned browser localStorage (`cv-matcher:job-library:v1`),
-not across accounts/devices. Default descriptions are curated EN/SK starting points, not
-a measured popularity ranking. Selecting a role does not replace the posting until
-**Use role description** is clicked, and never changes the CV. See `docs/JOB_LIBRARY.md`.
-A new skill is one row
-in `TAXONOMY`; aliases are lowercase without diacritics.
+Rules that keep the branch coherent:
+
+- **Nothing leaves the browser.** No Firestore for the workspace (factory-web's rules allow
+  visitors only `users/{uid}/records`), no API. `/dashboard` (auth) redirects to `/workspace`.
+- **The six stages are fixed** (`STAGES` in `model.ts`); their names are copy. Every report
+  depends on comparable stages.
+- **Status colours are fixed** (emerald/amber/rose/sky in `components/recruiting/ui.tsx`);
+  everything else uses the palette tokens so "Change colour" repaints the whole app.
+- **Copy goes in `lib/recruiting/copy.ts`**, both languages, never in a component.
+- **Template merges:** this branch carries the template's `main` as of 2026-10-12 (merge
+  commit resolved `package.json` — prebuild runs `stage-cv-readers` *and* `build-discovery`,
+  `maplibre-gl` pinned to 5 — the lockfile, `.gitignore`, `globals.css`). `app/[locale]/page.tsx`
+  (section registry) and `app/[locale]/{analyze,dashboard}/page.tsx` are the only template
+  files this branch overrides; expect conflicts there on the next refresh and keep this
+  branch's side.
+- The AI hero-image controls are not rendered on this landing (static illustrations instead);
+  the "Edit texts" panel is.
 
 ## Quick Reference — Which Files to Edit
 

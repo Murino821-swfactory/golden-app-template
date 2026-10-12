@@ -204,11 +204,27 @@ function SkillList({
   );
 }
 
-export function CvMatcher({ className }: { className?: string }) {
+export interface CvMatcherProps {
+  className?: string;
+  /** Controlled texts (the workspace matcher feeds a candidate's CV and a job's posting). */
+  value?: { cv: string; job: string };
+  onChange?: (next: { cv: string; job: string }) => void;
+  /** Called with every recomputed result, `null` while either text is empty. */
+  onResult?: (result: AnalysisResult | null) => void;
+  /** The sample buttons and the job library are for the public tool, not the workspace. */
+  showSamples?: boolean;
+  showLibrary?: boolean;
+}
+
+export function CvMatcher({ className, value, onChange, onResult, showSamples = true, showLibrary = true }: CvMatcherProps) {
   const locale = cvLocale(useLocale());
   const c = COPY[locale];
-  const [cv, setCv] = useState("");
-  const [job, setJob] = useState("");
+  const [ownCv, setOwnCv] = useState("");
+  const [ownJob, setOwnJob] = useState("");
+  const cv = value ? value.cv : ownCv;
+  const job = value ? value.job : ownJob;
+  const setCv = useCallback((next: string) => (value ? onChange?.({ cv: next, job: value.job }) : setOwnCv(next)), [value, onChange]);
+  const setJob = useCallback((next: string) => (value ? onChange?.({ cv: value.cv, job: next }) : setOwnJob(next)), [value, onChange]);
 
   // Import state, shared by the file button, the dropzone and the LinkedIn dialog.
   const [importLoading, setImportLoading] = useState(false);
@@ -244,7 +260,7 @@ export function CvMatcher({ className }: { className?: string }) {
         setImportLoading(false);
       }
     },
-    [c]
+    [c, setCv]
   );
 
   // Clear a stale error after a few seconds so it doesn't linger over a fresh attempt.
@@ -259,6 +275,9 @@ export function CvMatcher({ className }: { className?: string }) {
   const deferredJob = useDeferredValue(job);
   const result = useMemo(() => analyzeCv(deferredCv, deferredJob), [deferredCv, deferredJob]);
   const groups = result ? groupedRecommendations(result, locale) : [];
+  useEffect(() => {
+    onResult?.(result);
+  }, [result, onResult]);
 
   return (
     <div className={cn("space-y-8", className)}>
@@ -272,6 +291,7 @@ export function CvMatcher({ className }: { className?: string }) {
         onFile={importFile}
       />
 
+      {showSamples && (
       <div className="space-y-3 print:hidden">
         <p className="text-sm text-muted-foreground">{c.samplesLabel}</p>
         <div className="flex flex-wrap gap-2">
@@ -283,8 +303,11 @@ export function CvMatcher({ className }: { className?: string }) {
               className="h-11"
               disabled={importLoading}
               onClick={() => {
-                setCv(s.cv);
-                setJob(s.job);
+                if (value) onChange?.({ cv: s.cv, job: s.job });
+                else {
+                  setOwnCv(s.cv);
+                  setOwnJob(s.job);
+                }
               }}
             >
               {c.sampleButton(s.label)}
@@ -292,6 +315,7 @@ export function CvMatcher({ className }: { className?: string }) {
           ))}
         </div>
       </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2 print:hidden">
         <CvInputPanel
@@ -309,7 +333,7 @@ export function CvMatcher({ className }: { className?: string }) {
           onOpenLinkedIn={() => setLinkedInOpen(true)}
         />
         <div className="min-w-0 space-y-4">
-          <JobLibrary locale={locale} job={job} onUse={setJob} />
+          {showLibrary && <JobLibrary locale={locale} job={job} onUse={setJob} />}
           <TextPanel
             label={c.jobLabel}
             placeholder={c.jobPlaceholder}

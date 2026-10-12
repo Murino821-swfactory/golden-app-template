@@ -1,48 +1,38 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { AuthGuard } from "@/components/auth/auth-guard";
-import { CvMatcher } from "@/components/features";
 import { OwnerLinks } from "@/components/owner/owner-links";
-import { DataGrid } from "@/components/patterns/data-grid";
-import { MapBase } from "@/components/patterns/map-base";
-import { useContent } from "@/hooks/use-content";
-import { DashboardStats } from "@/components/dashboard/stats";
-import { config } from "@/lib/prototype-config";
-import { listingCards, listingPoints } from "@/lib/listings";
+import { Button } from "@/components/ui/button";
+import { useCopy } from "@/hooks/use-workspace";
+import { localePath } from "@/lib/locale-routing";
 
 /**
- * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
- * a pattern renders iff its config slice is present. No prototype-specific code.
+ * The signed-in page of this prototype is the workspace (public, browser-local). Signing
+ * in still has a home — the header's "Dashboard" lands here — but the desk itself is one
+ * place for everyone, so this page sends the visitor on and keeps the owner's shortcuts.
  */
-
-const hasGrid = config.patterns.dataGrid !== undefined;
-const hasMap = config.patterns.mapBase !== undefined;
-
 function DashboardContent() {
-  const content = useContent();
-  const dashboard = content.dashboard;
-  const listings = config.patterns.listings;
-  const points = useMemo(
-    () => (listings ? listingPoints(listingCards(listings, content.listings)) : []),
-    [listings, content.listings]
-  );
-
+  const c = useCopy();
+  const locale = useLocale();
+  const router = useRouter();
+  const href = localePath(locale, "/workspace");
+  useEffect(() => {
+    router.replace(href);
+  }, [router, href]);
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
-      <header className="print:hidden">
-        <h1 className="text-2xl font-semibold sm:text-3xl">
-          {dashboard?.title ?? config.appName}
-        </h1>
-        {dashboard?.intro && <p className="mt-2 text-muted-foreground">{dashboard.intro}</p>}
+    <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-8 sm:px-6 sm:py-12">
+      <header>
+        <h1 className="text-2xl font-semibold sm:text-3xl">{c.redirect.title}</h1>
+        <p className="mt-2 text-muted-foreground">{c.redirect.text}</p>
       </header>
       <OwnerLinks />
-
-      <CvMatcher />
-
-      {hasGrid && <DashboardStats />}
-      {hasMap && <MapBase points={points} />}
-      {hasGrid && <DataGrid />}
+      <Button asChild className="h-11">
+        <Link href={href}>{c.redirect.open}</Link>
+      </Button>
     </div>
   );
 }

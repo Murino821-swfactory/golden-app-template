@@ -12,7 +12,11 @@
     "landing": {
       "sections": [
         "hero",
+        "howItWorks",
         "features",
+        "useCases",
+        "comparison",
+        "faq",
         "contact",
         "cta"
       ]
@@ -20,97 +24,305 @@
     "dashboard": {},
     "authGoogle": {},
     "cta": {
-      "href": "/analyze"
+      "href": "/workspace"
     },
-    "contactForm": {}
+    "contactForm": {},
+    "useCases": {},
+    "comparison": {}
   },
   "content": {
     "en": {
-      "description": "CV Matcher scores resumes against job descriptions, highlights skill gaps, and gives HR teams and job seekers clear steps to improve.",
+      "description": "CV Matcher is a recruiting workspace for solo headhunters and small agencies: clients, jobs, a candidate pool with CV import, a six-stage pipeline, interview scorecards, placements with fees and GDPR consent — all in your browser.",
       "landing": {
-        "headline": "Know exactly how well a CV fits the role",
-        "subheadline": "For HR specialists and job seekers who upload a resume and a job description to get an instant Match Score and actionable feedback.",
+        "headline": "Run your whole recruiting desk from one screen",
+        "subheadline": "Clients, jobs, candidates, pipeline, interviews, placements and fees — for headhunters and small agencies who are done juggling spreadsheets, inboxes and sticky notes.",
+        "featuresHeading": "Everything a recruiting process needs",
         "features": [
           {
-            "icon": "📊",
-            "title": "Instant Match Score",
-            "description": "Upload a CV and a job description to receive a percentage score that shows objectively how well the candidate fits the role."
+            "icon": "funnel",
+            "title": "Pipeline board",
+            "description": "Six fixed stages from sourced to placed. Drag a card, see days in stage, spot what has stalled before the client does."
           },
           {
-            "icon": "🔍",
-            "title": "Skills Gap Analysis",
-            "description": "See which required skills are present and which are missing, so you know exactly where the candidate falls short."
+            "icon": "users",
+            "title": "Candidate pool with CV import",
+            "description": "PDF, DOC or DOCX in — name, contacts and skills out. Every candidate carries a consent record with an expiry date."
           },
           {
-            "icon": "💡",
-            "title": "Improvement Recommendations",
-            "description": "Get a prioritised list of concrete changes candidates can make to strengthen their profile before applying."
+            "icon": "search",
+            "title": "CV ↔ job matcher",
+            "description": "Score any CV against any posting in the browser, or rank the whole pool for a job and add the best fits to the pipeline."
           },
           {
-            "icon": "👥",
-            "title": "Candidate Comparison",
-            "description": "View all scored applicants side by side on one dashboard to shortlist faster and reduce subjective bias."
+            "icon": "calendar",
+            "title": "Interviews with scorecards",
+            "description": "Book the slot, export it to your calendar, rate every candidate on the same criteria and hand the client a summary."
           },
           {
-            "icon": "✓",
-            "title": "Strengths & Weaknesses",
-            "description": "Read a structured summary of each CV's strong points and gaps so every hiring decision is backed by clear evidence."
+            "icon": "wallet",
+            "title": "Placements and fees",
+            "description": "Fee from salary × percentage, guarantee window, invoice state — and revenue per client and per month in the reports."
+          },
+          {
+            "icon": "shield-check",
+            "title": "GDPR built in",
+            "description": "Consent expiry warnings, one-click data export for a candidate, anonymize instead of delete so your statistics stay true."
+          }
+        ],
+        "howItWorks": {
+          "heading": "From brief to placement in four steps",
+          "steps": [
+            {
+              "title": "Open the demo workspace",
+              "description": "No account, no setup. A sample desk with clients, jobs and candidates is waiting in your browser."
+            },
+            {
+              "title": "Take the brief",
+              "description": "Add the client and the job: salary range, must-have skills, fee and deadline. Load a posting from the job library."
+            },
+            {
+              "title": "Fill the pipeline",
+              "description": "Import CVs, let the matcher rank them, move cards through screening, submission, interview and offer."
+            },
+            {
+              "title": "Place and invoice",
+              "description": "Turn the offer into a placement: fee, start date, guarantee. Reports show time to fill and fees per client."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Questions before you try it",
+          "items": [
+            {
+              "question": "Where is my data stored?",
+              "answer": "In your own browser, on this device. Nothing is uploaded to a server. Export a JSON backup from Settings before clearing browser data or switching computers, and import it anywhere."
+            },
+            {
+              "question": "Do I need an account?",
+              "answer": "No. The workspace opens immediately with demo data. Google sign-in exists for the owner's tools, but the desk itself works without it."
+            },
+            {
+              "question": "How does the CV matching work?",
+              "answer": "A curated skill taxonomy with English and Slovak aliases, must-have versus nice-to-have detection, and a score in the browser. It is a screening aid for a recruiter's judgement, not an automated decision about a person."
+            },
+            {
+              "question": "How does it help with GDPR?",
+              "answer": "Each candidate has a consent record with an expiry date; the overview warns 30 days ahead. You can export one candidate's data, renew consent, or anonymize the record while keeping your pipeline statistics."
+            },
+            {
+              "question": "Can I replace the demo data with my own?",
+              "answer": "Yes. Settings lets you reset to demo data or start empty, then add your clients, jobs and candidates — or import a workspace file."
+            }
+          ]
+        }
+      },
+      "useCases": {
+        "heading": "Built for small desks",
+        "items": [
+          {
+            "title": "Solo headhunter",
+            "situation": "Five open searches, forty live candidates, and a client asking “where are we?” on each one — while the only system is a spreadsheet and an inbox.",
+            "action": "Open the pipeline filtered by that client's job, read days-in-stage and the last note, and send the status in a minute."
+          },
+          {
+            "title": "Two-to-five-person agency",
+            "situation": "Recruiters share candidates and clients but keep notes in their own files, so a colleague's absence stalls a search.",
+            "action": "One workspace per desk: every call, e-mail and stage change sits on the candidate's timeline, and reports show fees per client."
+          },
+          {
+            "title": "HR consultant doing occasional hiring",
+            "situation": "A client asks for help with one role; the consultant needs a quick, structured way to compare applicants fairly.",
+            "action": "Import the CVs, score them against the posting, book interviews with the same scorecard, and place the hire with the fee recorded."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Before and after",
+        "beforeLabel": "Spreadsheet and inbox",
+        "afterLabel": "CV Matcher workspace",
+        "rows": [
+          {
+            "topic": "Where a candidate stands",
+            "before": "Scroll through e-mail threads and a status column somebody forgot to update.",
+            "after": "A board with six stages, days in stage and a stale marker on every card."
+          },
+          {
+            "topic": "Screening CVs",
+            "before": "Open each file, search for keywords, keep a mental tally.",
+            "after": "Import the file, see the match score, missing must-haves and a ranked list for the job."
+          },
+          {
+            "topic": "Interviews",
+            "before": "Notes in different formats per interviewer; hard to compare two candidates.",
+            "after": "The same scorecard for every candidate on the job, average rating, recommendation and a client summary."
+          },
+          {
+            "topic": "Consent and retention",
+            "before": "Old CVs linger in folders; nobody knows when consent runs out.",
+            "after": "Expiry on every record, a 30-day warning, export or anonymize in one click."
           }
         ]
       },
       "dashboard": {
-        "title": "CV Analysis Dashboard"
+        "title": "Recruiting workspace",
+        "intro": "Your desk: today's interviews, what needs attention, the pipeline and your fees."
       },
       "cta": {
-        "label": "Analyze your first CV"
+        "label": "Open the demo workspace",
+        "title": "Try it on a desk that is already busy",
+        "subtitle": "Four clients, seven jobs, fourteen candidates and a pipeline in motion — explore, then replace it with your own."
       },
       "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "heading": "Talk to us about your agency",
+        "submitLabel": "Send message",
+        "intro": "Tell us how you recruit today and what you would need from a workspace like this."
       }
     },
     "sk": {
-      "description": "CV Matcher hodnotí životopisy voči popisu pozície, odhalí chýbajúce zručnosti a dá HR tímom aj uchádzačom jasné kroky na zlepšenie.",
+      "description": "CV Matcher je náborový workspace pre samostatných headhunterov a malé personálne agentúry: klienti, pozície, databáza kandidátov s importom CV, pipeline so šiestimi fázami, hodnotiace karty pohovorov, umiestnenia s odmenami a GDPR súhlasy — všetko vo vašom prehliadači.",
       "landing": {
-        "headline": "Zistite ihneď, ako dobre životopis sedí na pozíciu",
-        "subheadline": "Pre HR špecialistov a uchádzačov, ktorí nahrajú životopis a popis pozície a chcú okamžité skóre zhody aj konkrétnu spätnú väzbu.",
+        "headline": "Celý nábor z jednej obrazovky",
+        "subheadline": "Klienti, pozície, kandidáti, pipeline, pohovory, umiestnenia a odmeny — pre headhunterov a malé agentúry, ktoré už nechcú žonglovať s tabuľkami, e-mailami a lepiacimi papierikmi.",
+        "featuresHeading": "Všetko, čo náborový proces potrebuje",
         "features": [
           {
-            "icon": "📊",
-            "title": "Okamžité skóre zhody",
-            "description": "Nahrajte životopis a popis pozície a získate percentuálne skóre, ktoré objektívne ukáže, nakoľko kandidát spĺňa požiadavky."
+            "icon": "funnel",
+            "title": "Pipeline nástenka",
+            "description": "Šesť pevných fáz od vytipovania po umiestnenie. Presuňte kartu, sledujte dni vo fáze a odhaľte, čo stojí, skôr než si to všimne klient."
           },
           {
-            "icon": "🔍",
-            "title": "Analýza chýbajúcich zručností",
-            "description": "Uvidíte, ktoré požadované zručnosti sú prítomné a ktoré chýbajú, takže presne viete, kde kandidát zaostáva."
+            "icon": "users",
+            "title": "Databáza kandidátov s importom CV",
+            "description": "PDF, DOC alebo DOCX dnu — meno, kontakty a zručnosti von. Každý kandidát má záznam o súhlase s dátumom vypršania."
           },
           {
-            "icon": "💡",
-            "title": "Odporúčania na zlepšenie",
-            "description": "Získajte prioritizovaný zoznam konkrétnych zmien, ktoré uchádzač môže urobiť, aby posilnil svoj profil pred odoslaním."
+            "icon": "search",
+            "title": "Matcher CV ↔ pozícia",
+            "description": "Ohodnoťte akékoľvek CV voči akémukoľvek inzerátu priamo v prehliadači alebo zoraďte celú databázu pre pozíciu a najlepších pridajte do pipeline."
           },
           {
-            "icon": "👥",
-            "title": "Porovnanie kandidátov",
-            "description": "Zobrazte všetkých ohodnotených uchádzačov vedľa seba v jednom dashboarde pre rýchlejší výber bez subjektívnych skreslení."
+            "icon": "calendar",
+            "title": "Pohovory s hodnotiacimi kartami",
+            "description": "Dohodnite termín, exportujte ho do kalendára, ohodnoťte každého kandidáta podľa rovnakých kritérií a odovzdajte klientovi zhrnutie."
           },
           {
-            "icon": "✓",
-            "title": "Silné a slabé stránky",
-            "description": "Prečítajte si štruktúrovaný súhrn silných bodov a nedostatkov každého životopisu, aby každé rozhodnutie malo jasný základ."
+            "icon": "wallet",
+            "title": "Umiestnenia a odmeny",
+            "description": "Odmena z platu × percento, záručná doba, stav faktúry — a v reportoch tržby podľa klienta a mesiaca."
+          },
+          {
+            "icon": "shield-check",
+            "title": "GDPR zabudované",
+            "description": "Upozornenia na vypršanie súhlasu, export údajov kandidáta na jedno kliknutie, anonymizácia namiesto mazania, aby štatistiky zostali pravdivé."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Od zadania po umiestnenie v štyroch krokoch",
+          "steps": [
+            {
+              "title": "Otvorte demo workspace",
+              "description": "Bez účtu, bez inštalácie. Vo vašom prehliadači čaká ukážkový stôl s klientmi, pozíciami a kandidátmi."
+            },
+            {
+              "title": "Zoberte zadanie",
+              "description": "Pridajte klienta a pozíciu: platové rozpätie, povinné zručnosti, odmenu a termín. Inzerát načítajte z knižnice pozícií."
+            },
+            {
+              "title": "Naplňte pipeline",
+              "description": "Importujte CV, nechajte matcher zoradiť kandidátov a posúvajte karty cez screening, odoslanie, pohovor a ponuku."
+            },
+            {
+              "title": "Umiestnite a fakturujte",
+              "description": "Premeňte ponuku na umiestnenie: odmena, nástup, záruka. Reporty ukážu čas obsadenia a odmeny podľa klienta."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Otázky pred vyskúšaním",
+          "items": [
+            {
+              "question": "Kde sú uložené moje dáta?",
+              "answer": "Vo vašom prehliadači, na tomto zariadení. Nič sa neposiela na server. Pred vymazaním dát prehliadača alebo zmenou počítača si v Nastaveniach exportujte JSON zálohu a importujte ju kdekoľvek."
+            },
+            {
+              "question": "Potrebujem účet?",
+              "answer": "Nie. Workspace sa otvorí okamžite s demo dátami. Prihlásenie cez Google existuje pre nástroje vlastníka, ale samotný stôl funguje aj bez neho."
+            },
+            {
+              "question": "Ako funguje porovnávanie CV?",
+              "answer": "Kurátorovaná taxonómia zručností s anglickými a slovenskými aliasmi, rozlíšenie povinných a výhodou, a skóre počítané v prehliadači. Je to pomôcka pri screeningu pre úsudok recruitera, nie automatické rozhodnutie o človeku."
+            },
+            {
+              "question": "Ako pomáha s GDPR?",
+              "answer": "Každý kandidát má záznam o súhlase s dátumom vypršania; prehľad upozorní 30 dní vopred. Údaje jedného kandidáta viete exportovať, súhlas obnoviť alebo záznam anonymizovať a zachovať štatistiky pipeline."
+            },
+            {
+              "question": "Môžem demo dáta nahradiť vlastnými?",
+              "answer": "Áno. V Nastaveniach obnovíte demo dáta alebo začnete s prázdnym workspace a pridáte vlastných klientov, pozície a kandidátov — alebo importujete súbor workspace."
+            }
+          ]
+        }
+      },
+      "useCases": {
+        "heading": "Stavané pre malé stoly",
+        "items": [
+          {
+            "title": "Samostatný headhunter",
+            "situation": "Päť otvorených searchov, štyridsať živých kandidátov a klient, ktorý sa pri každom pýta „kde sme?“ — pričom jediný systém je tabuľka a e-mail.",
+            "action": "Otvorte pipeline filtrovanú podľa pozície klienta, prečítajte dni vo fáze a poslednú poznámku a status pošlite do minúty."
+          },
+          {
+            "title": "Agentúra s dvoma až piatimi ľuďmi",
+            "situation": "Recruiteri zdieľajú kandidátov a klientov, ale poznámky majú každý vo vlastných súboroch, takže neprítomnosť kolegu zastaví search.",
+            "action": "Jeden workspace na stôl: každý telefonát, e-mail a zmena fázy je v histórii kandidáta a reporty ukazujú odmeny podľa klienta."
+          },
+          {
+            "title": "HR konzultant s občasným náborom",
+            "situation": "Klient požiada o pomoc s jednou pozíciou; konzultant potrebuje rýchly a štruktúrovaný spôsob, ako férovo porovnať uchádzačov.",
+            "action": "Importujte CV, ohodnoťte ich voči inzerátu, dohodnite pohovory s rovnakou hodnotiacou kartou a umiestnite kandidáta so zaznamenanou odmenou."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Predtým a potom",
+        "beforeLabel": "Tabuľka a e-mail",
+        "afterLabel": "Workspace CV Matcher",
+        "rows": [
+          {
+            "topic": "Kde kandidát stojí",
+            "before": "Prehrabávanie e-mailových vlákien a stĺpec so stavom, ktorý niekto zabudol aktualizovať.",
+            "after": "Nástenka so šiestimi fázami, dňami vo fáze a označením stojacich procesov na každej karte."
+          },
+          {
+            "topic": "Screening CV",
+            "before": "Otvoriť každý súbor, hľadať kľúčové slová, držať si počet v hlave.",
+            "after": "Importovať súbor, vidieť skóre zhody, chýbajúce povinné zručnosti a zoradený zoznam pre pozíciu."
+          },
+          {
+            "topic": "Pohovory",
+            "before": "Poznámky v inom formáte u každého, kto vedie pohovor; dvoch kandidátov je ťažké porovnať.",
+            "after": "Rovnaká hodnotiaca karta pre každého kandidáta na pozícii, priemerné hodnotenie, odporúčanie a zhrnutie pre klienta."
+          },
+          {
+            "topic": "Súhlas a uchovávanie",
+            "before": "Staré CV ležia v priečinkoch; nikto nevie, kedy vyprší súhlas.",
+            "after": "Dátum vypršania na každom zázname, upozornenie 30 dní vopred, export alebo anonymizácia na jedno kliknutie."
           }
         ]
       },
       "dashboard": {
-        "title": "Dashboard analýzy životopisov"
+        "title": "Náborový workspace",
+        "intro": "Váš stôl: dnešné pohovory, čo vyžaduje pozornosť, pipeline a vaše odmeny."
       },
       "cta": {
-        "label": "Analyzovať prvý životopis"
+        "label": "Otvoriť demo workspace",
+        "title": "Vyskúšajte to na stole, ktorý už žije",
+        "subtitle": "Štyria klienti, sedem pozícií, štrnásť kandidátov a pipeline v pohybe — preskúmajte a potom nahraďte vlastnými dátami."
       },
       "contactForm": {
-        "heading": "Napíšte nám",
-        "submitLabel": "Odoslať správu"
+        "heading": "Porozprávajme sa o vašej agentúre",
+        "submitLabel": "Odoslať správu",
+        "intro": "Napíšte nám, ako dnes robíte nábor a čo by ste od takéhoto workspace potrebovali."
       }
     }
   }
