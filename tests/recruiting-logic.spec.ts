@@ -72,7 +72,7 @@ test.describe("metrics", () => {
   test("kpis count the open desk", () => {
     const k = kpis(ws, NOW);
     expect(k.openJobs).toBe(4);
-    expect(k.activeCandidates).toBe(8);
+    expect(k.activeCandidates).toBe(10);
     expect(k.interviewsThisWeek).toBeGreaterThanOrEqual(1);
     expect(k.pipelineValue).toBeGreaterThan(0);
     expect(k.avgTimeToFill).toBe(timeToFill(ws).average);

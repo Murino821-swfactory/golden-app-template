@@ -54,11 +54,12 @@ test.describe("recruiting workspace", () => {
     await expect(drawer).toContainText("Lucia Kováčová · Product Manager");
     await expect(drawer.getByText("Not scored")).toBeVisible();
     await drawer.getByRole("button", { name: "Score with the matcher" }).click();
-    await expect(drawer.getByText(/\d+% match/)).toBeVisible();
+    await expect(drawer.getByText(/\d+% match/).first()).toBeVisible();
 
     await drawer.getByRole("button", { name: "Create placement" }).click();
     const placement = page.getByRole("dialog").filter({ hasText: "Create placement" });
     await placement.getByLabel("Agreed salary (gross, yearly)").fill("52000");
+    await placement.getByLabel("Fee %").fill("20");
     await expect(placement).toContainText("10,400");
     await placement.getByRole("button", { name: "Place candidate" }).click();
     await expect(page.getByRole("dialog").first()).toContainText("Placed");
@@ -74,8 +75,9 @@ test.describe("recruiting workspace", () => {
     await expect(consent).not.toContainText("expires in");
     await expect(consent).toContainText("Consent granted");
 
+    // The first open job she is not in yet: the backend role (she already sits in Data Engineer).
     await drawer.getByRole("button", { name: "Add to pipeline" }).click();
-    await expect(drawer.getByText("Frontend Developer (React)")).toBeVisible();
+    await expect(drawer.getByRole("button", { name: /Senior Backend Engineer/ })).toBeVisible();
   });
 
   test("a new candidate is created from an uploaded CV with fields pre-filled", async ({ page }) => {
@@ -94,7 +96,8 @@ test.describe("recruiting workspace", () => {
     const drawer = page.getByRole("dialog");
     await drawer.getByRole("button", { name: "Find matches" }).click();
     const matches = drawer.getByTestId("job-matches");
-    await expect(matches.locator("li").first()).toContainText("Dávid Mlynár");
+    // D. Mlynár was rejected for this job, so he is "in process" and not offered again.
+    await expect(matches).not.toContainText("Dávid Mlynár");
     await expect(matches.locator("li").first()).toContainText(/\d+% match/);
     const pipelineBefore = await drawer.getByTestId("job-pipeline").locator("li").count();
     await matches.locator("li").first().getByRole("button", { name: "Add" }).click();
@@ -171,7 +174,7 @@ test.describe("landing", () => {
     await page.getByRole("link", { name: "Open the demo workspace" }).first().click();
     await expect(page).toHaveURL(/\/workspace\/?$/);
     await page.goto("./");
-    await page.getByRole("link", { name: "Try the CV matcher" }).click();
+    await page.getByRole("button", { name: "Try the CV matcher" }).click();
     await expect(page).toHaveURL(/\/workspace\/matcher\/?$/);
   });
 

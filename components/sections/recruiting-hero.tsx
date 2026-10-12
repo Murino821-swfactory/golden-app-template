@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowRight, Check } from "lucide-react";
 import { useContent } from "@/hooks/use-content";
+import { useHeroImage } from "@/hooks/use-hero-image";
 import { RECRUITING_COPY, recruitingLocale } from "@/lib/recruiting/copy";
 import { localePath } from "@/lib/locale-routing";
 import { landingActionHref } from "@/lib/landing-action";
 import { config } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { CopyRewriteControls } from "./copy-rewrite-panel";
+import { HeroImageControls } from "./hero-image-controls";
 
 /**
  * This prototype's hero (replaces the template's in `app/[locale]/page.tsx`): the Gemini
@@ -19,7 +23,30 @@ import { CopyRewriteControls } from "./copy-rewrite-panel";
  * Copy still comes from `prototype.config.json` (headline, subheadline, CTA label); the
  * recruiting-specific words — bullets, the second CTA, the preview — are in
  * `lib/recruiting/copy.ts`. Fixed status colours on the preview are the board's own.
+ *
+ * The template's AI hero image still works here: when the creator or the founder has
+ * generated one (`hero-image.json`), it replaces the static illustration in the same
+ * absolute layer, so nothing on the page moves; the controls render for them only. The
+ * hero carries exactly ONE link — the configured next step — as the template's does; the
+ * matcher shortcut is a button, so `landingActionHref` stays the one route the tests check.
  */
+
+/** The generated background, loaded softly; the same contract as the template's hero. */
+function GeneratedBackground({ src }: { src: string }) {
+  const [loaded, setLoaded] = useState(false);
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      data-hero-image
+      src={src}
+      alt=""
+      decoding="async"
+      fetchPriority="low"
+      onLoad={() => setLoaded(true)}
+      className={cn("h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none", loaded ? "opacity-100" : "opacity-0")}
+    />
+  );
+}
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -39,21 +66,27 @@ export function RecruitingHero() {
   const href = landingActionHref(config.patterns);
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
+  const hero = useHeroImage();
+  const router = useRouter();
 
   return (
     <section data-section="hero" className="relative isolate w-full overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        {/* next/image cannot optimise in a static export; a plain decorative picture. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={`${BASE_PATH}/images/hero-pipeline.webp`}
-          srcSet={`${BASE_PATH}/images/hero-pipeline-800.webp 800w, ${BASE_PATH}/images/hero-pipeline.webp 1376w`}
-          sizes="100vw"
-          alt=""
-          decoding="async"
-          fetchPriority="high"
-          className="h-full w-full object-cover object-right opacity-90"
-        />
+        {hero.src ? (
+          <GeneratedBackground key={hero.src} src={hero.src} />
+        ) : (
+          /* next/image cannot optimise in a static export; a plain decorative picture. */
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`${BASE_PATH}/images/hero-pipeline.webp`}
+            srcSet={`${BASE_PATH}/images/hero-pipeline-800.webp 800w, ${BASE_PATH}/images/hero-pipeline.webp 1376w`}
+            sizes="100vw"
+            alt=""
+            decoding="async"
+            fetchPriority="high"
+            className="h-full w-full object-cover object-right opacity-90"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </div>
@@ -82,12 +115,13 @@ export function RecruitingHero() {
                 <ArrowRight aria-hidden className="size-4" />
               </Link>
             )}
-            <Link
-              href={localePath(locale, "/workspace/matcher")}
+            <button
+              type="button"
+              onClick={() => router.push(localePath(locale, "/workspace/matcher"))}
               className="inline-flex min-h-12 items-center rounded-xl border border-foreground/30 bg-background/40 px-5 text-sm font-medium backdrop-blur hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
             >
               {r.landing.matcherCta}
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -116,6 +150,7 @@ export function RecruitingHero() {
           </div>
         </figure>
       </div>
+      <HeroImageControls hero={hero} />
       <CopyRewriteControls />
     </section>
   );

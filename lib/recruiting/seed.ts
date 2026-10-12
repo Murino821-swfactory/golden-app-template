@@ -6,6 +6,7 @@
  * a placement inside its guarantee, consent about to expire. English and Slovak variants
  * share the same ids and numbers so reports read the same in both languages.
  */
+import { analyzeCv } from "@/lib/cv-analyzer";
 import {
   addDays, addMonths, emptyWorkspace, isoDate, type Activity, type Application, type ApplicationStage,
   type Candidate, type Client, type Interview, type Job, type Recommendation, type Task, type Workspace,
@@ -353,8 +354,16 @@ export function seedWorkspace(locale: L, now = new Date()): Workspace {
     anonymized: false, createdAt: at(now, c.createdDaysAgo), lastContactAt: c.lastContactDaysAgo === null ? null : at(now, c.lastContactDaysAgo, 11),
   }));
 
+  // Stored scores are the analyzer's own, so "Score with the matcher" never contradicts
+  // the card; `null` stays null (the demo keeps one unscored application on purpose).
+  const scoreOf = (a: SeedApplication): number | null => {
+    if (a.score === null) return null;
+    const cand = ws.candidates.find((c) => c.id === a.candidateId);
+    const job = ws.jobs.find((j) => j.id === a.jobId);
+    return cand && job ? (analyzeCv(cand.cvText, job.description)?.score ?? a.score) : a.score;
+  };
   ws.applications = APPLICATIONS.map<Application>((a) => ({
-    id: a.id, candidateId: a.candidateId, jobId: a.jobId, score: a.score,
+    id: a.id, candidateId: a.candidateId, jobId: a.jobId, score: scoreOf(a),
     stage: a.path[a.path.length - 1]![0],
     history: a.path.map(([stage, daysAgo]) => ({ stage, at: at(now, daysAgo, 10) })),
     rejection: a.rejection ?? null, createdAt: at(now, a.path[0]![1]),

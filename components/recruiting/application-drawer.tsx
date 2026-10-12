@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useLocale } from "next-intl";
 import { CalendarPlus, Handshake, RotateCcw, Sparkles, XCircle } from "lucide-react";
 import { analyzeCv } from "@/lib/cv-analyzer";
+import { COPY as MATCHER_COPY } from "@/lib/cv-matcher-copy";
 import { useActionLabels, useCopy, useLookups, useWorkspace } from "@/hooks/use-workspace";
 import { moveApplication, rejectApplication, reopenApplication, setApplicationScore } from "@/lib/recruiting/actions";
 import { REJECTION_REASONS, STAGES, fullName, type RejectionReason, type Stage } from "@/lib/recruiting/model";
@@ -25,6 +26,7 @@ export function ApplicationDrawer({ applicationId, open, onOpenChange }: { appli
   const labels = useActionLabels();
   const lookups = useLookups(ws);
   const now = useNow();
+  const m = MATCHER_COPY[locale === "sk" ? "sk" : "en"];
   const app = applicationId ? lookups.application(applicationId) : undefined;
   const candidate = app ? lookups.candidate(app.candidateId) : undefined;
   const job = app ? lookups.job(app.jobId) : undefined;
@@ -159,11 +161,11 @@ export function ApplicationDrawer({ applicationId, open, onOpenChange }: { appli
             {analysis && (
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <p className="mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">{analysis.matched.length} · {c.jobs.detail.mustHave}</p>
+                  <p className="mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">{analysis.matched.length} · {m.matched}</p>
                   <Chips items={analysis.matched.map((h) => h.skill.name)} tone="good" max={8} />
                 </div>
                 <div>
-                  <p className="mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">{analysis.missing.length} · {c.jobs.detail.requirements}</p>
+                  <p className="mb-1.5 text-xs uppercase tracking-wide text-muted-foreground">{analysis.missing.length} · {m.missing}</p>
                   <Chips items={analysis.missing.map((h) => h.skill.name)} tone="bad" max={8} />
                 </div>
               </div>
