@@ -54,7 +54,12 @@ export function ResearchArchive({ locale }: { locale: Locale }) {
   const [revision, setRevision] = useState(0);
   useEffect(() => {
     let cancelled = false;
-    store.list().then(rows => { if (!cancelled) { setRecords(rows); setState("ready"); } }).catch(() => { if (!cancelled) setState("failed"); });
+    store.list().then(rows => {
+      if (cancelled) return;
+      setRecords(rows); setState("ready");
+      const open = new URLSearchParams(window.location.search).get("open");
+      if (open && rows.some(r => r.id === open)) setSelected(open);
+    }).catch(() => { if (!cancelled) setState("failed"); });
     return () => { cancelled = true; };
   }, [store, revision]);
   const current = records.find(r => r.id === selected);
