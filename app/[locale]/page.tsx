@@ -1,12 +1,12 @@
 import { type ComponentType } from "react";
-import { HeroSection } from "@/components/sections/hero";
+import { RealEstateHero } from "@/components/sections/realestate-hero";
+import { RealEstateCta } from "@/components/sections/realestate-cta";
 import { FeaturesSection } from "@/components/sections/features";
 import { HowItWorksSection } from "@/components/sections/how-it-works";
 import { PricingSection } from "@/components/sections/pricing";
 import { TestimonialsSection } from "@/components/sections/testimonials";
 import { FaqSection } from "@/components/sections/faq";
 import { ContactSection } from "@/components/sections/contact";
-import { CtaSection } from "@/components/sections/cta";
 import { UseCasesSection } from "@/components/sections/use-cases";
 import { ComparisonSection } from "@/components/sections/comparison";
 import { ListingsSection } from "@/components/sections/listings";
@@ -23,15 +23,17 @@ import { config } from "@/lib/prototype-config";
 // thing that decides what renders here.
 const SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 
+// realitny-makler: the hero (deal rail + listing dossier) and the closing band (plans for
+// agents and agencies) are this prototype's own; every other section is the template's.
 const SECTION_REGISTRY: Record<string, ComponentType> = {
-  hero: HeroSection,
+  hero: RealEstateHero,
   features: FeaturesSection,
   howItWorks: HowItWorksSection,
   pricing: PricingSection,
   testimonials: TestimonialsSection,
   faq: FaqSection,
   contact: ContactSection,
-  cta: CtaSection,
+  cta: RealEstateCta,
   useCases: UseCasesSection,
   comparison: ComparisonSection,
   listings: ListingsSection,

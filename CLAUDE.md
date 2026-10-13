@@ -9,6 +9,24 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 > history until they are rewritten. What is current: the structure table, the config
 > contract, the theming section and the commands.
 
+## This branch: the real estate workspace (demo/realitny-makler, 2026-10-13)
+
+This prototype carries its own product on top of the template: a browser-local workspace
+for real estate agents and agencies. Read `docs/REALESTATE_WORKSPACE.md` first.
+
+| What | Where |
+|---|---|
+| Data model, store (localStorage), actions, metrics, seed, copy (EN+SK), documents | `lib/realestate/*.ts` |
+| Views, shell, rail, UI primitives | `components/realestate/*.tsx` |
+| Routes | `app/[locale]/workspace/**` (+ `app/(default)/workspace/**` re-exports) |
+| Landing hero and closing section | `components/sections/realestate-hero.tsx`, `realestate-cta.tsx` (registered in `app/[locale]/page.tsx`) |
+| Hooks | `hooks/use-workspace.ts`, `hooks/use-selected.ts` |
+| Images (Gemini, static WebP) | `public/images/` |
+| Tests | `tests/realestate-logic.spec.ts`, `tests/realestate.spec.ts` |
+
+Branch-side overrides of template files (keep the branch's side on a refresh conflict):
+`app/[locale]/page.tsx`, `app/[locale]/dashboard/page.tsx`, `app/globals.css`.
+
 ## Quick Reference — Which Files to Edit
 
 | Feature Type | Files to Change |
