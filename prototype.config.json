@@ -6,556 +6,344 @@
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "honey-tan-jet-black"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
+        "howItWorks",
         "features",
-        "listings",
+        "useCases",
+        "comparison",
+        "faq",
         "contact",
         "cta"
       ],
       "presentation": "document"
     },
     "authGoogle": {},
-    "dashboard": {
-      "kpis": [
-        {
-          "id": "totalInquiries",
-          "field": "*",
-          "agg": "count"
-        },
-        {
-          "id": "newInquiries",
-          "field": "status",
-          "agg": "share",
-          "value": "new"
-        },
-        {
-          "id": "closedInquiries",
-          "field": "status",
-          "agg": "share",
-          "value": "closed"
-        }
-      ]
+    "dashboard": {},
+    "cta": {
+      "href": "/workspace"
     },
     "contactForm": {
-      "phone": "required"
+      "phone": "optional"
     },
-    "dataGrid": {
-      "entity": {
-        "key": "inquiry",
-        "fields": [
-          {
-            "key": "propertyName",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "clientName",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "clientPhone",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "clientEmail",
-            "type": "text"
-          },
-          {
-            "key": "receivedDate",
-            "type": "date"
-          },
-          {
-            "key": "status",
-            "type": "select",
-            "options": [
-              "new",
-              "inProgress",
-              "closed"
-            ],
-            "required": true
-          }
-        ]
-      },
-      "boardBy": "status"
-    },
-    "listings": {
-      "categories": [
-        "apartment",
-        "house",
-        "land"
-      ],
-      "attributes": [
-        {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
-        }
-      ],
-      "currency": "EUR",
-      "items": [
-        {
-          "id": "apt-1",
-          "category": "apartment",
-          "price": 189000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 65,
-            "rooms": 2
-          },
-          "location": {
-            "lat": 48.1436,
-            "lng": 17.1075
-          }
-        },
-        {
-          "id": "apt-2",
-          "category": "apartment",
-          "price": 215000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 82,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.138,
-            "lng": 17.15
-          }
-        },
-        {
-          "id": "apt-3",
-          "category": "apartment",
-          "price": 95000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 42,
-            "rooms": 1
-          },
-          "location": {
-            "lat": 48.7163,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "house-1",
-          "category": "house",
-          "price": 320000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 145,
-            "rooms": 4
-          },
-          "location": {
-            "lat": 48.2186,
-            "lng": 17.3719
-          }
-        },
-        {
-          "id": "house-2",
-          "category": "house",
-          "price": 285000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 180,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.377,
-            "lng": 17.587
-          }
-        },
-        {
-          "id": "land-1",
-          "category": "land",
-          "price": 45000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 850
-          },
-          "location": {
-            "lat": 48.4344,
-            "lng": 17.0194
-          }
-        },
-        {
-          "id": "land-2",
-          "category": "land",
-          "price": 68000,
-          "pricePeriod": "once",
-          "attributes": {
-            "area": 1200
-          },
-          "location": {
-            "lat": 48.3312,
-            "lng": 17.3073
-          }
-        }
-      ]
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.7,
-        "lng": 19.5
-      },
-      "zoom": 8
-    },
-    "cta": {
-      "href": "#contact"
-    }
+    "useCases": {},
+    "comparison": {}
   },
   "content": {
     "en": {
-      "description": "Realitný maklér – browse apartments, houses and plots on an interactive map and send an inquiry directly from the listing card.",
+      "description": "Workspace for real estate agents and agencies: listings, clients, demand matching, deals from offer to keys, leases, AML/GDPR, commissions and reports.",
       "landing": {
-        "headline": "Find your next home on the map",
-        "subheadline": "Property seekers in Slovakia browse available apartments, houses and plots on a live map and send their inquiry in one click.",
-        "featuresHeading": "Everything you need to find a property",
+        "headline": "Every listing, client and deal — from the first inquiry to the keys",
+        "subheadline": "A workspace for real estate agents and agencies in Slovakia: properties, clients, demand matching, viewings, deals with checklists, leases, contracts, AML and GDPR records, commissions and the owner's reports.",
+        "featuresHeading": "Everything a sale or a lease needs",
         "features": [
           {
-            "icon": "map-pin",
-            "title": "Properties on the map",
-            "description": "Every listing is pinned on an interactive map so you can see exactly where each property stands."
+            "icon": "house",
+            "title": "Listings with compliance",
+            "description": "Facts, cadastre, documents, energy certificate, exclusivity and the portals each listing is live on — with warnings before something goes live without them."
           },
           {
-            "icon": "funnel",
-            "title": "Filter by type and price",
-            "description": "Narrow results to apartments, houses or plots and set a price range to see only what fits your budget."
+            "icon": "users",
+            "title": "Clients with GDPR and AML",
+            "description": "Owners, buyers, landlords and tenants. Consent with an expiry, one-click data export, and the identification Act 297/2008 asks of every agent before a deal."
           },
           {
-            "icon": "message-square",
-            "title": "Inquire from the card",
-            "description": "Send a question about a specific property from its card — the broker receives your name, phone number and the property title by email."
+            "icon": "target",
+            "title": "Demand matched to supply",
+            "description": "Every inquiry scored against your portfolio on type, location, budget, rooms, area and must-haves; the unanswered ones flagged after your response time."
           },
           {
-            "icon": "briefcase",
-            "title": "Broker dashboard",
-            "description": "After sign-in the broker sees all current listings and incoming inquiries in one place, with no need to switch between tools."
+            "icon": "route",
+            "title": "Deals on a rail",
+            "description": "Offer → reservation → contracts → financing → cadastre → handover. Each station has its checklist; a signed document ticks it; nothing is forgotten before the keys."
+          },
+          {
+            "icon": "calendar",
+            "title": "Viewings and leases",
+            "description": "An agenda with calendar export and outcomes; leases with rent payments, deposits, handover protocols with meter readings and renewal reminders."
+          },
+          {
+            "icon": "wallet",
+            "title": "Commissions and reports",
+            "description": "Commission, VAT and the agent's split on every deal; monthly statements per agent; the funnel, days on market, money by month and inventory for the owner."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "From the first call to the keys in four steps",
+          "steps": [
+            {
+              "title": "Open the demo workspace",
+              "description": "No account, no setup. An agency with fourteen listings, twenty clients and deals on every station is waiting in your browser."
+            },
+            {
+              "title": "List and match",
+              "description": "Add the property with its documents and portals; the inquiry arrives, gets scored against the portfolio and turns into a viewing."
+            },
+            {
+              "title": "Run the deal on the rail",
+              "description": "Offer, reservation with a deposit, contracts, mortgage, cadastre filing — each station with its checklist, AML checked before the contracts."
+            },
+            {
+              "title": "Hand over the keys and settle up",
+              "description": "Handover protocol with meter readings, commission invoiced, the agent's share on the statement, the numbers in the reports."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Questions before you try it",
+          "items": [
+            {
+              "question": "Where is my data stored?",
+              "answer": "In your own browser, on this device. Nothing is uploaded to a server. Export a JSON backup from Settings before clearing browser data or changing computers, and import it anywhere."
+            },
+            {
+              "question": "Do I need an account?",
+              "answer": "No. The workspace opens immediately with demo data. Google sign-in exists for the owner's tools; the desk itself works without it."
+            },
+            {
+              "question": "Is it for a solo agent or for an agency?",
+              "answer": "Both. Switch the mode in Settings: Solo hides the team features; Agency adds colleagues, commission splits, statements per agent and lets the owner look at any desk."
+            },
+            {
+              "question": "What does the deal rail enforce?",
+              "answer": "Nothing by force — it shows. Each station lists what should be true before the next one (deposit received, title deed checked, mortgage approved, cadastre decision), and the overview flags stale deals and missing AML identification."
+            },
+            {
+              "question": "Does it publish to nehnutelnosti.sk or reality.sk?",
+              "answer": "The demo tracks where each listing is published and gives you portal-ready texts. The XML feed export to the portals is the integration step that follows."
+            },
+            {
+              "question": "Are the contract templates legally valid?",
+              "answer": "They are demo drafts filled with the deal's data, in Slovak and English, meant to show the flow. Every contract must be reviewed by a lawyer before signing."
+            }
+          ]
+        }
       },
       "dashboard": {
-        "title": "Broker dashboard",
-        "intro": "An overview of all your current listings and incoming client inquiries in one place.",
-        "kpiLabels": {
-          "totalInquiries": "Total inquiries",
-          "newInquiries": "New inquiries",
-          "closedInquiries": "Closed"
-        }
+        "title": "Real estate workspace",
+        "intro": "Your desk: today's viewings, what needs attention, the deals on the rail and your commissions."
+      },
+      "cta": {
+        "label": "Open the demo workspace",
+        "title": "Try it on a desk that is already busy",
+        "subtitle": "Fourteen listings, twenty clients, deals on every station, three leases — explore, then replace it with your own."
       },
       "contactForm": {
-        "heading": "Send us an inquiry",
-        "submitLabel": "Send inquiry",
-        "intro": "Tell us which property interests you and leave your contact details — we will get back to you as soon as possible."
+        "heading": "Talk to us about your agency",
+        "submitLabel": "Send message",
+        "intro": "Tell us how you work today — alone or with a team — and what your desk would need."
       },
-      "dataGrid": {
-        "entityLabel": "Inquiry",
-        "fieldLabels": {
-          "propertyName": "Property",
-          "clientName": "Client name",
-          "clientPhone": "Phone",
-          "clientEmail": "Email",
-          "receivedDate": "Date received",
-          "status": "Status"
-        },
-        "sampleRecords": [
+      "useCases": {
+        "heading": "Who it is for",
+        "items": [
           {
-            "propertyName": "2-room apartment, Bratislava Old Town",
-            "clientName": "Martin Kováč",
-            "clientPhone": "+421 900 111 222",
-            "clientEmail": "m.kovac@example.com",
-            "receivedDate": "2026-10-08",
-            "status": "new"
+            "title": "Solo agent",
+            "situation": "You carry a dozen listings and a phone full of inquiries, and the reservation deadline is in a notebook.",
+            "action": "Match demand to listings, plan viewings, run each deal on the rail and keep AML and GDPR records without an assistant."
           },
           {
-            "propertyName": "Family house, Senec",
-            "clientName": "Jana Novotná",
-            "clientPhone": "+421 900 333 444",
-            "clientEmail": "j.novotna@example.com",
-            "receivedDate": "2026-09-25",
-            "status": "inProgress"
+            "title": "Agency with several agents",
+            "situation": "The owner wants to know who carries what, which deals have stalled and what the commission statements look like.",
+            "action": "Work as any colleague, see the whole pipeline, split commissions by agent and read the monthly reports."
           },
           {
-            "propertyName": "Building plot, Modra area",
-            "clientName": "Peter Horváth",
-            "clientPhone": "+421 900 555 666",
-            "clientEmail": "p.horvath@example.com",
-            "receivedDate": "2026-09-15",
-            "status": "closed"
+            "title": "Rentals desk",
+            "situation": "Dozens of tenancies: who paid, whose lease ends in two months, what the meters showed at move-in.",
+            "action": "Track rent payments, protocols with meter readings, deposits and renewals per lease."
+          },
+          {
+            "title": "Developer's units",
+            "situation": "A building's units go on the market in waves, each with its documents, photos and energy certificate.",
+            "action": "Keep units in preparation until their documents are complete, then publish to the portals from one matrix."
           }
         ]
       },
-      "listings": {
-        "heading": "Current property listings",
-        "intro": "Browse our available apartments, houses and building plots across Slovakia. Click any card to learn more or send an inquiry directly.",
-        "notice": "These listings are illustrative examples — contact us to see the agency's actual live offers.",
-        "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "land": "Plot"
-        },
-        "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
-        },
-        "inquireLabel": "Send inquiry",
-        "items": {
-          "apt-1": {
-            "title": "2-room apartment, Bratislava Old Town",
-            "summary": "Bright two-room apartment on the third floor of a well-maintained building in the historic centre, with a balcony overlooking a quiet courtyard.",
-            "highlights": [
-              "Balcony",
-              "Third floor",
-              "City centre",
-              "Available immediately"
-            ]
+      "comparison": {
+        "heading": "Today versus with the workspace",
+        "beforeLabel": "Today",
+        "afterLabel": "With the workspace",
+        "rows": [
+          {
+            "topic": "Inquiries",
+            "before": "Portal e-mails, calls and notes in three places; the fast ones get an answer, the rest wait.",
+            "after": "Every inquiry in one list with a response-time flag and a score against your listings."
           },
-          "apt-2": {
-            "title": "3-room apartment, Bratislava Ružinov",
-            "summary": "Spacious three-room flat in a popular residential district close to schools, shops and public transport, with a parking space included.",
-            "highlights": [
-              "Parking included",
-              "Near schools",
-              "Loggia",
-              "Energy class B"
-            ]
+          {
+            "topic": "Deals",
+            "before": "Deadlines in a calendar, documents in a folder, the mortgage status in a text message.",
+            "after": "One rail per deal with the checklist of each station and a warning when it stalls."
           },
-          "apt-3": {
-            "title": "1-room apartment, Košice city centre",
-            "summary": "Compact one-room apartment fully renovated in 2024, suitable for a young professional or as a buy-to-let investment in eastern Slovakia.",
-            "highlights": [
-              "Fully renovated",
-              "City centre",
-              "Low service charges",
-              "Available now"
-            ]
+          {
+            "topic": "Compliance",
+            "before": "AML forms and GDPR consents collected when someone remembers.",
+            "after": "Identification and consent on every client, flagged before the contracts and before they expire."
           },
-          "house-1": {
-            "title": "Family house, Senec",
-            "summary": "Detached four-bedroom house with a garden and garage on a quiet residential street, a short drive from Bratislava.",
-            "highlights": [
-              "Garden",
-              "Garage",
-              "Quiet street",
-              "Near motorway"
-            ]
-          },
-          "house-2": {
-            "title": "Family house, Trnava",
-            "summary": "Generous five-bedroom house with a large garden, ideal for a family looking for space within easy reach of the city centre.",
-            "highlights": [
-              "Large garden",
-              "Five bedrooms",
-              "Solar panels",
-              "Double garage"
-            ]
-          },
-          "land-1": {
-            "title": "Building plot, Malacky area",
-            "summary": "Flat building plot with planning permission for a family house; all utilities available at the plot boundary and access road in place.",
-            "highlights": [
-              "Planning permission",
-              "Utilities on boundary",
-              "Flat terrain",
-              "Access road"
-            ]
-          },
-          "land-2": {
-            "title": "Building plot, Modra area",
-            "summary": "Attractive plot in a green residential zone near vineyards, suitable for a family house or a countryside retreat.",
-            "highlights": [
-              "Green surroundings",
-              "Near vineyards",
-              "Quiet zone",
-              "Utilities nearby"
-            ]
+          {
+            "topic": "Money",
+            "before": "Commission splits in a spreadsheet at the end of the month.",
+            "after": "Commission, VAT and the agent's share on each deal; the statement per agent in one click."
           }
-        }
-      },
-      "cta": {
-        "label": "Get in touch",
-        "title": "Interested in a property?",
-        "subtitle": "Send us an inquiry and our broker will contact you with all the details you need."
+        ]
       }
     },
     "sk": {
-      "description": "Realitný maklér – prezerajte byty, domy a pozemky na interaktívnej mape a pošlite dopyt priamo z karty ponuky.",
+      "description": "Pracovný priestor pre realitných maklérov a kancelárie: ponuky, klienti, párovanie dopytov, obchody od ponuky po kľúče, prenájmy, AML/GDPR, provízie a reporty.",
       "landing": {
-        "headline": "Nájdite si bývanie na mape",
-        "subheadline": "Záujemcovia o nehnuteľnosti na Slovensku prezerajú dostupné byty, domy a pozemky na živej mape a pošlú dopyt jedným kliknutím.",
-        "featuresHeading": "Všetko pre nájdenie aj prezentáciu nehnuteľností",
+        "headline": "Každá ponuka, klient a obchod — od prvého dopytu po kľúče",
+        "subheadline": "Pracovný priestor pre realitných maklérov a kancelárie na Slovensku: nehnuteľnosti, klienti, párovanie dopytov, obhliadky, obchody s kontrolnými zoznamami, prenájmy, zmluvy, AML a GDPR záznamy, provízie a reporty pre majiteľa.",
+        "featuresHeading": "Všetko, čo predaj alebo prenájom potrebuje",
         "features": [
           {
-            "icon": "map-pin",
-            "title": "Ponuky na mape",
-            "description": "Každá ponuka je vyznačená na interaktívnej mape, takže presne vidíte, kde sa nehnuteľnosť nachádza."
+            "icon": "house",
+            "title": "Ponuky so súladom",
+            "description": "Fakty, kataster, dokumenty, energetický certifikát, výhradnosť a portály, kde je každá ponuka zverejnená — s upozornením skôr, než ide von bez nich."
           },
           {
-            "icon": "funnel",
-            "title": "Filter podľa typu a ceny",
-            "description": "Zobrazíte si len byty, domy alebo pozemky v cenovom rozsahu, ktorý vám vyhovuje."
+            "icon": "users",
+            "title": "Klienti s GDPR a AML",
+            "description": "Vlastníci, kupujúci, prenajímatelia a nájomcovia. Súhlas s platnosťou, export údajov jedným klikom a identifikácia, ktorú zákon č. 297/2008 od makléra vyžaduje pred obchodom."
           },
           {
-            "icon": "message-square",
-            "title": "Dopyt priamo z karty",
-            "description": "Pošlite otázku k vybranej nehnuteľnosti priamo z jej karty – maklér dostane vaše meno, telefón a názov ponuky e-mailom."
+            "icon": "target",
+            "title": "Dopyty spárované s ponukou",
+            "description": "Každý dopyt ohodnotený voči portfóliu podľa typu, lokality, rozpočtu, izieb, plochy a podmienok; nezodpovedané po lehote označené."
           },
           {
-            "icon": "briefcase",
-            "title": "Prehľad pre makléra",
-            "description": "Po prihlásení maklér vidí všetky aktuálne ponuky a prichádzajúce dopyty na jednom mieste bez prepínania medzi nástrojmi."
+            "icon": "route",
+            "title": "Obchody na koľaji",
+            "description": "Ponuka → rezervácia → zmluvy → financovanie → kataster → odovzdanie. Každá stanica má kontrolný zoznam; podpísaný dokument ho odškrtne; pred kľúčmi sa na nič nezabudne."
+          },
+          {
+            "icon": "calendar",
+            "title": "Obhliadky a prenájmy",
+            "description": "Agenda s exportom do kalendára a výsledkami; prenájmy s platbami nájomného, kauciou, preberacími protokolmi so stavmi meračov a pripomienkou predĺženia."
+          },
+          {
+            "icon": "wallet",
+            "title": "Provízie a reporty",
+            "description": "Provízia, DPH a deľba makléra pri každom obchode; mesačné vyúčtovanie pre každého makléra; lievik, dni v ponuke, peniaze po mesiacoch a zásoba pre majiteľa."
           }
-        ]
+        ],
+        "howItWorks": {
+          "heading": "Od prvého telefonátu po kľúče v štyroch krokoch",
+          "steps": [
+            {
+              "title": "Otvorte demo priestor",
+              "description": "Bez účtu, bez nastavovania. Vo vašom prehliadači čaká kancelária so štrnástimi ponukami, dvadsiatimi klientmi a obchodmi na každej stanici."
+            },
+            {
+              "title": "Zaevidujte a spárujte",
+              "description": "Pridajte nehnuteľnosť s dokumentmi a portálmi; príde dopyt, systém ho ohodnotí voči portfóliu a premení na obhliadku."
+            },
+            {
+              "title": "Veďte obchod po koľaji",
+              "description": "Ponuka, rezervácia s depozitom, zmluvy, hypotéka, návrh na vklad — každá stanica s kontrolným zoznamom, AML skontrolované pred zmluvami."
+            },
+            {
+              "title": "Odovzdajte kľúče a vyúčtujte",
+              "description": "Preberací protokol so stavmi meračov, vyfakturovaná provízia, podiel makléra vo vyúčtovaní, čísla v reportoch."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Otázky, než to vyskúšate",
+          "items": [
+            {
+              "question": "Kde sú uložené moje dáta?",
+              "answer": "Vo vašom prehliadači, na tomto zariadení. Nič sa neodosiela na server. Pred vymazaním dát prehliadača alebo zmenou počítača si v Nastaveniach exportujte JSON zálohu a importujte ju kdekoľvek."
+            },
+            {
+              "question": "Potrebujem účet?",
+              "answer": "Nie. Priestor sa otvorí okamžite s demo dátami. Prihlásenie cez Google existuje pre nástroje vlastníka; samotný stôl funguje bez neho."
+            },
+            {
+              "question": "Je to pre samostatného makléra alebo pre kanceláriu?",
+              "answer": "Pre oboch. Režim prepnete v Nastaveniach: Samostatný maklér skryje tímové funkcie; Realitná kancelária pridá kolegov, deľbu provízií, vyúčtovanie pre každého makléra a majiteľovi ukáže ktorýkoľvek stôl."
+            },
+            {
+              "question": "Čo koľaj obchodu vynucuje?",
+              "answer": "Nič násilím — ukazuje. Každá stanica vypíše, čo má platiť pred ďalšou (prijatý depozit, skontrolovaný list vlastníctva, schválená hypotéka, rozhodnutie katastra), a prehľad označí obchody bez pohybu a chýbajúcu AML identifikáciu."
+            },
+            {
+              "question": "Zverejňuje na nehnutelnosti.sk alebo reality.sk?",
+              "answer": "Demo sleduje, kde je každá ponuka zverejnená, a pripraví texty pre portály. Export XML feedu na portály je nasledujúci integračný krok."
+            },
+            {
+              "question": "Sú šablóny zmlúv právne záväzné?",
+              "answer": "Sú to demo návrhy vyplnené dátami obchodu, v slovenčine aj angličtine, ktoré ukazujú tok. Každú zmluvu musí pred podpisom skontrolovať advokát."
+            }
+          ]
+        }
       },
       "dashboard": {
-        "title": "Prehľad makléra",
-        "intro": "Prehľad všetkých aktuálnych ponúk a prichádzajúcich dopytov klientov na jednom mieste.",
-        "kpiLabels": {
-          "totalInquiries": "Celkovo dopytov",
-          "newInquiries": "Nové dopyty",
-          "closedInquiries": "Uzavreté"
-        }
+        "title": "Realitný pracovný priestor",
+        "intro": "Váš stôl: dnešné obhliadky, čo vyžaduje pozornosť, obchody na koľaji a vaše provízie."
+      },
+      "cta": {
+        "label": "Otvoriť demo priestor",
+        "title": "Vyskúšajte to na stole, ktorý už žije",
+        "subtitle": "Štrnásť ponúk, dvadsať klientov, obchody na každej stanici, tri prenájmy — preskúmajte a potom nahraďte vlastnými."
       },
       "contactForm": {
-        "heading": "Pošlite nám dopyt",
-        "submitLabel": "Odoslať dopyt",
-        "intro": "Napíšte, ktorá nehnuteľnosť vás zaujíma, a zanechajte kontaktné údaje – ozveme sa vám čo najskôr."
+        "heading": "Porozprávajme sa o vašej kancelárii",
+        "submitLabel": "Odoslať správu",
+        "intro": "Napíšte, ako dnes pracujete — sami alebo s tímom — a čo by váš stôl potreboval."
       },
-      "dataGrid": {
-        "entityLabel": "Dopyt",
-        "fieldLabels": {
-          "propertyName": "Nehnuteľnosť",
-          "clientName": "Meno klienta",
-          "clientPhone": "Telefón",
-          "clientEmail": "E-mail",
-          "receivedDate": "Dátum prijatia",
-          "status": "Stav"
-        },
-        "sampleRecords": [
+      "useCases": {
+        "heading": "Pre koho to je",
+        "items": [
           {
-            "propertyName": "2-izbový byt, Bratislava Staré Mesto",
-            "clientName": "Martin Kováč",
-            "clientPhone": "+421 900 111 222",
-            "clientEmail": "m.kovac@example.com",
-            "receivedDate": "2026-10-08",
-            "status": "new"
+            "title": "Samostatný maklér",
+            "situation": "Nesiete tucet ponúk a telefón plný dopytov a termín rezervácie máte v zošite.",
+            "action": "Spárujte dopyty s ponukami, naplánujte obhliadky, veďte každý obchod po koľaji a majte AML aj GDPR záznamy bez asistentky."
           },
           {
-            "propertyName": "Rodinný dom, Senec",
-            "clientName": "Jana Novotná",
-            "clientPhone": "+421 900 333 444",
-            "clientEmail": "j.novotna@example.com",
-            "receivedDate": "2026-09-25",
-            "status": "inProgress"
+            "title": "Kancelária s viacerými maklérmi",
+            "situation": "Majiteľ chce vedieť, kto čo nesie, ktoré obchody stoja a ako vyzerajú vyúčtovania provízií.",
+            "action": "Pozrite sa na stôl ktoréhokoľvek kolegu, vidíte celý pipeline, deľte provízie podľa makléra a čítajte mesačné reporty."
           },
           {
-            "propertyName": "Stavebný pozemok, okolie Modry",
-            "clientName": "Peter Horváth",
-            "clientPhone": "+421 900 555 666",
-            "clientEmail": "p.horvath@example.com",
-            "receivedDate": "2026-09-15",
-            "status": "closed"
+            "title": "Správa prenájmov",
+            "situation": "Desiatky nájmov: kto zaplatil, komu končí zmluva o dva mesiace, aké stavy ukázali merače pri nasťahovaní.",
+            "action": "Sledujte platby nájomného, protokoly so stavmi meračov, kaucie a predlžovanie pri každom nájme."
+          },
+          {
+            "title": "Byty od developera",
+            "situation": "Byty v dome idú na trh vo vlnách, každý s dokumentmi, fotografiami a energetickým certifikátom.",
+            "action": "Držte byty v príprave, kým nie sú dokumenty kompletné, potom ich zverejnite na portály z jednej matice."
           }
         ]
       },
-      "listings": {
-        "heading": "Aktuálne ponuky nehnuteľností",
-        "intro": "Prezerajte dostupné byty, domy a stavebné pozemky po celom Slovensku. Kliknite na kartu, dozviete sa viac alebo hneď pošlite dopyt.",
-        "notice": "Zobrazené ponuky sú ilustračné príklady — kontaktujte nás pre aktuálne ponuky kancelárie.",
-        "categoryLabels": {
-          "apartment": "Byt",
-          "house": "Dom",
-          "land": "Pozemok"
-        },
-        "attributeLabels": {
-          "area": "Plocha",
-          "rooms": "Izby"
-        },
-        "inquireLabel": "Poslať dopyt",
-        "items": {
-          "apt-1": {
-            "title": "2-izbový byt, Bratislava Staré Mesto",
-            "summary": "Svetlý dvojizbový byt na treťom poschodí dobre udržiavaného domu v historickom centre s balkónom s výhľadom do tichého dvora.",
-            "highlights": [
-              "Balkón",
-              "Tretie poschodie",
-              "Centrum mesta",
-              "Voľný ihneď"
-            ]
+      "comparison": {
+        "heading": "Dnes a s pracovným priestorom",
+        "beforeLabel": "Dnes",
+        "afterLabel": "S pracovným priestorom",
+        "rows": [
+          {
+            "topic": "Dopyty",
+            "before": "E-maily z portálov, hovory a poznámky na troch miestach; rýchle dostanú odpoveď, ostatné čakajú.",
+            "after": "Každý dopyt v jednom zozname s označením lehoty na odpoveď a so zhodou voči vašim ponukám."
           },
-          "apt-2": {
-            "title": "3-izbový byt, Bratislava Ružinov",
-            "summary": "Priestranný trojizbový byt v obľúbenej rezidenčnej štvrti s blízkosťou škôl, obchodov a MHD, parkovanie v cene.",
-            "highlights": [
-              "Parkovanie v cene",
-              "Blízko škôl",
-              "Lodžia",
-              "Energetická trieda B"
-            ]
+          {
+            "topic": "Obchody",
+            "before": "Termíny v kalendári, dokumenty v šanóne, stav hypotéky v SMS.",
+            "after": "Jedna koľaj na obchod s kontrolným zoznamom každej stanice a upozornením, keď stojí."
           },
-          "apt-3": {
-            "title": "1-izbový byt, Košice centrum",
-            "summary": "Kompaktný jednoizbový byt kompletne zrekonštruovaný v roku 2024, vhodný pre mladého profesionála alebo ako investičná nehnuteľnosť.",
-            "highlights": [
-              "Kompletná rekonštrukcia",
-              "Centrum mesta",
-              "Nízke poplatky",
-              "Voľný ihneď"
-            ]
+          {
+            "topic": "Súlad",
+            "before": "AML formuláre a GDPR súhlasy zbierané, keď si niekto spomenie.",
+            "after": "Identifikácia a súhlas pri každom klientovi, označené pred zmluvami a pred vypršaním."
           },
-          "house-1": {
-            "title": "Rodinný dom, Senec",
-            "summary": "Samostatne stojaci štvorizbový dom so záhradou a garážou na tichej ulici, krátka vzdialenosť autom od Bratislavy.",
-            "highlights": [
-              "Záhrada",
-              "Garáž",
-              "Tichá ulica",
-              "Blízko diaľnice"
-            ]
-          },
-          "house-2": {
-            "title": "Rodinný dom, Trnava",
-            "summary": "Veľkorysý päťizbový dom s rozľahlou záhradou ideálny pre rodinu, ktorá hľadá priestor v dosahu centra mesta.",
-            "highlights": [
-              "Veľká záhrada",
-              "Päť izieb",
-              "Solárne panely",
-              "Dvojgaráž"
-            ]
-          },
-          "land-1": {
-            "title": "Stavebný pozemok, okolie Malaciek",
-            "summary": "Rovný stavebný pozemok so stavebným povolením pre rodinný dom, všetky inžinierske siete privedené na hranicu pozemku.",
-            "highlights": [
-              "Stavebné povolenie",
-              "Siete na hranici",
-              "Rovný terén",
-              "Prístupová cesta"
-            ]
-          },
-          "land-2": {
-            "title": "Stavebný pozemok, okolie Modry",
-            "summary": "Atraktívny pozemok v zelenej rezidenčnej zóne pri viniciach, vhodný pre rodinný dom alebo víkendové bývanie.",
-            "highlights": [
-              "Zelené okolie",
-              "Blízko viníc",
-              "Tichá zóna",
-              "Siete v blízkosti"
-            ]
+          {
+            "topic": "Peniaze",
+            "before": "Deľba provízií v tabuľke na konci mesiaca.",
+            "after": "Provízia, DPH a podiel makléra pri každom obchode; vyúčtovanie pre makléra jedným klikom."
           }
-        }
-      },
-      "cta": {
-        "label": "Kontaktujte nás",
-        "title": "Máte záujem o nehnuteľnosť?",
-        "subtitle": "Pošlite dopyt a náš maklér vás kontaktuje so všetkými informáciami, ktoré potrebujete."
+        ]
       }
     }
   }
