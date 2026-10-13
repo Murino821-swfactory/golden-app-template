@@ -9,43 +9,47 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 > history until they are rewritten. What is current: the structure table, the config
 > contract, the theming section and the commands.
 
-## law-expert — the research page (this branch only, OTH-91)
+## law-expert — the lawyer's workspace (this branch only)
 
-`/research` (and `/sk/research`) is the product of this prototype; sign-in lands there.
-It has a **server half** — the only prototype that does — in factory-web
-(`functions/src/law-expert/`, function `lawExpertApi`, rewrite `/api/law-expert/**` on
-apps.tokenwise.sk). Spec: sw-factory `docs/superpowers/specs/2026-09-24-law-expert-research-design.md`.
+Since 2026-10-13 this branch is an **internal system for lawyers and law firms**, not a
+landing page with one research tab. Sign-in lands on `/dashboard`; every workspace page is
+`<AuthGuard><AppShell active=…><Page/></AppShell></AuthGuard>`, Slovak at the bare path, English
+under `/en`. Spec and research: sw-factory
+`docs/superpowers/specs/2026-10-13-law-expert-practice-system-design.md`; demo script
+`docs/runbooks/law-expert-demo-script.md`.
 
 | What | Where |
 |---|---|
-| API client (origin-relative `/api/law-expert/*`, Bearer ID token) | `lib/law-expert/api.ts`, `token.ts` |
-| Contract — a COPY of factory-web `functions/src/law-expert/types.ts`; change both | `lib/law-expert/types.ts` |
-| What the page shows (memo grouping, unsupported flags, facet shares, case record) | `lib/law-expert/view.ts` |
-| Copy, en + sk (not `messages/*.json` — those are shared chrome) | `lib/law-expert/copy.ts` |
-| Components | `components/law-expert/*` |
+| Domain model (matters, clients, deadlines, hearings, time, invoices, documents, team) | `lib/legal/types.ts` |
+| Statutory periods (CSP § 121 rules, presets with statute refs), SK days of rest 2026–27 | `lib/legal/deadlines.ts`, `lib/legal/holidays.ts`, `lib/legal/dates.ts` |
+| Advokátska tarifa 655/2004 (§ 10, § 11, § 16 ods. 3) and court fees 71/1992 | `lib/legal/tariff.ts` |
+| Money from time, WIP, receivables ageing, utilisation | `lib/legal/billing.ts` |
+| Conflict-of-interest check (loose name match) | `lib/legal/conflicts.ts` |
+| Demo seed — one invented Bratislava practice, `solo` and `firm`, dated around today | `lib/legal/seed.ts` |
+| The store — localStorage, one key, `useWorkspace()`; `installWorkspace` for tests | `lib/legal/store.ts` |
+| Copy sk + en for the workspace (not `messages/*.json`) | `lib/legal/copy.ts` |
+| Shell (sidebar ≥ lg, bottom bar on phones), UI vocabulary, `?id=` state | `components/app/shell.tsx`, `ui.tsx`, `use-query-param.ts` |
+| Pages | `components/app/pages/*.tsx`; routes `app/[locale]/<page>/` + `app/(default)/<page>/` re-exports |
+| Research (InfoSúd + NS SR, the only server half — factory-web `lawExpertApi`) | `components/law-expert/*`, `lib/law-expert/*`, archive as a third tab, `?matter=` links a saved snapshot to a matter |
+| Landing: hero with `public/law/hero.jpg` + workspace still, audiences with `hearing.jpg`/`firm.jpg` | `components/sections/hero.tsx`, `use-cases.tsx`, `workspace-preview.tsx`; copy in `prototype.config.json` |
 
-- **Dates go out as `yyyy-MM-dd`.** InfoSúd silently ignores `dd.MM.yyyy` in `vydaniaOd`
-  and returns the unfiltered set [FAKT 2026-09-25].
-- **Research, 2026-09-30:** direct search combines InfoSúd and NS SR. Explicit filters and
-  source coverage explain omissions; no hidden criminal-law/date/statute constraint. Problem
-  search compares issue and circumstances, displays a source passage and differences. A memo
-  is optional and off by default. Server-verifiable passages do not guarantee legal reasoning.
-- **NS SR § reference, 2026-09-30:** `paragraph=212` does not exclude NS SR. Its API searches
-  `§ 212` and the issue text separately; backend intersects IDs and verifies the literal
-  section in each detail. This is only a text mention, which may refer to another law.
-  Coverage and filter help make that difference visible. Region/form restrictions still
-  exclude NS SR because its API cannot honor them.
-- **Saved research:** `lib/law-expert/saved.ts` defines a versioned snapshot; `store.ts` uses
-  `demos/law-expert/research` through the shared Firebase path helper. Facts, submitted filters,
-  results, comparisons, selections and time persist even without a memo/case number. Dashboard
-  archive supports notes, reopening, deletion and repeat input. Repeat needs an explicit search
-  click, so opening an archive spends no model tokens. Snapshot limit is 700k UTF-8 bytes.
-- **Access:** prototype owner only, under existing factory-web Firestore rules. The client UID
-  query is convenience, not multi-user authorization; no rules were broadened for this feature.
-- **Tests:** `test:law-expert` exercises real components on desktop/mobile with injected API and
-  storage adapters (test-only harness, never exported). Existing static-export tests still run.
-  The backend's emulator suite verifies real rules/CRUD. Google OAuth and live production
-  writes are outside these automated tests; verify them after an approved publication.
+- **Data lives in the browser** (`law-expert.workspace.v1`): the demo never depends on a
+  network or a second user; Settings offers JSON export and a reset. The research archive is
+  the exception — it stays in Firestore (`demos/law-expert/research`, owner only). Production
+  persistence is a product decision recorded in the spec (§7), not something to bolt on here.
+- **Dates:** `todayIso()` is the one clock; the harness pins it with `setFixedToday`. Deadline
+  rules carry their statute in `DEADLINE_RULES[...].source`; the holiday table is per year and
+  tagged [OVERIŤ] — extend it every December.
+- **Palette:** `honey-tan-jet-black`; one hue, so emphasis is weight/border/surface and
+  `text-destructive` marks what is late. Never hardcode a colour.
+- **Images:** three photographs drawn once with the factory's Gemini model (cost ≈ $0.20),
+  compressed to ≤ 70 kB each in `public/law/`. Referenced with `NEXT_PUBLIC_BASE_PATH`.
+- **Tests:** `tests/legal-logic.spec.ts` (rules, seed integrity), `tests/workspace-workflow.spec.ts`
+  (real pages in the harness, `npm run test:law-expert`), `tests/law-expert.spec.ts`
+  (signed-out routes, landing promises). Google sign-in and the live research API stay
+  outside automated tests; verify them after publishing.
+- `patterns.dashboard` stays in the config for `landingActionHref`; the template's grid
+  (`dataGrid`) is gone from this branch — matters replaced the "case" entity.
 
 ## Quick Reference — Which Files to Edit
 

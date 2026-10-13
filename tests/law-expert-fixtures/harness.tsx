@@ -3,9 +3,24 @@ import { NextIntlClientProvider } from "next-intl";
 import { Research } from "../../components/law-expert/research";
 import { ResearchArchive } from "../../components/law-expert/archive";
 import { ResearchServices } from "../../components/law-expert/services";
+import { AppShell } from "../../components/app/shell";
+import { DashboardPage } from "../../components/app/pages/dashboard";
+import { MattersPage } from "../../components/app/pages/matters";
+import { ClientsPage } from "../../components/app/pages/clients";
+import { CalendarPage } from "../../components/app/pages/calendar";
+import { DeadlinesPage } from "../../components/app/pages/deadlines";
+import { HearingsPage } from "../../components/app/pages/hearings";
+import { BillingPage } from "../../components/app/pages/billing";
+import { DocumentsPage } from "../../components/app/pages/documents";
+import { TeamPage } from "../../components/app/pages/team";
+import { SettingsPage } from "../../components/app/pages/settings";
+import { installWorkspace } from "../../lib/legal/store";
+import { seedWorkspace } from "../../lib/legal/seed";
+import { setFixedToday } from "../../lib/legal/dates";
 import type { SavedResearch } from "../../lib/law-expert/saved";
 import { encodeSnapshot, decodeSnapshot } from "../../lib/law-expert/saved";
 import type { MemoResponse, SearchFilters, SearchResponse } from "../../lib/law-expert/types";
+import type { NavId } from "../../lib/legal/copy";
 const rows = (): SavedResearch[] => JSON.parse(sessionStorage.getItem("test-archive") || "[]");
 const write = (records: SavedResearch[]) => sessionStorage.setItem("test-archive", JSON.stringify(records));
 const params = new URLSearchParams(location.search), locale = params.get("lang") === "en" ? "en" : "sk";
@@ -28,6 +43,27 @@ function answer(filters: SearchFilters): SearchResponse {
   return search;
 }
 const log = (key: string, value: unknown) => sessionStorage.setItem(key, JSON.stringify([...JSON.parse(sessionStorage.getItem(key) || "[]"), value]));
+
+/** The workspace pages, under /workspace/<page>: a fixed "today" and a fresh firm seed per page load. */
+const WORKSPACE: Record<string, { nav: NavId; page: () => React.ReactElement }> = {
+  dashboard: { nav: "dashboard", page: () => <DashboardPage /> },
+  matters: { nav: "matters", page: () => <MattersPage /> },
+  clients: { nav: "clients", page: () => <ClientsPage /> },
+  calendar: { nav: "calendar", page: () => <CalendarPage /> },
+  deadlines: { nav: "deadlines", page: () => <DeadlinesPage /> },
+  hearings: { nav: "hearings", page: () => <HearingsPage /> },
+  billing: { nav: "billing", page: () => <BillingPage /> },
+  documents: { nav: "documents", page: () => <DocumentsPage /> },
+  team: { nav: "team", page: () => <TeamPage /> },
+  settings: { nav: "settings", page: () => <SettingsPage /> },
+};
+const workspaceMatch = location.pathname.match(/\/workspace\/([a-z]+)/);
+const workspace = workspaceMatch ? WORKSPACE[workspaceMatch[1]!] : undefined;
+if (workspace) {
+  setFixedToday("2026-10-13");
+  if (!params.has("keep")) installWorkspace(seedWorkspace(params.get("kind") === "solo" ? "solo" : "firm", "2026-10-13"));
+}
+
 createRoot(document.getElementById("root")!).render(<NextIntlClientProvider locale={locale} messages={{}} timeZone="Europe/Bratislava"><ResearchServices.Provider value={{
   store: {
     list: async () => rows(),
@@ -50,4 +86,6 @@ createRoot(document.getElementById("root")!).render(<NextIntlClientProvider loca
   },
   sections: async () => ({ ok: true, data: { version: "20260818", sections: HEADINGS } }),
   feedback: event => log("feedback", event),
-}}><main className="mx-auto max-w-5xl p-4">{location.pathname.endsWith("dashboard") ? <ResearchArchive locale={locale} /> : <Research />}</main></ResearchServices.Provider></NextIntlClientProvider>);
+}}>{workspace
+  ? <AppShell active={workspace.nav}>{workspace.page()}</AppShell>
+  : <main className="mx-auto max-w-5xl p-4">{location.pathname.endsWith("dashboard") ? <ResearchArchive locale={locale} /> : <Research />}</main>}</ResearchServices.Provider></NextIntlClientProvider>);

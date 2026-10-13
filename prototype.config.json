@@ -1,167 +1,327 @@
 {
   "appName": "Law expert",
   "locales": [
-    "en",
-    "sk"
+    "sk",
+    "en"
   ],
-  "defaultLocale": "en",
+  "defaultLocale": "sk",
   "theme": {
-    "colorScheme": "green"
+    "colorScheme": "honey-tan-jet-black"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
+        "useCases",
+        "howItWorks",
+        "comparison",
+        "faq",
         "cta"
-      ]
+      ],
+      "presentation": "document"
     },
     "authGoogle": {},
     "dashboard": {},
-    "dataGrid": {
-      "entity": {
-        "key": "case",
-        "fields": [
-          {
-            "key": "caseNumber",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "crimeType",
-            "type": "select",
-            "required": true,
-            "options": [
-              "Majetkový",
-              "Násilný",
-              "Hospodársky",
-              "Korupčný",
-              "Iný"
-            ]
-          },
-          {
-            "key": "courtName",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "decisionDate",
-            "type": "date",
-            "required": false
-          },
-          {
-            "key": "status",
-            "type": "select",
-            "required": true,
-            "options": [
-              "Prebieha",
-              "Uzavreté",
-              "Odvolanie"
-            ]
-          },
-          {
-            "key": "notes",
-            "type": "longtext",
-            "required": false
-          }
-        ]
-      }
-    },
+    "useCases": {},
+    "comparison": {},
     "cta": {
-      "href": "/research"
+      "href": "/dashboard"
     }
   },
   "content": {
-    "en": {
-      "description": "Search Slovak court decisions in InfoSúd and NS SR, compare legal issues and save full research with sources.",
+    "sk": {
+      "description": "Interný systém pre advokátov a kancelárie: spisy, lehoty podľa CSP, príprava na pojednávanie, výkazy a tarifa, rešerš judikatúry z InfoSúdu a NS SR.",
       "landing": {
-        "headline": "Find the right precedent before your opponent does",
-        "subheadline": "Describe your legal issue, compare published court decisions and return to your saved research with passages, sources and notes.",
+        "headline": "Celá kancelária v jednom pracovisku — od prvej konzultácie po právoplatný rozsudok",
+        "subheadline": "Spisy, lehoty, pojednávania, klienti, výkazy a rešerš judikatúry pre samostatných advokátov aj kancelárie s viacerými právnikmi. Postavené na slovenskom práve: CSP, Trestný poriadok, advokátska tarifa, InfoSúd a NS SR.",
+        "featuresHeading": "Čo pokrýva Law expert",
         "features": [
           {
-            "icon": "🔍",
-            "title": "Two public court sources",
-            "description": "Search InfoSúd and Supreme Court OpenData. Choose sources, courts and dates; any coverage limits are shown with the results."
+            "icon": "briefcase",
+            "title": "Spisy a klienti",
+            "description": "Každá vec od príjmu po archív: strany, súd, spisová značka, fáza konania, tím a odmena. Nový klient a protistrana prejdú kontrolou konfliktu záujmov skôr, než spis vznikne."
           },
           {
-            "icon": "⚖️",
-            "title": "Compare issues and circumstances",
-            "description": "See AI comparisons, material differences and passages checked against the retrieved decision text. Review the legal conclusions yourself."
+            "icon": "timer",
+            "title": "Lehoty podľa procesných predpisov",
+            "description": "Odvolanie, odpor, dovolanie, sťažnosť či správna žaloba — lehoty sa počítajú podľa § 121 CSP s posunom konca na najbližší pracovný deň a zapisujú sa priamo do spisu."
           },
           {
-            "icon": "📊",
-            "title": "Your search, visible limits",
-            "description": "Inspect the queries and source availability. Search older decisions without an automatic five-year limit."
+            "icon": "gavel",
+            "title": "Príprava na pojednávanie",
+            "description": "Jeden zväzok na pojednávanie: checklist, chronológia skutku, dôkazy a ich stav, svedkovia, argumentácia s rizikami a otázky na výsluch. Pripravenosť vidíte v percentách."
           },
           {
-            "icon": "📁",
-            "title": "Full research in your dashboard",
-            "description": "Save your problem, filters, decisions and any cited memo. Reopen the result, add notes and repeat the search without needing a case number."
+            "icon": "search",
+            "title": "Rešerš judikatúry",
+            "description": "Vyhľadávanie v InfoSúde a NS SR OpenData, porovnanie rozhodnutí s vašou právnou otázkou a uložená rešerš prepojená so spisom. Každý citát je overený v texte rozhodnutia."
+          },
+          {
+            "icon": "receipt",
+            "title": "Výkazy, tarifa a faktúry",
+            "description": "Úkony v minútach, nefakturovaná práca, faktúry z úkonov, výpočet tarifnej odmeny podľa vyhlášky 655/2004 Z. z. a súdneho poplatku podľa zákona 71/1992 Zb."
+          },
+          {
+            "icon": "users",
+            "title": "Tím a vyťaženie",
+            "description": "Partner, advokáti, koncipienti a asistenti s rolami, kapacitou a vyťažením. Kto vedie ktorý spis, kto zodpovedá za ktorú lehotu a koľko hodín je fakturovateľných."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako prebieha deň v Law expert",
+          "steps": [
+            {
+              "title": "Prijmite vec",
+              "description": "Založte spis, pridajte klienta a protistranu — kontrola konfliktu prebehne hneď pri zadávaní mien."
+            },
+            {
+              "title": "Strážte lehoty",
+              "description": "Vyberte druh lehoty a deň doručenia; aplikácia vypočíta posledný deň a zobrazí ho v prehľade aj kalendári."
+            },
+            {
+              "title": "Pripravte sa na pojednávanie",
+              "description": "Doplňte chronológiu, dôkazy, svedkov a argumenty; rešerš judikatúry prepojte so spisom."
+            },
+            {
+              "title": "Vyúčtujte prácu",
+              "description": "Zapisujte úkony, vystavte faktúru z úkonov alebo vypočítajte tarifnú odmenu a súdny poplatok."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Je to vhodné aj pre samostatného advokáta?",
+              "answer": "Áno. Režim „samostatný advokát“ zjednoduší pracovisko na jedného právnika s asistentom; tímové funkcie sa zapnú prepnutím na kanceláriu v nastaveniach."
+            },
+            {
+              "question": "Ako sa počítajú lehoty?",
+              "answer": "Podľa § 121 CSP a rovnakých pravidiel v Trestnom a Správnom súdnom poriadku: deň doručenia sa nepočíta, lehoty v mesiacoch končia rovnakým dňom v mesiaci a koniec na víkend alebo sviatok sa posúva na najbližší pracovný deň. Výsledok je orientačný — rozhoduje poučenie súdu."
+            },
+            {
+              "question": "Odkiaľ berie rešerš súdne rozhodnutia?",
+              "answer": "Z verejných zdrojov: InfoSúd (Ministerstvo spravodlivosti SR) a OpenData Najvyššieho súdu SR. Porovnanie píše umelá inteligencia, každý citát je overený v texte rozhodnutia a výstup je podklad pre advokáta, nie právna rada."
+            },
+            {
+              "question": "Kde sú uložené údaje tejto ukážky?",
+              "answer": "Demo pracovisko ukladá údaje len vo vašom prehliadači a všetky osoby a firmy v ňom sú vymyslené. Produkčná verzia ukladá údaje na serveri s prístupovými právami kancelárie a so zálohovaním."
+            },
+            {
+              "question": "Počíta aj advokátsku tarifu a súdne poplatky?",
+              "answer": "Áno — základnú sadzbu podľa hodnoty veci (§ 10), 1/13 výpočtového základu pri veciach neoceniteľných peniazmi (§ 11), režijný paušál (§ 16 ods. 3) a súdny poplatok z návrhu vrátane zníženia pri elektronickom podaní. Sumy sú orientačné."
+            }
+          ]
+        }
+      },
+      "useCases": {
+        "heading": "Pre koho je Law expert",
+        "items": [
+          {
+            "title": "Samostatný advokát",
+            "situation": "Jedna hlava drží desiatky spisov, lehôt a pojednávaní; asistent eviduje úkony a faktúry v tabuľkách.",
+            "action": "Jeden prehľad na deň: agenda, lehoty v riziku, nefakturovaná práca. Kalkulačka lehôt a tarify, rešerš judikatúry a zväzok na pojednávanie v telefóne aj na stole."
+          },
+          {
+            "title": "Advokátska kancelária",
+            "situation": "Partner, advokáti, koncipienti a office: každý vidí len svoj kúsok a vyťaženie sa odhaduje po pamäti.",
+            "action": "Spisy s vedúcim a tímom, lehoty so zodpovedným, vyťaženie proti kapacite, pohľadávky podľa splatnosti a spoločné šablóny — v jednom pracovisku s rolami."
+          },
+          {
+            "title": "Obhajca v trestnom konaní",
+            "situation": "Hlavné pojednávanie s výsluchom znalca, sťažnosť do troch pracovných dní, dôkazy vyžiadané od úradov.",
+            "action": "Príprava na pojednávanie s otázkami pre znalca, lehoty v pracovných dňoch a rešerš rozhodnutí NS SR podľa paragrafu Trestného zákona."
+          },
+          {
+            "title": "Právne poradenstvo a transakcie",
+            "situation": "Stanoviská, revízie zmlúv a prevody podielov s paušálnou odmenou, kde sa míňa čas na koordináciu.",
+            "action": "Spis typu poradenstvo s úlohami, dokumentmi vo verziách, zmluvným termínom odovzdania a faktúrou z paušálu."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Dnes a s Law expert",
+        "beforeLabel": "Dnes",
+        "afterLabel": "S Law expert",
+        "rows": [
+          {
+            "topic": "Lehoty",
+            "before": "Počítanie v hlave alebo v diári, bez ohľadu na sviatky; zodpovednosť nie je jasná.",
+            "after": "Lehota z predpisu alebo výzvy súdu, prepočítaná podľa § 121 CSP, so zodpovedným a stavom v prehľade."
+          },
+          {
+            "topic": "Pojednávanie",
+            "before": "Papierový zväzok, dôkazy v e-mailoch, otázky na poslednú chvíľu.",
+            "after": "Checklist, chronológia, dôkazy so stavom, svedkovia, argumenty a otázky na jednom mieste, s percentom pripravenosti."
+          },
+          {
+            "topic": "Judikatúra",
+            "before": "Hľadanie v niekoľkých databázach a kopírovanie citátov bez overenia.",
+            "after": "Jedno vyhľadávanie v InfoSúde a NS SR, porovnanie s otázkou a citáty overené v texte rozhodnutia, uložené pri spise."
+          },
+          {
+            "topic": "Vyúčtovanie",
+            "before": "Úkony v tabuľke, tarifa z kalkulačky na webe, faktúra ručne.",
+            "after": "Úkony pri spise, nefakturovaná práca v prehľade, faktúra z úkonov a tarifa či súdny poplatok na dva kliky."
           }
         ]
       },
       "dashboard": {
-        "title": "My Cases"
-      },
-      "dataGrid": {
-        "entityLabel": "Case",
-        "fieldLabels": {
-          "caseNumber": "Case Number",
-          "crimeType": "Crime Type",
-          "courtName": "Court",
-          "decisionDate": "Decision Date",
-          "status": "Status",
-          "notes": "Notes"
-        }
+        "title": "Prehľad",
+        "intro": "Agenda dňa, lehoty v riziku, nefakturovaná práca a vyťaženie tímu."
       },
       "cta": {
-        "label": "Start searching decisions"
+        "label": "Vyskúšať demo pracovisko",
+        "title": "Pozrite si pracovisko na vlastných očiach",
+        "subtitle": "Prihláste sa účtom Google a otvorte demo kanceláriu s vymyslenými spismi, lehotami a pojednávaniami."
       }
     },
-    "sk": {
-      "description": "Vyhľadávanie slovenských súdnych rozhodnutí v InfoSúde a NS SR, porovnanie právnych otázok a uloženie celej rešerše so zdrojmi.",
+    "en": {
+      "description": "An internal system for lawyers and law firms: matters, statutory deadlines, hearing preparation, time and tariff, case-law research from InfoSúd and NS SR.",
       "landing": {
-        "headline": "Správny precedens nájdete skôr, než ho hľadá protistrana",
-        "subheadline": "Opíšte právnu otázku, porovnajte zverejnené súdne rozhodnutia a vráťte sa k uloženej rešerši s pasážami, zdrojmi a poznámkami.",
+        "headline": "The whole practice in one workspace — from the first consultation to the final judgment",
+        "subheadline": "Matters, deadlines, hearings, clients, time and case-law research for sole practitioners and multi-lawyer firms. Built on Slovak law: the Civil Procedure Code, the Criminal Procedure Code, the lawyers' tariff, InfoSúd and the Supreme Court.",
+        "featuresHeading": "What Law expert covers",
         "features": [
           {
-            "icon": "🔍",
-            "title": "Dva verejné súdne zdroje",
-            "description": "Hľadajte v InfoSúde a OpenData Najvyššieho súdu. Vyberte zdroje, súdy a dátumy; obmedzenia pokrytia uvidíte pri výsledkoch."
+            "icon": "briefcase",
+            "title": "Matters and clients",
+            "description": "Every matter from intake to archive: parties, court, file number, stage, team and fees. A new client or opposing party passes a conflict-of-interest check before the matter exists."
           },
           {
-            "icon": "⚖️",
-            "title": "Porovnajte otázku a okolnosti",
-            "description": "Pozrite si AI porovnanie, podstatné rozdiely a pasáže overené v načítanom texte rozhodnutia. Právne závery si skontrolujte."
+            "icon": "timer",
+            "title": "Deadlines by the procedure codes",
+            "description": "Appeal, opposition, extraordinary appeal, complaint or administrative action — periods are counted per § 121 CSP with the end moved to the next working day, and saved to the matter."
           },
           {
-            "icon": "📊",
-            "title": "Viditeľné dopyty a obmedzenia",
-            "description": "Skontrolujte použité dopyty a dostupnosť zdrojov. Hľadajte aj staršie rozhodnutia bez automatického päťročného limitu."
+            "icon": "gavel",
+            "title": "Hearing preparation",
+            "description": "One binder per hearing: checklist, chronology, evidence and its status, witnesses, arguments with risks and examination questions. Readiness is shown as a percentage."
           },
           {
-            "icon": "📁",
-            "title": "Celá rešerš v dashboarde",
-            "description": "Uložte problém, filtre, rozhodnutia a prípadné stanovisko s citáciami. Výsledok znovu otvorte, doplňte poznámky a zopakujte hľadanie aj bez čísla spisu."
+            "icon": "search",
+            "title": "Case-law research",
+            "description": "Search InfoSúd and Supreme Court OpenData, compare decisions with your legal question and keep the research linked to the matter. Every quote is verified in the decision text."
+          },
+          {
+            "icon": "receipt",
+            "title": "Time, tariff and invoices",
+            "description": "Time in minutes, unbilled work, invoices from entries, the statutory tariff under Decree 655/2004 and the court fee under Act 71/1992."
+          },
+          {
+            "icon": "users",
+            "title": "Team and workload",
+            "description": "Partner, attorneys, trainees and assistants with roles, capacity and utilisation. Who leads which matter, who owns which deadline and how many hours are billable."
+          }
+        ],
+        "howItWorks": {
+          "heading": "A day in Law expert",
+          "steps": [
+            {
+              "title": "Take the matter in",
+              "description": "Open a matter, add the client and the opposing party — the conflict check runs as you type the names."
+            },
+            {
+              "title": "Guard the deadlines",
+              "description": "Pick the kind of period and the day of delivery; the app computes the last day and shows it in the overview and calendar."
+            },
+            {
+              "title": "Prepare the hearing",
+              "description": "Fill in the chronology, evidence, witnesses and arguments; link case-law research to the matter."
+            },
+            {
+              "title": "Bill the work",
+              "description": "Record time, issue an invoice from entries or compute the tariff fee and the court fee."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Frequently asked questions",
+          "items": [
+            {
+              "question": "Does it suit a sole practitioner?",
+              "answer": "Yes. The sole-practitioner mode reduces the workspace to one lawyer and an assistant; team features switch on when you change the workspace to a firm in Settings."
+            },
+            {
+              "question": "How are deadlines computed?",
+              "answer": "Per § 121 of the Civil Procedure Code and the same rules in the criminal and administrative codes: the day of delivery is not counted, periods in months end on the same day number, and an end on a weekend or holiday moves to the next working day. The result is indicative — the court's instruction prevails."
+            },
+            {
+              "question": "Where does the research get its decisions?",
+              "answer": "From public sources: InfoSúd (Ministry of Justice) and the Supreme Court's OpenData. The comparison is written by AI, every quote is verified in the decision text, and the output is a research aid for a lawyer, not legal advice."
+            },
+            {
+              "question": "Where is this demo's data stored?",
+              "answer": "The demo workspace keeps its data in your browser only, and every person and company in it is invented. The production version stores data on a server under the firm's access rules, with backups."
+            },
+            {
+              "question": "Does it compute the tariff and court fees?",
+              "answer": "Yes — the basic rate by the value of the matter (§ 10), 1/13 of the base for non-monetary matters (§ 11), the overhead flat fee (§ 16(3)) and the court fee on a claim including the e-filing reduction. Amounts are indicative."
+            }
+          ]
+        }
+      },
+      "useCases": {
+        "heading": "Who Law expert is for",
+        "items": [
+          {
+            "title": "Sole practitioner",
+            "situation": "One head holds dozens of matters, deadlines and hearings; an assistant keeps time and invoices in spreadsheets.",
+            "action": "One overview per day: agenda, deadlines at risk, unbilled work. Deadline and tariff calculators, case-law research and the hearing binder on the phone and at the desk."
+          },
+          {
+            "title": "Law firm",
+            "situation": "Partner, attorneys, trainees and office staff each see their own slice; workload is guessed from memory.",
+            "action": "Matters with a lead and a team, deadlines with an owner, utilisation against capacity, receivables by age and shared templates — one workspace with roles."
+          },
+          {
+            "title": "Criminal defence counsel",
+            "situation": "A main hearing with an expert witness, a complaint within three working days, evidence requested from authorities.",
+            "action": "Hearing preparation with questions for the expert, periods in working days and Supreme Court research by Criminal Code section."
+          },
+          {
+            "title": "Advisory and transactions",
+            "situation": "Opinions, contract reviews and share transfers on a flat fee, where time leaks into coordination.",
+            "action": "An advisory matter with tasks, versioned documents, a contractual delivery date and an invoice from the flat fee."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Today and with Law expert",
+        "beforeLabel": "Today",
+        "afterLabel": "With Law expert",
+        "rows": [
+          {
+            "topic": "Deadlines",
+            "before": "Counted in the head or a diary, holidays ignored; ownership unclear.",
+            "after": "A period from the statute or the court's request, computed per § 121 CSP, with an owner and a status in the overview."
+          },
+          {
+            "topic": "Hearings",
+            "before": "A paper binder, evidence in e-mails, questions written at the last minute.",
+            "after": "Checklist, chronology, evidence with status, witnesses, arguments and questions in one place, with a readiness percentage."
+          },
+          {
+            "topic": "Case law",
+            "before": "Searching several databases and copying quotes without verification.",
+            "after": "One search across InfoSúd and the Supreme Court, a comparison with the question and quotes verified in the decision text, saved with the matter."
+          },
+          {
+            "topic": "Billing",
+            "before": "Time in a spreadsheet, the tariff from a web calculator, invoices by hand.",
+            "after": "Time on the matter, unbilled work in the overview, an invoice from entries and the tariff or court fee in two clicks."
           }
         ]
       },
       "dashboard": {
-        "title": "Moje prípady"
-      },
-      "dataGrid": {
-        "entityLabel": "Prípad",
-        "fieldLabels": {
-          "caseNumber": "Číslo veci",
-          "crimeType": "Typ trestného činu",
-          "courtName": "Súd",
-          "decisionDate": "Dátum rozhodnutia",
-          "status": "Stav",
-          "notes": "Poznámky"
-        }
+        "title": "Overview",
+        "intro": "Today's agenda, deadlines at risk, unbilled work and team workload."
       },
       "cta": {
-        "label": "Začať vyhľadávať rozhodnutia"
+        "label": "Try the demo workspace",
+        "title": "See the workspace for yourself",
+        "subtitle": "Sign in with Google and open a demo practice with invented matters, deadlines and hearings."
       }
     }
   }

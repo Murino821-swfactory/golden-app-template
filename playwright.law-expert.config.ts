@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
-  testDir: "./tests", testMatch: "law-expert-workflow.spec.ts", workers: 1,
+  testDir: "./tests", testMatch: ["law-expert-workflow.spec.ts", "workspace-workflow.spec.ts"], workers: 1,
   use: { baseURL: "http://127.0.0.1:3107", trace: "retain-on-failure" },
   projects: [
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
