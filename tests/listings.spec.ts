@@ -194,8 +194,10 @@ test.describe("listings section", () => {
     await expect(section.locator("[data-listing]")).toHaveCount(listings!.items.length);
   });
 
+  // Same condition as the "Show on map" button in components/sections/listings.tsx: mapBase
+  // alone is not enough, an offer has to have a place (OTH-195: map on, no located offer).
   test("the map is not loaded until the visitor asks for it", async ({ page }) => {
-    test.skip(!config.patterns.listings || !config.patterns.mapBase, "listings with a map not enabled");
+    test.skip(!config.patterns.mapBase || !config.patterns.listings?.items.some((i) => i.location), "no offer on a map");
     let tiles = false;
     await page.route(/basemaps\.cartocdn\.com/, (route) => { tiles = true; void route.abort(); });
     await page.goto("./");
