@@ -8,18 +8,25 @@ This branch is one customer's app, not the template. Code specific to it:
 
 | What | Where |
 |---|---|
-| Daily five-pillar check-in (OTH-84) — public page, no sign-in | `app/[locale]/checkin/page.tsx` (bare path: re-export in `app/(default)/checkin/`) → `components/features/daily-checkin.tsx` |
+| Daily five-pillar check-in (OTH-84) — public page, no sign-in; own canonical, apple-touch-icon, `appleWebApp` | `app/[locale]/checkin/page.tsx` (bare path: re-export in `app/(default)/checkin/`) → `components/features/daily-checkin.tsx` |
+| Motivation layer (2026-10-13): shields, XP + levels, focus, comeback banner, full-day confetti, weekly recap | `components/features/daily-checkin.tsx` (UI) over pure functions in `lib/checkin-engine.ts` — everything is DERIVED from the log, nothing extra is stored |
+| Trophy case (streak tiers 3…365 per pillar and overall, six special badges) | `components/features/checkin-trophies.tsx` |
+| Share card (canvas → Web Share API with files, or download) | `components/features/checkin-share.tsx` |
+| Daily reminder (Google Calendar link + `.ics`, floating time, no push server) | `components/features/checkin-reminder.tsx`, `lib/checkin-reminder.ts` |
+| Install hint (`beforeinstallprompt` / iOS two-tap text) + web app manifest + icons | `components/features/checkin-install.tsx`, `app/manifest.ts`, `public/icons/` (drawn by `scripts/unbroken-icons.mjs`) |
 | Week radar + month heatmap (inline SVG / CSS grid, no chart library) | `components/features/checkin-charts.tsx` |
-| Engine: streaks (per pillar and all five), 7/30-day consistency, week balance, month grid, log parsing | `lib/checkin-engine.ts` |
-| localStorage store (`unbroken:checkins:v1`) via `useSyncExternalStore` | `hooks/use-checkin-log.ts` |
+| localStorage store (`unbroken:checkins:v1`) via `useSyncExternalStore`, plus cloud sync when signed in | `hooks/use-checkin-log.ts` → `lib/checkin-cloud.ts` (one doc `demos/unbroken/users/{uid}/state/checkins`, compact `encodeLog` format; `reconcile` in the engine decides merges) |
 | Every string it shows (EN default, SK) | `lib/checkin-copy.ts` |
 | Tests | `tests/checkin-engine.spec.ts` (logic, no page), `tests/checkin.spec.ts` (UI) |
 
 Pillars are Work, Fitness, Mind, Relationships, Habits (from OTH-84 — the landing
 subheadline says the same). The check-in also renders on `/dashboard`; the landing CTA
-(`patterns.cta.href`) points to `/checkin`. The Firestore `dataGrid` (a second, different
-check-in) and the `mapBase` (New York) were removed from the config with OTH-84. Header and
-footer read `config.appName`, not `messages/en.json`.
+(`patterns.cta.href`) points to `/checkin`. The Firestore `dataGrid` holds the founder's
+goals (entity `goals`); the `mapBase` was removed with OTH-84. Header and footer read
+`config.appName`, not `messages/en.json`. Cloud sync needs factory-web's `state` rule
+(`demos/{slug}/users/{uid}/state/{slot}`); without it the hook reports `unavailable` and
+keeps the device copy. Research and decisions: sw-factory
+`docs/decisions/2026-10-13-unbroken-gamification.md`.
 
 > **Staleness warning (2026-09-17).** Most of the recipes below were written for the era
 > when a Developer agent wrote code into this template per customer. That agent was
