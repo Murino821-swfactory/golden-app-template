@@ -1,6 +1,6 @@
 {
   "appName": "Unbroken",
-  "description": "Unbroken helps busy professionals track five daily life pillars with five taps, turning consistency into a habit even after a missed day.",
+  "description": "Unbroken helps busy professionals keep five daily life pillars with five taps a day. Shields cover a missed day, XP and levels show the climb, and your streak syncs to every device.",
   "theme": {
     "colorScheme": "yellow",
     "style": "bold"
@@ -14,27 +14,27 @@
         "contact"
       ],
       "headline": "One missed day won't break you.",
-      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Mind, Relationships and Habits in under ten seconds a day.",
+      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Mind, Relationships and Habits in under ten seconds a day, and let a shield cover the day you miss.",
       "features": [
         {
-          "icon": "✓",
+          "icon": "list-checks",
           "title": "Five-Pillar Check-In",
           "description": "Tap yes or no for each of your five pillars and your whole day is logged before your coffee goes cold."
         },
         {
-          "icon": "🔥",
-          "title": "Streak Per Pillar",
-          "description": "See your current run for each pillar separately, so a rough sleep night never wipes out your fitness streak."
+          "icon": "shield-check",
+          "title": "Shields Instead of Resets",
+          "description": "Every seven days in a row earns a shield. Miss a day and the shield covers it, so one missed day never breaks your streak."
         },
         {
-          "icon": "📅",
-          "title": "30-Day Calendar Grid",
-          "description": "Scan a colour-coded monthly grid to see the full picture of your consistency rather than fixating on a single missed day."
+          "icon": "trophy",
+          "title": "Levels and a Trophy Case",
+          "description": "Every tap earns XP, from Paper all the way to Unbroken. Streak milestones, perfect weeks and comebacks land in your trophy case."
         },
         {
-          "icon": "🏅",
-          "title": "Longest-Streak Badge",
-          "description": "Your personal best for each pillar stays on display even after a reset, reminding you what you are capable of."
+          "icon": "users",
+          "title": "Share, Remind, Sync",
+          "description": "Share a streak card with your people, put a daily reminder in your calendar, and find the same streak on your phone and your laptop."
         }
       ]
     },
