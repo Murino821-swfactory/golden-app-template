@@ -56,6 +56,27 @@ test.describe("real estate workspace", () => {
     await expect(drawer.getByTestId("property-portals")).toContainText("topreality.sk · Live");
   });
 
+  test("the properties map pins every listed property and a pin opens it", async ({ page }) => {
+    await fresh(page, "./workspace/properties");
+    const map = page.getByTestId("properties-map");
+    await expect(map).toBeVisible();
+    // A MapLibre marker is added per point whether or not the tiles load (offline-safe);
+    // the seed's fourteen listings all sit in towns the map knows.
+    const markers = map.locator(".maplibregl-marker");
+    await expect(markers.first()).toBeVisible();
+    expect(await markers.count()).toBe(14);
+    // The Bratislava pins overlap at the all-Slovakia fit; the easternmost one (Košice) is
+    // on its own, so clicking it proves the pin → listing wiring without a flaky hit-test.
+    let east = markers.first();
+    let eastX = -1;
+    for (let i = 0; i < 14; i += 1) {
+      const box = await markers.nth(i).boundingBox();
+      if (box && box.x > eastX) { eastX = box.x; east = markers.nth(i); }
+    }
+    await east.click();
+    await expect(page.getByTestId("property-drawer")).toBeVisible();
+  });
+
   test("the deals board has the sale stations and a card moves forward from the menu", async ({ page }) => {
     await fresh(page, "./workspace/deals");
     const board = page.getByTestId("deals-board");
