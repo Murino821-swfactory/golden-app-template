@@ -120,6 +120,7 @@ const EN = {
   properties: {
     title: "Properties", intro: "Every listing from preparation to keys: facts, documents, portals, matching demand.", add: "Add property", edit: "Edit property", empty: "No property matches the filters.",
     filters: { transaction: "Sale / rent", status: "Status", type: "Type", search: "Search title, street, district", mine: "Only my listings" },
+    map: { title: "Listings on the map", hint: "Every listing in the list with a known address — click a pin to open it." },
     columns: { property: "Property", price: "Price", size: "Size", status: "Status", portals: "Portals", agent: "Agent", days: "Days" },
     detail: {
       facts: "Facts", documents: "Documents and compliance", documentsHint: "What the listing needs before it goes live and before the contracts.", portals: "Portals", portalsHint: "Click a portal to move it off → queued → live.",
@@ -336,6 +337,7 @@ const SK: WorkspaceCopy = {
   properties: {
     title: "Nehnuteľnosti", intro: "Každá ponuka od prípravy po kľúče: fakty, dokumenty, portály, zodpovedajúce dopyty.", add: "Pridať nehnuteľnosť", edit: "Upraviť nehnuteľnosť", empty: "Filtrom nevyhovuje žiadna nehnuteľnosť.",
     filters: { transaction: "Predaj / prenájom", status: "Stav", type: "Typ", search: "Hľadať názov, ulicu, mestskú časť", mine: "Len moje ponuky" },
+    map: { title: "Nehnuteľnosti na mape", hint: "Každá ponuka zo zoznamu so známou adresou — kliknutím na bod ju otvoríte." },
     columns: { property: "Nehnuteľnosť", price: "Cena", size: "Veľkosť", status: "Stav", portals: "Portály", agent: "Maklér", days: "Dní" },
     detail: {
       facts: "Fakty", documents: "Dokumenty a súlad", documentsHint: "Čo ponuka potrebuje pred zverejnením a pred zmluvami.", portals: "Portály", portalsHint: "Kliknutím prepnete vypnuté → čaká → zverejnené.",

@@ -9,6 +9,7 @@ import { checklistTemplate, freshChecklist, fullName, stagesFor, type Deal, type
 import { seedWorkspace } from "../lib/realestate/seed";
 import { parseWorkspace } from "../lib/realestate/store";
 import { generatePayments } from "../lib/realestate/actions";
+import { propertyCoords, propertyPoints } from "../lib/realestate/geo";
 
 /**
  * The workspace's arithmetic, without a browser: matching, money, the overview's
@@ -236,6 +237,33 @@ test.describe("documents", () => {
       const rendered = renderDocument(ws, { id: "x", templateId: templateId as never, link: { kind, id: links[kind] }, status: "draft", createdAt: now.toISOString(), signedAt: null }, "sk", WORKSPACE_COPY.sk);
       expect(rendered.clauses.length, templateId).toBeGreaterThan(1);
     }
+  });
+});
+
+test.describe("the map", () => {
+  test("every seeded listing is pinned, in Slovakia, in both languages", () => {
+    for (const locale of ["en", "sk"] as const) {
+      const w = seedWorkspace(locale);
+      const points = propertyPoints(w.properties);
+      expect(points.length, locale).toBe(w.properties.length);
+      for (const p of points) {
+        expect(p.lat, p.id).toBeGreaterThan(47.5);
+        expect(p.lat, p.id).toBeLessThan(49.7);
+        expect(p.lng, p.id).toBeGreaterThan(16.5);
+        expect(p.lng, p.id).toBeLessThan(22.6);
+      }
+    }
+  });
+  test("a known town places the pin, an unknown one is left off", () => {
+    expect(propertyCoords({ id: "a", city: "Bratislava", district: "" })).not.toBeNull();
+    expect(propertyCoords({ id: "b", city: "Atlantis", district: "" })).toBeNull();
+  });
+  test("coordinates are deterministic and the offset separates two listings in one place", () => {
+    const a1 = propertyCoords({ id: "p-1", city: "Bratislava", district: "Ružinov" });
+    const a2 = propertyCoords({ id: "p-1", city: "Bratislava", district: "Ružinov" });
+    const b = propertyCoords({ id: "p-2", city: "Bratislava", district: "Ružinov" });
+    expect(a1).toEqual(a2);
+    expect(a1).not.toEqual(b);
   });
 });
 

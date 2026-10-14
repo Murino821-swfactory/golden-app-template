@@ -7,11 +7,13 @@ import { useSelected } from "@/hooks/use-selected";
 import { addProperty, setPortal, setPropertyStatus, togglePropertyDoc, updateProperty, type PropertyInput } from "@/lib/realestate/actions";
 import { formatDate, formatMoney, formatNumber } from "@/lib/realestate/format";
 import { daysOnMarket, demandsForProperty, livePortals } from "@/lib/realestate/metrics";
+import { propertyPoints } from "@/lib/realestate/geo";
 import {
   CONDITIONS, ENERGY_CLASSES, FEATURES, PORTALS, PROPERTY_STATUSES, PROPERTY_TYPES, SYNDICATION_CYCLE, TRANSACTIONS, emptyDocuments, emptyPortals, fullName,
   type Feature, type Property, type PropertyStatus, type PropertyType, type Transaction,
 } from "@/lib/realestate/model";
 import { DealForm } from "./deal-form";
+import { PropertyMap } from "./property-map";
 import { ViewingForm } from "./viewing-form";
 import { Money, PropertyFacts, PropertyStatusPill, RecordLink, ScorePill, StagePill, Timeline, useActionLabels, useAgentName, useNow } from "./shared";
 import { Checkbox, DataList, Definition, Drawer, EmptyState, Field, FormRow, PageHeader, Panel, Pill, PrimaryButton, SYNDICATION_TONE, SecondaryButton, Select, TextArea, TextInput, ToggleGroup, type Column } from "./ui";
@@ -321,6 +323,7 @@ export function Properties() {
       (!q || `${p.title} ${p.street} ${p.district} ${p.city}`.toLocaleLowerCase().includes(q))
     );
   }, [ws, transaction, status, type, mine, query, agent]);
+  const points = useMemo(() => propertyPoints(rows), [rows]);
   if (!ws) return null;
   const current = selected ? ws.properties.find((p) => p.id === selected) ?? null : null;
   const columns: Column<Property>[] = [
@@ -334,6 +337,11 @@ export function Properties() {
   return (
     <div className="space-y-6">
       <PageHeader title={c.properties.title} intro={c.properties.intro} actions={<PrimaryButton onClick={() => setEditing("new")}><Plus aria-hidden />{c.properties.add}</PrimaryButton>} />
+      {points.length > 0 && (
+        <Panel title={c.properties.map.title} hint={c.properties.map.hint} testId="properties-map">
+          <PropertyMap points={points} onSelect={setSelected} />
+        </Panel>
+      )}
       <div className="flex flex-wrap items-end gap-3">
         <Field label={c.properties.filters.search} className="min-w-56 flex-1">{(id) => <TextInput id={id} type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={c.common.search} />}</Field>
         <Field label={c.properties.filters.transaction}>{(id) => <Select id={id} value={transaction} onChange={(e) => setTransaction(e.target.value as Transaction | "all")}><option value="all">{c.common.all}</option>{TRANSACTIONS.map((t) => <option key={t} value={t}>{c.transaction[t]}</option>)}</Select>}</Field>
