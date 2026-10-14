@@ -13,6 +13,7 @@
       "sections": [
         "hero",
         "features",
+        "faq",
         "cta"
       ]
     },
@@ -76,7 +77,7 @@
   },
   "content": {
     "en": {
-      "description": "Continue keeps your AI coding agents running — monitor token quotas, manage sessions for Claude Code, Codex, and Continue, and catch rate limits before they stall your work.",
+      "description": "Continue keeps your AI coding agents running: monitor token quotas and sessions for Claude Code, Codex, and Continue, and catch rate limits early.",
       "landing": {
         "headline": "Keep every AI agent working, around the clock",
         "subheadline": "For developers running Claude Code, Codex, or Continue — monitor sessions, track token quotas, and keep the queue moving.",
@@ -111,7 +112,28 @@
             "title": "Force Resume",
             "description": "Manually trigger a quota reset or push a paused session back to active with a single action."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Frequently asked questions",
+          "items": [
+            {
+              "question": "Which AI agents can I monitor with Continue?",
+              "answer": "Continue tracks sessions for Claude Code, OpenAI Codex, and Continue. Every session shows its agent, status, tokens used, and mode in one filterable table."
+            },
+            {
+              "question": "How does Continue help me avoid hitting rate limits?",
+              "answer": "It counts down each model's 5-hour and weekly token resets and watches for HTTP 429 and 'try again at' responses, so you see a limit coming before it stalls a running session."
+            },
+            {
+              "question": "What happens when a session is paused or waiting for a reset?",
+              "answer": "Queued tasks stay assigned to their model and pick up automatically the moment the quota clears. You can also force a resume to push a paused session back to active yourself."
+            },
+            {
+              "question": "Can I keep working when the cloud quota runs out?",
+              "answer": "Yes. Switch a session between Cloud API and a local Ollama or vLLM fallback from the dashboard, so work continues while a cloud limit is resetting."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Session Overview"
@@ -132,7 +154,7 @@
       }
     },
     "es": {
-      "description": "Continue mantiene tus agentes de IA en marcha — supervisa cuotas de tokens, gestiona sesiones de Claude Code, Codex y Continue, y detecta límites de velocidad a tiempo.",
+      "description": "Continue mantiene tus agentes de IA en marcha: supervisa cuotas de tokens y sesiones de Claude Code, Codex y Continue, y detecta límites a tiempo.",
       "landing": {
         "headline": "Mantén a tus agentes de IA trabajando sin interrupciones",
         "subheadline": "Para desarrolladores que usan Claude Code, Codex o Continue: supervisa sesiones, controla cuotas de tokens y gestiona la cola de tareas.",
@@ -167,7 +189,28 @@
             "title": "Forzar reanudación",
             "description": "Activa manualmente un reset de cuota o devuelve una sesión pausada al estado activo con una sola acción."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Preguntas frecuentes",
+          "items": [
+            {
+              "question": "¿Qué agentes de IA puedo supervisar con Continue?",
+              "answer": "Continue sigue las sesiones de Claude Code, OpenAI Codex y Continue. Cada sesión muestra su agente, estado, tokens usados y modo en una única tabla filtrable."
+            },
+            {
+              "question": "¿Cómo me ayuda Continue a evitar los límites de velocidad?",
+              "answer": "Hace una cuenta atrás de los resets de tokens de 5 horas y semanal de cada modelo y vigila las respuestas HTTP 429 y los mensajes 'try again at', para que veas venir un límite antes de que detenga una sesión activa."
+            },
+            {
+              "question": "¿Qué ocurre cuando una sesión se pausa o espera un reset?",
+              "answer": "Las tareas en cola siguen asignadas a su modelo y se reanudan automáticamente en cuanto se libera la cuota. También puedes forzar una reanudación para devolver una sesión pausada al estado activo."
+            },
+            {
+              "question": "¿Puedo seguir trabajando cuando se agota la cuota de la nube?",
+              "answer": "Sí. Cambia una sesión entre Cloud API y un fallback local con Ollama o vLLM desde el dashboard, para que el trabajo continúe mientras se renueva un límite de la nube."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Vista general de sesiones"
