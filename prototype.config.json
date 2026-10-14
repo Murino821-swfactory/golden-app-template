@@ -77,7 +77,7 @@
   },
   "content": {
     "en": {
-      "description": "Continue keeps your AI coding agents running: monitor token quotas and sessions for Claude Code, Codex, and Continue, and catch rate limits early.",
+      "description": "Keep AI coding sessions in one place with Continue: record each agent, status, tokens used and cloud or local mode in a filterable session table.",
       "landing": {
         "headline": "Keep every AI agent working, around the clock",
         "subheadline": "For developers running Claude Code, Codex, or Continue — monitor sessions, track token quotas, and keep the queue moving.",
@@ -117,20 +117,20 @@
           "heading": "Frequently asked questions",
           "items": [
             {
-              "question": "Which AI agents can I monitor with Continue?",
-              "answer": "Continue tracks sessions for Claude Code, OpenAI Codex, and Continue. Every session shows its agent, status, tokens used, and mode in one filterable table."
+              "question": "Which AI coding sessions can I record?",
+              "answer": "You can record sessions for Claude Code, OpenAI Codex and Continue. The table stores the agent, status, tokens used, task and cloud or local mode. You enter these details yourself."
             },
             {
-              "question": "How does Continue help me avoid hitting rate limits?",
-              "answer": "It counts down each model's 5-hour and weekly token resets and watches for HTTP 429 and 'try again at' responses, so you see a limit coming before it stalls a running session."
+              "question": "Does this prototype automatically read agent quotas?",
+              "answer": "No. It records the token usage and status you enter. Automatic quota monitoring, reset countdowns and rate-limit detection are not connected in this prototype."
             },
             {
-              "question": "What happens when a session is paused or waiting for a reset?",
-              "answer": "Queued tasks stay assigned to their model and pick up automatically the moment the quota clears. You can also force a resume to push a paused session back to active yourself."
+              "question": "What does changing a session status do?",
+              "answer": "It updates the entry in your session table. This prototype does not run a task queue, pause coding agents or automatically restart their sessions."
             },
             {
-              "question": "Can I keep working when the cloud quota runs out?",
-              "answer": "Yes. Switch a session between Cloud API and a local Ollama or vLLM fallback from the dashboard, so work continues while a cloud limit is resetting."
+              "question": "Does choosing Local Fallback connect to a local model?",
+              "answer": "No. Cloud API and Local Fallback are labels for recording a session mode. The prototype does not start Ollama or vLLM, switch providers or execute agent tasks."
             }
           ]
         }
@@ -154,7 +154,7 @@
       }
     },
     "es": {
-      "description": "Continue mantiene tus agentes de IA en marcha: supervisa cuotas de tokens y sesiones de Claude Code, Codex y Continue, y detecta límites a tiempo.",
+      "description": "Organiza tus sesiones de programación con IA en Continue: registra el agente, estado, tokens usados y modo de nube o local en una tabla filtrable.",
       "landing": {
         "headline": "Mantén a tus agentes de IA trabajando sin interrupciones",
         "subheadline": "Para desarrolladores que usan Claude Code, Codex o Continue: supervisa sesiones, controla cuotas de tokens y gestiona la cola de tareas.",
@@ -194,20 +194,20 @@
           "heading": "Preguntas frecuentes",
           "items": [
             {
-              "question": "¿Qué agentes de IA puedo supervisar con Continue?",
-              "answer": "Continue sigue las sesiones de Claude Code, OpenAI Codex y Continue. Cada sesión muestra su agente, estado, tokens usados y modo en una única tabla filtrable."
+              "question": "¿Qué sesiones de programación con IA puedo registrar?",
+              "answer": "Puedes registrar sesiones de Claude Code, OpenAI Codex y Continue. La tabla guarda el agente, estado, tokens usados, tarea y modo de nube o local. Introduces estos datos manualmente."
             },
             {
-              "question": "¿Cómo me ayuda Continue a evitar los límites de velocidad?",
-              "answer": "Hace una cuenta atrás de los resets de tokens de 5 horas y semanal de cada modelo y vigila las respuestas HTTP 429 y los mensajes 'try again at', para que veas venir un límite antes de que detenga una sesión activa."
+              "question": "¿Este prototipo lee automáticamente las cuotas de los agentes?",
+              "answer": "No. Registra el uso de tokens y el estado que introduces. La supervisión automática de cuotas, las cuentas atrás de resets y la detección de límites no están conectadas en este prototipo."
             },
             {
-              "question": "¿Qué ocurre cuando una sesión se pausa o espera un reset?",
-              "answer": "Las tareas en cola siguen asignadas a su modelo y se reanudan automáticamente en cuanto se libera la cuota. También puedes forzar una reanudación para devolver una sesión pausada al estado activo."
+              "question": "¿Qué hace cambiar el estado de una sesión?",
+              "answer": "Actualiza la entrada en tu tabla de sesiones. Este prototipo no ejecuta una cola de tareas, pausa agentes de programación ni reinicia sus sesiones automáticamente."
             },
             {
-              "question": "¿Puedo seguir trabajando cuando se agota la cuota de la nube?",
-              "answer": "Sí. Cambia una sesión entre Cloud API y un fallback local con Ollama o vLLM desde el dashboard, para que el trabajo continúe mientras se renueva un límite de la nube."
+              "question": "¿Elegir Local Fallback conecta con un modelo local?",
+              "answer": "No. Cloud API y Local Fallback son etiquetas para registrar el modo de una sesión. El prototipo no inicia Ollama ni vLLM, cambia proveedores ni ejecuta tareas de agentes."
             }
           ]
         }
