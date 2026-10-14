@@ -4,7 +4,7 @@
  * sw-factory spec docs/superpowers/specs/2026-09-30-prototype-copy-rewrite-design.md §8.
  * The prototype's creator and the founder edit the INSTRUCTIONS, ask for a preview (one
  * model call on the factory, ~1 minute) and may use it (the factory commits the new
- * texts and republishes this page — a few minutes; the creator pays one credit).
+ * texts and republishes this page — a few minutes; the creator pays 1.1M tokens from their wallet).
  *
  * Same rule as the hero image: NEVER call the API without a signed-in user, and only where
  * factory-web routes it (`ownerActionsAvailable`) — an anonymous visitor, the sandbox smoke
@@ -240,7 +240,7 @@ export function formatSeconds(ms: number): string {
 export type CopyErrorKey =
   | "busy"
   | "limit"
-  | "noCredits"
+  | "noTokens"
   | "draftUnusable"
   | "vmUnreachable"
   | "upstream"
@@ -255,7 +255,7 @@ export type CopyErrorKey =
 const ERROR_KEYS: Record<string, CopyErrorKey> = {
   busy: "busy",
   limit: "limit",
-  "no-credits": "noCredits",
+  "no-tokens": "noTokens",
   "draft-unusable": "draftUnusable",
   "vm-unreachable": "vmUnreachable",
   upstream: "upstream",

@@ -20,10 +20,19 @@ import { appCopy } from "@/lib/legal/copy";
  * customer's name is in the footer, the `<title>` and the page (it used to be the logo).
  * The controls — palette, font, language, cart, the prototype's own sign-in — stay the
  * prototype's.
+ *
+ * The cart opens tokenwise.sk's token window (`/pricing?buy=1`): the one place tokens are
+ * bought, priced by its server; payment needs a tokenwise.sk sign-in and the tokens go
+ * to the visitor's wallet (sw-factory decision 2026-10-11-token-pricing.md, §5).
  */
 
 /** Where tokenwise.sk lives. Absolute, because a prototype is never served from it. */
 const TOKENWISE_SITE = "https://tokenwise.sk";
+
+/** The token window on tokenwise.sk, opened on arrival. */
+const TOKEN_WINDOW_URL = `${TOKENWISE_SITE}/pricing?buy=1`;
+
+const cart = { count: 0, onOpen: () => window.location.assign(TOKEN_WINDOW_URL) };
 
 /** Each language named in ITSELF: a visitor on the wrong language has to be able to read
  * the way out of it, and "Slovak" is no help to someone who only reads Slovak. */
@@ -94,6 +103,7 @@ export function Header() {
         { label: appCopy(locale).nav.settings, href: localePath(locale, "/settings") },
       ]}
       onSignOut={signOut}
+      cart={cart}
       labels={labels}
     />
   );

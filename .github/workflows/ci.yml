@@ -2,13 +2,50 @@ name: CI
 
 on:
   push:
-    branches: [main, demo/law-expert]
+    branches: [main]
   pull_request:
-    branches: [main, demo/law-expert]
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  plan:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      reused: ${{ steps.verified.outputs.verified }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify CI evidence handling
+        run: node --test scripts/ci-proof.test.mjs
+      - name: Mark this exact PR tree pending
+        if: github.event_name == 'pull_request'
+        run: node scripts/ci-proof.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_PROOF_STATE: pending
+      - id: verified
+        name: Reuse the exact PR-tested tree on main
+        if: github.event_name == 'push'
+        run: node scripts/ci-pr-verified.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
   # Static checks run once — they do not depend on which config is in place.
   quality:
+    needs: plan
+    if: needs.plan.outputs.reused != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +80,7 @@ jobs:
   # publishes only a version npm does not have yet, so an unbumped change would be merged
   # and never released.
   shared-ui-version:
+    needs: plan
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -67,13 +105,19 @@ jobs:
           fi
           echo "shared-ui $before -> $after"
 
-  # demo/law-expert has custom research pages; validate its own shipped config.
+  # A prototype differs from this repo ONLY by prototype.config.json. Building just the
+  # shipped config would prove nothing about the configs a customer can actually pick, so
+  # every one of them is built and tested here. This job IS the promise the assembly line
+  # makes: if it is green, a prototype cannot fail the build gate on its own config.
   build:
+    needs: plan
+    if: needs.plan.outputs.reused != 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        config: [default]
+        # `full` and `multilingual` both declare two locales, so both exercise locale routing.
+        config: [default, minimal, full, composed, multilingual]
     env:
       # Which config is actually on disk for this job. `composed-config.spec.ts` reads it to
       # skip the "what gets published" rule in jobs that swapped a fixture in — `full` uses
@@ -105,13 +149,43 @@ jobs:
       - name: Run E2E tests
         run: npm run test:e2e
 
-      - name: Law Expert saved research workflow
-        if: matrix.config == 'default'
-        run: npm run test:law-expert
-
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report-${{ matrix.config }}
           path: playwright-report/
           retention-days: 7
+
+  ci-result:
+    name: CI result
+    needs: [plan, quality, shared-ui-version, build]
+    if: always() && needs.plan.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Require the planned checks
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          node --input-type=module -e '
+          const n = JSON.parse(process.env.RESULTS);
+          if (n.plan.result !== "success") throw new Error("Plan failed");
+          const reused = n.plan.outputs.reused === "true";
+          for (const k of ["quality", "build"]) {
+            if (n[k].result !== (reused ? "skipped" : "success")) throw new Error(k + " failed or skipped unexpectedly");
+          }
+          if (n["shared-ui-version"].result !== (process.env.EVENT === "pull_request" ? "success" : "skipped")) throw new Error("Package version check failed");'
+      - name: Persist exact-tree verification
+        if: always() && github.event_name == 'pull_request'
+        run: node scripts/ci-proof.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CI_PROOF_STATE: ${{ job.status == 'success' && 'success' || 'failed' }}
