@@ -1,306 +1,539 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Parking",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "fresh-sky-blood-red"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
+        "useCases",
         "listings",
-        "contact",
+        "faq",
         "cta"
       ],
-      "presentation": "story"
+      "presentation": "document"
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {
-      "phone": "optional"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalAllocations",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "activeShare",
+          "field": "status",
+          "agg": "share",
+          "value": "active"
+        },
+        {
+          "id": "reservedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "reserved"
+        }
+      ]
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "allocation",
         "fields": [
           {
-            "key": "name",
+            "key": "space",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "assignee",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "department",
+            "type": "text"
+          },
+          {
+            "key": "assignedDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "active",
+              "reserved",
+              "available",
+              "expired"
+            ],
+            "required": true
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "covered",
+        "outdoor",
+        "accessible"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
+          "key": "capacity"
         }
       ],
-      "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "zone-a",
+          "category": "covered",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "capacity": 20
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "id": "zone-b",
+          "category": "outdoor",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "capacity": 45
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "zone-c",
+          "category": "outdoor",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "capacity": 30
+          }
+        },
+        {
+          "id": "zone-d",
+          "category": "accessible",
+          "attributes": {
+            "capacity": 6
           }
         }
       ]
+    },
+    "useCases": {},
+    "cta": {
+      "href": "/login"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Parking manages parking space allocation and reservations for company employees and building visitors in one place.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every parking space accounted for",
+        "subheadline": "For company employees and building visitors who need a reliable spot — Parking handles allocation and reservations in one place.",
+        "featuresHeading": "Everything you need to manage parking",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Clear space overview",
+            "description": "See which parking spaces are available, reserved or occupied at a glance."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Allocation tracking",
+            "description": "Assign spaces to specific employees or visitors and keep a complete record of every allocation."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "calendar",
+            "title": "Date-based reservations",
+            "description": "Set a start date for each allocation so the record reflects when the space was assigned."
+          },
+          {
+            "icon": "users",
+            "title": "Employees & visitors",
+            "description": "Manage long-term employee spots and short-term visitor reservations from the same screen."
+          },
+          {
+            "icon": "funnel",
+            "title": "Filter by status",
+            "description": "Filter allocations by active, reserved, available or expired to find exactly what you need."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Secure sign-in",
+            "description": "Only authorised staff can view and manage allocations, keeping your records private."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How Parking works",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Log in with your Google account to access the parking management dashboard."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Choose a space",
+              "description": "Browse available parking zones and pick the space that fits the need."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Assign it",
+              "description": "Enter the employee or visitor's name, department and assignment date, then save the record."
+            },
+            {
+              "title": "Track & update",
+              "description": "Monitor all allocations on the dashboard and update or expire them as circumstances change."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Frequently asked questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who can manage parking allocations?",
+              "answer": "Only staff who sign in with an authorised Google account can view and manage allocations. Visitors can browse available zones on the public page."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can I allocate a space for just one day?",
+              "answer": "Yes. When adding an allocation you record the assignment date, and you can update the status to expired when the visit ends."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "What happens when an allocation is no longer needed?",
+              "answer": "You update the status to expired. The space then appears as available for a new assignment."
+            },
+            {
+              "question": "Are visitor spots handled separately from employee spots?",
+              "answer": "All spots are managed in the same list. You can filter or sort by department or status to separate visitor and employee allocations."
+            },
+            {
+              "question": "Can I see all allocations in a board view?",
+              "answer": "Yes. The dashboard includes a board view grouped by status — active, reserved, available and expired — so you always have the full picture at a glance."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Parking Dashboard",
+        "intro": "An overview of all parking allocations. Assign spaces, track occupancy and update records from here.",
+        "kpiLabels": {
+          "totalAllocations": "Total allocations",
+          "activeShare": "Active",
+          "reservedShare": "Reserved"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Allocation",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "space": "Space",
+          "assignee": "Employee / Visitor",
+          "department": "Department",
+          "assignedDate": "Assigned from",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "space": "A-12",
+            "assignee": "Ján Novák",
+            "department": "IT",
+            "assignedDate": "2026-09-15",
+            "status": "active"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "space": "B-07",
+            "assignee": "Mária Kováčová",
+            "department": "Human Resources",
+            "assignedDate": "2026-10-01",
+            "status": "reserved"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "space": "C-03",
+            "assignee": "Peter Horváth",
+            "department": "Sales",
+            "assignedDate": "2026-08-20",
+            "status": "expired"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Parking zones",
+        "intro": "Browse the parking zones available at the building. Detailed space allocation is managed by authorised staff after sign-in.",
+        "notice": "These zones are illustrative examples; actual availability is managed by your facility team.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "covered": "Covered",
+          "outdoor": "Outdoor",
+          "accessible": "Accessible"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "capacity": "Spaces"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "zone-a": {
+            "title": "Zone A – Covered Parking",
+            "summary": "A sheltered multi-level covered zone close to the main entrance, suitable for regular employee allocation.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Near main entrance",
+              "Multi-level",
+              "Sheltered from weather"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "zone-b": {
+            "title": "Zone B – Outdoor East",
+            "summary": "A large open-air parking area on the east side of the building, ideal for high-capacity employee parking.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "High capacity",
+              "East side of building",
+              "Open air"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "zone-c": {
+            "title": "Zone C – Outdoor West",
+            "summary": "An outdoor parking area on the west side, used for visitor parking and overflow employee spaces.",
+            "highlights": [
+              "Visitor-friendly",
+              "West side of building",
+              "Overflow capacity"
+            ]
+          },
+          "zone-d": {
+            "title": "Zone D – Accessible Spaces",
+            "summary": "Dedicated accessible parking spaces at ground level near the building entrance.",
+            "highlights": [
+              "Ground level",
+              "Near entrance",
+              "Reserved for accessibility needs"
+            ]
           }
+        }
+      },
+      "useCases": {
+        "heading": "Who uses Parking",
+        "items": [
+          {
+            "title": "Facility manager",
+            "situation": "A facility manager needs to allocate monthly parking spots to employees across several departments.",
+            "action": "Opens the dashboard, assigns each space to the relevant employee, and tracks occupancy across zones in the board view."
+          },
+          {
+            "title": "Receptionist",
+            "situation": "A visitor is expected and needs a reserved spot for the day of their visit.",
+            "action": "Adds a short-term allocation for the visitor's name, sets today's date, and notes the space number to share at check-in."
+          },
+          {
+            "title": "Department coordinator",
+            "situation": "A coordinator needs to see which team members have an active parking allocation this month.",
+            "action": "Filters the allocation list by department and status to get an instant view of who has a space and who does not."
+          }
+        ]
+      },
+      "cta": {
+        "label": "Sign in to manage parking",
+        "title": "Take control of your parking",
+        "subtitle": "Sign in to start allocating spaces, tracking occupancy and managing reservations for your building."
+      }
+    },
+    "sk": {
+      "description": "Parking spravuje prideľovanie a rezerváciu parkovacích miest pre zamestnancov firmy a návštevníkov budovy na jednom mieste.",
+      "landing": {
+        "headline": "Každé parkovacie miesto pod kontrolou",
+        "subheadline": "Pre zamestnancov firmy a návštevníkov budovy — Parking spravuje prideľovanie a rezervácie parkovacích miest na jednom mieste.",
+        "featuresHeading": "Všetko pre správu parkovania",
+        "features": [
+          {
+            "icon": "map-pin",
+            "title": "Prehľad miest",
+            "description": "Na prvý pohľad zistíte, ktoré parkovacie miesta sú voľné, rezervované alebo obsadené."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Evidencia pridelení",
+            "description": "Prideľte miesta konkrétnym zamestnancom alebo návštevníkom a udržiavajte úplný záznam každého pridelenia."
+          },
+          {
+            "icon": "calendar",
+            "title": "Rezervácie s dátumom",
+            "description": "Nastavte dátum pridelenia, aby každý záznam presne odrážal, od kedy je miesto obsadené."
+          },
+          {
+            "icon": "users",
+            "title": "Zamestnanci aj návštevníci",
+            "description": "Spravujte dlhodobé miesta pre zamestnancov aj krátkodobé rezervácie pre návštevníkov z jednej obrazovky."
+          },
+          {
+            "icon": "funnel",
+            "title": "Filtrovanie podľa stavu",
+            "description": "Rýchlo filtrujte pridelenia podľa stavu — aktívne, rezervované, voľné alebo expirované."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Bezpečné prihlásenie",
+            "description": "Evidenciu pridelení môžu spravovať iba oprávnení pracovníci prihlásení do systému."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako Parking funguje",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa svojím Google účtom a pristúpte k správe parkovacích miest."
+            },
+            {
+              "title": "Vyberte miesto",
+              "description": "Prezrite dostupné parkovacie zóny a vyberte vhodné miesto."
+            },
+            {
+              "title": "Prideľte ho",
+              "description": "Zadajte meno zamestnanca alebo návštevníka, oddelenie a dátum pridelenia, potom uložte záznam."
+            },
+            {
+              "title": "Sledujte a aktualizujte",
+              "description": "Monitorujte všetky pridelenia na dashboarde a podľa potreby ich aktualizujte alebo označte ako expirované."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Často kladené otázky",
+          "items": [
+            {
+              "question": "Kto môže spravovať pridelenia parkovacích miest?",
+              "answer": "Pridelenia môžu spravovať iba pracovníci prihlásení prostredníctvom oprávneného Google účtu. Návštevníci si môžu prezerať dostupné zóny na verejnej stránke."
+            },
+            {
+              "question": "Môžem prideliť miesto iba na jeden deň?",
+              "answer": "Áno. Pri pridaní pridelenia zaznamenáte dátum začiatku a po skončení návštevy jednoducho zmeníte stav na expirovaný."
+            },
+            {
+              "question": "Čo sa stane, keď pridelenie prestane byť potrebné?",
+              "answer": "Zmeníte stav na expirovaný. Miesto sa potom zobrazí ako dostupné pre nové pridelenie."
+            },
+            {
+              "question": "Sú návštevnícke miesta spravované oddelene od zamestnaneckých?",
+              "answer": "Všetky miesta sú v jednom spoločnom zozname. Môžete ich filtrovať alebo triediť podľa oddelenia či stavu a ľahko tak oddeliť návštevnícke a zamestnanecké pridelenia."
+            },
+            {
+              "question": "Môžem zobraziť pridelenia v board pohľade?",
+              "answer": "Áno. Dashboard obsahuje board pohľad zoskupený podľa stavu — aktívne, rezervované, voľné a expirované — takže máte vždy kompletný prehľad na jednej obrazovke."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Správa parkovania",
+        "intro": "Prehľad všetkých pridelení parkovacích miest. Prideľujte miesta, sledujte obsadenosť a aktualizujte záznamy.",
+        "kpiLabels": {
+          "totalAllocations": "Celkové pridelenia",
+          "activeShare": "Aktívne",
+          "reservedShare": "Rezervované"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Pridelenie",
+        "fieldLabels": {
+          "space": "Miesto",
+          "assignee": "Zamestnanec / Návštevník",
+          "department": "Oddelenie",
+          "assignedDate": "Pridelené od",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "space": "A-12",
+            "assignee": "Ján Novák",
+            "department": "IT",
+            "assignedDate": "2026-09-15",
+            "status": "active"
+          },
+          {
+            "space": "B-07",
+            "assignee": "Mária Kováčová",
+            "department": "Ľudské zdroje",
+            "assignedDate": "2026-10-01",
+            "status": "reserved"
+          },
+          {
+            "space": "C-03",
+            "assignee": "Peter Horváth",
+            "department": "Obchod",
+            "assignedDate": "2026-08-20",
+            "status": "expired"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Parkovacie zóny",
+        "intro": "Prezrite parkovacie zóny dostupné pri budove. Detailné prideľovanie miest spravujú oprávnení pracovníci po prihlásení.",
+        "notice": "Tieto zóny sú ilustratívne príklady; skutočnú dostupnosť spravuje tím správy vašej budovy.",
+        "categoryLabels": {
+          "covered": "Kryté",
+          "outdoor": "Vonkajšie",
+          "accessible": "Bezbariérové"
+        },
+        "attributeLabels": {
+          "capacity": "Počet miest"
+        },
+        "items": {
+          "zone-a": {
+            "title": "Zóna A – Kryté parkovisko",
+            "summary": "Kryté viacpodlažné parkovisko v blízkosti hlavného vchodu, vhodné na pravidelné prideľovanie zamestnancom.",
+            "highlights": [
+              "Pri hlavnom vchode",
+              "Viacpodlažné",
+              "Chránené pred počasím"
+            ]
+          },
+          "zone-b": {
+            "title": "Zóna B – Vonkajšie (východ)",
+            "summary": "Rozsiahle vonkajšie parkovisko na východnej strane budovy, vhodné pre väčší počet zamestnancov.",
+            "highlights": [
+              "Vysoká kapacita",
+              "Východná strana budovy",
+              "Vonkajšie"
+            ]
+          },
+          "zone-c": {
+            "title": "Zóna C – Vonkajšie (západ)",
+            "summary": "Vonkajšie parkovisko na západnej strane budovy, využívané pre návštevníkov a záložné miesta zamestnancov.",
+            "highlights": [
+              "Vhodné pre návštevníkov",
+              "Západná strana budovy",
+              "Záložná kapacita"
+            ]
+          },
+          "zone-d": {
+            "title": "Zóna D – Bezbariérové miesta",
+            "summary": "Vyhradené bezbariérové parkovacie miesta na prízemí v blízkosti vchodu do budovy.",
+            "highlights": [
+              "Prízemie",
+              "Pri vchode do budovy",
+              "Vyhradené pre bezbariérový prístup"
+            ]
+          }
+        }
+      },
+      "useCases": {
+        "heading": "Kto používa Parking",
+        "items": [
+          {
+            "title": "Správca budovy",
+            "situation": "Správca budovy potrebuje mesačne prideliť parkovacie miesta zamestnancom z viacerých oddelení.",
+            "action": "Otvorí dashboard, pridelí každé miesto príslušnému zamestnancovi a sleduje obsadenosť v board pohľade."
+          },
+          {
+            "title": "Recepčná",
+            "situation": "Očakáva sa návštevník, ktorý potrebuje rezervované miesto na deň svojej návštevy.",
+            "action": "Pridá krátkodobé pridelenie na meno návštevníka, nastaví dnešný dátum a číslo miesta odovzdá pri príchode."
+          },
+          {
+            "title": "Koordinátor oddelenia",
+            "situation": "Koordinátor potrebuje zistiť, ktorí členovia tímu majú v tomto mesiaci aktívne parkovacie miesto.",
+            "action": "Filtruje zoznam pridelení podľa oddelenia a stavu a okamžite vidí, kto miesto má a kto nie."
+          }
+        ]
+      },
+      "cta": {
+        "label": "Prihláste sa a spravujte parkovanie",
+        "title": "Prevezmite kontrolu nad parkovaním",
+        "subtitle": "Prihláste sa a začnite prideľovať miesta, sledovať obsadenosť a spravovať rezervácie pre vašu budovu."
       }
     }
   }
