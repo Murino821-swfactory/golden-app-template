@@ -69,6 +69,31 @@ test.describe("Daily check-in", () => {
     await expect(page.getByLabel("Note for this day")).toHaveValue("Long walk after work.");
   });
 
+  test("a note survives immediate page close without blur or a debounce delay", async ({ page, context }) => {
+    await page.getByLabel("Note for this day").fill("Saved before closing");
+    // Read storage immediately: no polling that could hide a deferred save.
+    const saved = await page.evaluate(() => localStorage.getItem("unbroken:checkins:v1"));
+    expect(saved).toContain("Saved before closing");
+    const url = page.url();
+    await page.close();
+    const reopened = await context.newPage();
+    await reopened.goto(url);
+    await expect(reopened.getByLabel("Note for this day")).toHaveValue("Saved before closing");
+  });
+
+  test("notification link opens today and history switches between days and months", async ({ page }) => {
+    await page.getByRole("button", { name: "Yesterday", exact: true }).click();
+    await pillar(page, "Work").click();
+    await page.goto("./checkin?today=1#daily-form");
+    await expect(page.getByRole("button", { name: "Today", exact: true })).toHaveAttribute("aria-pressed", "true");
+    const history = page.getByTestId("checkin-history");
+    await expect(history.getByRole("columnheader", { name: "Note", exact: true })).toBeVisible();
+    await history.getByRole("button", { name: "Months", exact: true }).click();
+    await expect(history.locator("tbody tr")).toHaveCount(12);
+    await history.getByRole("button", { name: "Previous month" }).click();
+    await expect(history.getByRole("button", { name: "Next month" })).toBeEnabled();
+  });
+
   test("scores consistency and draws the week and the month", async ({ page }) => {
     await pillar(page, "Work").click();
     await pillar(page, "Habits").click();
@@ -160,7 +185,7 @@ test.describe("Daily check-in", () => {
     const google = page.getByTestId("reminder-google");
     await expect(google).toHaveAttribute("href", /calendar\.google\.com\/calendar\/render\?/);
     await expect(google).toHaveAttribute("href", /recur=RRULE%3AFREQ%3DDAILY/);
-    await expect(google).toHaveAttribute("href", /T203000/);
+    await expect(google).toHaveAttribute("href", /T080000/);
     await expect(page.getByTestId("reminder-ics")).toHaveAttribute("download", "unbroken-reminder.ics");
   });
 

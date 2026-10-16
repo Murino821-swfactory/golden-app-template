@@ -51,6 +51,8 @@ import { TrophyCase } from "./checkin-trophies";
 import { ShareButton } from "./checkin-share";
 import { ReminderButton } from "./checkin-reminder";
 import { InstallHint } from "./checkin-install";
+import { CheckinHistory } from "./checkin-history";
+import { DAILY_COPY } from "@/lib/checkin-daily-copy";
 
 /**
  * Daily five-pillar check-in (OTH-84): one tap per pillar, a note per day, streaks per
@@ -92,26 +94,10 @@ function NoteField({
   onSave: (note: string) => void;
 }) {
   const id = useId();
-  const [draft, setDraft] = useState(initial);
-  const latest = useRef({ draft, initial, onSave });
-  useEffect(() => {
-    latest.current = { draft, initial, onSave };
-  });
-
-  // Save a moment after typing stops, on blur, and when the day changes (unmount) —
-  // never on each keystroke, which would trim the space you just typed.
-  useEffect(() => {
-    if (draft.trim() === initial) return;
-    const t = setTimeout(() => latest.current.onSave(draft), 600);
-    return () => clearTimeout(t);
-  }, [draft, initial]);
-  useEffect(
-    () => () => {
-      const { draft: d, initial: i, onSave: save } = latest.current;
-      if (d.trim() !== i) save(d);
-    },
-    []
-  );
+  const [state, setState] = useState({ initial, draft: initial });
+  // Keep typing spaces visible, while external/cloud edits update the field too.
+  if (state.initial !== initial) setState({ initial, draft: state.draft.trim() === initial ? state.draft : initial });
+  const draft = state.draft;
 
   return (
     <div className="space-y-2">
@@ -122,8 +108,11 @@ function NoteField({
         id={id}
         value={draft}
         maxLength={NOTE_MAX}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={() => draft.trim() !== initial && onSave(draft)}
+        onChange={(e) => {
+          setState({ initial, draft: e.target.value });
+          // Synchronous device persistence: even closing before blur loses no text.
+          onSave(e.target.value);
+        }}
         placeholder={placeholder}
         rows={3}
         className="w-full resize-none rounded-lg border border-border bg-card px-3 py-2.5 text-sm leading-relaxed text-card-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -222,6 +211,13 @@ export function DailyCheckin({ className }: { className?: string }) {
   const celebrationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dateInputId = useId();
   const baseId = useId();
+
+  useEffect(() => {
+    if (ready && window.location.hash === "#daily-form") {
+      document.getElementById("daily-form")?.scrollIntoView();
+      document.getElementById("daily-form")?.focus({ preventScroll: true });
+    }
+  }, [ready]);
 
   useEffect(
     () => () => {
@@ -377,7 +373,7 @@ export function DailyCheckin({ className }: { className?: string }) {
           </section>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div id="daily-form" tabIndex={-1} className="flex scroll-mt-24 flex-wrap items-center gap-2">
           {[
             { key: today, label: c.today },
             { key: yesterday, label: c.yesterday },
@@ -477,7 +473,7 @@ export function DailyCheckin({ className }: { className?: string }) {
           initial={entry?.note ?? ""}
           label={c.noteLabel}
           placeholder={c.notePlaceholder}
-          saved={persistent ? c.saved : c.storageBlocked}
+          saved={persistent ? DAILY_COPY[locale].saved : c.storageBlocked}
           onSave={(note) => setNote(selected, note)}
         />
 
@@ -499,6 +495,7 @@ export function DailyCheckin({ className }: { className?: string }) {
       </div>
 
       <div className="space-y-6">
+        <CheckinHistory log={log} today={today} locale={locale} onSelect={pick} />
         <Panel title={c.consistencyTitle}>
           {[
             { days: 7, label: c.last7 },

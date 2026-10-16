@@ -81,11 +81,13 @@ function subscribe(listener: () => void) {
   window.addEventListener("storage", onStorage);
   window.addEventListener("focus", listener);
   document.addEventListener("visibilitychange", listener);
+  const dayTimer = window.setInterval(listener, 30_000);
   return () => {
     listeners.delete(listener);
     window.removeEventListener("storage", onStorage);
     window.removeEventListener("focus", listener);
     document.removeEventListener("visibilitychange", listener);
+    window.clearInterval(dayTimer);
   };
 }
 
@@ -114,6 +116,9 @@ let activeUid: string | null = null;
 let denied = false;
 let lastPull = 0;
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
+let generation = 0;
+let uploading: number | null = null;
+let downloading: number | null = null;
 
 function setCloud(state: CloudState) {
   cloudState = state;
@@ -131,16 +136,23 @@ function fail(err: unknown, what: string) {
 }
 
 async function push(uid: string) {
-  if (denied || activeUid !== uid) return;
+  const session = generation;
+  if (denied || activeUid !== uid || uploading === session || downloading === session || getMeta().uid !== uid) return;
+  uploading = session;
   setCloud("syncing");
   try {
     const snapshot = getLog();
     const stamp = await pushCloud(uid, snapshot);
+    if (activeUid !== uid || generation !== session) return;
     // A tap during the upload keeps the device dirty; its own push is already scheduled.
-    setMeta({ uid, stamp, dirty: getLog() !== snapshot });
-    setCloud("synced");
+    const dirty = getLog() !== snapshot;
+    setMeta({ uid, stamp, dirty });
+    setCloud(dirty ? "syncing" : "synced");
+    if (dirty) schedulePush(uid);
   } catch (err) {
-    fail(err, "push");
+    if (activeUid === uid && generation === session) fail(err, "push");
+  } finally {
+    if (uploading === session) uploading = null;
   }
 }
 
@@ -151,17 +163,24 @@ function schedulePush(uid: string) {
 }
 
 async function pull(uid: string) {
-  if (denied || activeUid !== uid) return;
+  const session = generation;
+  if (denied || activeUid !== uid || uploading === session || downloading === session) return;
+  downloading = session;
   setCloud("syncing");
   try {
     const copy = await pullCloud(uid);
+    if (activeUid !== uid || generation !== session) return;
     lastPull = Date.now();
     const result = reconcile(getLog(), getMeta(), copy, uid);
-    adopt(result.log, result.meta);
+    // Retain the pending-write marker until the server acknowledges the upload.
+    adopt(result.log, { ...result.meta, dirty: result.push });
+    downloading = null;
     if (result.push) await push(uid);
     else setCloud("synced");
   } catch (err) {
-    fail(err, "pull");
+    if (activeUid === uid && generation === session) fail(err, "pull");
+  } finally {
+    if (downloading === session) downloading = null;
   }
 }
 
@@ -171,8 +190,8 @@ function write(log: CheckinLog) {
   memory = raw;
   writeRaw(STORAGE_KEY, raw);
   const meta = getMeta();
+  if (!meta.dirty) setMeta({ ...meta, dirty: true });
   if (activeUid && meta.uid === activeUid) {
-    if (!meta.dirty) setMeta({ ...meta, dirty: true });
     schedulePush(activeUid);
   }
   emit();
@@ -208,16 +227,28 @@ export function useCheckinLog() {
   useEffect(() => {
     if (!uid) return;
     activeUid = uid;
+    generation++;
     denied = false;
     void pull(uid);
     const onVisible = () => {
-      if (document.visibilityState === "visible" && Date.now() - lastPull > PULL_EVERY_MS) void pull(uid);
+      if (document.visibilityState === "hidden") flush();
+      else if (getMeta().dirty || Date.now() - lastPull > PULL_EVERY_MS) void pull(uid);
     };
+    const flush = () => {
+      if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
+      if (getMeta().dirty) void push(uid);
+    };
+    const reconnect = () => void pull(uid);
     document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pagehide", flush);
+    window.addEventListener("online", reconnect);
     return () => {
       document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pagehide", flush);
+      window.removeEventListener("online", reconnect);
       if (activeUid === uid) {
         activeUid = null;
+        generation++;
         if (pushTimer) clearTimeout(pushTimer);
         setCloud("off");
       }
