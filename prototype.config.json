@@ -13,6 +13,7 @@
       "sections": [
         "hero",
         "features",
+        "faq",
         "cta"
       ]
     },
@@ -121,7 +122,32 @@
             "title": "Movement History Replay",
             "description": "Replay any animal's path over a chosen date range to study migration patterns and seasonal behaviour."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Frequently asked questions",
+          "items": [
+            {
+              "question": "What is FaunaTrack?",
+              "answer": "FaunaTrack is a real-time GPS tracking tool for animals in the field. On a single map it shows each animal's current position, movement history and activity — built for conservation teams, researchers and farmers who need to know where their animals are the moment it matters."
+            },
+            {
+              "question": "Which animals can I track?",
+              "answer": "Any animal carrying a compatible GPS device. You define the species you work with, from wildlife such as wolves, lynx, bears or deer to livestock such as cattle and sheep, and filter the map by species, territory or time range."
+            },
+            {
+              "question": "How do geofencing alerts work?",
+              "answer": "You draw virtual safe zones around the areas that matter. The moment a tracked animal crosses a boundary, FaunaTrack raises an alert so you can react before it strays or is put at risk."
+            },
+            {
+              "question": "What happens if a GPS device loses signal or battery?",
+              "answer": "Every device reports its battery level and signal quality, and inactivity or a missing position is flagged automatically. That way you always know whether the location you see is live or needs attention in the field."
+            },
+            {
+              "question": "Is my tracking data private?",
+              "answer": "Yes. Each signed-in user works in their own private space — the animals, positions and history you add are visible only to you, not to other users of the app."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Animal Overview"
@@ -177,7 +203,32 @@
             "title": "História pohybu",
             "description": "Prehrávajte trasu ľubovoľného zvieraťa za zvolené obdobie a skúmajte migračné vzorce a sezónne správanie."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Čo je FaunaTrack?",
+              "answer": "FaunaTrack je nástroj na sledovanie zvierat cez GPS v reálnom čase. Na jednej mape zobrazuje aktuálnu polohu, históriu pohybu a aktivitu každého zvieraťa — pre ochranárske tímy, výskumníkov a farmárov, ktorí potrebujú vedieť, kde sú ich zvieratá, v každom dôležitom okamihu."
+            },
+            {
+              "question": "Aké zvieratá môžem sledovať?",
+              "answer": "Ľubovoľné zviera s kompatibilným GPS zariadením. Druhy, s ktorými pracujete, si určíte sami — od voľne žijúcich ako vlk, rys, medveď či jeleň až po hospodárske ako dobytok a ovce — a mapu filtrujete podľa druhu, teritória alebo časového rozmedzia."
+            },
+            {
+              "question": "Ako fungujú geofencingové výstrahy?",
+              "answer": "Na mape vyznačíte virtuálne bezpečné zóny okolo oblastí, ktoré sú pre vás dôležité. Keď sledované zviera prekročí hranicu, FaunaTrack vás ihneď upozorní, aby ste mohli zareagovať skôr, než sa zviera vzdiali alebo sa ocitne v ohrození."
+            },
+            {
+              "question": "Čo sa stane, keď zariadenie stratí signál alebo batériu?",
+              "answer": "Každé zariadenie hlási úroveň batérie a kvalitu signálu a neaktivita alebo chýbajúca poloha sa automaticky označí. Vďaka tomu vždy viete, či je zobrazená poloha aktuálna, alebo si zariadenie v teréne vyžaduje pozornosť."
+            },
+            {
+              "question": "Sú moje údaje súkromné?",
+              "answer": "Áno. Každý prihlásený používateľ pracuje vo vlastnom súkromnom priestore — zvieratá, polohy a história, ktoré pridáte, sú viditeľné len pre vás, nie pre ostatných používateľov aplikácie."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Prehľad zvierat"
