@@ -42,10 +42,10 @@
             "type": "select",
             "options": [
               "Blog",
-              "LinkedIn",
-              "X",
+              "Facebook",
               "Instagram",
-              "Video"
+              "TikTok",
+              "YouTube"
             ],
             "required": true
           },
@@ -67,7 +67,7 @@
       }
     },
     "cta": {
-      "href": "#signup"
+      "href": "/studio"
     }
   },
   "content": {
@@ -78,39 +78,41 @@
         "subheadline": "GitPulse Studio is for developers and technical founders who ship code every week but have no time to write about it — it turns your commits and PRs into ready-to-publish content.",
         "features": [
           {
-            "icon": "📡",
-            "title": "Connect Your Repos",
-            "description": "Link any GitHub repository and GitPulse Studio automatically reads your weekly commits, merged PRs, and changelogs."
+            "icon": "chart-line",
+            "title": "Live projects",
+            "description": "Every public project the factory runs or its owners adopted, read live from tokenwise.sk — a list that changes every week."
           },
           {
-            "icon": "✍️",
-            "title": "Blog Post Generated",
-            "description": "Each week's changes become a polished Markdown article that translates technical work into a story your audience understands."
+            "icon": "list-checks",
+            "title": "Git history by commits",
+            "description": "The factory's record era by era, or any public GitHub repository week by week, busiest first."
           },
           {
-            "icon": "📱",
-            "title": "Social Posts, Done",
-            "description": "Platform-optimized posts for LinkedIn, X, Facebook, and Instagram are produced from the same data, ready to schedule or copy."
+            "icon": "trophy",
+            "title": "Ship it, the pipeline game",
+            "description": "White tasks and red defects fall towards the line; a score card and a 15-second clip come out of every round."
           },
           {
-            "icon": "🎨",
-            "title": "Visuals Included",
-            "description": "An OpenGraph infographic and a short animated recap video of your changes are generated alongside every weekly digest."
+            "icon": "globe",
+            "title": "Five destinations",
+            "description": "tokenwise.sk, Facebook, Instagram, TikTok and YouTube — each gets its own image size and a caption within its limit."
           },
           {
-            "icon": "✓",
-            "title": "Review Before Publishing",
-            "description": "Every piece of content lands in your approval queue where you can read, tweak, and approve before anything goes public."
+            "icon": "shield-check",
+            "title": "Review before publishing",
+            "description": "Edit the caption and check the preview first; a signed-in owner keeps every publish in a content queue."
           },
           {
-            "icon": "🚀",
-            "title": "One-Click Publish",
-            "description": "Send approved content directly to your blog and social profiles through connected APIs — no copy-pasting, no manual uploads."
+            "icon": "star",
+            "title": "One click to post",
+            "description": "On a phone the share sheet opens with the files attached; on a desktop the caption is copied, the image saved and the profile opened."
           }
-        ]
+        ],
+        "featuresHeading": "Three stories, five networks"
       },
       "dashboard": {
-        "title": "Your Content Studio"
+        "title": "Your Content Studio",
+        "intro": "Your content queue. Open the studio for the three stories ready to publish."
       },
       "dataGrid": {
         "entityLabel": "Content Item",
@@ -124,7 +126,9 @@
         }
       },
       "cta": {
-        "label": "Connect Your Repository"
+        "label": "Open the studio",
+        "title": "See the three stories, ready to post",
+        "subtitle": "No sign-in needed. Sign in only to keep a content queue."
       }
     },
     "cs": {
@@ -134,39 +138,41 @@
         "subheadline": "GitPulse Studio je pro vývojáře a technické zakladatele, kteří každý týden píší kód, ale nemají čas o něm psát — automaticky z commitů a PR vytvoří obsah připravený k publikování.",
         "features": [
           {
-            "icon": "📡",
-            "title": "Propojte repozitář",
-            "description": "Připojte libovolný GitHub repozitář a GitPulse Studio každý týden automaticky přečte vaše commity, mergnuté PR a changelogy."
+            "icon": "chart-line",
+            "title": "Živé projekty",
+            "description": "Každý veřejný projekt, který továrna provozuje nebo převzali jeho majitelé, čtený živě z tokenwise.sk — seznam, který se mění každý týden."
           },
           {
-            "icon": "✍️",
-            "title": "Blogový článek hotový",
-            "description": "Změny za celý týden se přemění ve vybroušený Markdown článek, který technickou práci převypráví srozumitelně pro vaši komunitu."
+            "icon": "list-checks",
+            "title": "Git historie podle commitů",
+            "description": "Záznam továrny éra po éře, nebo libovolný veřejný GitHub repozitář týden po týdnu, nejrušnější první."
           },
           {
-            "icon": "📱",
-            "title": "Sociální příspěvky připraveny",
-            "description": "Ze stejných dat vzniknou příspěvky optimalizované pro LinkedIn, X, Facebook a Instagram, připravené ke zkopírování nebo naplánování."
+            "icon": "trophy",
+            "title": "Ship it, hra s pipeline",
+            "description": "Bílé úkoly a červené chyby padají k lince; z každého kola vznikne karta se skóre a patnáctivteřinový klip."
           },
           {
-            "icon": "🎨",
-            "title": "Vizuály v balení",
-            "description": "Ke každému týdennímu přehledu se automaticky vygeneruje infografický obrázek pro OpenGraph a krátké animované rekapitulační video."
+            "icon": "globe",
+            "title": "Pět cílů",
+            "description": "tokenwise.sk, Facebook, Instagram, TikTok a YouTube — každý dostane vlastní velikost obrázku a popisek ve svém limitu."
           },
           {
-            "icon": "✓",
+            "icon": "shield-check",
             "title": "Kontrola před zveřejněním",
-            "description": "Veškerý obsah čeká ve schvalovací frontě, kde si ho můžete přečíst, upravit a schválit dříve, než se cokoliv zveřejní."
+            "description": "Nejprve upravte popisek a zkontrolujte náhled; přihlášený majitel má každé publikování ve frontě obsahu."
           },
           {
-            "icon": "🚀",
-            "title": "Publikování jedním klikem",
-            "description": "Schválený obsah odešlete přímo na blog a sociální profily přes napojená API — bez kopírování a ručního nahrávání."
+            "icon": "star",
+            "title": "Jedno klepnutí",
+            "description": "Na telefonu se otevře sdílení s přiloženými soubory; na počítači se zkopíruje popisek, uloží obrázek a otevře profil."
           }
-        ]
+        ],
+        "featuresHeading": "Tři příběhy, pět sítí"
       },
       "dashboard": {
-        "title": "Vaše obsahové studio"
+        "title": "Vaše obsahové studio",
+        "intro": "Vaše fronta obsahu. Studio nabízí tři příběhy připravené k publikování."
       },
       "dataGrid": {
         "entityLabel": "Obsah",
@@ -180,7 +186,9 @@
         }
       },
       "cta": {
-        "label": "Připojte svůj repozitář"
+        "label": "Otevřít studio",
+        "title": "Podívejte se na tři příběhy připravené k publikování",
+        "subtitle": "Bez přihlášení. Přihlaste se jen kvůli frontě obsahu."
       }
     }
   }

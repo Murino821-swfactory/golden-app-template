@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { OwnerLinks } from "@/components/owner/owner-links";
+import { StudioLink } from "@/components/studio/studio-link";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useContent } from "@/hooks/use-content";
@@ -36,6 +37,7 @@ function DashboardContent() {
         {dashboard?.intro && <p className="mt-2 text-muted-foreground">{dashboard.intro}</p>}
       </header>
       <OwnerLinks />
+      <StudioLink />
 
       {hasGrid && <DashboardStats />}
       {hasMap && <MapBase points={points} />}
