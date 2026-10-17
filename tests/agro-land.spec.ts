@@ -50,20 +50,15 @@ test.describe("agro-land data", () => {
 
   test("every value stays in its range", () => {
     const { coarse, fine } = parseLandData(raw());
-    for (const c of [...coarse, ...fine]) {
-      if (c.bh !== null) {
-        expect(c.bh).toBeGreaterThanOrEqual(0);
-        expect(c.bh).toBeLessThanOrEqual(100);
-      }
-      if (c.group !== null) {
-        expect(c.group).toBeGreaterThanOrEqual(1);
-        expect(c.group).toBeLessThanOrEqual(9);
-      }
-      expect(c.agriShare).toBeGreaterThanOrEqual(0);
-      expect(c.agriShare).toBeLessThanOrEqual(1);
-      if (c.arableShare !== null) expect(c.arableShare).toBeLessThanOrEqual(1);
-      if (c.avgBlockHa !== null) expect(c.avgBlockHa).toBeGreaterThan(0);
-    }
+    // One assertion over all ~10k cells: a Playwright expect per value took minutes and
+    // pushed the prototype export smoke past its 10-minute limit on the factory VM.
+    const outOfRange = [...coarse, ...fine].filter((c) =>
+      (c.bh !== null && (c.bh < 0 || c.bh > 100)) ||
+      (c.group !== null && (c.group < 1 || c.group > 9)) ||
+      !(c.agriShare >= 0 && c.agriShare <= 1) ||
+      (c.arableShare !== null && c.arableShare > 1) ||
+      (c.avgBlockHa !== null && !(c.avgBlockHa > 0)));
+    expect(outOfRange.slice(0, 5)).toEqual([]);
   });
 
   test("features drop empty land and get unique numeric ids across both zoom bands", () => {
