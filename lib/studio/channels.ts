@@ -9,7 +9,10 @@
 
 export type ChannelId = "site" | "facebook" | "instagram" | "tiktok" | "youtube";
 export type AssetFormat = "og" | "square" | "portrait" | "wide";
-export type ScenarioId = "projects" | "history" | "game";
+/** The studio's three scenes, plus the growth plan's three sources (`lib/growth/*`). */
+export type ScenarioId = "projects" | "history" | "game" | "plan" | "profile" | "report";
+/** What shape a piece of content takes — the weekly report counts by it. */
+export type ContentKind = "post" | "story" | "reel" | "video" | "article";
 export type StudioLocale = "en" | "cs";
 
 export interface Channel {
@@ -72,6 +75,10 @@ export interface ScenarioContent {
   /** Where the story lives. */
   url: string;
   hashtags: string[];
+  /** The shape of the piece (growth plan); the scenes leave it to the channel to decide. */
+  kind?: ContentKind;
+  /** Which planned item this is, so the plan can tick it off when it is published. */
+  ref?: string;
 }
 
 /** Cut at a word boundary so a limit never splits a hashtag or a URL in two. */

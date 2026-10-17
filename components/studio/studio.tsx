@@ -3,14 +3,11 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useLocale } from "next-intl";
-import { useAuth } from "@/hooks/use-auth";
-import { useRecords } from "@/hooks/use-records";
 import { localePath } from "@/lib/locale-routing";
-import type { Channel, ScenarioContent, ScenarioId } from "@/lib/studio/channels";
+import type { ScenarioContent, ScenarioId } from "@/lib/studio/channels";
 import { studioCopy } from "@/lib/studio/copy";
 import type { LiveProject } from "@/lib/studio/projects";
 import { useBrowserValue } from "@/lib/studio/client-store";
-import { appendPublishLog, usePublishLog, type PublishLogEntry, type PublishOutcome } from "@/lib/studio/publish";
 import { gameContent, projectsContent, recordContent, repoContent } from "@/lib/studio/scenarios";
 import type { GameScore } from "@/lib/studio/ship-it";
 import { cn } from "@/lib/utils";
@@ -18,20 +15,12 @@ import { GameScene, type GameClip } from "./game-scene";
 import { HistoryScene, type HistoryState } from "./history-scene";
 import { ProjectsScene } from "./projects-scene";
 import { PublishBar } from "./publish-bar";
+import { usePublishReceipt } from "./use-publish-receipt";
 
 const TABS: ScenarioId[] = ["projects", "history", "game"];
 
 /** Until the browser says otherwise — the published address of this page. */
 const FALLBACK_PAGE_URL = "https://apps.tokenwise.sk/newapp/gitpulse-studio/studio";
-
-/** The grid's `type` option each channel files under (prototype.config.json → dataGrid). */
-const QUEUE_TYPE: Record<Channel["id"], string> = {
-  site: "Blog",
-  facebook: "Facebook",
-  instagram: "Instagram",
-  tiktok: "TikTok",
-  youtube: "YouTube",
-};
 
 /**
  * The studio: three scenes, one publish bar. Every scene is mounted once and hidden when
@@ -41,15 +30,12 @@ const QUEUE_TYPE: Record<Channel["id"], string> = {
 export function Studio() {
   const locale = useLocale();
   const copy = studioCopy(locale);
-  const { user } = useAuth();
-  const { addRecord } = useRecords();
+  const { user, log, queued, onPublished } = usePublishReceipt();
   const [tab, setTab] = useState<ScenarioId>("projects");
   const [contents, setContents] = useState<Partial<Record<ScenarioId, ScenarioContent>>>({});
   const [clip, setClip] = useState<GameClip | null>(null);
   // The page's own address goes into the game's caption; the log is this browser's.
   const pageUrl = useBrowserValue(() => window.location.origin + window.location.pathname, FALLBACK_PAGE_URL);
-  const log = usePublishLog();
-  const [queued, setQueued] = useState(false);
 
   const onProjects = useCallback((projects: LiveProject[]) => {
     setContents((prev) => ({ ...prev, projects: projectsContent(projects, copy) }));
@@ -63,37 +49,6 @@ export function Studio() {
   const onScore = useCallback((score: GameScore, best: number) => {
     setContents((prev) => ({ ...prev, game: gameContent(score, best, pageUrl, copy) }));
   }, [copy, pageUrl]);
-
-  const onPublished = useCallback(
-    async (channel: Channel, content: ScenarioContent, outcome: PublishOutcome) => {
-      const entry: PublishLogEntry = {
-        id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
-        at: new Date().toISOString(),
-        channel: channel.id,
-        scenario: content.scenario,
-        title: content.title,
-        outcome,
-      };
-      appendPublishLog(entry);
-      setQueued(false);
-      if (!user || outcome === "failed" || outcome === "cancelled") return;
-      const today = new Date().toISOString().slice(0, 10);
-      try {
-        await addRecord({
-          title: content.title.slice(0, 200),
-          week: today,
-          repository: content.url.replace(/^https?:\/\//, "").slice(0, 200),
-          type: QUEUE_TYPE[channel.id],
-          status: "Published",
-          publishedAt: today,
-        });
-        setQueued(true);
-      } catch (err) {
-        console.warn("[studio] content queue write failed:", err);
-      }
-    },
-    [user, addRecord]
-  );
 
   const content = contents[tab] ?? null;
 

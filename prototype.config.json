@@ -13,6 +13,8 @@
       "sections": [
         "hero",
         "features",
+        "howItWorks",
+        "faq",
         "cta"
       ]
     },
@@ -98,9 +100,9 @@
             "description": "tokenwise.sk, Facebook, Instagram, TikTok and YouTube — each gets its own image size and a caption within its limit."
           },
           {
-            "icon": "shield-check",
-            "title": "Review before publishing",
-            "description": "Edit the caption and check the preview first; a signed-in owner keeps every publish in a content queue."
+            "icon": "calendar",
+            "title": "Growth plan and weekly report",
+            "description": "A content plan for every week, the Instagram profile kit, leads with their e-mails, and a weekly report counted from what went out."
           },
           {
             "icon": "star",
@@ -108,11 +110,57 @@
             "description": "On a phone the share sheet opens with the files attached; on a desktop the caption is copied, the image saved and the profile opened."
           }
         ],
-        "featuresHeading": "Three stories, five networks"
+        "featuresHeading": "Three stories, five networks",
+        "howItWorks": {
+          "heading": "How it works",
+          "steps": [
+            {
+              "title": "Pick a story",
+              "description": "Live projects, the git history, the pipeline game, or a slot from this week's content plan."
+            },
+            {
+              "title": "Pick a network",
+              "description": "The card is rendered in the network's size and the caption worded within its limit — edit it if you like."
+            },
+            {
+              "title": "Publish",
+              "description": "The share sheet on a phone; the profile, the files and the caption on a desktop. Every publish lands in the log."
+            },
+            {
+              "title": "Read the report",
+              "description": "Every Monday the weekly report counts what went out against your goals — no tokens spent."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Questions before you start",
+          "items": [
+            {
+              "question": "Do I need to sign in to use the studio?",
+              "answer": "No. The studio and the growth plan are public. Sign in only to keep a content queue and to use the creation studio's generation."
+            },
+            {
+              "question": "Where does the content come from?",
+              "answer": "From data you can check: the live projects list, the git history of a public repository, and the plan's idea bank. Nothing is invented about customers."
+            },
+            {
+              "question": "Does GitPulse Studio post to the networks for me?",
+              "answer": "It prepares the image in the network's size and the caption within its limit, then hands them to your phone's share sheet or opens the profile on a desktop. No network token is stored."
+            },
+            {
+              "question": "What does the weekly report measure?",
+              "answer": "What went out from this browser's log, by shape and by channel, plus the numbers you type in from the networks' insights — against your weekly and monthly goals."
+            },
+            {
+              "question": "Who owns the content?",
+              "answer": "You do. Captions, images and the Markdown article are files in your browser; the content queue is your own sandbox."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Your Content Studio",
-        "intro": "Your content queue. Open the studio for the three stories ready to publish."
+        "intro": "Your content queue. The studio has the three stories; the growth plan has this week's slots, the profile kit, the report and the leads."
       },
       "dataGrid": {
         "entityLabel": "Content Item",
@@ -128,7 +176,7 @@
       "cta": {
         "label": "Open the studio",
         "title": "See the three stories, ready to post",
-        "subtitle": "No sign-in needed. Sign in only to keep a content queue."
+        "subtitle": "No sign-in needed. The growth plan and the weekly report are one tab away."
       }
     },
     "cs": {
@@ -158,9 +206,9 @@
             "description": "tokenwise.sk, Facebook, Instagram, TikTok a YouTube — každý dostane vlastní velikost obrázku a popisek ve svém limitu."
           },
           {
-            "icon": "shield-check",
-            "title": "Kontrola před zveřejněním",
-            "description": "Nejprve upravte popisek a zkontrolujte náhled; přihlášený majitel má každé publikování ve frontě obsahu."
+            "icon": "calendar",
+            "title": "Plán růstu a týdenní report",
+            "description": "Plán obsahu na každý týden, sada pro instagramový profil, leady s jejich e-maily a týdenní report spočítaný z toho, co vyšlo."
           },
           {
             "icon": "star",
@@ -168,11 +216,57 @@
             "description": "Na telefonu se otevře sdílení s přiloženými soubory; na počítači se zkopíruje popisek, uloží obrázek a otevře profil."
           }
         ],
-        "featuresHeading": "Tři příběhy, pět sítí"
+        "featuresHeading": "Tři příběhy, pět sítí",
+        "howItWorks": {
+          "heading": "Jak to funguje",
+          "steps": [
+            {
+              "title": "Vyberte příběh",
+              "description": "Živé projekty, git historie, hra s pipeline, nebo slot z plánu obsahu na tento týden."
+            },
+            {
+              "title": "Vyberte síť",
+              "description": "Karta se vykreslí ve velikosti sítě a popisek se napíše v jejím limitu — klidně ho upravte."
+            },
+            {
+              "title": "Publikujte",
+              "description": "Na telefonu sdílení; na počítači profil, soubory a popisek. Každé publikování se zapíše do logu."
+            },
+            {
+              "title": "Přečtěte si report",
+              "description": "Každé pondělí týdenní report spočítá, co vyšlo, proti vašim cílům — bez utracených tokenů."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Otázky, než začnete",
+          "items": [
+            {
+              "question": "Musím se přihlásit, abych studio použil?",
+              "answer": "Ne. Studio i plán růstu jsou veřejné. Přihlaste se jen kvůli frontě obsahu a generování v tvůrčím studiu."
+            },
+            {
+              "question": "Odkud obsah pochází?",
+              "answer": "Z dat, která si můžete ověřit: seznam živých projektů, git historie veřejného repozitáře a zásobník nápadů plánu. O zákaznících se nic nevymýšlí."
+            },
+            {
+              "question": "Zveřejňuje GitPulse Studio na sítích za mě?",
+              "answer": "Připraví obrázek ve velikosti sítě a popisek v jejím limitu, pak je předá sdílení na telefonu nebo otevře profil na počítači. Žádný token sítě se neukládá."
+            },
+            {
+              "question": "Co měří týdenní report?",
+              "answer": "Co vyšlo z logu tohoto prohlížeče, podle tvaru a kanálu, plus čísla, která zadáte z přehledů sítí — proti vašim týdenním a měsíčním cílům."
+            },
+            {
+              "question": "Komu patří obsah?",
+              "answer": "Vám. Popisky, obrázky a Markdown článek jsou soubory ve vašem prohlížeči; fronta obsahu je váš vlastní sandbox."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Vaše obsahové studio",
-        "intro": "Vaše fronta obsahu. Studio nabízí tři příběhy připravené k publikování."
+        "intro": "Vaše fronta obsahu. Studio má tři příběhy; plán růstu má sloty tohoto týdne, sadu pro profil, report a leady."
       },
       "dataGrid": {
         "entityLabel": "Obsah",
@@ -188,7 +282,7 @@
       "cta": {
         "label": "Otevřít studio",
         "title": "Podívejte se na tři příběhy připravené k publikování",
-        "subtitle": "Bez přihlášení. Přihlaste se jen kvůli frontě obsahu."
+        "subtitle": "Bez přihlášení. Plán růstu a týdenní report jsou o záložku dál."
       }
     }
   }

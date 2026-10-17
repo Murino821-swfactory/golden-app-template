@@ -14,7 +14,7 @@ const EN = {
   title: "Studio",
   intro:
     "Three stories the factory tells every week — its live projects, its git history and the pipeline game — each ready to post on tokenwise.sk and the four social profiles.",
-  tabs: { projects: "Live projects", history: "Git history", game: "Ship it" },
+  tabs: { projects: "Live projects", history: "Git history", game: "Ship it", plan: "Content plan", profile: "Profile", report: "Weekly report" },
   projects: {
     heading: "Every live project",
     intro: "The same list tokenwise.sk/projects shows: production apps the factory runs or their owners adopted, most liked first.",
@@ -134,7 +134,7 @@ const CS: StudioCopy = {
   title: "Studio",
   intro:
     "Tři příběhy, které továrna vypráví každý týden — živé projekty, git historie a hra s pipeline — každý připravený k publikování na tokenwise.sk a čtyřech sociálních profilech.",
-  tabs: { projects: "Živé projekty", history: "Git historie", game: "Ship it" },
+  tabs: { projects: "Živé projekty", history: "Git historie", game: "Ship it", plan: "Plán obsahu", profile: "Profil", report: "Týdenní report" },
   projects: {
     heading: "Všechny živé projekty",
     intro: "Stejný seznam jako na tokenwise.sk/projects: produkční aplikace, které továrna provozuje nebo je převzali jejich majitelé, nejoblíbenější první.",

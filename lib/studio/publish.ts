@@ -11,7 +11,7 @@
  *
  * The browser calls live behind `PublishEnv` so the decision is testable without one.
  */
-import { fileNameFor, titleFor, type Channel, type ScenarioContent } from "./channels";
+import { fileNameFor, titleFor, type Channel, type ContentKind, type ScenarioContent } from "./channels";
 import { createStoredValue } from "./client-store";
 
 export type PublishOutcome = "shared" | "cancelled" | "opened" | "downloaded" | "failed";
@@ -124,6 +124,10 @@ export interface PublishLogEntry {
   scenario: ScenarioContent["scenario"];
   title: string;
   outcome: PublishOutcome;
+  /** The shape of the piece, when the content named one (growth plan). */
+  kind?: ContentKind;
+  /** The planned item it fulfils, when it fulfils one. */
+  ref?: string;
 }
 
 export const PUBLISH_LOG_KEY = "gitpulse.publish-log.v1";
