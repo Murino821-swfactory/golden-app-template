@@ -18,7 +18,12 @@ import { localePath } from "@/lib/locale-routing";
 import { cardIsEmpty, fullName, mapsHref, telHref, websiteHref, websiteText, type OwnerCard } from "@/lib/owner-contact";
 import { cn } from "@/lib/utils";
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "submitting" | "success" | "error" | "tooMany";
+
+/** The server's bounds (factory-web `validatePrototypeContact`); the form enforces them first,
+ * so a short message no longer comes back as an unexplained "invalid input". */
+const MESSAGE_MIN = 10;
+const MESSAGE_MAX = 5000;
 
 /**
  * The owner's public profile (sw-factory spec 2026-09-29-golden-template-v2 §6.3, profile
@@ -144,6 +149,10 @@ export function ContactSection() {
         }),
       });
       const body = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+      if (res.status === 429) {
+        setStatus("tooMany");
+        return;
+      }
       if (!res.ok || !body?.ok) throw new Error(`prototype-contact responded ${res.status}`);
       selectInquiry(null);
       setStatus("success");
@@ -223,6 +232,7 @@ export function ContactSection() {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  maxLength={200}
                   className="h-11 text-base sm:text-sm"
                   required
                   value={email}
@@ -257,9 +267,19 @@ export function ContactSection() {
                   name="message"
                   rows={4}
                   required
+                  maxLength={MESSAGE_MAX}
+                  aria-describedby="contact-message-hint"
                   value={message}
-                  onChange={(event) => setMessage(event.target.value)}
+                  onChange={(event) => {
+                    // The server counts the trimmed text, so plain minLength would pass padding.
+                    const next = event.target.value;
+                    event.target.setCustomValidity(next && next.trim().length < MESSAGE_MIN ? t("messageHint") : "");
+                    setMessage(next);
+                  }}
                 />
+                <p id="contact-message-hint" className="text-xs text-muted-foreground">
+                  {t("messageHint")}
+                </p>
               </div>
 
               {/* Honeypot. A bot that fills every input in the DOM fills this one; a sighted
@@ -286,9 +306,9 @@ export function ContactSection() {
               </div>
               </fieldset>
 
-              {status === "error" && (
+              {(status === "error" || status === "tooMany") && (
                 <p className="text-sm text-destructive" role="alert">
-                  {t("error")}
+                  {t(status === "tooMany" ? "errorTooMany" : "error")}
                 </p>
               )}
 
