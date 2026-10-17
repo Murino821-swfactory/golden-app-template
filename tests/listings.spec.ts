@@ -164,7 +164,12 @@ test.describe("listings logic", () => {
 });
 
 test.describe("listings section", () => {
-  test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "reduce" }); });
+  test.beforeEach(async ({ page }) => {
+    // agromapa: the `listings` slot renders the land map instead of offer cards
+    // (app/[locale]/page.tsx); tests/agro-land.spec.ts covers what is on screen there.
+    test.skip(true, "agromapa replaces the listings section with the land map");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+  });
 
   test("renders every offer in each language, with the illustrative notice", async ({ page }) => {
     test.skip(!config.patterns.listings, "listings pattern not enabled in this config");
