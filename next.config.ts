@@ -16,8 +16,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // The shared header ships as TypeScript source, not a build (packages/shared-ui).
-  transpilePackages: ["@tokenwise/shared-ui"],
+  // Workspace packages ship as TypeScript source, not a build (packages/shared-ui, packages/hex-map).
+  transpilePackages: ["@tokenwise/shared-ui", "@tokenwise/hex-map"],
 };
 
 export default withNextIntl(nextConfig);
