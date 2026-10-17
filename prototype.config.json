@@ -194,10 +194,10 @@
   },
   "content": {
     "en": {
-      "description": "Agromapa gives Slovak farmers and co-owners a hexagonal map of land quality, typical rent and fragmentation so they can negotiate fair lease agreements.",
+      "description": "Slovak farmland hexagon by hexagon from the state's open data: soil quality (BPEJ), arable share and farmed block size.",
       "landing": {
-        "headline": "Know what your farmland is worth",
-        "subheadline": "Agromapa gives Slovak farmers and co-owners a clear view of land quality, market rent and ownership fragmentation across every corner of Slovakia.",
+        "headline": "Read the land around your plot",
+        "subheadline": "Soil quality, arable share and the size of farmed blocks for every hexagon of Slovakia — built from the state's open BPEJ and LPIS data, free to explore without signing in.",
         "featuresHeading": "Everything a small farmer needs to know",
         "features": [
           {
@@ -206,14 +206,14 @@
             "description": "Browse BPEJ-derived quality scores for any hexagonal cell across Slovakia at national or local zoom level."
           },
           {
-            "icon": "wallet",
-            "title": "Rent benchmark",
-            "description": "See the typical rental rate for your location in €/ha/year and compare it against what you currently pay or receive."
+            "icon": "chart-line",
+            "title": "Arable share",
+            "description": "See how much of each hexagon's farmland is arable, and which culture dominates: arable land, grassland, vineyard or orchard."
           },
           {
-            "icon": "users",
-            "title": "Fragmentation index",
-            "description": "Check how many co-owners share a hectare in any hex — the key metric for understanding Slovakia's split-ownership reality."
+            "icon": "scale",
+            "title": "Block size",
+            "description": "The average size of a farmed land block in each hexagon — small blocks mean finely split land use, large ones consolidated fields."
           },
           {
             "icon": "leaf",
@@ -223,19 +223,19 @@
           {
             "icon": "list-checks",
             "title": "My parcels register",
-            "description": "Log your own land parcels, record your current rental rate and instantly see whether it sits above or below the local benchmark."
+            "description": "Sign in to log your own parcels with the rent you pay or receive, and keep them next to the soil data of their hexagon."
           }
         ],
         "howItWorks": {
-          "heading": "From the map to a fair rental in four steps",
+          "heading": "From the map to your own parcel register in four steps",
           "steps": [
             {
               "title": "Open the map",
-              "description": "Navigate to your cadastral area on the hexagonal map and click any cell to reveal its quality score, typical rent and fragmentation data."
+              "description": "Open the map, zoom to your cadastral area and tap a hexagon to read its soil quality, arable share and block size."
             },
             {
               "title": "Read the hex data",
-              "description": "Compare the BPEJ-based quality index and local rental benchmark for that cell against the figures in your own lease agreement."
+              "description": "Switch between the four layers to compare your area with its neighbours — quality, arable share, block size and farmland share."
             },
             {
               "title": "Log your parcels",
@@ -252,19 +252,19 @@
           "items": [
             {
               "question": "Where does the land quality data come from?",
-              "answer": "Quality scores are derived from publicly available BPEJ (soil-ecological unit) data published by Slovak authorities. The base map does not use cadastral transactional prices."
+              "answer": "From the state's open data: BPEJ soil-ecological units (NPPC-VÚPOP, CC0) and the LPIS 2026 land-parcel blocks (PPA, CC BY 4.0), aggregated into hexagons. No cadastral transaction prices are used."
             },
             {
               "question": "Is Agromapa a real estate trading platform?",
-              "answer": "No. Agromapa is an information and analysis tool. It shows quality indices and rent benchmarks so you can make better-informed decisions — it does not broker sales or rentals."
+              "answer": "No. Agromapa is an information tool. It shows soil quality and land use so you can make better-informed decisions — it does not broker sales or rentals, and it shows no prices or rents."
             },
             {
               "question": "Do I need to register to see the map?",
               "answer": "The public map is visible to everyone without signing in. Creating an account lets you log your own parcels, record rental rates and track them over time."
             },
             {
-              "question": "What is the fragmentation index?",
-              "answer": "It is the average number of co-owners per hectare within a hexagonal cell. A high index signals highly fragmented ownership — common across Slovakia and directly relevant to lease negotiations."
+              "question": "What does the block size tell me?",
+              "answer": "It is the farmed area of a hexagon divided by the number of LPIS land blocks in it. Small blocks mean finely split land use. It describes how land is farmed, not how many people own it — ownership is not in open data."
             },
             {
               "question": "Can I look up a specific cadastral parcel number?",
@@ -275,7 +275,7 @@
       },
       "dashboard": {
         "title": "My Parcels",
-        "intro": "Track all your land parcels, monitor rental rates and compare them against local benchmarks on the map.",
+        "intro": "Track your land parcels, the rent you pay or receive and the state of each contract.",
         "kpiLabels": {
           "totalParcels": "Parcels tracked",
           "contractedShare": "With active lease",
@@ -391,33 +391,33 @@
         "heading": "Built for those without an analyst",
         "items": [
           {
-            "title": "The farmer checking rental fairness",
-            "situation": "A small farmer has been renting out a 4-hectare arable plot at the same rate for eight years and wonders whether it still reflects the going market level.",
-            "action": "They open the relevant hexagonal cell, compare the benchmark rent against their contract rate, and arrive at the renewal conversation with a concrete market-backed number."
+            "title": "The farmer before a lease renewal",
+            "situation": "A small farmer has rented out a 4-hectare arable plot at the same rate for eight years and wants to know how good that land really is before the renewal talk.",
+            "action": "They open the plot's hexagon, read its BPEJ quality and quality group against the neighbouring hexagons, and log the plot with its current rent in My parcels."
           },
           {
             "title": "The co-owner deciding after an inheritance",
             "situation": "A person inherits a co-ownership share in several scattered plots and has no idea what they are worth or how they are currently managed.",
-            "action": "They map each plot's hex cell, read the quality score and fragmentation index, and decide whether to continue the existing lease, renegotiate, or explore consolidation."
+            "action": "They find each plot's hexagon, read its soil quality, dominant culture and block size, and keep the plots in one register before deciding what to do with them."
           },
           {
             "title": "The beginning farmer scouting new land",
-            "situation": "A young farmer planning to expand production wants to understand going rental rates in a neighbouring cadastral area before approaching landowners.",
-            "action": "They filter the map by arable land, read the typical rent for each hex in the target area, and approach owners with figures grounded in local market data."
+            "situation": "A young farmer planning to expand wants to know where the arable land in a neighbouring cadastral area is best and how it is farmed before approaching landowners.",
+            "action": "They switch to the arable-share and quality layers, compare the hexagons of the target area, and approach owners knowing where the good fields are."
           }
         ]
       },
       "cta": {
         "label": "Sign in to track your parcels",
         "title": "Your farmland, clearly mapped",
-        "subtitle": "Sign in with Google to log your parcels, benchmark your rent and stay on top of your land rights."
+        "subtitle": "Sign in with Google to log your parcels and keep them next to the soil data of their area."
       }
     },
     "sk": {
-      "description": "Agromapa zobrazuje slovenským farmárom a spoluvlastníkom hexagónovú mapu kvality pôdy, typického nájomného a rozdrobenosti na celom Slovensku.",
+      "description": "Slovenská poľnohospodárska pôda po hexagónoch z otvorených dát štátu: kvalita pôdy (BPEJ), podiel ornej pôdy a veľkosť dielov.",
       "landing": {
-        "headline": "Zistite, čo vaša poľnohospodárska pôda skutočne stojí",
-        "subheadline": "Agromapa dáva malým farmárom a spoluvlastníkom prehľad o kvalite pôdy, trhovom nájomnom a rozdrobenosti — priamo na mape Slovenska.",
+        "headline": "Prečítajte si pôdu okolo svojej parcely",
+        "subheadline": "Kvalita pôdy, podiel ornej pôdy a veľkosť obhospodarovaných dielov pre každý hexagón Slovenska — z otvorených dát BPEJ a LPIS, bez prihlásenia.",
         "featuresHeading": "Čo každý malý farmár potrebuje vedieť",
         "features": [
           {
@@ -426,14 +426,14 @@
             "description": "Prezrite si skóre kvality odvodené z BPEJ pre každú hexagónovú bunku na Slovensku — od celonárodného po detailný miestny pohľad."
           },
           {
-            "icon": "wallet",
-            "title": "Benchmark nájomného",
-            "description": "Zistite typické nájomné pre vašu lokalitu v €/ha/rok a porovnajte ho so sumou, ktorú platíte alebo dostávate."
+            "icon": "chart-line",
+            "title": "Podiel ornej pôdy",
+            "description": "Uvidíte, aká časť poľnohospodárskej pôdy v hexagóne je orná a ktorá kultúra prevažuje: orná pôda, trávne porasty, vinica alebo sad."
           },
           {
-            "icon": "users",
-            "title": "Index rozdrobenosti",
-            "description": "Overte, koľko spoluvlastníkov zdieľa hektár v danej bunke — kľúčová metrika pre slovenský trh s pôdou."
+            "icon": "scale",
+            "title": "Veľkosť dielov",
+            "description": "Priemerná veľkosť obhospodarovaného dielu v hexagóne — malé diely znamenajú rozdrobené využívanie, veľké scelené polia."
           },
           {
             "icon": "leaf",
@@ -442,20 +442,20 @@
           },
           {
             "icon": "list-checks",
-            "title": "Evidencia mojich parciel",
-            "description": "Zadajte vlastné parcely, zaznamenajte aktuálne nájomné a okamžite uvidíte, či je nad alebo pod miestnym benchmarkom."
+            "title": "Register mojich parciel",
+            "description": "Po prihlásení si zapíšete vlastné parcely s nájomným, ktoré platíte alebo dostávate, a máte ich pri pôdnych dátach ich hexagónu."
           }
         ],
         "howItWorks": {
-          "heading": "Od mapy k férovému nájmu v štyroch krokoch",
+          "heading": "Od mapy k vlastnému registru parciel v štyroch krokoch",
           "steps": [
             {
               "title": "Otvorte mapu",
-              "description": "Prejdite na vaše katastrálne územie a kliknite na hexagónovú bunku — uvidíte skóre kvality, typické nájomné a index rozdrobenosti."
+              "description": "Otvorte mapu, priblížte svoje katastrálne územie a ťuknite na hexagón — uvidíte kvalitu pôdy, podiel ornej pôdy a veľkosť dielov."
             },
             {
               "title": "Prečítajte si dáta bunky",
-              "description": "Porovnajte index kvality podľa BPEJ a miestny benchmark nájomného s číslami z vašej nájomnej zmluvy."
+              "description": "Prepínajte štyri vrstvy a porovnajte svoje územie so susednými — kvalitu, podiel ornej pôdy, veľkosť dielov a podiel poľnohospodárskej pôdy."
             },
             {
               "title": "Evidujte svoje parcely",
@@ -463,7 +463,7 @@
             },
             {
               "title": "Kontaktujte nás",
-              "description": "Napíšte nám, ak potrebujete pomoc s čítaním dát, porozumením vašich práv alebo prípravou na rokovanie o nájomnom."
+              "description": "Napíšte nám, ak potrebujete pomoc s čítaním dát alebo s prípravou na rokovanie o nájme."
             }
           ]
         },
@@ -472,19 +472,19 @@
           "items": [
             {
               "question": "Odkiaľ pochádzajú dáta o kvalite pôdy?",
-              "answer": "Skóre kvality sú odvodené z verejne dostupných dát BPEJ (bonitovaných pôdno-ekologických jednotiek) zverejnených slovenskými úradmi. Základná mapa nepoužíva katastrálne realizačné ceny."
+              "answer": "Z otvorených dát štátu: bonitované pôdno-ekologické jednotky BPEJ (NPPC-VÚPOP, CC0) a diely pôdnych blokov LPIS 2026 (PPA, CC BY 4.0), zoskupené do hexagónov. Katastrálne realizačné ceny sa nepoužívajú."
             },
             {
               "question": "Je Agromapa realitná platforma?",
-              "answer": "Nie. Agromapa je informačný a analytický nástroj. Zobrazuje indexy kvality a benchmarky nájomného, aby ste mohli robiť lepšie informované rozhodnutia — nesprostredkúva predaj ani prenájom."
+              "answer": "Nie. Agromapa je informačný nástroj. Zobrazuje kvalitu a využitie pôdy, aby ste sa rozhodovali informovanejšie — nesprostredkúva predaj ani prenájom a neukazuje ceny ani nájomné."
             },
             {
               "question": "Musím sa registrovať, aby som videl mapu?",
               "answer": "Verejná mapa je prístupná každému bez prihlásenia. Po vytvorení účtu môžete evidovať vlastné parcely, zaznamenávať nájomné a sledovať jeho vývoj v čase."
             },
             {
-              "question": "Čo je index rozdrobenosti?",
-              "answer": "Je to priemerný počet spoluvlastníkov na hektár v rámci hexagónovej bunky. Vysoký index naznačuje silne rozdrobenú vlastnícku štruktúru — na Slovensku bežnú situáciu, ktorá priamo ovplyvňuje dynamiku rokovaní o nájme."
+              "question": "Čo mi povie veľkosť dielov?",
+              "answer": "Je to obhospodarovaná plocha hexagónu vydelená počtom dielov pôdnych blokov LPIS v ňom. Malé diely znamenajú rozdrobené využívanie pôdy. Hovorí o tom, ako sa pôda obhospodaruje, nie koľko má vlastníkov — vlastníctvo v otvorených dátach nie je."
             },
             {
               "question": "Môžem vyhľadať konkrétne číslo katastrálnej parcely?",
@@ -495,7 +495,7 @@
       },
       "dashboard": {
         "title": "Moje parcely",
-        "intro": "Evidujte všetky svoje parcely, sledujte nájomné a porovnávajte ho s miestnym benchmarkom priamo na mape.",
+        "intro": "Evidujte svoje parcely, nájomné, ktoré platíte alebo dostávate, a stav každej zmluvy.",
         "kpiLabels": {
           "totalParcels": "Evidovaných parciel",
           "contractedShare": "S aktívnou zmluvou",
@@ -611,26 +611,26 @@
         "heading": "Pre tých, čo nemajú analytika",
         "items": [
           {
-            "title": "Farmár, ktorý overuje spravodlivosť nájmu",
-            "situation": "Malý farmár prenajíma 4-hektárovú ornú parcelu za rovnakú sadzbu osem rokov a chce vedieť, či zodpovedá aktuálnym trhovým cenám.",
-            "action": "Otvorí príslušnú hexagónovú bunku, porovná benchmark nájomného so sumou v zmluve a na rokovanie o predĺžení príde s konkrétnym číslom podloženým trhom."
+            "title": "Farmár pred predĺžením nájmu",
+            "situation": "Malý farmár prenajíma 4 hektáre ornej pôdy osem rokov za rovnakú sumu a pred rokovaním o predĺžení chce vedieť, aká kvalitná tá pôda naozaj je.",
+            "action": "Otvorí hexagón svojej parcely, porovná kvalitu BPEJ a skupinu kvality so susednými hexagónmi a parcelu s aktuálnym nájomným zapíše do registra."
           },
           {
             "title": "Spoluvlastník po dedičstve",
-            "situation": "Osoba zdedí spoluvlastnícky podiel na viacerých roztrúsených parcelách a nevie, čo stoja ani ako sú momentálne obhospodarované.",
-            "action": "Namapuje hexagónovú bunku každej parcely, prečíta si skóre kvality a index rozdrobenosti a rozhodne, či pokračovať v nájme, rokovať o novej sadzbe, alebo konsolidovať."
+            "situation": "Osoba zdedí spoluvlastnícky podiel na viacerých roztrúsených parcelách a nevie, aká je to pôda ani ako sa obhospodaruje.",
+            "action": "Nájde hexagón každej parcely, prečíta si kvalitu pôdy, prevažujúcu kultúru a veľkosť dielov a parcely si vedie v jednom registri, kým sa rozhodne, čo s nimi."
           },
           {
-            "title": "Začínajúci farmár hľadajúci pôdu",
-            "situation": "Mladý farmár chcúci rozšíriť produkciu potrebuje poznať bežné nájomné v susednom katastrálnom území skôr, ako osloví vlastníkov pôdy.",
-            "action": "Filtruje mapu podľa ornej pôdy, prečíta typické nájomné pre každý hexagón v cieľovej oblasti a oslovuje vlastníkov s číslami podloženými miestnymi dátami."
+            "title": "Začínajúci farmár hľadá pôdu",
+            "situation": "Mladý farmár chce rozšíriť výrobu a skôr, ako osloví vlastníkov, potrebuje vedieť, kde je v susednom katastrálnom území najlepšia orná pôda a ako sa obhospodaruje.",
+            "action": "Prepne na vrstvy podielu ornej pôdy a kvality, porovná hexagóny cieľového územia a vlastníkov oslovuje s vedomím, kde sú dobré polia."
           }
         ]
       },
       "cta": {
         "label": "Prihláste sa a evidujte parcely",
         "title": "Vaša pôda, prehľadne zmapovaná",
-        "subtitle": "Prihláste sa cez Google, zadajte parcely, porovnajte nájomné s benchmarkom a majte vždy prehľad o svojich pozemkových právach."
+        "subtitle": "Prihláste sa cez Google, zapíšte si parcely a majte ich pri pôdnych dátach ich územia."
       }
     }
   }

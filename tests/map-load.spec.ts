@@ -19,6 +19,8 @@ const style = {
 
 test("the listings map finishes loading once its style arrives", async ({ page }) => {
   test.skip(!config.patterns.mapBase || !config.patterns.listings?.items.some((i) => i.location), "no offer on a map");
+  // agromapa: no offer cards on the landing — tests/agro-land.spec.ts loads the land map the same way.
+  test.skip(true, "agromapa replaces the listings section with the land map");
   await page.route(/basemaps\.cartocdn\.com/, (route) =>
     route.request().url().endsWith("style.json")
       ? route.fulfill({ contentType: "application/json", body: JSON.stringify(style) })

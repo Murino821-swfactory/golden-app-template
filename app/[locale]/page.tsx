@@ -9,7 +9,7 @@ import { ContactSection } from "@/components/sections/contact";
 import { CtaSection } from "@/components/sections/cta";
 import { UseCasesSection } from "@/components/sections/use-cases";
 import { ComparisonSection } from "@/components/sections/comparison";
-import { ListingsSection } from "@/components/sections/listings";
+import { LandMapSection } from "@/components/sections/land-map";
 import { LandingStory } from "@/components/sections/landing-story";
 import { landingJsonLd } from "@/lib/seo";
 import { config } from "@/lib/prototype-config";
@@ -34,7 +34,9 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   cta: CtaSection,
   useCases: UseCasesSection,
   comparison: ComparisonSection,
-  listings: ListingsSection,
+  // agromapa: the `listings` slot shows the land map built from open data (BPEJ + LPIS);
+  // the template's illustrative offers promised rents no source backs.
+  listings: LandMapSection,
 };
 
 export default async function LandingPage({ params }: { params: Promise<{ locale?: string }> }) {
