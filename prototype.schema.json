@@ -39,6 +39,7 @@
         "hero",
         "features",
         "howItWorks",
+        "game",
         "useCases",
         "comparison",
         "listings",
@@ -53,6 +54,7 @@
         "cta": "cta",
         "faq": "landing",
         "howItWorks": "landing",
+        "game": "landing",
         "useCases": "useCases",
         "comparison": "comparison",
         "listings": "listings",
@@ -71,6 +73,10 @@
         "howItWorks": [
           "landing.howItWorks.heading",
           "landing.howItWorks.steps"
+        ],
+        "game": [
+          "landing.game.heading",
+          "landing.game.intro"
         ],
         "faq": [
           "landing.faq.heading",
@@ -141,6 +147,7 @@
               "hero",
               "features",
               "howItWorks",
+              "game",
               "useCases",
               "comparison",
               "listings",
@@ -718,6 +725,29 @@
             "steps"
           ]
         },
+        "game": {
+          "description": "A playable, cursor-driven preview on the landing page that records the visitor's own scores on their device. Pick it for a game, an interactive toy or a hands-on demo of the product.",
+          "type": "object",
+          "properties": {
+            "heading": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "intro": {
+              "description": "What the full product is and what this in-page preview lets the visitor try.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "instructions": {
+              "description": "One line on how to play the mouse-driven preview.",
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        },
         "faq": {
           "type": "object",
           "properties": {
@@ -1053,6 +1083,7 @@
                     "hero",
                     "features",
                     "howItWorks",
+                    "game",
                     "useCases",
                     "comparison",
                     "listings",
@@ -1522,6 +1553,29 @@
                   "required": [
                     "steps"
                   ]
+                },
+                "game": {
+                  "description": "A playable, cursor-driven preview on the landing page that records the visitor's own scores on their device. Pick it for a game, an interactive toy or a hands-on demo of the product.",
+                  "type": "object",
+                  "properties": {
+                    "heading": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "intro": {
+                      "description": "What the full product is and what this in-page preview lets the visitor try.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    },
+                    "instructions": {
+                      "description": "One line on how to play the mouse-driven preview.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  }
                 },
                 "faq": {
                   "type": "object",

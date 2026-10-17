@@ -247,6 +247,20 @@
     "gestureWindows": "Nagyításhoz használja a Ctrl + görgőt",
     "gestureMac": "Nagyításhoz használja a ⌘ + görgőt"
   },
+  "game": {
+    "start": "Előnézet indítása",
+    "restart": "Új játék",
+    "running": "Kapd el a gömböket!",
+    "score": "Pontszám",
+    "time": "Hátralévő idő",
+    "best": "Legjobb pontszám",
+    "played": "Lejátszott körök",
+    "catches": "Összes elkapás",
+    "statsHeading": "A statisztikád",
+    "result": "{score} gömböt kaptál el!",
+    "targetLabel": "Gömb elkapása",
+    "seconds": "{count} mp"
+  },
   "footer": {
     "generatedBy": "A Tokenwise AI által generálva"
   }

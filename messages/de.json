@@ -247,6 +247,20 @@
     "gestureWindows": "Zoomen Sie mit Strg + Mausrad",
     "gestureMac": "Zoomen Sie mit ⌘ + Mausrad"
   },
+  "game": {
+    "start": "Vorschau starten",
+    "restart": "Nochmal spielen",
+    "running": "Fang die Kugeln!",
+    "score": "Punkte",
+    "time": "Verbleibende Zeit",
+    "best": "Bestwert",
+    "played": "Gespielte Runden",
+    "catches": "Gefangene insgesamt",
+    "statsHeading": "Deine Statistik",
+    "result": "Du hast {score} Kugeln gefangen!",
+    "targetLabel": "Kugel fangen",
+    "seconds": "{count} s"
+  },
   "footer": {
     "generatedBy": "Erstellt von Tokenwise AI"
   }

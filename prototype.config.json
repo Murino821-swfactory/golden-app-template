@@ -13,12 +13,13 @@
         "hero",
         "features",
         "howItWorks",
+        "game",
         "faq",
         "cta"
       ]
     },
     "cta": {
-      "href": "#chapter-features"
+      "href": "#chapter-game"
     }
   },
   "content": {
@@ -66,6 +67,11 @@
               "description": "Drop into the Unreal Engine 5 environment and start exploring, talking to NPCs and uncovering what is there to find."
             }
           ]
+        },
+        "game": {
+          "heading": "Play the mouse-mechanic preview",
+          "intro": "New game pairs an Unreal Engine 5 world with characters written by Claude Fable 5.1. This preview runs the same mouse mechanic from how it works, so you can feel the controls before the full build. Your stats stay on this device.",
+          "instructions": "Move your cursor to catch every orb that appears. Each catch scores a point; a round lasts 30 seconds."
         },
         "faq": {
           "heading": "Common questions",

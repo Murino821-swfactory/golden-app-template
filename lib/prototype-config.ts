@@ -58,6 +58,7 @@ export const SECTION_IDS = [
   "hero",
   "features",
   "howItWorks",
+  "game",
   "useCases",
   "comparison",
   "listings",
@@ -453,6 +454,14 @@ export const CONTENT_SCHEMAS = {
         steps: z.array(stepSchema).min(3).max(4).describe("The first three or four things a user does, in order, each starting with a verb."),
       })
       .optional(),
+    game: z
+      .object({
+        heading: z.string().min(1).max(60).optional(),
+        intro: z.string().min(1).max(300).optional().describe("What the full product is and what this in-page preview lets the visitor try."),
+        instructions: z.string().min(1).max(200).optional().describe("One line on how to play the mouse-driven preview."),
+      })
+      .optional()
+      .describe("A playable, cursor-driven preview on the landing page that records the visitor's own scores on their device. Pick it for a game, an interactive toy or a hands-on demo of the product."),
     faq: z
       .object({
         heading: z.string().min(1).max(60).optional(),
@@ -535,6 +544,7 @@ export const SECTION_COPY_SOURCE: Record<SectionId, ContentPatternId | null> = {
   cta: "cta",
   faq: "landing",
   howItWorks: "landing",
+  game: "landing",
   useCases: "useCases",
   comparison: "comparison",
   listings: "listings",
@@ -711,7 +721,7 @@ export const prototypeConfigSchema = z
 
       // A section whose copy is a sub-slice of `landing` needs that sub-slice, or it would
       // render the template's placeholder on a customer's page.
-      for (const section of ["howItWorks", "faq"] as const) {
+      for (const section of ["howItWorks", "faq", "game"] as const) {
         if (cfg.patterns.landing?.sections.includes(section) && !block.landing?.[section]) {
           ctx.addIssue({
             code: "custom",
@@ -752,6 +762,7 @@ export const PRODUCTION_SECTION_COPY: Record<string, string[]> = {
   hero: ["landing.headline", "landing.subheadline"],
   features: ["landing.featuresHeading", "landing.features"],
   howItWorks: ["landing.howItWorks.heading", "landing.howItWorks.steps"],
+  game: ["landing.game.heading", "landing.game.intro"],
   faq: ["landing.faq.heading", "landing.faq.items"],
   listings: ["listings.heading", "listings.intro", "listings.notice"],
 };
