@@ -2,6 +2,7 @@
   "appName": "OSS Billing",
   "locales": [
     "en",
+    "sk",
     "es"
   ],
   "defaultLocale": "en",
@@ -113,7 +114,8 @@
         ]
       },
       "dashboard": {
-        "title": "Billing Dashboard"
+        "title": "Billing Dashboard",
+        "intro": "Your invoices, VAT status and everything your accountant needs before Slovak e-invoicing becomes mandatory on 1 January 2027."
       },
       "dataGrid": {
         "entityLabel": "Invoices",
@@ -128,6 +130,63 @@
       },
       "cta": {
         "label": "Start automating your billing"
+      }
+    },
+    "sk": {
+      "description": "Automatizované OSS DPH a fakturácia pre SaaS zakladateľov, ktorí predávajú do celého sveta — od platby po štvrťročné daňové hlásenie bez papierovačiek.",
+      "landing": {
+        "headline": "Predávajte komukoľvek. Účtujte správnu DPH. Bez tabuliek.",
+        "subheadline": "OSS Billing je pre SaaS zakladateľov a digitálne firmy, ktoré prijímajú platby z celého sveta a potrebujú mať európsku DPH vyriešenú od začiatku do konca.",
+        "features": [
+          {
+            "icon": "🌍",
+            "title": "Automatické určenie DPH",
+            "description": "Určí krajinu zákazníka podľa IP a karty a použije správnu sadzbu OSS — alebo nulu pre kupujúcich mimo EÚ."
+          },
+          {
+            "icon": "🧾",
+            "title": "Okamžitá slovenská faktúra",
+            "description": "Vystaví faktúru cez SuperFaktúru alebo Fakturoid a doručí ju zákazníkovi hneď, ako prejde platba."
+          },
+          {
+            "icon": "📊",
+            "title": "Štvrťročné OSS hlásenie",
+            "description": "Na konci každého štvrťroka stiahnete XML daňové priznanie OSS pripravené na podanie — bez ručného prepisovania."
+          },
+          {
+            "icon": "💳",
+            "title": "Párovanie výplat zo Stripe",
+            "description": "Každú hromadnú výplatu zo Stripe automaticky spáruje s poplatkami jednotlivých transakcií a mesačne exportuje výsledok."
+          },
+          {
+            "icon": "📈",
+            "title": "Strážca obratu 100 000 €",
+            "description": "Sleduje ročný obrat v reálnom čase, aby ste neprekročili hranicu, nad ktorou prídete o 10 % sadzbu dane z príjmov."
+          },
+          {
+            "icon": "📤",
+            "title": "Exporty pre účtovníka",
+            "description": "Mesačné exporty pre podvojné účtovníctvo, ktoré si účtovník priamo naimportuje — bez preformátovania a kopírovania."
+          }
+        ]
+      },
+      "dashboard": {
+        "title": "Prehľad fakturácie",
+        "intro": "Vaše faktúry, stav DPH a všetko, čo účtovník potrebuje, kým bude od 1. 1. 2027 elektronická fakturácia povinná."
+      },
+      "dataGrid": {
+        "entityLabel": "Faktúry",
+        "fieldLabels": {
+          "date": "Dátum",
+          "amount": "Suma (€)",
+          "customerCountry": "Krajina zákazníka",
+          "vatRate": "Sadzba DPH",
+          "status": "Stav",
+          "invoiceNumber": "Číslo faktúry"
+        }
+      },
+      "cta": {
+        "label": "Začnite automatizovať fakturáciu"
       }
     },
     "es": {
@@ -169,7 +228,8 @@
         ]
       },
       "dashboard": {
-        "title": "Panel de facturación"
+        "title": "Panel de facturación",
+        "intro": "Tus facturas, tu situación de IVA y todo lo que necesita tu contable antes de que la factura electrónica eslovaca sea obligatoria el 1 de enero de 2027."
       },
       "dataGrid": {
         "entityLabel": "Facturas",

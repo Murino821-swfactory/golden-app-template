@@ -5,6 +5,7 @@ import { AuthGuard } from "@/components/auth/auth-guard";
 import { OwnerLinks } from "@/components/owner/owner-links";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
+import { CompliancePanel } from "@/components/billing/compliance-panel";
 import { useContent } from "@/hooks/use-content";
 import { DashboardStats } from "@/components/dashboard/stats";
 import { config } from "@/lib/prototype-config";
@@ -12,7 +13,8 @@ import { listingCards, listingPoints } from "@/lib/listings";
 
 /**
  * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
- * a pattern renders iff its config slice is present. No prototype-specific code.
+ * a pattern renders iff its config slice is present. On demo/oss-billing the one exception is
+ * the accountant panel (components/billing), which this branch adds above the grid.
  */
 
 const hasGrid = config.patterns.dataGrid !== undefined;
@@ -39,6 +41,7 @@ function DashboardContent() {
 
       {hasGrid && <DashboardStats />}
       {hasMap && <MapBase points={points} />}
+      <CompliancePanel />
       {hasGrid && <DataGrid />}
     </div>
   );
