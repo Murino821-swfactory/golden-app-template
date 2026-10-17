@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { AuthGuard } from "@/components/auth/auth-guard";
 import { OwnerLinks } from "@/components/owner/owner-links";
 import { StudioLink } from "@/components/studio/studio-link";
+import { CreateLink } from "@/components/gitpulse/create-link";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useContent } from "@/hooks/use-content";
@@ -38,6 +39,7 @@ function DashboardContent() {
       </header>
       <OwnerLinks />
       <StudioLink />
+      <CreateLink />
 
       {hasGrid && <DashboardStats />}
       {hasMap && <MapBase points={points} />}
