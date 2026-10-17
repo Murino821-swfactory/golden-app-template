@@ -1,78 +1,93 @@
 {
-  "appName": "Golden App Template",
+  "appName": "reality + psd2",
   "locales": [
     "en"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "fresh-lime-azure-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
-        "howItWorks",
-        "faq",
         "listings",
+        "howItWorks",
         "contact",
         "cta"
-      ],
-      "presentation": "story"
+      ]
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {
-      "phone": "optional"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalInquiries",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "newLeads",
+          "field": "status",
+          "agg": "share",
+          "value": "new"
+        },
+        {
+          "id": "qualifiedLeads",
+          "field": "status",
+          "agg": "share",
+          "value": "qualified"
+        }
+      ]
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "inquiry",
         "fields": [
           {
-            "key": "name",
+            "key": "clientName",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "email",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "property",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "new",
+              "contacted",
+              "qualified",
+              "closed"
+            ],
+            "required": true
+          },
+          {
+            "key": "receivedDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "notes",
+            "type": "longtext"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
         "apartment",
         "house",
-        "office"
+        "office",
+        "land"
       ],
       "attributes": [
         {
@@ -81,6 +96,9 @@
         },
         {
           "key": "rooms"
+        },
+        {
+          "key": "floor"
         }
       ],
       "currency": "EUR",
@@ -88,219 +106,287 @@
         {
           "id": "offer-1",
           "category": "apartment",
-          "price": 189000,
+          "price": 185000,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "area": 62,
+            "rooms": 2,
+            "floor": 3
           },
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 48.1501,
+            "lng": 17.1082
           }
         },
         {
           "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "category": "apartment",
+          "price": 249000,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 142,
-            "rooms": 5
+            "area": 88,
+            "rooms": 3,
+            "floor": 5
           },
           "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "lat": 48.1523,
+            "lng": 17.1119
           }
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "category": "house",
+          "price": 385000,
+          "pricePeriod": "once",
+          "status": "reserved",
           "attributes": {
-            "area": 95
+            "area": 145,
+            "rooms": 5,
+            "floor": 1
           },
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 48.1438,
+            "lng": 17.0941
+          }
+        },
+        {
+          "id": "offer-4",
+          "category": "office",
+          "price": 3200,
+          "pricePeriod": "month",
+          "attributes": {
+            "area": 118,
+            "rooms": 4,
+            "floor": 2
+          },
+          "location": {
+            "lat": 48.1534,
+            "lng": 17.1198
+          }
+        },
+        {
+          "id": "offer-5",
+          "category": "land",
+          "price": 92000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 850
+          },
+          "location": {
+            "lat": 48.1372,
+            "lng": 17.0824
+          }
+        },
+        {
+          "id": "offer-6",
+          "category": "apartment",
+          "price": 168000,
+          "pricePeriod": "once",
+          "attributes": {
+            "area": 55,
+            "rooms": 2,
+            "floor": 1
+          },
+          "location": {
+            "lat": 48.1581,
+            "lng": 17.1308
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.1486,
+        "lng": 17.1077
+      },
+      "zoom": 12
+    },
+    "contactForm": {
+      "phone": "required"
+    },
+    "cta": {
+      "href": "#contact"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Browse live agency property listings on an interactive map and send inquiries with your phone number and listing name directly to the agent.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Find real properties — skip the outdated ads",
+        "subheadline": "Property seekers browse live listings pinned on a map; every inquiry reaches the agent with a phone number and listing name already attached.",
+        "featuresHeading": "Everything buyers and agents need in one place",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Live map of listings",
+            "description": "Every current property is pinned on the map so visitors can explore by location, not just scroll through a list."
+          },
+          {
+            "icon": "bell",
+            "title": "Inquiries with full context",
+            "description": "Each contact form captures the visitor's phone number and the listing name, so the agent knows exactly who to call and about which property."
+          },
+          {
+            "icon": "shield-check",
+            "title": "No duplicates, no stale ads",
+            "description": "Listings are managed directly by the agency, keeping the catalogue current and free of repeated or outdated entries."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
-          },
-          {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "title": "Lead tracker for agents",
+            "description": "Log and follow every incoming inquiry through a board, from first contact all the way to a closed deal."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "From browsing to a booked viewing in four steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Browse the map",
+              "description": "Open the interactive map to see all current agency properties pinned at their real locations."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Pick a property",
+              "description": "Select any listing to read the full description, price, area and key highlights."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Send your inquiry",
+              "description": "Leave your name and phone number; the form attaches the property name automatically."
+            },
+            {
+              "title": "Expect a call back",
+              "description": "The agent receives one email with your contact details and the property name and calls you directly."
             }
           ]
-        },
-        "faq": {
-          "heading": "What should you know before trying it?",
-          "items": [
-            {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
-            },
-            {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
-            },
-            {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
-            }
-          ]
-        },
-        "featuresHeading": "What is already built?"
+        }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "Inquiry Overview",
+        "intro": "Track all incoming property inquiries, see their status at a glance, and follow up with every interested client.",
+        "kpiLabels": {
+          "totalInquiries": "Total Inquiries",
+          "newLeads": "New Leads",
+          "qualifiedLeads": "Qualified Leads"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Inquiry",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "clientName": "Client Name",
+          "email": "Email",
+          "property": "Property",
+          "status": "Status",
+          "receivedDate": "Received",
+          "notes": "Notes"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "clientName": "Marta Horáková",
+            "email": "marta.h@example.com",
+            "property": "Bright 2-Bedroom Apartment, Central District",
+            "status": "new",
+            "receivedDate": "2026-10-15",
+            "notes": "Interested in a weekend viewing"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "clientName": "Ján Blaho",
+            "email": "j.blaho@example.com",
+            "property": "Family House with Garden, Suburban Street",
+            "status": "contacted",
+            "receivedDate": "2026-10-08",
+            "notes": "Follow-up call arranged for Monday"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "clientName": "Eva Šimková",
+            "email": "eva.s@example.com",
+            "property": "Modern Open-Plan Office, Business District",
+            "status": "qualified",
+            "receivedDate": "2026-09-30",
+            "notes": "Ready to make an offer, inspection pending"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Current Properties",
+        "intro": "Browse the agency's latest listings. Filter by type, explore on the map, and inquire directly about any property that catches your eye.",
+        "notice": "These are illustrative sample listings — the agency will replace them with its live offers.",
         "categoryLabels": {
           "apartment": "Apartment",
           "house": "House",
-          "office": "Office"
+          "office": "Office",
+          "land": "Land"
         },
         "attributeLabels": {
           "area": "Area",
-          "rooms": "Rooms"
+          "rooms": "Rooms",
+          "floor": "Floor"
         },
+        "inquireLabel": "Inquire",
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Bright 2-Bedroom Apartment, Central District",
+            "summary": "A well-maintained apartment on the third floor with natural light throughout and a south-facing balcony. Close to public transport and city-centre amenities.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Renovated kitchen",
+              "South-facing balcony",
+              "Underground parking available"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Spacious 3-Bedroom Apartment, Residential Quarter",
+            "summary": "A generously sized apartment on the fifth floor in a quiet area with good transport links and nearby schools.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Open-plan living area",
+              "Two bathrooms",
+              "Storage room included"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Family House with Garden, Suburban Street",
+            "summary": "A detached family house with a private garden in a calm neighbourhood, ready for immediate occupancy.",
+            "highlights": [
+              "Private garden approx. 400 m²",
+              "Double garage",
+              "4 bedrooms and a study"
+            ]
+          },
+          "offer-4": {
+            "title": "Modern Open-Plan Office, Business District",
+            "summary": "A bright open-plan office on the second floor in a well-connected business area, available immediately for monthly rental.",
+            "highlights": [
+              "Dedicated meeting room",
+              "Air conditioning included",
+              "Parking for 4 vehicles"
+            ]
+          },
+          "offer-5": {
+            "title": "Building Plot with Planning Permission",
+            "summary": "A flat building plot with approved planning permission in a growing suburban area with easy motorway access.",
+            "highlights": [
+              "Planning permission granted",
+              "Utility connections on site",
+              "South-facing orientation"
+            ]
+          },
+          "offer-6": {
+            "title": "Cosy 2-Room Apartment, Southern Quarter",
+            "summary": "A compact and practical apartment on the first floor, ideal as a starter home or a buy-to-let investment.",
+            "highlights": [
+              "Recently repainted",
+              "Secure entry system",
+              "5 minutes to tram stop"
+            ]
           }
-        },
-        "inquireLabel": "Ask about this offer"
+        }
+      },
+      "contactForm": {
+        "heading": "Ask About a Property",
+        "submitLabel": "Send Inquiry",
+        "intro": "Tell us which property interests you and leave your phone number. We will call you back promptly."
+      },
+      "cta": {
+        "label": "Inquire Now",
+        "title": "Find your next property today",
+        "subtitle": "Browse live listings on the map and get in touch directly — no outdated ads, no missing contacts."
       }
     }
   }
