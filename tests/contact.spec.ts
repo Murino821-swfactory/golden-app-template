@@ -72,6 +72,45 @@ test.describe("contact form — no demo slug", () => {
   });
 });
 
+/**
+ * A configured form (every deployed prototype; the factory smoke gate builds WITH the slug).
+ * The endpoint rejects a message under 10 trimmed characters as a bare 400, which the form
+ * used to show as "something went wrong" (founder on agromapa, 2026-10-17), so the form
+ * now refuses it before any request.
+ */
+test.describe("contact form — configured", () => {
+  test.skip(!process.env.NEXT_PUBLIC_DEMO_SLUG, "no demo slug — the form is the not-configured one");
+  test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
+
+  test("a message shorter than the server minimum is refused without a request", async ({ page }) => {
+    let requested = false;
+    await page.route("**/api/prototype-contact", (route) => {
+      requested = true;
+      void route.fulfill({ json: { ok: true } });
+    });
+    await page.goto("./");
+    const section = page.locator('[data-section="contact"]');
+    await section.locator("#contact-email").fill("visitor@example.com");
+    await section.locator("#contact-message").fill("test      ");
+    await expect(section.locator("#contact-message-hint")).toHaveText(uiCopy.contact.messageHint!);
+    await section.getByRole("button", { name: submitLabel, exact: true }).click();
+    expect(await section.locator("#contact-message").evaluate((el: HTMLTextAreaElement) => el.validity.valid)).toBe(false);
+    expect(requested).toBe(false);
+  });
+
+  test("a rate-limited send says so instead of a generic failure", async ({ page }) => {
+    await page.route("**/api/prototype-contact", (route) =>
+      route.fulfill({ status: 429, json: { error: "too many requests" } })
+    );
+    await page.goto("./");
+    const section = page.locator('[data-section="contact"]');
+    await section.locator("#contact-email").fill("visitor@example.com");
+    await section.locator("#contact-message").fill("A question about the map data.");
+    await section.getByRole("button", { name: submitLabel, exact: true }).click();
+    await expect(section.getByRole("alert")).toHaveText(uiCopy.contact.errorTooMany!);
+  });
+});
+
 test.describe("owner contact card", () => {
   test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
 
