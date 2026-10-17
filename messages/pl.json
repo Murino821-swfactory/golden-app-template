@@ -247,6 +247,20 @@
     "gestureWindows": "Przybliżaj mapę za pomocą Ctrl + kółko",
     "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
   },
+  "game": {
+    "start": "Uruchom podgląd",
+    "restart": "Zagraj ponownie",
+    "running": "Łap kule!",
+    "score": "Wynik",
+    "time": "Pozostały czas",
+    "best": "Najlepszy wynik",
+    "played": "Rozegrane rundy",
+    "catches": "Złapane łącznie",
+    "statsHeading": "Twoje statystyki",
+    "result": "Złapałeś {score} kul!",
+    "targetLabel": "Złap kulę",
+    "seconds": "{count} s"
+  },
   "footer": {
     "generatedBy": "Wygenerowane przez Tokenwise AI"
   }

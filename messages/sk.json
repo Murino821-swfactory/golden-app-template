@@ -247,6 +247,20 @@
     "gestureWindows": "Mapu priblížite pomocou Ctrl + koliesko",
     "gestureMac": "Mapu priblížite pomocou ⌘ + koliesko"
   },
+  "game": {
+    "start": "Spustiť ukážku",
+    "restart": "Hrať znova",
+    "running": "Chytaj gule!",
+    "score": "Skóre",
+    "time": "Zostávajúci čas",
+    "best": "Najlepšie skóre",
+    "played": "Odohraté kolá",
+    "catches": "Celkovo chytení",
+    "statsHeading": "Tvoje štatistiky",
+    "result": "Chytil si {score} gúľ!",
+    "targetLabel": "Chyť guľu",
+    "seconds": "{count} s"
+  },
   "footer": {
     "generatedBy": "Vytvorené pomocou Tokenwise AI"
   }

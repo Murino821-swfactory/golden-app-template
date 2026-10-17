@@ -247,6 +247,20 @@
     "gestureWindows": "Utilisez Ctrl + molette pour zoomer",
     "gestureMac": "Utilisez ⌘ + molette pour zoomer"
   },
+  "game": {
+    "start": "Lancer l'aperçu",
+    "restart": "Rejouer",
+    "running": "Attrapez les orbes !",
+    "score": "Score",
+    "time": "Temps restant",
+    "best": "Meilleur score",
+    "played": "Parties jouées",
+    "catches": "Captures totales",
+    "statsHeading": "Vos statistiques",
+    "result": "Vous avez attrapé {score} orbes !",
+    "targetLabel": "Attraper l'orbe",
+    "seconds": "{count} s"
+  },
   "footer": {
     "generatedBy": "Généré par Tokenwise AI"
   }
