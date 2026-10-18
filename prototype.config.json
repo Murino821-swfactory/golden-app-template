@@ -13,6 +13,7 @@
       "sections": [
         "hero",
         "features",
+        "faq",
         "cta"
       ]
     },
@@ -103,7 +104,28 @@
             "title": "Three Sports, One Tool",
             "description": "Manage football, volleyball and basketball in one place without switching between separate systems."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Frequently asked questions",
+          "items": [
+            {
+              "question": "What does Sportsevent do?",
+              "answer": "Sportsevent helps event managers plan multi-day tournaments across football, volleyball and basketball. You add every match with its sport, date, time and venue, so the whole programme stays visible in one place and every attendee knows what happens next."
+            },
+            {
+              "question": "Which sports can I organise with it?",
+              "answer": "Football, volleyball and basketball — all in one tool. You manage the schedule for every sport in the same place, instead of switching between separate systems or spreadsheets for each one."
+            },
+            {
+              "question": "How do attendees know where and when each match is played?",
+              "answer": "Every match carries its date, time and venue, and each playing location can be pinned on a map, so attendees always know where to go. A live status marks each match as planned, in progress or finished, so everyone can follow the event as it unfolds."
+            },
+            {
+              "question": "Do I need to install anything to use it?",
+              "answer": "No. Sportsevent runs in your browser. Sign in with your Google account to open the event dashboard, then start adding matches to build your programme straight away."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Event Overview"
@@ -149,7 +171,28 @@
             "title": "Tri športy naraz",
             "description": "Spravujte futbal, volejbal aj basketbal na jednom mieste bez prepínania medzi rôznymi nástrojmi."
           }
-        ]
+        ],
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Čo Sportsevent robí?",
+              "answer": "Sportsevent pomáha organizátorom naplánovať viacdňové turnaje vo futbale, volejbale a basketbale. Každý zápas pridáte so športom, dátumom, časom a miestom, takže celý program máte prehľadne na jednom mieste a každý účastník vie, čo nasleduje."
+            },
+            {
+              "question": "Ktoré športy v ňom môžem organizovať?",
+              "answer": "Futbal, volejbal aj basketbal — všetko v jednom nástroji. Rozvrh pre každý šport spravujete na rovnakom mieste namiesto prepínania medzi samostatnými systémami alebo tabuľkami pre každý z nich."
+            },
+            {
+              "question": "Ako účastníci zistia, kde a kedy sa zápas hrá?",
+              "answer": "Každý zápas má svoj dátum, čas a miesto a každé hracie miesto sa dá označiť na mape, takže účastníci vždy vedia, kam prísť. Aktuálny stav označuje každý zápas ako naplánovaný, prebiehajúci alebo ukončený, aby mohli event sledovať priebežne."
+            },
+            {
+              "question": "Musím si niečo inštalovať, aby som ho mohol používať?",
+              "answer": "Nie. Sportsevent beží vo vašom prehliadači. Prihláste sa účtom Google, otvorte prehľad eventu a hneď začnite pridávať zápasy a zostavovať svoj program."
+            }
+          ]
+        }
       },
       "dashboard": {
         "title": "Prehľad eventu"
