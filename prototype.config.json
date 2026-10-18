@@ -1,12 +1,12 @@
 {
-  "appName": "Realitný maklér",
+  "appName": "find your home",
   "locales": [
     "en",
     "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "honey-tan-jet-black"
+    "colorScheme": "deep-indigo-frost-white"
   },
   "patterns": {
     "landing": {
@@ -35,26 +35,26 @@
   },
   "content": {
     "en": {
-      "description": "Workspace for real estate agents and agencies: listings, clients, demand matching, deals from offer to keys, leases, AML/GDPR, commissions and reports.",
+      "description": "Workspace for real estate agents and agencies: current listings on a map, inquiries with phone and listing name, clients, deals from offer to keys, leases, AML/GDPR, commissions and reports.",
       "landing": {
-        "headline": "Every listing, client and deal — from the first inquiry to the keys",
-        "subheadline": "A workspace for real estate agents and agencies in Slovakia: properties, clients, demand matching, viewings, deals with checklists, leases, contracts, AML and GDPR records, commissions and the owner's reports.",
-        "featuresHeading": "Everything a sale or a lease needs",
+        "headline": "Current listings, complete inquiries — every buyer reaches the right agent",
+        "subheadline": "find your home gives agents and agencies in Slovakia a map of live listings and delivers every inquiry with the buyer's phone number and the exact listing name — no more anonymous contacts, no more guessing which property they meant.",
+        "featuresHeading": "Everything an agent needs, from listing to keys",
         "features": [
           {
             "icon": "house",
-            "title": "Listings with compliance",
-            "description": "Facts, cadastre, documents, energy certificate, exclusivity and the portals each listing is live on — with warnings before something goes live without them."
+            "title": "Map of live listings",
+            "description": "Listings shown on a map, always current. No outdated or duplicate entries reach your buyers; every pin reflects what is actually for sale or rent today."
+          },
+          {
+            "icon": "bell",
+            "title": "Complete inquiries",
+            "description": "Every inquiry arrives by email with the buyer's phone number and the name of the listing they asked about. No more anonymous contacts without context."
           },
           {
             "icon": "users",
             "title": "Clients with GDPR and AML",
-            "description": "Owners, buyers, landlords and tenants. Consent with an expiry, one-click data export, and the identification Act 297/2008 asks of every agent before a deal."
-          },
-          {
-            "icon": "target",
-            "title": "Demand matched to supply",
-            "description": "Every inquiry scored against your portfolio on type, location, budget, rooms, area and must-haves; the unanswered ones flagged after your response time."
+            "description": "Owners, buyers, landlords and tenants. Consent with an expiry, one-click data export, and the identification Act 297/2008 requires of every agent before a deal."
           },
           {
             "icon": "route",
@@ -73,23 +73,23 @@
           }
         ],
         "howItWorks": {
-          "heading": "From the first call to the keys in four steps",
+          "heading": "From a map pin to a signed deal in four steps",
           "steps": [
             {
               "title": "Open the demo workspace",
-              "description": "No account, no setup. An agency with fourteen listings, twenty clients and deals on every station is waiting in your browser."
+              "description": "No account, no setup. An agency with fourteen listings on the map, clients and deals at every stage is ready in your browser."
             },
             {
-              "title": "List and match",
-              "description": "Add the property with its documents and portals; the inquiry arrives, gets scored against the portfolio and turns into a viewing."
+              "title": "Publish and be found",
+              "description": "Add a listing with its facts, photos and documents; it appears on the map immediately and stays current until you take it down."
             },
             {
-              "title": "Run the deal on the rail",
-              "description": "Offer, reservation with a deposit, contracts, mortgage, cadastre filing — each station with its checklist, AML checked before the contracts."
+              "title": "Receive a complete inquiry",
+              "description": "A buyer clicks a pin, fills a short form; you get an email with their name, phone and the exact listing they asked about."
             },
             {
-              "title": "Hand over the keys and settle up",
-              "description": "Handover protocol with meter readings, commission invoiced, the agent's share on the statement, the numbers in the reports."
+              "title": "Run the deal to the keys",
+              "description": "Match, book a viewing, move through the rail — reservation, contracts, cadastre, handover — with AML and GDPR in place throughout."
             }
           ]
         },
@@ -109,12 +109,12 @@
               "answer": "Both. Switch the mode in Settings: Solo hides the team features; Agency adds colleagues, commission splits, statements per agent and lets the owner look at any desk."
             },
             {
-              "question": "What does the deal rail enforce?",
-              "answer": "Nothing by force — it shows. Each station lists what should be true before the next one (deposit received, title deed checked, mortgage approved, cadastre decision), and the overview flags stale deals and missing AML identification."
+              "question": "How does the map stay current?",
+              "answer": "Each listing has a status. Only active listings appear on the map. When you close a deal or remove a listing, it disappears from the map immediately — no stale pins."
             },
             {
-              "question": "Does it publish to nehnutelnosti.sk or reality.sk?",
-              "answer": "The demo tracks where each listing is published and gives you portal-ready texts. The XML feed export to the portals is the integration step that follows."
+              "question": "What information comes with each inquiry?",
+              "answer": "The buyer's name, email address, phone number and the name of the listing they contacted you about, delivered directly to your inbox."
             },
             {
               "question": "Are the contract templates legally valid?",
@@ -124,31 +124,31 @@
         }
       },
       "dashboard": {
-        "title": "Real estate workspace",
-        "intro": "Your desk: today's viewings, what needs attention, the deals on the rail and your commissions."
+        "title": "find your home — agent workspace",
+        "intro": "Your desk: today's viewings, live listings on the map, pending inquiries with contacts, and your deals on the rail."
       },
       "cta": {
         "label": "Open the demo workspace",
-        "title": "Try it on a desk that is already busy",
-        "subtitle": "Fourteen listings, twenty clients, deals on every station, three leases — explore, then replace it with your own."
+        "title": "Your listings on the map, inquiries in your inbox",
+        "subtitle": "Fourteen listings, twenty clients, every inquiry with a phone number — explore the demo, then replace it with your own."
       },
       "contactForm": {
         "heading": "Talk to us about your agency",
         "submitLabel": "Send message",
-        "intro": "Tell us how you work today — alone or with a team — and what your desk would need."
+        "intro": "Tell us how you work today — alone or with a team — and what your desk would need to run better."
       },
       "useCases": {
         "heading": "Who it is for",
         "items": [
           {
             "title": "Solo agent",
-            "situation": "You carry a dozen listings and a phone full of inquiries, and the reservation deadline is in a notebook.",
-            "action": "Match demand to listings, plan viewings, run each deal on the rail and keep AML and GDPR records without an assistant."
+            "situation": "You carry a dozen listings on scattered portals, and callers can't say which property they mean.",
+            "action": "Publish all listings on one live map; every inquiry arrives with the buyer's phone and the listing name so you can call back prepared."
           },
           {
             "title": "Agency with several agents",
-            "situation": "The owner wants to know who carries what, which deals have stalled and what the commission statements look like.",
-            "action": "Work as any colleague, see the whole pipeline, split commissions by agent and read the monthly reports."
+            "situation": "The owner wants to see all listings on the map, know which deals have stalled and read commission statements per agent.",
+            "action": "Work as any colleague, see the whole pipeline, split commissions by agent and read the monthly reports from one desk."
           },
           {
             "title": "Rentals desk",
@@ -158,29 +158,29 @@
           {
             "title": "Developer's units",
             "situation": "A building's units go on the market in waves, each with its documents, photos and energy certificate.",
-            "action": "Keep units in preparation until their documents are complete, then publish to the portals from one matrix."
+            "action": "Keep units in preparation until their documents are complete, then publish them to the map from one matrix."
           }
         ]
       },
       "comparison": {
-        "heading": "Today versus with the workspace",
+        "heading": "Today versus with find your home",
         "beforeLabel": "Today",
-        "afterLabel": "With the workspace",
+        "afterLabel": "With find your home",
         "rows": [
           {
             "topic": "Inquiries",
-            "before": "Portal e-mails, calls and notes in three places; the fast ones get an answer, the rest wait.",
-            "after": "Every inquiry in one list with a response-time flag and a score against your listings."
+            "before": "Portal emails without contact details or listing reference; you spend the first call finding out which property they meant.",
+            "after": "Every inquiry arrives with the buyer's phone number and the exact listing name, ready to act on."
+          },
+          {
+            "topic": "Listings",
+            "before": "Outdated and duplicate listings on portals; buyers waste time on properties already sold or rented.",
+            "after": "One live map showing only current listings; a closed deal removes the pin immediately."
           },
           {
             "topic": "Deals",
             "before": "Deadlines in a calendar, documents in a folder, the mortgage status in a text message.",
             "after": "One rail per deal with the checklist of each station and a warning when it stalls."
-          },
-          {
-            "topic": "Compliance",
-            "before": "AML forms and GDPR consents collected when someone remembers.",
-            "after": "Identification and consent on every client, flagged before the contracts and before they expire."
           },
           {
             "topic": "Money",
@@ -191,26 +191,26 @@
       }
     },
     "sk": {
-      "description": "Pracovný priestor pre realitných maklérov a kancelárie: ponuky, klienti, párovanie dopytov, obchody od ponuky po kľúče, prenájmy, AML/GDPR, provízie a reporty.",
+      "description": "Pracovný priestor pre realitných maklérov a kancelárie: aktuálne ponuky na mape, dopyty s telefónom a názvom ponuky, klienti, obchody od ponuky po kľúče, prenájmy, AML/GDPR, provízie a reporty.",
       "landing": {
-        "headline": "Každá ponuka, klient a obchod — od prvého dopytu po kľúče",
-        "subheadline": "Pracovný priestor pre realitných maklérov a kancelárie na Slovensku: nehnuteľnosti, klienti, párovanie dopytov, obhliadky, obchody s kontrolnými zoznamami, prenájmy, zmluvy, AML a GDPR záznamy, provízie a reporty pre majiteľa.",
-        "featuresHeading": "Všetko, čo predaj alebo prenájom potrebuje",
+        "headline": "Aktuálne ponuky, úplné dopyty — každý záujemca nájde správneho makléra",
+        "subheadline": "find your home dáva maklérom a kanceláriám na Slovensku mapu živých ponúk a každý dopyt doručí s telefónnym číslom záujemcu a presným názvom ponuky — bez anonymných kontaktov, bez hádania, o ktorú nehnuteľnosť ide.",
+        "featuresHeading": "Všetko, čo maklér potrebuje, od ponuky po kľúče",
         "features": [
           {
             "icon": "house",
-            "title": "Ponuky so súladom",
-            "description": "Fakty, kataster, dokumenty, energetický certifikát, výhradnosť a portály, kde je každá ponuka zverejnená — s upozornením skôr, než ide von bez nich."
+            "title": "Mapa živých ponúk",
+            "description": "Ponuky zobrazené na mape, vždy aktuálne. Zastarané alebo duplicitné inzeráty sa k záujemcom nedostanú; každý pin odráža to, čo je skutočne na predaj alebo prenájom."
+          },
+          {
+            "icon": "bell",
+            "title": "Úplné dopyty",
+            "description": "Každý dopyt príde e-mailom s telefónom záujemcu a názvom ponuky, na ktorú sa pýtal. Koniec anonymným kontaktom bez kontextu."
           },
           {
             "icon": "users",
             "title": "Klienti s GDPR a AML",
-            "description": "Vlastníci, kupujúci, prenajímatelia a nájomcovia. Súhlas s platnosťou, export údajov jedným klikom a identifikácia, ktorú zákon č. 297/2008 od makléra vyžaduje pred obchodom."
-          },
-          {
-            "icon": "target",
-            "title": "Dopyty spárované s ponukou",
-            "description": "Každý dopyt ohodnotený voči portfóliu podľa typu, lokality, rozpočtu, izieb, plochy a podmienok; nezodpovedané po lehote označené."
+            "description": "Vlastníci, kupujúci, prenajímatelia a nájomcovia. Súhlas s platnosťou, export jedným klikom a identifikácia podľa zákona č. 297/2008 od makléra pred každým obchodom."
           },
           {
             "icon": "route",
@@ -229,23 +229,23 @@
           }
         ],
         "howItWorks": {
-          "heading": "Od prvého telefonátu po kľúče v štyroch krokoch",
+          "heading": "Od pinu na mape po podpísaný obchod v štyroch krokoch",
           "steps": [
             {
               "title": "Otvorte demo priestor",
-              "description": "Bez účtu, bez nastavovania. Vo vašom prehliadači čaká kancelária so štrnástimi ponukami, dvadsiatimi klientmi a obchodmi na každej stanici."
+              "description": "Bez účtu, bez nastavovania. Vo vašom prehliadači čaká kancelária so štrnástimi ponukami na mape, klientmi a obchodmi na každej stanici."
             },
             {
-              "title": "Zaevidujte a spárujte",
-              "description": "Pridajte nehnuteľnosť s dokumentmi a portálmi; príde dopyt, systém ho ohodnotí voči portfóliu a premení na obhliadku."
+              "title": "Zverejnite a buďte nájdení",
+              "description": "Pridajte ponuku s faktami, fotografiami a dokumentmi; okamžite sa objaví na mape a zostane aktuálna, kým ju nestiahnete."
             },
             {
-              "title": "Veďte obchod po koľaji",
-              "description": "Ponuka, rezervácia s depozitom, zmluvy, hypotéka, návrh na vklad — každá stanica s kontrolným zoznamom, AML skontrolované pred zmluvami."
+              "title": "Prijmite úplný dopyt",
+              "description": "Záujemca klikne na pin, vyplní krátky formulár; dostanete e-mail s menom, telefónom a presnou ponukou, na ktorú sa pýtal."
             },
             {
-              "title": "Odovzdajte kľúče a vyúčtujte",
-              "description": "Preberací protokol so stavmi meračov, vyfakturovaná provízia, podiel makléra vo vyúčtovaní, čísla v reportoch."
+              "title": "Veďte obchod po kľúče",
+              "description": "Spárujte, dohodnite obhliadku, prejdite koľajou — rezervácia, zmluvy, kataster, odovzdanie — s AML a GDPR počas celého procesu."
             }
           ]
         },
@@ -265,12 +265,12 @@
               "answer": "Pre oboch. Režim prepnete v Nastaveniach: Samostatný maklér skryje tímové funkcie; Realitná kancelária pridá kolegov, deľbu provízií, vyúčtovanie pre každého makléra a majiteľovi ukáže ktorýkoľvek stôl."
             },
             {
-              "question": "Čo koľaj obchodu vynucuje?",
-              "answer": "Nič násilím — ukazuje. Každá stanica vypíše, čo má platiť pred ďalšou (prijatý depozit, skontrolovaný list vlastníctva, schválená hypotéka, rozhodnutie katastra), a prehľad označí obchody bez pohybu a chýbajúcu AML identifikáciu."
+              "question": "Ako zostáva mapa aktuálna?",
+              "answer": "Každá ponuka má stav. Na mape sa zobrazujú len aktívne ponuky. Keď uzavriete obchod alebo ponuku stiahnete, pin z mapy okamžite zmizne — žiadne zastarané inzeráty."
             },
             {
-              "question": "Zverejňuje na nehnutelnosti.sk alebo reality.sk?",
-              "answer": "Demo sleduje, kde je každá ponuka zverejnená, a pripraví texty pre portály. Export XML feedu na portály je nasledujúci integračný krok."
+              "question": "Aké informácie prídu s každým dopytom?",
+              "answer": "Meno záujemcu, e-mailová adresa, telefónne číslo a názov ponuky, cez ktorú vás kontaktoval — doručené priamo do vašej schránky."
             },
             {
               "question": "Sú šablóny zmlúv právne záväzné?",
@@ -280,31 +280,31 @@
         }
       },
       "dashboard": {
-        "title": "Realitný pracovný priestor",
-        "intro": "Váš stôl: dnešné obhliadky, čo vyžaduje pozornosť, obchody na koľaji a vaše provízie."
+        "title": "find your home — pracovný priestor makléra",
+        "intro": "Váš stôl: dnešné obhliadky, živé ponuky na mape, čakajúce dopyty s kontaktmi a obchody na koľaji."
       },
       "cta": {
         "label": "Otvoriť demo priestor",
-        "title": "Vyskúšajte to na stole, ktorý už žije",
-        "subtitle": "Štrnásť ponúk, dvadsať klientov, obchody na každej stanici, tri prenájmy — preskúmajte a potom nahraďte vlastnými."
+        "title": "Vaše ponuky na mape, dopyty s kontaktom v schránke",
+        "subtitle": "Štrnásť ponúk, dvadsať klientov, každý dopyt s telefónnym číslom — preskúmajte demo a nahraďte ho vlastnými údajmi."
       },
       "contactForm": {
         "heading": "Porozprávajme sa o vašej kancelárii",
         "submitLabel": "Odoslať správu",
-        "intro": "Napíšte, ako dnes pracujete — sami alebo s tímom — a čo by váš stôl potreboval."
+        "intro": "Napíšte, ako dnes pracujete — sami alebo s tímom — a čo by váš stôl potreboval, aby fungoval lepšie."
       },
       "useCases": {
         "heading": "Pre koho to je",
         "items": [
           {
             "title": "Samostatný maklér",
-            "situation": "Nesiete tucet ponúk a telefón plný dopytov a termín rezervácie máte v zošite.",
-            "action": "Spárujte dopyty s ponukami, naplánujte obhliadky, veďte každý obchod po koľaji a majte AML aj GDPR záznamy bez asistentky."
+            "situation": "Nesiete tucet ponúk na rôznych portáloch a volajúci nevedia povedať, o ktorú nehnuteľnosť ide.",
+            "action": "Zverejnite všetky ponuky na jednej živej mape; každý dopyt príde s telefónom záujemcu a názvom ponuky, aby ste mohli zavolať späť pripravení."
           },
           {
             "title": "Kancelária s viacerými maklérmi",
-            "situation": "Majiteľ chce vedieť, kto čo nesie, ktoré obchody stoja a ako vyzerajú vyúčtovania provízií.",
-            "action": "Pozrite sa na stôl ktoréhokoľvek kolegu, vidíte celý pipeline, deľte provízie podľa makléra a čítajte mesačné reporty."
+            "situation": "Majiteľ chce vidieť všetky ponuky na mape, vedieť, ktoré obchody stoja, a čítať vyúčtovania provízií pre každého makléra.",
+            "action": "Pozrite sa na stôl ktoréhokoľvek kolegu, vidíte celý pipeline, deľte provízie podľa makléra a čítajte mesačné reporty z jedného miesta."
           },
           {
             "title": "Správa prenájmov",
@@ -314,29 +314,29 @@
           {
             "title": "Byty od developera",
             "situation": "Byty v dome idú na trh vo vlnách, každý s dokumentmi, fotografiami a energetickým certifikátom.",
-            "action": "Držte byty v príprave, kým nie sú dokumenty kompletné, potom ich zverejnite na portály z jednej matice."
+            "action": "Držte byty v príprave, kým nie sú dokumenty kompletné, potom ich zverejnite na mapu z jednej matice."
           }
         ]
       },
       "comparison": {
-        "heading": "Dnes a s pracovným priestorom",
+        "heading": "Dnes a s find your home",
         "beforeLabel": "Dnes",
-        "afterLabel": "S pracovným priestorom",
+        "afterLabel": "S find your home",
         "rows": [
           {
             "topic": "Dopyty",
-            "before": "E-maily z portálov, hovory a poznámky na troch miestach; rýchle dostanú odpoveď, ostatné čakajú.",
-            "after": "Každý dopyt v jednom zozname s označením lehoty na odpoveď a so zhodou voči vašim ponukám."
+            "before": "E-maily z portálov bez kontaktných údajov alebo názvu ponuky; prvý hovor strávite zisťovaním, o ktorú nehnuteľnosť ide.",
+            "after": "Každý dopyt príde s telefónom záujemcu a presným názvom ponuky, hneď pripravený na akciu."
+          },
+          {
+            "topic": "Ponuky",
+            "before": "Zastarané a duplicitné inzeráty na portáloch; záujemcovia strácajú čas na nehnuteľnostiach, ktoré sú už predané alebo prenajaté.",
+            "after": "Jedna živá mapa zobrazuje len aktuálne ponuky; uzavretý obchod pin okamžite odstráni."
           },
           {
             "topic": "Obchody",
             "before": "Termíny v kalendári, dokumenty v šanóne, stav hypotéky v SMS.",
             "after": "Jedna koľaj na obchod s kontrolným zoznamom každej stanice a upozornením, keď stojí."
-          },
-          {
-            "topic": "Súlad",
-            "before": "AML formuláre a GDPR súhlasy zbierané, keď si niekto spomenie.",
-            "after": "Identifikácia a súhlas pri každom klientovi, označené pred zmluvami a pred vypršaním."
           },
           {
             "topic": "Peniaze",
