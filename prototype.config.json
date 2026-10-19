@@ -1,60 +1,32 @@
 {
   "appName": "Unbroken",
-  "description": "Unbroken helps busy professionals keep five daily life pillars with five taps a day. Shields cover a missed day, XP and levels show the climb, and your streak syncs to every device.",
+  "locales": ["en"],
+  "defaultLocale": "en",
   "theme": {
-    "colorScheme": "yellow",
-    "style": "bold"
+    "colorScheme": "yellow"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
+        "faq",
         "cta",
         "contact"
-      ],
-      "headline": "One missed day won't break you.",
-      "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Mind, Relationships and Habits in under ten seconds a day, and let a shield cover the day you miss.",
-      "features": [
-        {
-          "icon": "list-checks",
-          "title": "Five-Pillar Check-In",
-          "description": "Tap yes or no for each of your five pillars and your whole day is logged before your coffee goes cold."
-        },
-        {
-          "icon": "shield-check",
-          "title": "Shields Instead of Resets",
-          "description": "Every seven days in a row earns a shield. Miss a day and the shield covers it, so one missed day never breaks your streak."
-        },
-        {
-          "icon": "trophy",
-          "title": "Levels and a Trophy Case",
-          "description": "Every tap earns XP, from Paper all the way to Unbroken. Streak milestones, perfect weeks and comebacks land in your trophy case."
-        },
-        {
-          "icon": "users",
-          "title": "Share, Remind, Sync",
-          "description": "Share a streak card with your people, put a daily reminder in your calendar, and find the same streak on your phone and your laptop."
-        }
       ]
     },
-    "dashboard": {
-      "title": "Today's Check-In"
-    },
+    "dashboard": {},
     "dataGrid": {
       "entity": {
         "key": "goals",
-        "label": "Goal",
         "fields": [
           {
             "key": "goal",
-            "label": "Goal",
             "type": "text",
             "required": true
           },
           {
             "key": "pillar",
-            "label": "Pillar",
             "type": "select",
             "options": [
               "Work",
@@ -67,7 +39,6 @@
           },
           {
             "key": "details",
-            "label": "Details",
             "type": "longtext"
           }
         ]
@@ -75,12 +46,82 @@
     },
     "authGoogle": {},
     "cta": {
-      "label": "Start your first check-in",
       "href": "/checkin"
     },
-    "contactForm": {
-      "heading": "Get in touch",
-      "submitLabel": "Send message"
+    "contactForm": {}
+  },
+  "content": {
+    "en": {
+      "description": "Unbroken helps busy professionals keep five daily life pillars with five taps a day. Shields cover a missed day, XP and levels show the climb, and your streak syncs to every device.",
+      "landing": {
+        "headline": "One missed day won't break you.",
+        "subheadline": "Unbroken is for busy professionals who want balanced habits — check off Work, Fitness, Mind, Relationships and Habits in under ten seconds a day, and let a shield cover the day you miss.",
+        "features": [
+          {
+            "icon": "list-checks",
+            "title": "Five-Pillar Check-In",
+            "description": "Tap yes or no for each of your five pillars and your whole day is logged before your coffee goes cold."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Shields Instead of Resets",
+            "description": "Every seven days in a row earns a shield. Miss a day and the shield covers it, so one missed day never breaks your streak."
+          },
+          {
+            "icon": "trophy",
+            "title": "Levels and a Trophy Case",
+            "description": "Every tap earns XP, from Paper all the way to Unbroken. Streak milestones, perfect weeks and comebacks land in your trophy case."
+          },
+          {
+            "icon": "users",
+            "title": "Share, Remind, Sync",
+            "description": "Share a streak card with your people, put a daily reminder in your calendar, and find the same streak on your phone and your laptop."
+          }
+        ],
+        "faq": {
+          "heading": "Before your first check-in",
+          "items": [
+            {
+              "question": "What do I track each day?",
+              "answer": "Five life pillars — Work, Fitness, Mind, Relationships and Habits. You tap yes or no for each one, so a whole day is logged in about ten seconds, before your coffee goes cold."
+            },
+            {
+              "question": "What happens if I miss a day?",
+              "answer": "Nothing breaks. Every seven days in a row earns a shield, and a shield automatically covers a day you miss, so your streak keeps going. One off day never sends you back to zero."
+            },
+            {
+              "question": "Do I need an account to start?",
+              "answer": "No. You can start your first check-in straight away and your streak is saved in your browser. Sign in with Google when you want the same streak on your phone and your laptop."
+            },
+            {
+              "question": "How do levels and the trophy case work?",
+              "answer": "Every tap earns XP, and you climb through levels from Paper all the way to Unbroken. Streak milestones, perfect weeks and comebacks land in your trophy case so you can see the climb."
+            },
+            {
+              "question": "Will it remind me to check in?",
+              "answer": "Yes. You can add a daily reminder to your calendar and share a streak card with the people keeping you accountable, so checking in becomes part of your routine."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Today's Check-In"
+      },
+      "cta": {
+        "label": "Start your first check-in"
+      },
+      "contactForm": {
+        "heading": "Get in touch",
+        "submitLabel": "Send message"
+      },
+      "dataGrid": {
+        "entityLabel": "Goal",
+        "fieldLabels": {
+          "goal": "Goal",
+          "pillar": "Pillar",
+          "details": "Details"
+        }
+      }
     }
   }
 }
