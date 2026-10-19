@@ -11,7 +11,7 @@ export function HowItWorksSection() {
   if (!block) return null; // zod requires the copy whenever this section is enabled
 
   return (
-    <section data-section="howItWorks" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="howItWorks" data-section="howItWorks" className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <h2 className="text-center text-3xl font-semibold tracking-tight">{block.heading ?? t("title")}</h2>
       <ol className={cn("mt-10 grid gap-8 sm:grid-cols-3", block.steps.length === 4 && "sm:grid-cols-2 lg:grid-cols-4")}>
         {block.steps.map((step, i) => (

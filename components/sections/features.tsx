@@ -32,8 +32,8 @@ export function FeaturesSection() {
 
   return (
     <section
-      data-section="features"
-      className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
+      id="features" data-section="features"
+      className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
     >
       <h2 className="text-center text-3xl font-semibold tracking-tight">
         {landing?.featuresHeading ?? t("title")}

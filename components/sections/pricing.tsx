@@ -17,8 +17,8 @@ export function PricingSection() {
 
   return (
     <section
-      data-section="pricing"
-      className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
+      id="pricing" data-section="pricing"
+      className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
     >
       <h2 className="text-center text-3xl font-semibold tracking-tight">
         {t("title")}
