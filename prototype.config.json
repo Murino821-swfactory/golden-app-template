@@ -1,306 +1,608 @@
 {
-  "appName": "Golden App Template",
+  "appName": "rohace",
   "locales": [
-    "en"
+    "en",
+    "pl"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "fluorescent-cyan-oxford-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
+        "listings",
         "howItWorks",
         "faq",
-        "listings",
         "contact",
         "cta"
       ],
-      "presentation": "story"
+      "presentation": "document"
     },
-    "dashboard": {},
-    "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {
-      "phone": "optional"
-    },
-    "dataGrid": {
-      "entity": {
-        "key": "location",
-        "fields": [
-          {
-            "key": "name",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
-          }
-        ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
-    },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "room",
+        "wellness",
+        "activity"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "capacity"
         },
         {
-          "key": "rooms"
+          "key": "area",
+          "unit": "m²"
         }
       ],
       "currency": "EUR",
       "items": [
         {
           "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "category": "room",
+          "price": 85,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "capacity": 2,
+            "area": 22
           },
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 49.2681,
+            "lng": 19.6523
           }
         },
         {
           "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "category": "room",
+          "price": 145,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 142,
-            "rooms": 5
+            "capacity": 4,
+            "area": 45
           },
           "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "lat": 49.2695,
+            "lng": 19.6511
           }
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "category": "wellness",
+          "price": 220,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 95
+            "capacity": 2
           },
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 49.2672,
+            "lng": 19.6541
+          }
+        },
+        {
+          "id": "offer-4",
+          "category": "wellness",
+          "price": 18,
+          "pricePeriod": "once",
+          "attributes": {
+            "capacity": 1
+          },
+          "location": {
+            "lat": 49.2663,
+            "lng": 19.653
+          }
+        },
+        {
+          "id": "offer-5",
+          "category": "activity",
+          "price": 35,
+          "pricePeriod": "once",
+          "attributes": {
+            "capacity": 12
+          },
+          "location": {
+            "lat": 49.2754,
+            "lng": 19.6602
+          }
+        },
+        {
+          "id": "offer-6",
+          "category": "activity",
+          "price": 25,
+          "pricePeriod": "once",
+          "attributes": {
+            "capacity": 1
+          },
+          "location": {
+            "lat": 49.2648,
+            "lng": 19.6478
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 49.267,
+        "lng": 19.651
+      },
+      "zoom": 12
+    },
+    "contactForm": {
+      "phone": "optional"
+    },
+    "cta": {
+      "href": "#contact"
+    },
+    "authGoogle": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalBookings",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "confirmedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "confirmed"
+        },
+        {
+          "id": "pendingShare",
+          "field": "status",
+          "agg": "share",
+          "value": "pending"
+        }
+      ]
+    },
+    "dataGrid": {
+      "entity": {
+        "key": "booking",
+        "fields": [
+          {
+            "key": "guestName",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "accommodation",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "checkIn",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "checkOut",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "numGuests",
+            "type": "number"
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "confirmed",
+              "pending",
+              "cancelled"
+            ],
+            "required": true
+          }
+        ]
+      },
+      "boardBy": "status"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Rohace resort in the Western Tatras — wellness, accommodation and outdoor activities in the heart of the Roháče mountains.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Relax and Explore the Heart of the Roháče Mountains",
+        "subheadline": "Rohace welcomes hikers, families and wellness seekers to a mountain retreat in the Western Tatras of Slovakia.",
+        "featuresHeading": "Everything You Need in the Mountains",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "dumbbell",
+            "title": "Wellness & Thermal Baths",
+            "description": "Unwind in warm thermal pools and revitalising treatments after a day exploring the Roháče peaks."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "house",
+            "title": "Mountain Accommodation",
+            "description": "Stay in comfortable rooms with panoramic views of the Western Tatras directly from your window."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "route",
+            "title": "Guided Hiking Trails",
+            "description": "Join expert-led treks through the most scenic routes in the Roháče mountain range."
+          },
+          {
+            "icon": "message-square",
+            "title": "Easy Online Inquiry",
+            "description": "Send your room or package inquiry directly from the website and receive a reply within one business day."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Plan Your Mountain Stay",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Browse Offers",
+              "description": "Explore available rooms, wellness packages and outdoor activities in our listings section."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Choose Your Package",
+              "description": "Pick the combination of accommodation and experiences that fits your trip and group size."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Send an Inquiry",
+              "description": "Fill in the contact form with your preferred dates and we will confirm availability promptly."
+            },
+            {
+              "title": "Arrive and Enjoy",
+              "description": "Check in and begin your mountain adventure in the beautiful Roháče area."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions & Answers",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Where is rohace located?",
+              "answer": "Rohace is situated in the Western Tatras mountain range, in the Roháče area near Zuberec in the Orava region of northern Slovakia."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can I reserve directly through the website?",
+              "answer": "You can send an inquiry through our contact form with your preferred dates. Our team will confirm availability and finalise your booking with you directly."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Is wellness access included in the room price?",
+              "answer": "It depends on the package you choose. Some packages include thermal bath entry; others offer wellness as an optional add-on. See our listings for details on each offer."
+            },
+            {
+              "question": "What outdoor activities are available nearby?",
+              "answer": "The Roháče area offers marked hiking trails, mountain biking routes and winter ski slopes. Our team can help you plan activities to suit your group during your stay."
+            },
+            {
+              "question": "Is rohace suitable for families with children?",
+              "answer": "Yes. We have family suites for up to four guests and can recommend trails and activities suited to children of different ages."
             }
           ]
-        },
-        "featuresHeading": "What is already built?"
-      },
-      "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
-      },
-      "dataGrid": {
-        "entityLabel": "Location",
-        "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
-        },
-        "sampleRecords": [
-          {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
-          }
-        ]
+        }
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Rooms, Wellness & Activities",
+        "intro": "Browse our accommodation, wellness treatments and outdoor experiences in the Roháče mountains. Contact us for current availability.",
+        "notice": "These listings are illustrative examples; please contact us to confirm current availability and pricing.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "room": "Accommodation",
+          "wellness": "Wellness",
+          "activity": "Activities"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "capacity": "Guests",
+          "area": "Area"
         },
+        "inquireLabel": "Inquire Now",
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Standard Mountain Room",
+            "summary": "A cosy en-suite room with mountain views, ideal for couples or solo travellers seeking a comfortable base in the Roháče.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Mountain view",
+              "En-suite bathroom",
+              "Free Wi-Fi"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Deluxe Family Suite",
+            "summary": "A spacious suite for up to four guests with a separate living area and panoramic views over the Western Tatras peaks.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Sleeps 4",
+              "Separate living area",
+              "Mountain panorama"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Wellness Weekend Package",
+            "summary": "Two nights of accommodation with full access to thermal baths, sauna and a relaxation massage — the ideal mountain reset.",
+            "highlights": [
+              "2 nights included",
+              "Thermal bath access",
+              "Relaxation massage"
+            ]
+          },
+          "offer-4": {
+            "title": "Thermal Bath Day Entry",
+            "summary": "Spend a full day in our thermal pools and steam rooms without an overnight stay, perfect for day visitors to the area.",
+            "highlights": [
+              "Full day access",
+              "Thermal pools",
+              "Steam rooms"
+            ]
+          },
+          "offer-5": {
+            "title": "Guided Roháče Trek",
+            "summary": "A half-day guided hike along the most scenic trails of the Roháče ridge, suitable for fit adults and older children.",
+            "highlights": [
+              "Half-day hike",
+              "Expert guide",
+              "Roháče ridge route"
+            ]
+          },
+          "offer-6": {
+            "title": "E-Bike Mountain Rental",
+            "summary": "Rent an electric mountain bike for the day and discover the valleys and forest trails around Zuberec at your own pace.",
+            "highlights": [
+              "Full day rental",
+              "Electric assist",
+              "Helmet included"
+            ]
           }
+        }
+      },
+      "contactForm": {
+        "heading": "Get in Touch",
+        "submitLabel": "Send Inquiry",
+        "intro": "Tell us your preferred dates and what you are looking for and we will respond within one business day."
+      },
+      "cta": {
+        "label": "Send an Inquiry",
+        "title": "Ready for Your Mountain Escape?",
+        "subtitle": "Get in touch and our team will help you plan the perfect stay in the Roháče mountains."
+      },
+      "dashboard": {
+        "title": "Bookings Overview",
+        "intro": "Track all guest inquiries and reservations for rohace in one place.",
+        "kpiLabels": {
+          "totalBookings": "Total Bookings",
+          "confirmedShare": "Confirmed",
+          "pendingShare": "Pending"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Booking",
+        "fieldLabels": {
+          "guestName": "Guest Name",
+          "accommodation": "Room / Package",
+          "checkIn": "Check-in",
+          "checkOut": "Check-out",
+          "numGuests": "Guests",
+          "status": "Status"
         },
-        "inquireLabel": "Ask about this offer"
+        "sampleRecords": [
+          {
+            "guestName": "Martin Kováč",
+            "accommodation": "Standard Mountain Room",
+            "checkIn": "2026-09-15",
+            "checkOut": "2026-09-17",
+            "numGuests": 2,
+            "status": "confirmed"
+          },
+          {
+            "guestName": "Anna Novák",
+            "accommodation": "Deluxe Family Suite",
+            "checkIn": "2026-10-01",
+            "checkOut": "2026-10-04",
+            "numGuests": 4,
+            "status": "pending"
+          },
+          {
+            "guestName": "Tomáš Hrubý",
+            "accommodation": "Wellness Weekend Package",
+            "checkIn": "2026-10-10",
+            "checkOut": "2026-10-12",
+            "numGuests": 2,
+            "status": "confirmed"
+          }
+        ]
+      }
+    },
+    "pl": {
+      "description": "Rohace – wellness i wypoczynek w Tatrach Zachodnich. Noclegi, baseny termalne i aktywności na świeżym powietrzu w sercu gór Roháče.",
+      "landing": {
+        "headline": "Odpoczynek i przygoda w sercu gór Roháče",
+        "subheadline": "Rohace zaprasza turystów, rodziny i miłośników wellness na górski wypoczynek w Tatrach Zachodnich Słowacji.",
+        "featuresHeading": "Wszystko, czego potrzebujesz w górach",
+        "features": [
+          {
+            "icon": "dumbbell",
+            "title": "Wellness i baseny termalne",
+            "description": "Zrelaksuj się w ciepłych basenach i skorzystaj z zabiegów regeneracyjnych po dniu w górach Roháče."
+          },
+          {
+            "icon": "house",
+            "title": "Noclegi z widokiem",
+            "description": "Zatrzymaj się w wygodnych pokojach z panoramą szczytów Tatr Zachodnich widoczną wprost z okna."
+          },
+          {
+            "icon": "route",
+            "title": "Wycieczki z przewodnikiem",
+            "description": "Wyrusz na prowadzone szlaki przez najpiękniejsze trasy w górach Roháče."
+          },
+          {
+            "icon": "message-square",
+            "title": "Szybkie zapytanie online",
+            "description": "Wyślij zapytanie o pokój lub pakiet przez stronę i otrzymaj odpowiedź w ciągu jednego dnia roboczego."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Zaplanuj swój pobyt",
+          "steps": [
+            {
+              "title": "Przeglądaj oferty",
+              "description": "Sprawdź dostępne pokoje, pakiety wellness i aktywności w naszej sekcji ofert."
+            },
+            {
+              "title": "Wybierz pakiet",
+              "description": "Dobierz kombinację noclegu i doświadczeń odpowiednią dla swojego wyjazdu i liczby gości."
+            },
+            {
+              "title": "Wyślij zapytanie",
+              "description": "Wypełnij formularz kontaktowy z preferowanymi datami, a my potwierdzimy dostępność."
+            },
+            {
+              "title": "Przyjedź i ciesz się",
+              "description": "Zamelduj się i zacznij swoją górską przygodę w pięknym rejonie Roháče."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Pytania i odpowiedzi",
+          "items": [
+            {
+              "question": "Gdzie dokładnie znajduje się rohace?",
+              "answer": "Rohace jest położone w Tatrach Zachodnich, w rejonie Roháče w pobliżu Zubercu, w malowniczym regionie Orawy na północnej Słowacji."
+            },
+            {
+              "question": "Czy mogę dokonać rezerwacji bezpośrednio przez stronę?",
+              "answer": "Możesz przesłać zapytanie przez formularz kontaktowy z preferowanymi datami. Nasz zespół skontaktuje się z Tobą, aby potwierdzić dostępność i sfinalizować rezerwację."
+            },
+            {
+              "question": "Czy wellness jest wliczone w cenę pokoju?",
+              "answer": "Dostęp do strefy wellness zależy od wybranego pakietu. Niektóre pakiety obejmują wstęp do basenów termalnych, inne oferują je jako dodatek. Szczegóły znajdziesz w naszych ofertach."
+            },
+            {
+              "question": "Jakie aktywności na świeżym powietrzu są dostępne w okolicy?",
+              "answer": "Rejon Roháče oferuje znakowane szlaki piesze, trasy rowerowe i zimowe stoki narciarskie. Nasz zespół chętnie pomoże Ci zaplanować aktywności podczas pobytu."
+            },
+            {
+              "question": "Czy rohace jest odpowiednie dla rodzin z dziećmi?",
+              "answer": "Tak. Dysponujemy apartamentami rodzinnymi dla do czterech osób i możemy polecić szlaki oraz aktywności dostosowane do dzieci w różnym wieku."
+            }
+          ]
+        }
+      },
+      "listings": {
+        "heading": "Pokoje, wellness i aktywności",
+        "intro": "Przeglądaj noclegi, zabiegi wellness i aktywności na świeżym powietrzu w górach Roháče. Skontaktuj się z nami w sprawie aktualnej dostępności.",
+        "notice": "Poniższe oferty mają charakter ilustracyjny; skontaktuj się z nami, aby potwierdzić aktualną dostępność i ceny.",
+        "categoryLabels": {
+          "room": "Noclegi",
+          "wellness": "Wellness",
+          "activity": "Aktywności"
+        },
+        "attributeLabels": {
+          "capacity": "Liczba gości",
+          "area": "Powierzchnia"
+        },
+        "inquireLabel": "Zapytaj teraz",
+        "items": {
+          "offer-1": {
+            "title": "Pokój Standard z widokiem na góry",
+            "summary": "Przytulny pokój z łazienką i widokiem na góry, idealny dla par lub podróżujących solo szukających komfortowej bazy w Roháče.",
+            "highlights": [
+              "Widok na góry",
+              "Łazienka",
+              "Bezpłatne Wi-Fi"
+            ]
+          },
+          "offer-2": {
+            "title": "Apartament Deluxe dla rodziny",
+            "summary": "Przestronny apartament dla maksymalnie czterech gości z oddzielnym salonem i panoramą szczytów Tatr Zachodnich.",
+            "highlights": [
+              "4 osoby",
+              "Osobny salon",
+              "Panorama gór"
+            ]
+          },
+          "offer-3": {
+            "title": "Weekendowy pakiet wellness",
+            "summary": "Dwie noce noclegu z pełnym dostępem do basenów termalnych, sauny i masażu relaksacyjnego – idealny górski relaks.",
+            "highlights": [
+              "2 noce w cenie",
+              "Baseny termalne",
+              "Masaż relaksacyjny"
+            ]
+          },
+          "offer-4": {
+            "title": "Jednodniowy wstęp do basenów",
+            "summary": "Spędź cały dzień w naszych basenach termalnych i łaźni parowej bez noclegu – idealne dla odwiedzających na jeden dzień.",
+            "highlights": [
+              "Całodzienny wstęp",
+              "Baseny termalne",
+              "Łaźnia parowa"
+            ]
+          },
+          "offer-5": {
+            "title": "Wycieczka z przewodnikiem po Roháče",
+            "summary": "Półdniowa wycieczka z przewodnikiem przez najpiękniejsze szlaki grzbietu Roháče, odpowiednia dla sprawnych dorosłych i starszych dzieci.",
+            "highlights": [
+              "Wycieczka półdniowa",
+              "Doświadczony przewodnik",
+              "Grzbiet Roháče"
+            ]
+          },
+          "offer-6": {
+            "title": "Wynajem e-roweru górskiego",
+            "summary": "Wypożycz elektryczny rower górski na cały dzień i odkrywaj doliny oraz leśne szlaki wokół Zubercu we własnym tempie.",
+            "highlights": [
+              "Wynajem całodniowy",
+              "Wspomaganie elektryczne",
+              "Kask w zestawie"
+            ]
+          }
+        }
+      },
+      "contactForm": {
+        "heading": "Skontaktuj się z nami",
+        "submitLabel": "Wyślij zapytanie",
+        "intro": "Podaj preferowane daty i to, czego szukasz, a my odpowiemy w ciągu jednego dnia roboczego."
+      },
+      "cta": {
+        "label": "Wyślij zapytanie",
+        "title": "Gotowy na górską ucieczkę?",
+        "subtitle": "Napisz do nas, a nasz zespół pomoże Ci zaplanować idealny pobyt w górach Roháče."
+      },
+      "dashboard": {
+        "title": "Przegląd rezerwacji",
+        "intro": "Śledź wszystkie zapytania i rezerwacje gości w rohace w jednym miejscu.",
+        "kpiLabels": {
+          "totalBookings": "Wszystkie rezerwacje",
+          "confirmedShare": "Potwierdzone",
+          "pendingShare": "Oczekujące"
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Rezerwacja",
+        "fieldLabels": {
+          "guestName": "Imię i nazwisko gościa",
+          "accommodation": "Pokój / Pakiet",
+          "checkIn": "Zameldowanie",
+          "checkOut": "Wymeldowanie",
+          "numGuests": "Liczba gości",
+          "status": "Status"
+        },
+        "sampleRecords": [
+          {
+            "guestName": "Martin Kováč",
+            "accommodation": "Standard Mountain Room",
+            "checkIn": "2026-09-15",
+            "checkOut": "2026-09-17",
+            "numGuests": 2,
+            "status": "confirmed"
+          },
+          {
+            "guestName": "Anna Novák",
+            "accommodation": "Deluxe Family Suite",
+            "checkIn": "2026-10-01",
+            "checkOut": "2026-10-04",
+            "numGuests": 4,
+            "status": "pending"
+          },
+          {
+            "guestName": "Tomáš Hrubý",
+            "accommodation": "Wellness Weekend Package",
+            "checkIn": "2026-10-10",
+            "checkOut": "2026-10-12",
+            "numGuests": 2,
+            "status": "confirmed"
+          }
+        ]
       }
     }
   }
