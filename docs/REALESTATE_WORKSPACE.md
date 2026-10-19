@@ -155,3 +155,44 @@ Slovak: the same at `/sk/workspace`.
 - Pricing of the Solo and Agency plans — founder's decision; the cards have no numbers.
 - The template's `pricing` section remains locked for hand-written configs; if the founder
   wants prices on the landing they go into `lib/realestate/copy.ts` → `landing.plans`.
+
+## 7. Landing design (2026-10-19) — after mdx.so
+
+Founder request: "edit the page after the design of https://mdx.so/". What was taken from
+the reference, and how it was fitted to the golden product rules (dark-only, one-hue
+palettes, the visitor's font, mobile-first):
+
+- **Composition.** The hero leads with the object — the listing dossier, centred and lit by
+  a pool of the accent, the rail under it — and keeps the words low: the headline set light
+  with its first clause in weight, a two-tone subheadline, the pill action, and beside them
+  the statement column (for whom, what the desk does). Sections alternate quiet whitespace
+  with one deeper band (features, the palette's background mixed toward black), thin rules
+  instead of boxes, large radii (`rounded-3xl`) on the few cards, the contact form as a
+  card with underlined fields, the closing band on the keys photograph, and the app's name
+  set large across the foot of the landing.
+- **Typography.** Display headings are the visitor's face at light weight with one
+  medium-weight phrase (`DisplayText`: the first clause of a dashed headline, the last two
+  words of a long one). Labels are small capitals with the accent's dot (`Eyebrow`).
+  Paragraphs are two-tone (`TwoTone`: the lead up to the first colon in the ink, the rest
+  muted). The rendered text is always the configured string, character for character.
+- **Colour.** Nothing hardcoded: the reference's orange is the palette's `primary`, its
+  black is `color-mix(var(--background), black)`, its greys are `muted-foreground` and
+  `foreground/NN`. "Change colour" repaints all of it; the dossier's chips lost their
+  second hues (amber, emerald, sky) for the same reason.
+- **Motion.** The hero fades in (opacity only — the hero-image gate compares boxes), the
+  rail lights up as before, blocks below the fold rise when scrolled to
+  (`components/motion/landing-reveal.tsx`, `[data-reveal]`), pill arrows step up and out on
+  hover. Reduced motion, no JavaScript and blocks already on screen are plain visible.
+- **Where.** `components/sections/realestate-landing-ui.tsx` (primitives),
+  `realestate-hero.tsx`, `realestate-landing.tsx` (how it works, features, use cases,
+  comparison, FAQ), `realestate-contact.tsx`, `realestate-cta.tsx`,
+  `components/layout/footer-wordmark.tsx`; registered in `app/[locale]/page.tsx`. The
+  template's own section files are untouched, so a refresh merges clean; `footer.tsx` is
+  the one template file edited (it renders the wordmark).
+- **Kept to the letter.** The DOM the template's tests hold: one `<a>` in the hero with the
+  configured label, `[data-app-name]`, `[data-hero-dossier]`, the seven rail stations, one
+  `svg` per feature icon and nothing else in that section, one `li` per step and use case,
+  one `article` per comparison row, one `details` per question with the FAQPage JSON-LD,
+  `#contact` with the field ids and the one `role="status"`, two plan articles under
+  `landing-plans`, and the configured `data-section` order. New tests:
+  `tests/realestate.spec.ts` ("display design", "reduced motion", "Slovak landing").
