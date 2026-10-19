@@ -6,7 +6,7 @@ export function ComparisonSection() {
   const copy = useContent().comparison;
   if (!copy) return null;
   return (
-    <section data-section="comparison" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="comparison" data-section="comparison" className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <h2 className="text-balance text-center text-3xl font-semibold tracking-tight">{copy.heading}</h2>
       <div className="mt-10 space-y-3">
         {copy.rows.map((row, i) => (
