@@ -148,6 +148,8 @@
     "slow": "Ez tovább tart – töltsd újra az oldalt"
   },
   "inbox": {
+    "markReadError": "Nem sikerült olvasottként megjelölni az üzenetet. Továbbra is olvasatlan. Próbálja újra.",
+    "retryMarkRead": "Megjelölés újra olvasottként",
     "title": "Üzenetek",
     "empty": "Még nincs üzenet. A kapcsolatfelvételi űrlapon küldött üzenetek itt jelennek meg.",
     "ownerOnly": "Ez az oldal csak a prototípus tulajdonosának szól.",
