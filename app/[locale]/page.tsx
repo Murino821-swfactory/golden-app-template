@@ -1,14 +1,17 @@
 import { type ComponentType } from "react";
 import { RealEstateHero } from "@/components/sections/realestate-hero";
 import { RealEstateCta } from "@/components/sections/realestate-cta";
-import { FeaturesSection } from "@/components/sections/features";
-import { HowItWorksSection } from "@/components/sections/how-it-works";
+import { RealEstateContact } from "@/components/sections/realestate-contact";
+import {
+  RealEstateComparison,
+  RealEstateFaq,
+  RealEstateFeatures,
+  RealEstateHowItWorks,
+  RealEstateUseCases,
+} from "@/components/sections/realestate-landing";
+import { LandingReveal } from "@/components/motion/landing-reveal";
 import { PricingSection } from "@/components/sections/pricing";
 import { TestimonialsSection } from "@/components/sections/testimonials";
-import { FaqSection } from "@/components/sections/faq";
-import { ContactSection } from "@/components/sections/contact";
-import { UseCasesSection } from "@/components/sections/use-cases";
-import { ComparisonSection } from "@/components/sections/comparison";
 import { ListingsSection } from "@/components/sections/listings";
 import { LandingStory } from "@/components/sections/landing-story";
 import { landingJsonLd } from "@/lib/seo";
@@ -23,19 +26,21 @@ import { config } from "@/lib/prototype-config";
 // thing that decides what renders here.
 const SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 
-// realitny-makler: the hero (deal rail + listing dossier) and the closing band (plans for
-// agents and agencies) are this prototype's own; every other section is the template's.
+// realitny-makler: every rendered section is this prototype's own, set in the landing's
+// display language after mdx.so (2026-10-19, `components/sections/realestate-*.tsx`); the
+// template's files stay untouched so a refresh merges clean. The sections this config
+// does not render keep the template's components, so the registry stays complete.
 const SECTION_REGISTRY: Record<string, ComponentType> = {
   hero: RealEstateHero,
-  features: FeaturesSection,
-  howItWorks: HowItWorksSection,
+  features: RealEstateFeatures,
+  howItWorks: RealEstateHowItWorks,
   pricing: PricingSection,
   testimonials: TestimonialsSection,
-  faq: FaqSection,
-  contact: ContactSection,
+  faq: RealEstateFaq,
+  contact: RealEstateContact,
   cta: RealEstateCta,
-  useCases: UseCasesSection,
-  comparison: ComparisonSection,
+  useCases: RealEstateUseCases,
+  comparison: RealEstateComparison,
   listings: ListingsSection,
 };
 
@@ -48,6 +53,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         const Section = SECTION_REGISTRY[id];
         return { id, content: Section ? <Section /> : null };
       })} />
+      <LandingReveal />
     </>
   );
 }

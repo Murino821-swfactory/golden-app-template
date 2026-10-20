@@ -21,6 +21,42 @@ test.describe("real estate workspace", () => {
     await expect(page.locator("[data-product-preview]")).toHaveCount(0);
   });
 
+  // The landing's display language (2026-10-19, after mdx.so): the one hero action is a
+  // pill, the foot of the page carries the app's name large, and the scroll reveal never
+  // leaves a block hidden — after a scroll to the end every block is in, and with reduced
+  // motion nothing ever waited.
+  test("the landing wears the display design: the pill action, the wordmark, nothing left hidden", async ({ page }) => {
+    await page.goto("./");
+    const action = page.locator('[data-section="hero"] a');
+    await expect(action).toHaveCount(1);
+    await expect(action).toHaveCSS("border-top-left-radius", /^(?!0px)/);
+    await expect(page.getByRole("contentinfo").locator("[data-footer-wordmark]")).toHaveText("Realitný maklér");
+    await page.evaluate(async () => {
+      for (let y = 0; y <= document.documentElement.scrollHeight; y += 300) {
+        window.scrollTo({ top: y, behavior: "instant" });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      }
+    });
+    await expect(page.locator('[data-reveal="pending"]')).toHaveCount(0);
+    await expect(page.locator("[data-reveal]").last()).toHaveAttribute("data-reveal", "in");
+  });
+
+  test("reduced motion keeps every landing block on screen without a scroll", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("./");
+    await expect(page.locator("[data-reveal]").first()).toBeVisible();
+    await expect(page.locator('[data-reveal="pending"]')).toHaveCount(0);
+    await expect(page.locator('[data-section="cta"] h2')).toBeVisible();
+  });
+
+  test("the Slovak landing wears the same design, with the configured words", async ({ page }) => {
+    await page.goto("./sk");
+    await expect(page.getByRole("heading", { level: 1, name: "Každá ponuka, klient a obchod — od prvého dopytu po kľúče", exact: true })).toBeVisible();
+    await expect(page.locator('[data-section="hero"] a')).toHaveText("Otvoriť demo priestor");
+    await expect(page.locator("[data-footer-wordmark]")).toHaveText("Realitný maklér");
+    await expect(page.locator("[data-landing-rail] li")).toHaveCount(7);
+  });
+
   test("opens on today's desk with KPIs and things that need attention", async ({ page }) => {
     await fresh(page, "./workspace");
     await expect(page.getByRole("heading", { level: 1, name: /Today's desk/ })).toBeVisible();
