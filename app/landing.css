@@ -1,0 +1,259 @@
+/*
+ * landing.css — the GitPulse Studio landing (demo/gitpulse-studio, 2026-10-23), after the
+ * Indoobit case study on mdx.so: eyebrow pills, faint numerals, glowing cards, a line that
+ * draws itself, a wordmark cut by the fold.
+ *
+ * Every colour is a palette token (`--primary`, `--background`, `--border`, …) mixed with
+ * `color-mix`, so "Change colour" in the header repaints all of it and no hue is written
+ * here. Motion is scroll-driven CSS (`animation-timeline: view()`) behind `@supports` and
+ * `prefers-reduced-motion`: a browser without it, or a reader who asked for calm, gets the
+ * finished state at once. Nothing here needs JavaScript.
+ */
+
+/* ── Tokens derived from the palette ─────────────────────────────────────────────── */
+.landing-hero,
+.landing-closing,
+[data-section="features"],
+[data-section="howItWorks"],
+[data-section="faq"] {
+  --landing-glow: color-mix(in oklab, var(--primary) 22%, transparent);
+  --landing-glow-soft: color-mix(in oklab, var(--primary) 9%, transparent);
+  --landing-void: color-mix(in oklab, var(--background) 72%, black);
+  --landing-hairline: color-mix(in oklab, var(--primary) 35%, transparent);
+}
+
+/* ── Eyebrow pill ────────────────────────────────────────────────────────────────── */
+.landing-eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--landing-hairline, color-mix(in oklab, var(--primary) 35%, transparent));
+  border-radius: 999px;
+  background: var(--landing-glow-soft, color-mix(in oklab, var(--primary) 9%, transparent));
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+@media (min-width: 640px) {
+  .landing-eyebrow-lines::before,
+  .landing-eyebrow-lines::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 7rem;
+    height: 1px;
+  }
+  .landing-eyebrow-lines::before {
+    right: calc(100% + 0.9rem);
+    background: linear-gradient(to left, var(--primary), transparent);
+  }
+  .landing-eyebrow-lines::after {
+    left: calc(100% + 0.9rem);
+    background: linear-gradient(to right, var(--primary), transparent);
+  }
+}
+
+/* ── Numerals ────────────────────────────────────────────────────────────────────── */
+.landing-numeral {
+  font-size: 3.25rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--primary) 28%, transparent);
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────────────── */
+.landing-card {
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  background:
+    radial-gradient(120% 80% at 100% 0%, var(--landing-glow-soft), transparent 60%),
+    color-mix(in oklab, var(--card) 85%, var(--background));
+  transition: border-color 300ms ease, transform 300ms ease;
+}
+.landing-card:hover {
+  border-color: var(--landing-hairline);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .landing-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* ── Hero: the studio rising from the fold ───────────────────────────────────────── */
+.landing-hero {
+  background:
+    radial-gradient(60% 50% at 50% 0%, var(--landing-glow), transparent 70%),
+    var(--background);
+}
+.landing-fold {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+.landing-frame {
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
+  border-bottom: 0;
+  border-radius: 1.5rem 1.5rem 0 0;
+  background: color-mix(in oklab, var(--landing-void) 80%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 -1px 0 0 var(--landing-hairline),
+    0 0 60px -10px var(--landing-glow),
+    0 40px 120px -40px black;
+}
+/* The glowing top edge: a hairline that is brightest in the middle, like a lit bezel. */
+.landing-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px 10% auto;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, transparent, var(--primary), transparent);
+  filter: drop-shadow(0 0 8px var(--primary));
+}
+
+/* ── How it works: the glowing line and the ticks ────────────────────────────────── */
+.landing-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 45%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(70% 70% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, black 30%, transparent 100%);
+}
+.landing-glow-line path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 6px var(--primary)) drop-shadow(0 0 22px var(--landing-glow));
+}
+/* A phone reads the steps down one hairline instead. */
+.landing-steps::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem auto 0.5rem 0.4rem;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+  filter: drop-shadow(0 0 6px var(--primary));
+}
+.landing-tick {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .landing-steps::before {
+    display: none;
+  }
+  .landing-tick {
+    display: block;
+    width: 1px;
+    height: 4.5rem;
+    margin-left: 0.3rem;
+    background: linear-gradient(to bottom, transparent, var(--primary));
+    filter: drop-shadow(0 0 6px var(--primary));
+  }
+  .landing-step-numeral {
+    display: block;
+    margin-top: 0.75rem;
+  }
+}
+
+/* ── FAQ: plus that becomes a cross ──────────────────────────────────────────────── */
+.landing-plus {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--landing-hairline);
+  border-radius: 999px;
+}
+.landing-plus::before,
+.landing-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--primary);
+  transform: translate(-50%, -50%);
+  transition: transform 300ms ease;
+}
+.landing-plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+details[open] .landing-plus::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+details[open] .landing-plus::before {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/* ── Closing band and wordmark ───────────────────────────────────────────────────── */
+.landing-band {
+  border: 1px solid var(--landing-hairline);
+  background:
+    radial-gradient(80% 120% at 50% 120%, var(--landing-glow), transparent 60%),
+    color-mix(in oklab, var(--landing-void) 70%, var(--card));
+}
+.landing-closing {
+  container-type: inline-size;
+}
+.landing-wordmark {
+  margin: 2.5rem 0 -0.2em;
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(2.75rem, 11.5cqw, 15rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to bottom, var(--foreground) 10%, color-mix(in oklab, var(--foreground) 20%, transparent) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+}
+
+/* ── Motion: reveal on scroll, draw the line — only where supported and wanted ───── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      animation: landing-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    .landing-glow-line path {
+      stroke-dashoffset: 1;
+      animation: landing-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+  }
+}
+@keyframes landing-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes landing-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:has([data-landing-mode="document"]) {
+    scroll-behavior: smooth;
+  }
+}

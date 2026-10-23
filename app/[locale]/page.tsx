@@ -11,6 +11,7 @@ import { UseCasesSection } from "@/components/sections/use-cases";
 import { ComparisonSection } from "@/components/sections/comparison";
 import { ListingsSection } from "@/components/sections/listings";
 import { LandingStory } from "@/components/sections/landing-story";
+import { GITPULSE_SECTIONS } from "@/components/landing/registry";
 import { landingJsonLd } from "@/lib/seo";
 import { config } from "@/lib/prototype-config";
 
@@ -35,6 +36,8 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   useCases: UseCasesSection,
   comparison: ComparisonSection,
   listings: ListingsSection,
+  // This demo's own presentation of the same sections (components/landing/registry.ts).
+  ...GITPULSE_SECTIONS,
 };
 
 export default async function LandingPage({ params }: { params: Promise<{ locale?: string }> }) {
