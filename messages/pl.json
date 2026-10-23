@@ -148,6 +148,8 @@
     "slow": "To trwa dłużej — odśwież stronę"
   },
   "inbox": {
+    "markReadError": "Nie udało się oznaczyć wiadomości jako przeczytanej. Nadal jest nieprzeczytana. Spróbuj ponownie.",
+    "retryMarkRead": "Ponów oznaczenie jako przeczytane",
     "title": "Wiadomości",
     "empty": "Na razie brak wiadomości. Wiadomości z formularza kontaktowego pojawią się tutaj.",
     "ownerOnly": "Ta strona jest tylko dla właściciela prototypu.",

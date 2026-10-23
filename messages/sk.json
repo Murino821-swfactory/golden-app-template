@@ -148,6 +148,8 @@
     "slow": "Trvá to dlhšie — obnov stránku"
   },
   "inbox": {
+    "markReadError": "Správu sa nepodarilo označiť ako prečítanú. Stále je neprečítaná. Skúste to znova.",
+    "retryMarkRead": "Znova označiť ako prečítané",
     "title": "Správy",
     "empty": "Zatiaľ žiadne správy. Správy z kontaktného formulára sa zobrazia tu.",
     "ownerOnly": "Táto stránka je len pre vlastníka prototypu.",
