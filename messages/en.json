@@ -148,6 +148,8 @@
     "slow": "This is taking longer — reload the page"
   },
   "inbox": {
+    "markReadError": "Could not mark this message as read. It is still unread. Please try again.",
+    "retryMarkRead": "Retry marking as read",
     "title": "Messages",
     "empty": "No messages yet. Messages sent through the contact form appear here.",
     "ownerOnly": "This page is only for the prototype's owner.",
