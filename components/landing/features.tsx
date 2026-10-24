@@ -41,7 +41,7 @@ export function FeaturesSection() {
   const features = landing?.features ?? [];
 
   return (
-    <section data-section="features" className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
+    <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
       <div className="flex flex-col items-center gap-4 text-center">
         <Eyebrow>{words.features.eyebrow}</Eyebrow>
         <h2 className="max-w-3xl text-balance text-3xl font-light tracking-[-0.02em] sm:text-5xl">{landing?.featuresHeading ?? t("title")}</h2>

@@ -70,6 +70,12 @@ export const SECTION_IDS = [
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
+/** Public paths with a page in app/(default). Locale and base-path prefixes are
+ * applied by routing, never invented by the composition model.
+ * demo/gitpulse-studio adds its own pages (/studio, /create, /growth): its CTA opens the
+ * studio, which this branch exports and the template does not. */
+export const LANDING_CTA_ROUTES = ["/", "/dashboard", "/login", "/messages", "/studio", "/create", "/growth"] as const;
+
 /** Field types the generic `data-grid` and `map-base` patterns can render. Closed enum —
  * a new type is a deliberate decision with a decision record, not a config typo. */
 export const FIELD_TYPES = [
@@ -298,11 +304,15 @@ export const PATTERN_SCHEMAS = {
   /** Nothing to configure — Google sign-in is the same everywhere by design. */
   authGoogle: z.object({}),
   cta: z.object({
-    href: z.string().min(1).describe(
-      "Use an existing destination: /login with authGoogle, /dashboard with dashboard, " +
-      "#contact when contact is a landing section, or #chapter-<section> for a rendered " +
-      "landing section (for example #chapter-features). Never invent /app, /signup, " +
-      "#start, download routes, or features not present in the template."
+    href: z.union([
+      z.enum(LANDING_CTA_ROUTES),
+      z.string().regex(/^#[a-zA-Z][a-zA-Z0-9-]*$/),
+      z.url({ protocol: /^https?$/ }),
+    ]).describe(
+      "Use an exported destination: /, /login, /dashboard or /messages; prefer /login " +
+      "with authGoogle and /dashboard with dashboard. A #<section> or #chapter-<section> " +
+      "anchor must name a rendered landing section (for example #features or #chapter-features). " +
+      "Absolute HTTP(S) URLs are allowed. Never invent /app, /signup, #start or download routes."
     ),
   }),
   contactForm: z.object({
@@ -620,6 +630,14 @@ export const prototypeConfigSchema = z
   })
   .superRefine((cfg, ctx) => {
     const sections = cfg.patterns.landing?.sections ?? [];
+    const href = cfg.patterns.cta?.href;
+    if (href?.startsWith("#") && !sections.some((id) => href === `#${id}` || href === `#chapter-${id}`)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["patterns", "cta", "href"],
+        message: "CTA anchor must name a rendered landing section id or chapter-<section> id",
+      });
+    }
     if (new Set(sections).size !== sections.length) {
       ctx.addIssue({ code: "custom", path: ["patterns", "landing", "sections"], message: "Landing sections must be unique" });
     }

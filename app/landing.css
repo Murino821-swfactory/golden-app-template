@@ -252,8 +252,6 @@ details[open] .landing-plus::before {
     stroke-dashoffset: 0;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  html:has([data-landing-mode="document"]) {
-    scroll-behavior: smooth;
-  }
-}
+/* No `scroll-behavior: smooth`: a hash set while a smooth scroll is still running is
+   dropped by Chromium, and the template's anchors test (OTH-144) walks the sections by
+   hash in quick succession. Anchors jump, as everywhere else in the template. */

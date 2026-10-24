@@ -148,6 +148,8 @@
     "slow": "Cela prend plus de temps — rechargez la page"
   },
   "inbox": {
+    "markReadError": "Impossible de marquer ce message comme lu. Il reste non lu. Veuillez réessayer.",
+    "retryMarkRead": "Réessayer de marquer comme lu",
     "title": "Messages",
     "empty": "Aucun message pour l'instant. Les messages envoyés via le formulaire de contact apparaissent ici.",
     "ownerOnly": "Cette page est réservée au propriétaire du prototype.",

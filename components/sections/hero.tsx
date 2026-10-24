@@ -94,7 +94,7 @@ export function HeroSection() {
   const hasPreview = Boolean(config.patterns.dataGrid && content.dataGrid?.sampleRecords?.length);
 
   return (
-    <section data-section="hero" className="relative isolate w-full overflow-hidden">
+    <section id="hero" data-section="hero" className="scroll-mt-24 relative isolate w-full overflow-hidden">
       {HERO_VIDEO ? (
         <HeroVideoBackground video={HERO_VIDEO} poster={hero.src ?? HERO_VIDEO.poster} />
       ) : hero.src ? (

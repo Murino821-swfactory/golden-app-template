@@ -84,7 +84,7 @@ export function HeroSection() {
   const backdrop = Boolean(HERO_VIDEO || hero.src);
 
   return (
-    <section data-section="hero" className="landing-hero relative isolate w-full overflow-clip">
+    <section id="hero" data-section="hero" className="landing-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {HERO_VIDEO ? <HeroVideoBackground video={HERO_VIDEO} poster={hero.src ?? HERO_VIDEO.poster} /> : hero.src ? <HeroImageBackground key={hero.src} src={hero.src} /> : null}
 
       <div className="mx-auto w-full max-w-6xl px-4 pt-16 sm:pt-24">
