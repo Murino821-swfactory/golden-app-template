@@ -41,7 +41,8 @@ template refresh (`npm run prototypes:refresh` on the VM) merges past this desig
   behind `@supports (animation-timeline: view())` and `prefers-reduced-motion`. Decorative
   wrappers use `overflow: clip`, never `hidden` — a hidden overflow is a scroll container and
   would become the timeline's root, leaving the content at opacity 0.
-- **Contract with the template's tests.** `data-section` ids and order, `[data-app-name]`
+- **Contract with the template's tests.** `id` + `data-section` per section with `scroll-mt-24`
+  (stable anchors, OTH-144) and their order, `[data-app-name]`
   (the studio window's title), one `h2` per section, one `svg` per feature with an icon,
   `li` per step, `details` per question, the CTA link named `cta.label`.
 

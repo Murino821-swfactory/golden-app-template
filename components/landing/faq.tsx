@@ -20,7 +20,7 @@ export function FaqSection() {
   if (!faq) return null; // zod requires the copy whenever this section is enabled
 
   return (
-    <section data-section="faq" className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
+    <section id="faq" data-section="faq" className="scroll-mt-24 mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
       <div className="grid gap-10 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
         <div className="flex flex-col items-start gap-4 lg:sticky lg:top-28 lg:self-start">
           <Eyebrow>{words.faq.eyebrow}</Eyebrow>

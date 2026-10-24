@@ -25,7 +25,7 @@ export function CtaSection() {
   const href = action && action.startsWith("/") ? localePath(locale, action) : action;
 
   return (
-    <section data-section="cta" className="landing-closing relative mx-auto w-full max-w-6xl overflow-clip px-4 pt-20 sm:pt-28">
+    <section id="cta" data-section="cta" className="landing-closing scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 pt-20 sm:pt-28">
       <div data-reveal className="landing-band relative overflow-clip rounded-3xl px-6 py-14 text-center sm:px-12 sm:py-20">
         <Eyebrow>{words.cta.eyebrow}</Eyebrow>
         <h2 className="mt-5 text-balance text-3xl font-light tracking-[-0.02em] sm:text-5xl">{copy?.title ?? t("title")}</h2>

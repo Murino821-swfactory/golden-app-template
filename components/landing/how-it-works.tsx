@@ -24,7 +24,7 @@ export function HowItWorksSection() {
   const four = block.steps.length === 4;
 
   return (
-    <section data-section="howItWorks" className="relative mx-auto w-full max-w-6xl overflow-clip px-4 py-20 sm:py-28">
+    <section id="howItWorks" data-section="howItWorks" className="scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 py-20 sm:py-28">
       <GridBackdrop />
       <div className="flex flex-col items-center gap-4 text-center">
         <Eyebrow>{words.howItWorks.eyebrow}</Eyebrow>
