@@ -30,6 +30,10 @@ const EN = {
     ready: "Ready",
   },
   features: { eyebrow: "What you get" },
+  gallery: {
+    kicker: "Live projects",
+    title: (shown: number, total: number) => `${shown} of the ${total} apps the factory runs in production`,
+  },
   manifesto: {
     kicker: "The manifesto",
     lead: "GitPulse Studio is a publishing desk, not another scheduler.",
@@ -57,6 +61,10 @@ const CS: typeof EN = {
     ready: "Připraveno",
   },
   features: { eyebrow: "Co získáte" },
+  gallery: {
+    kicker: "Živé projekty",
+    title: (shown: number, total: number) => `${shown} z ${total} aplikací, které továrna provozuje v produkci`,
+  },
   manifesto: {
     kicker: "Manifest",
     lead: "GitPulse Studio je publikační stůl, ne další plánovač.",

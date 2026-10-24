@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
 import { LANDING_COPY, landingCopy } from "../lib/landing/copy";
+import { GALLERY } from "../lib/landing/gallery";
 import { CHANNELS } from "../lib/studio/channels";
 
 /**
@@ -57,6 +58,46 @@ test("features: a bento with one wide card, numerals, and the manifesto after it
   await expect(section.locator("h2")).toHaveCount(1);
 });
 
+test("gallery: six live projects as pictures that load, link out and swipe on a phone", async ({ page }, info) => {
+  await page.goto("./");
+  const gallery = page.locator('[data-section="features"] [data-gallery]');
+  await expect(gallery.locator("[data-kicker]")).toHaveText(words.gallery.kicker);
+  const cards = gallery.locator("[data-gallery-card]");
+  await expect(cards).toHaveCount(GALLERY.length);
+  for (let i = 0; i < GALLERY.length; i++) {
+    const img = cards.nth(i).locator("img");
+    await expect(img).toHaveAttribute("alt", new RegExp(`^${GALLERY[i]!.project.name}`));
+    const src = (await img.getAttribute("src"))!;
+    expect((await page.request.get(new URL(src, page.url()).href)).status(), src).toBe(200);
+    await expect(cards.nth(i).locator("a")).toHaveAttribute("target", "_blank");
+  }
+  if (info.project.name === "mobile") {
+    // A strip that scrolls sideways inside itself — never the page.
+    const track = gallery.locator("ul");
+    expect(await track.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  }
+});
+
+test("manifesto is split into words for the scroll reveal, and reads whole without motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("./");
+  const manifesto = page.locator("[data-manifesto]");
+  const spoken = words.manifesto.lead.split(" ").length + words.manifesto.body.split(" ").length;
+  await expect(manifesto.locator("[data-word]")).toHaveCount(spoken);
+  await expect(manifesto.locator("p")).toHaveText(`${words.manifesto.lead} ${words.manifesto.body}`);
+  expect(await manifesto.locator("[data-word]").first().evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+  expect(await page.locator("[data-reveal]").first().evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+});
+
+test("the wordmark ends above the footer, not under it", async ({ page }) => {
+  await page.goto("./");
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  const wordmark = (await page.locator("[data-wordmark]").boundingBox())!;
+  const footer = (await page.getByRole("contentinfo").boundingBox())!;
+  expect(wordmark.y + wordmark.height).toBeLessThanOrEqual(footer.y + 1);
+});
+
 test("how it works: a glowing line drawn through the steps", async ({ page }) => {
   await page.goto("./");
   const section = page.locator('[data-section="howItWorks"]');
@@ -108,5 +149,14 @@ test.describe("landing copy (pure)", () => {
         : [];
     expect(keys(LANDING_COPY.cs).sort()).toEqual(keys(LANDING_COPY.en).sort());
     expect(JSON.stringify(LANDING_COPY)).not.toContain("!");
+    for (const copy of Object.values(LANDING_COPY)) expect(copy.gallery.title(6, 21)).not.toContain("!");
+  });
+
+  test("the gallery names only projects the snapshot knows, with a picture each", () => {
+    expect(GALLERY).toHaveLength(6);
+    for (const item of GALLERY) {
+      expect(item.image).toMatch(new RegExp(`/landing/${item.project.key}\\.webp$`));
+      expect(item.host).not.toMatch(/^https?:/);
+    }
   });
 });
