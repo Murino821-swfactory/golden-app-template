@@ -31,16 +31,28 @@ Five destinations, fixed by the owner:
 On a phone (coarse pointer + `navigator.canShare({files})`) the **share sheet** opens with the
 files attached, so Instagram, TikTok and YouTube appear as targets directly.
 
-Why not post through the networks' APIs: every one of them needs a server-side token; a
-static prototype holds no secrets (Golden Security) and the factory's Meta token lives in
-Secret Manager for `social-publish.ts`, not in a public page. The bar does everything a
+**The founder posts for real (2026-10-24).** Signed in as the founder (owner role `admin`,
+the owner-contact status call), the Facebook and Instagram buttons change route: the card
+is re-encoded as a JPEG in the browser (`toJpeg`, Instagram takes nothing else) and goes with
+the caption to `POST /api/gitpulse/publish` on factory-web, which stores the image under the
+studio's published prefix, posts through the Meta Graph API with the Page token from Secret
+Manager, and answers with the live post's URL — shown next to the button and kept in the
+log. The same route is on the `/create` queue (Facebook and Instagram pieces, with the
+step-3 visual as the image) and on `/growth`, which reuses this bar. Code
+`lib/gitpulse/social.ts`; server contract in factory-web `docs/context/API_CONTRACT.md`;
+decision record in the sw-factory repo
+(`docs/decisions/2026-10-24-gitpulse-direct-social-publish.md`).
+
+Everyone else keeps the share route, because a static prototype holds no secrets (Golden
+Security) and the Meta token must never reach a public page. The bar does everything a
 browser can do honestly inside one click: the card is rendered *before* the click
 (`renderCard`, a canvas → PNG), and `window.open` runs before the first `await`, or the
 browser would block it.
 
-Every publish is logged in the browser (`gitpulse.publish-log.v1`, newest first, 50 kept). A
-**signed-in owner** also gets it as a record in the content queue — the dashboard's data
-grid (`type` = Blog / Facebook / Instagram / TikTok / YouTube, `status` = Published).
+Every publish is logged in the browser (`gitpulse.publish-log.v1`, newest first, 50 kept;
+a direct post carries its `url`). A **signed-in owner** also gets it as a record in the
+content queue — the dashboard's data grid (`type` = Blog / Facebook / Instagram / TikTok /
+YouTube, `status` = Published).
 
 ## Where the code is
 

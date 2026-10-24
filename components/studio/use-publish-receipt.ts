@@ -27,7 +27,7 @@ export function usePublishReceipt() {
   const [queued, setQueued] = useState(false);
 
   const onPublished = useCallback(
-    async (channel: Channel, content: ScenarioContent, outcome: PublishOutcome) => {
+    async (channel: Channel, content: ScenarioContent, outcome: PublishOutcome, url?: string) => {
       const entry: PublishLogEntry = {
         id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
         at: new Date().toISOString(),
@@ -35,6 +35,7 @@ export function usePublishReceipt() {
         scenario: content.scenario,
         title: content.title,
         outcome,
+        ...(url ? { url } : {}),
         ...(content.kind ? { kind: content.kind } : {}),
         ...(content.ref ? { ref: content.ref } : {}),
       };

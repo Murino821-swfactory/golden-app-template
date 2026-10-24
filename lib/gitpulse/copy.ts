@@ -93,9 +93,19 @@ export interface GitpulseCopy {
     markPublished: string;
     remove: string;
     intentNote: string;
+    /** The direct route (founder): a real post on @tokenwisefactory. */
+    direct: (handle: string) => string;
+    directButton: (label: string) => string;
+    publishing: string;
+    published: string;
+    view: string;
+    needImage: string;
+    aspect: string;
+    metaRefused: (message: string) => string;
   };
   errors: {
     auth: string;
+    forbidden: string;
     invalid: string;
     "quota-user": string;
     "quota-global": string;
@@ -214,9 +224,18 @@ const en: GitpulseCopy = {
     markPublished: "Mark published",
     remove: "Remove",
     intentNote: "Publishing opens your own account's composer with the text prefilled — the demo stores no social credentials.",
+    direct: (handle) => `You are signed in as the founder — this posts straight to ${handle}.`,
+    directButton: (label) => `Post on ${label}`,
+    publishing: "Posting…",
+    published: "Posted.",
+    view: "Open the post",
+    needImage: "Generate the visual in step 3 first — a post needs an image.",
+    aspect: "Instagram takes 1:1, 4:5 or 16:9 — regenerate the image in one of those.",
+    metaRefused: (message) => `Meta refused the post: ${message}`,
   },
   errors: {
     auth: "Sign in to generate.",
+    forbidden: "Only the founder can post directly — use the share route.",
     invalid: "That input didn't pass validation.",
     "quota-user": "You've used today's limit for this — it resets at midnight UTC.",
     "quota-global": "The demo's daily budget for this is spent — try tomorrow.",
@@ -335,9 +354,18 @@ const cs: GitpulseCopy = {
     markPublished: "Označit jako publikované",
     remove: "Odebrat",
     intentNote: "Publikování otevře editor vašeho vlastního účtu s předvyplněným textem — demo neukládá žádné přihlašovací údaje k sítím.",
+    direct: (handle) => `Jste přihlášen jako zakladatel — tohle zveřejní rovnou na ${handle}.`,
+    directButton: (label) => `Zveřejnit na ${label}`,
+    publishing: "Zveřejňuji…",
+    published: "Zveřejněno.",
+    view: "Otevřít příspěvek",
+    needImage: "Nejdřív vygenerujte vizuál v kroku 3 — příspěvek potřebuje obrázek.",
+    aspect: "Instagram bere 1:1, 4:5 nebo 16:9 — vygenerujte obrázek v jednom z nich.",
+    metaRefused: (message) => `Meta příspěvek odmítla: ${message}`,
   },
   errors: {
     auth: "Pro generování se přihlaste.",
+    forbidden: "Přímo zveřejňovat může jen zakladatel — použijte sdílení.",
     invalid: "Tenhle vstup neprošel validací.",
     "quota-user": "Dnešní limit pro tuhle akci jste vyčerpali — obnoví se o půlnoci UTC.",
     "quota-global": "Denní rozpočet dema pro tuhle akci je vyčerpaný — zkuste to zítra.",

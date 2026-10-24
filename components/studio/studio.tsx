@@ -120,6 +120,11 @@ export function Studio() {
                 <span className="font-medium">{copy.tabs[e.scenario]}</span>
                 <span className="text-muted-foreground">→ {e.channel === "site" ? "tokenwise.sk" : e.channel}</span>
                 <span className="w-full truncate text-xs text-muted-foreground sm:w-auto sm:flex-1">{e.title}</span>
+                {e.url && (
+                  <a href={e.url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary underline-offset-4 hover:underline">
+                    {copy.publish.viewPost}
+                  </a>
+                )}
               </li>
             ))}
           </ul>

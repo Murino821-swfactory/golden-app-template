@@ -14,7 +14,8 @@
 import { fileNameFor, titleFor, type Channel, type ContentKind, type ScenarioContent } from "./channels";
 import { createStoredValue } from "./client-store";
 
-export type PublishOutcome = "shared" | "cancelled" | "opened" | "downloaded" | "failed";
+/** `published` = posted for real through the studio API (founder); the rest are the share routes. */
+export type PublishOutcome = "shared" | "cancelled" | "opened" | "downloaded" | "failed" | "published";
 
 export interface PublishInput {
   channel: Channel;
@@ -124,6 +125,8 @@ export interface PublishLogEntry {
   scenario: ScenarioContent["scenario"];
   title: string;
   outcome: PublishOutcome;
+  /** The live post, when the network gave one back (`published`). */
+  url?: string;
   /** The shape of the piece, when the content named one (growth plan). */
   kind?: ContentKind;
   /** The planned item it fulfils, when it fulfils one. */
