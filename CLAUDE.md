@@ -20,7 +20,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
-| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `ContactSection` owns the stable `contact` anchor. |
+| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
@@ -36,6 +36,25 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 2. **DO NOT run `find`, `grep`, or `ls`** — the structure is documented below
 3. **Read a file ONLY when you're about to edit it** — one read, one edit
 4. **Batch all changes to a file in ONE Edit call** — no read-edit-read-edit loops
+
+## Test-driven — every change starts with a failing test (founder rule, 2026-10-18)
+
+This template is developed **test-first** (golden product rule 7, sw-factory
+`docs/GOLDEN_PRODUCT_RULES.md`):
+
+1. **Red** — write the test for the missing behaviour (a bug fix: a test that reproduces the
+   bug) and run it; it must fail for that reason. Pure logic → a browser-free spec
+   (`tests/*-logic.spec.ts` pattern) or `packages/*/test`; page behaviour → Playwright.
+2. **Green** — the minimum code that makes it pass.
+3. **Refactor** — clean up with the suite green.
+
+The PR shows the test next to the code it drives and says it failed before the change.
+
+**Permanent baseline (golden product rule 6):** colour choice, font choice, language choice
+and Google sign-in, all from `packages/shared-ui`. Their tests — `tests/header.spec.ts`
+(colour, sign-in control), `tests/shared-header.spec.ts` (font), `tests/locale.spec.ts`
+(language), `tests/smoke.spec.ts` (sign-in page) — are never skipped, weakened or deleted to
+make a change pass; they change only with a founder decision.
 
 ## The config splits in two — learn this before editing anything
 
@@ -505,16 +524,18 @@ Use semantic tokens — they adapt to the customer's palette:
 npm run dev              # Dev server
 npm run build            # Production build (must pass)
 npm run typecheck        # Type check
-npm run test:e2e         # Playwright smoke tests (must pass)
+npm run test:e2e         # Playwright tests (must pass)
+npm run test:packages    # shared-ui / hex-map package tests (must pass)
 ```
 
 ## Summary: Fastest Path
 
 1. Read this CLAUDE.md completely
 2. Identify which 2-3 files need changes based on the spec
-3. For each file: read → make ALL changes → move to next file
-4. Run `npm run build` once at the end
-5. Done — no exploration, no extra reads, no refactoring
+3. Write the failing test first and run it red (see "Test-driven" above)
+4. For each file: read → make ALL changes → move to next file
+5. Run the affected tests green, then `npm run build` once at the end
+6. Done — no exploration, no extra reads, no refactoring
 
 ## OTH-117 — landing stories and discovery (2026-10-03)
 

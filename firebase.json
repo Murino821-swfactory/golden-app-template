@@ -15,6 +15,7 @@
         "destination": "/index.html"
       }
     ],
+    "_comment_headers": "GOLDEN_SECURITY §A2. CSP is tuned to the template stack and is the main mitigation against hostile generated/injected content in demos (prototype briefs are untrusted public input). script-src/style-src keep 'unsafe-inline' because a Next static export (output: 'export') emits inline hydration scripts and ThemeBootstrap injects inline <style> with no server to mint a nonce; the real containment is connect-src/img-src/frame-src/object-src/base-uri/form-action. apis.google.com + *.firebaseapp.com + accounts.google.com = Firebase Google sign-in; *.googleapis.com = Auth/Firestore; basemaps.cartocdn.com = CARTO map tiles/style. Any new external origin a prototype loads must be added here.",
     "headers": [
       {
         "source": "**",
@@ -34,6 +35,18 @@
           {
             "key": "Referrer-Policy",
             "value": "strict-origin-when-cross-origin"
+          },
+          {
+            "key": "Content-Security-Policy",
+            "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://apis.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self' https://*.googleapis.com https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; upgrade-insecure-requests"
+          },
+          {
+            "key": "Strict-Transport-Security",
+            "value": "max-age=31536000; includeSubDomains"
+          },
+          {
+            "key": "Permissions-Policy",
+            "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
           }
         ]
       }

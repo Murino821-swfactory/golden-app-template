@@ -59,10 +59,12 @@
     "title": "Contacto",
     "email": "Correo electrónico",
     "message": "Mensaje",
+    "messageHint": "Al menos 10 caracteres.",
     "send": "Enviar",
     "sending": "Enviando…",
     "success": "Gracias — tu mensaje va en camino. Te responderemos pronto.",
     "error": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
+    "errorTooMany": "Demasiados mensajes en poco tiempo. Inténtelo de nuevo dentro de una hora.",
     "notConfigured": "El formulario de contacto no está configurado en esta vista previa.",
     "name": "Nombre (opcional)",
     "ownerEdit": "Editar datos de contacto",
@@ -146,6 +148,8 @@
     "slow": "Está tardando más — recarga la página"
   },
   "inbox": {
+    "markReadError": "No se pudo marcar este mensaje como leído. Sigue sin leer. Inténtalo de nuevo.",
+    "retryMarkRead": "Reintentar marcar como leído",
     "title": "Mensajes",
     "empty": "Aún no hay mensajes. Los mensajes enviados desde el formulario de contacto aparecen aquí.",
     "ownerOnly": "Esta página es solo para la persona propietaria del prototipo.",
