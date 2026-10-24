@@ -16,7 +16,8 @@
         "howItWorks",
         "faq",
         "cta"
-      ]
+      ],
+      "presentation": "document"
     },
     "authGoogle": {},
     "dashboard": {},
@@ -74,82 +75,86 @@
   },
   "content": {
     "en": {
-      "description": "GitPulse Studio turns your GitHub commits and pull requests into blog posts, social media content, and visuals — automatically, every week.",
+      "description": "GitPulse Studio turns a week of commits from any public GitHub repository into a post, an image and a caption for five networks — no sign-in, no tokens.",
       "landing": {
-        "headline": "Your code tells a story. Let the world read it.",
-        "subheadline": "GitPulse Studio is for developers and technical founders who ship code every week but have no time to write about it — it turns your commits and PRs into ready-to-publish content.",
+        "headline": "Ship code. Publish the story.",
+        "subheadline": "For developers and technical founders who ship every week and never write about it: a public repository's week becomes a post, an image and a caption for five networks — in your browser, with no sign-in.",
         "features": [
           {
             "icon": "chart-line",
-            "title": "Live projects",
-            "description": "Every public project the factory runs or its owners adopted, read live from tokenwise.sk — a list that changes every week."
+            "title": "Live projects, read live",
+            "description": "Every public project the factory runs, read live from tokenwise.sk. The list changes weekly, so there is always a fresh post in it."
           },
           {
             "icon": "list-checks",
-            "title": "Git history by commits",
-            "description": "The factory's record era by era, or any public GitHub repository week by week, busiest first."
+            "title": "Any public repository, week by week",
+            "description": "Type owner/name and the busiest weeks come first: commits, authors and the lines that mattered, grouped the way you would publish them."
           },
           {
             "icon": "trophy",
-            "title": "Ship it, the pipeline game",
-            "description": "White tasks and red defects fall towards the line; a score card and a 15-second clip come out of every round."
+            "title": "Ship it, a 15-second clip",
+            "description": "A pipeline game you record straight from the browser — white tasks ship, red defects get squashed — cut for TikTok and YouTube."
           },
           {
             "icon": "globe",
-            "title": "Five destinations",
-            "description": "tokenwise.sk, Facebook, Instagram, TikTok and YouTube — each gets its own image size and a caption within its limit."
+            "title": "Five networks, one click",
+            "description": "tokenwise.sk, Facebook, Instagram, TikTok and YouTube: each gets the right image size and a caption inside its character limit."
           },
           {
             "icon": "calendar",
-            "title": "Growth plan and weekly report",
-            "description": "A content plan for every week, the Instagram profile kit, leads with their e-mails, and a weekly report counted from what went out."
+            "title": "A plan for every week",
+            "description": "Seven slots a week drawn from a bank of fifteen ideas, an Instagram profile kit and lead e-mails ready to send."
           },
           {
             "icon": "star",
-            "title": "One click to post",
-            "description": "On a phone the share sheet opens with the files attached; on a desktop the caption is copied, the image saved and the profile opened."
+            "title": "A report that counts itself",
+            "description": "Every Monday the weekly report adds up what went out, by channel and by shape, against your goals — no tokens spent."
           }
         ],
-        "featuresHeading": "Three stories, five networks",
+        "featuresHeading": "Everything a week of commits can become",
         "howItWorks": {
-          "heading": "How it works",
+          "heading": "From commit to post in four steps",
           "steps": [
             {
               "title": "Pick a story",
-              "description": "Live projects, the git history, the pipeline game, or a slot from this week's content plan."
+              "description": "Live projects, a public repository's week, the pipeline game, or this week's slot from the content plan."
             },
             {
               "title": "Pick a network",
-              "description": "The card is rendered in the network's size and the caption worded within its limit — edit it if you like."
+              "description": "The card renders in that network's size and the caption is worded inside its limit. Edit any line before it goes."
             },
             {
               "title": "Publish",
-              "description": "The share sheet on a phone; the profile, the files and the caption on a desktop. Every publish lands in the log."
+              "description": "On a phone the share sheet opens with the files attached. On a desktop the caption is copied, the image saved, the profile opened."
             },
             {
               "title": "Read the report",
-              "description": "Every Monday the weekly report counts what went out against your goals — no tokens spent."
+              "description": "Every Monday the weekly report counts what went out against your goals. Nothing is sent that you did not tap."
             }
           ]
         },
         "faq": {
-          "heading": "Questions before you start",
+          "heading": "Before you open the studio",
           "items": [
             {
-              "question": "Do I need to sign in to use the studio?",
-              "answer": "No. The studio and the growth plan are public. Sign in only to keep a content queue and to use the creation studio's generation."
+              "question": "Do I need to sign in?",
+              "answer": "No. The studio and the growth plan are public. Sign in with Google only if you want a content queue of your own or the creation studio's generation."
+            },
+            {
+              "question": "Does it work with my repository?",
+              "answer": "With any public GitHub repository: type owner/name and the studio reads up to 300 recent commits and groups them by week. Private repositories need a token this page never holds."
             },
             {
               "question": "Where does the content come from?",
-              "answer": "From data you can check: the live projects list, the git history of a public repository, and the plan's idea bank. Nothing is invented about customers."
+              "answer": "From data you can check: the live project list, the git history of a public repository, and the plan's idea bank. Nothing is invented about customers, numbers or results."
             },
             {
-              "question": "Does GitPulse Studio post to the networks for me?",
-              "answer": "It prepares the image in the network's size and the caption within its limit, then hands them to your phone's share sheet or opens the profile on a desktop. No network token is stored."
+              "question": "Does GitPulse Studio post for me?",
+              "answer": "It prepares the image in the network's size and the caption within its limit, then hands both to your phone's share sheet or opens the profile on a desktop. No network token is stored, so nothing goes out without your tap."
             },
             {
-              "question": "What does the weekly report measure?",
-              "answer": "What went out from this browser's log, by shape and by channel, plus the numbers you type in from the networks' insights — against your weekly and monthly goals."
+              "question": "What does it cost?",
+              "answer": "The studio, the growth plan and the weekly report run in your browser and spend no tokens. The creation studio's AI generation has a daily quota per signed-in user."
             },
             {
               "question": "Who owns the content?",
@@ -175,87 +180,91 @@
       },
       "cta": {
         "label": "Open the studio",
-        "title": "See the three stories, ready to post",
-        "subtitle": "No sign-in needed. The growth plan and the weekly report are one tab away."
+        "title": "This week's stories are ready to post",
+        "subtitle": "No sign-in. Pick a story, pick a network, publish — the growth plan and the weekly report are one tab away."
       }
     },
     "cs": {
-      "description": "GitPulse Studio každý týden převede vaše GitHub commity a pull requesty na blogové články, sociální příspěvky a vizuály — automaticky.",
+      "description": "GitPulse Studio promění týden commitů z libovolného veřejného GitHub repozitáře v příspěvek, obrázek a popisek pro pět sítí — bez přihlášení, bez tokenů.",
       "landing": {
-        "headline": "Váš kód vypráví příběh. Nechte ho slyšet.",
-        "subheadline": "GitPulse Studio je pro vývojáře a technické zakladatele, kteří každý týden píší kód, ale nemají čas o něm psát — automaticky z commitů a PR vytvoří obsah připravený k publikování.",
+        "headline": "Pište kód. Publikujte příběh.",
+        "subheadline": "Pro vývojáře a technické zakladatele, kteří každý týden nasazují a nikdy o tom nepíší: týden veřejného repozitáře se promění v příspěvek, obrázek a popisek pro pět sítí — v prohlížeči, bez přihlášení.",
         "features": [
           {
             "icon": "chart-line",
-            "title": "Živé projekty",
-            "description": "Každý veřejný projekt, který továrna provozuje nebo převzali jeho majitelé, čtený živě z tokenwise.sk — seznam, který se mění každý týden."
+            "title": "Živé projekty, čtené živě",
+            "description": "Každý veřejný projekt, který továrna provozuje, čtený živě z tokenwise.sk. Seznam se mění každý týden, takže je v něm vždy čerstvý příspěvek."
           },
           {
             "icon": "list-checks",
-            "title": "Git historie podle commitů",
-            "description": "Záznam továrny éra po éře, nebo libovolný veřejný GitHub repozitář týden po týdnu, nejrušnější první."
+            "title": "Libovolný veřejný repozitář, týden po týdnu",
+            "description": "Zadejte owner/name a nejrušnější týdny jdou první: commity, autoři a řádky, na kterých záleželo, seskupené tak, jak byste je publikovali."
           },
           {
             "icon": "trophy",
-            "title": "Ship it, hra s pipeline",
-            "description": "Bílé úkoly a červené chyby padají k lince; z každého kola vznikne karta se skóre a patnáctivteřinový klip."
+            "title": "Ship it, patnáctivteřinový klip",
+            "description": "Hra s pipeline, kterou nahrajete přímo z prohlížeče — bílé úkoly se nasadí, červené chyby rozmáčknete — střižená pro TikTok a YouTube."
           },
           {
             "icon": "globe",
-            "title": "Pět cílů",
-            "description": "tokenwise.sk, Facebook, Instagram, TikTok a YouTube — každý dostane vlastní velikost obrázku a popisek ve svém limitu."
+            "title": "Pět sítí, jedno klepnutí",
+            "description": "tokenwise.sk, Facebook, Instagram, TikTok a YouTube: každá dostane správnou velikost obrázku a popisek v rámci svého limitu znaků."
           },
           {
             "icon": "calendar",
-            "title": "Plán růstu a týdenní report",
-            "description": "Plán obsahu na každý týden, sada pro instagramový profil, leady s jejich e-maily a týdenní report spočítaný z toho, co vyšlo."
+            "title": "Plán na každý týden",
+            "description": "Sedm slotů týdně ze zásobníku patnácti nápadů, sada pro instagramový profil a e-maily leadům připravené k odeslání."
           },
           {
             "icon": "star",
-            "title": "Jedno klepnutí",
-            "description": "Na telefonu se otevře sdílení s přiloženými soubory; na počítači se zkopíruje popisek, uloží obrázek a otevře profil."
+            "title": "Report, který se spočítá sám",
+            "description": "Každé pondělí týdenní report sečte, co vyšlo, podle kanálu a tvaru, proti vašim cílům — bez utracených tokenů."
           }
         ],
-        "featuresHeading": "Tři příběhy, pět sítí",
+        "featuresHeading": "Vše, čím se může stát týden commitů",
         "howItWorks": {
-          "heading": "Jak to funguje",
+          "heading": "Od commitu k příspěvku ve čtyřech krocích",
           "steps": [
             {
               "title": "Vyberte příběh",
-              "description": "Živé projekty, git historie, hra s pipeline, nebo slot z plánu obsahu na tento týden."
+              "description": "Živé projekty, týden veřejného repozitáře, hra s pipeline, nebo slot tohoto týdne z plánu obsahu."
             },
             {
               "title": "Vyberte síť",
-              "description": "Karta se vykreslí ve velikosti sítě a popisek se napíše v jejím limitu — klidně ho upravte."
+              "description": "Karta se vykreslí ve velikosti dané sítě a popisek se napíše v jejím limitu. Před odesláním upravte kterýkoli řádek."
             },
             {
               "title": "Publikujte",
-              "description": "Na telefonu sdílení; na počítači profil, soubory a popisek. Každé publikování se zapíše do logu."
+              "description": "Na telefonu se otevře sdílení s přiloženými soubory. Na počítači se zkopíruje popisek, uloží obrázek a otevře profil."
             },
             {
               "title": "Přečtěte si report",
-              "description": "Každé pondělí týdenní report spočítá, co vyšlo, proti vašim cílům — bez utracených tokenů."
+              "description": "Každé pondělí týdenní report spočítá, co vyšlo, proti vašim cílům. Neodejde nic, na co jste neklepli."
             }
           ]
         },
         "faq": {
-          "heading": "Otázky, než začnete",
+          "heading": "Než otevřete studio",
           "items": [
             {
-              "question": "Musím se přihlásit, abych studio použil?",
-              "answer": "Ne. Studio i plán růstu jsou veřejné. Přihlaste se jen kvůli frontě obsahu a generování v tvůrčím studiu."
+              "question": "Musím se přihlásit?",
+              "answer": "Ne. Studio i plán růstu jsou veřejné. Přihlaste se přes Google jen tehdy, když chcete vlastní frontu obsahu nebo generování v tvůrčím studiu."
+            },
+            {
+              "question": "Funguje to s mým repozitářem?",
+              "answer": "S libovolným veřejným GitHub repozitářem: zadejte owner/name a studio přečte až 300 posledních commitů a seskupí je po týdnech. Soukromé repozitáře potřebují token, který tato stránka nikdy nedrží."
             },
             {
               "question": "Odkud obsah pochází?",
-              "answer": "Z dat, která si můžete ověřit: seznam živých projektů, git historie veřejného repozitáře a zásobník nápadů plánu. O zákaznících se nic nevymýšlí."
+              "answer": "Z dat, která si můžete ověřit: seznam živých projektů, git historie veřejného repozitáře a zásobník nápadů plánu. O zákaznících, číslech ani výsledcích se nic nevymýšlí."
             },
             {
-              "question": "Zveřejňuje GitPulse Studio na sítích za mě?",
-              "answer": "Připraví obrázek ve velikosti sítě a popisek v jejím limitu, pak je předá sdílení na telefonu nebo otevře profil na počítači. Žádný token sítě se neukládá."
+              "question": "Zveřejňuje GitPulse Studio za mě?",
+              "answer": "Připraví obrázek ve velikosti sítě a popisek v jejím limitu, pak obojí předá sdílení na telefonu nebo otevře profil na počítači. Žádný token sítě se neukládá, takže bez vašeho klepnutí neodejde nic."
             },
             {
-              "question": "Co měří týdenní report?",
-              "answer": "Co vyšlo z logu tohoto prohlížeče, podle tvaru a kanálu, plus čísla, která zadáte z přehledů sítí — proti vašim týdenním a měsíčním cílům."
+              "question": "Kolik to stojí?",
+              "answer": "Studio, plán růstu a týdenní report běží ve vašem prohlížeči a neutrácejí žádné tokeny. Generování AI v tvůrčím studiu má denní kvótu na přihlášeného uživatele."
             },
             {
               "question": "Komu patří obsah?",
@@ -281,8 +290,8 @@
       },
       "cta": {
         "label": "Otevřít studio",
-        "title": "Podívejte se na tři příběhy připravené k publikování",
-        "subtitle": "Bez přihlášení. Plán růstu a týdenní report jsou o záložku dál."
+        "title": "Příběhy tohoto týdne jsou připravené k publikování",
+        "subtitle": "Bez přihlášení. Vyberte příběh, vyberte síť, publikujte — plán růstu a týdenní report jsou o záložku dál."
       }
     }
   }
