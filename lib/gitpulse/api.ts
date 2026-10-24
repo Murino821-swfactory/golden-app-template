@@ -1,6 +1,6 @@
 import type {
   ApiOutcome, AssistantResponse, AssistantTurn, Digest, GitpulseLocale, ImageAspect,
-  ImageResponse, ImageStyle, SpeechResponse, TextKind, TextResponse, TtsVoice, UiError,
+  ImageResponse, ImageStyle, PublishResponse, SocialNetwork, SpeechResponse, TextKind, TextResponse, TtsVoice, UiError,
 } from "./types";
 
 /**
@@ -18,6 +18,7 @@ const BASE = "/api/gitpulse";
 export function errorFromResponse(status: number, body: unknown): UiError {
   const b = typeof body === "object" && body !== null ? (body as Record<string, unknown>) : {};
   if (status === 401 && b.error === "auth") return "auth";
+  if (status === 403 && b.error === "forbidden") return "forbidden";
   if (status === 400 && b.error === "invalid") return "invalid";
   if (status === 429 && b.error === "quota") {
     if (b.reason === "user-daily") return "quota-user";
@@ -67,6 +68,14 @@ export function generateSpeech(
   getToken: GetToken
 ): Promise<ApiOutcome<SpeechResponse>> {
   return call<SpeechResponse>("/speech", input, getToken);
+}
+
+/** Founder only — the server answers 403 for anyone else. `image` is a JPEG data URI. */
+export function publishSocial(
+  input: { network: SocialNetwork; caption: string; image: string },
+  getToken: GetToken
+): Promise<ApiOutcome<PublishResponse>> {
+  return call<PublishResponse>("/publish", input, getToken);
 }
 
 export function askAssistant(

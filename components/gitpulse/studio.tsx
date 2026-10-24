@@ -161,7 +161,7 @@ export function GitpulseStudio() {
           />
         </>
       )}
-      <PublishPanel items={queue} onChange={writeQueue} copy={copy} />
+      <PublishPanel items={queue} onChange={writeQueue} copy={copy} image={image} />
       <AssistantPanel digest={digest} copy={copy} />
     </div>
   );

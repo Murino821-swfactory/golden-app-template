@@ -41,7 +41,7 @@ export interface AssistantTurn {
   content: string;
 }
 
-export type UiError = "auth" | "invalid" | "quota-user" | "quota-global" | "rate" | "model" | "internal" | "network";
+export type UiError = "auth" | "forbidden" | "invalid" | "quota-user" | "quota-global" | "rate" | "model" | "internal" | "network";
 
 export type ApiOutcome<T> = { ok: true; data: T } | { ok: false; error: UiError };
 
@@ -49,6 +49,14 @@ export interface TextResponse { content: GeneratedText; costUsd: number }
 export interface ImageResponse { image: { dataUri: string; contentType: string }; costUsd: number }
 export interface SpeechResponse { audio: { dataUri: string; seconds: number }; costUsd: number }
 export interface AssistantResponse { reply: string; costUsd: number }
+
+/** Direct posting (founder only): the Tokenwise Facebook Page and Instagram account. */
+export const SOCIAL_NETWORKS = ["facebook", "instagram"] as const;
+export type SocialNetwork = (typeof SOCIAL_NETWORKS)[number];
+export type SocialResult =
+  | { network: SocialNetwork; ok: true; postId: string; url: string }
+  | { network: SocialNetwork; ok: false; error: string };
+export interface PublishResponse { result: SocialResult }
 
 /** Generative-soundtrack moods (lib/gitpulse/music.ts — rendered in the browser, €0). */
 export const MUSIC_MOODS = ["calm", "upbeat", "epic"] as const;

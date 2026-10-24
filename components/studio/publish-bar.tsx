@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useOwnerRole } from "@/hooks/use-owner-role";
+import { gitpulseCopy } from "@/lib/gitpulse/copy";
+import { directPublish, publishRouteFor } from "@/lib/gitpulse/social";
+import { getIdToken } from "@/lib/gitpulse/token";
+import type { SocialNetwork } from "@/lib/gitpulse/types";
 import { CHANNELS, CHANNEL_BY_ID, FORMAT_SIZES, articleFor, captionFor, type Channel, type ChannelId, type ScenarioContent } from "@/lib/studio/channels";
 import type { StudioCopy } from "@/lib/studio/copy";
 import { publish, type PublishOutcome } from "@/lib/studio/publish";
@@ -16,7 +22,7 @@ interface Props {
   /** The game's recorded clip, when the active scene is the game and one exists. */
   clip: GameClip | null;
   pageUrl: string;
-  onPublished: (channel: Channel, content: ScenarioContent, outcome: PublishOutcome) => void;
+  onPublished: (channel: Channel, content: ScenarioContent, outcome: PublishOutcome, url?: string) => void;
 }
 
 interface Asset {
@@ -26,18 +32,29 @@ interface Asset {
   key: string;
 }
 
+type DirectStatus = { kind: "ok"; url: string } | { kind: "error"; text: string };
+
 /**
  * The publish bar — five destinations, one caption, one preview, one button.
  *
  * Choosing a channel re-words the caption for its limit and re-renders the card in its
  * size, so the preview is what will be posted. The card is rendered ahead of the click:
- * the publish itself has to open a tab inside the click's activation, and an `await`
+ * the share route has to open a tab inside the click's activation, and an `await`
  * before `window.open` would get it blocked.
+ *
+ * Two routes behind the one button: the founder (owner role `admin`) posts to Facebook
+ * and Instagram for real through the studio API (`lib/gitpulse/social.ts`); everyone
+ * else, and every other channel, gets the share sheet or the profile in a new tab.
  */
 export function PublishBar({ copy, content, clip, pageUrl, onPublished }: Props) {
   const c = copy.publish;
+  const locale = useLocale();
+  const direct = gitpulseCopy(locale).publish;
+  const errors = gitpulseCopy(locale).errors;
+  const { status: owner } = useOwnerRole();
   const [channelId, setChannelId] = useState<ChannelId>("site");
   const channel = CHANNEL_BY_ID[channelId];
+  const route = publishRouteFor(owner?.role, channel.id);
   const auto = useMemo(() => (content ? captionFor(channel, content) : ""), [channel, content]);
   // The caption follows the data until the visitor edits it; picking a channel resets it.
   const [edited, setEdited] = useState<string | null>(null);
@@ -45,6 +62,8 @@ export function PublishBar({ copy, content, clip, pageUrl, onPublished }: Props)
   const [asset, setAsset] = useState<Asset | null>(null);
   const assetUrl = useRef<string | null>(null);
   const [status, setStatus] = useState<PublishOutcome | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [directStatus, setDirectStatus] = useState<DirectStatus | null>(null);
 
   const assetKey = content ? `${content.scenario}:${channel.format}:${content.title}:${content.stats.map((s) => s.value).join(",")}` : "";
 
@@ -90,10 +109,26 @@ export function PublishBar({ copy, content, clip, pageUrl, onPublished }: Props)
     setChannelId(id);
     setEdited(null);
     setStatus(null);
+    setDirectStatus(null);
   };
 
   const onPublish = async () => {
-    if (!content || !ready) return;
+    if (!content || !ready || busy) return;
+    if (route === "direct") {
+      setBusy(true);
+      setStatus(null);
+      setDirectStatus(null);
+      const out = await directPublish({ network: channel.id as SocialNetwork, caption, image: asset.blob }, getIdToken);
+      setBusy(false);
+      if (out.ok) {
+        setDirectStatus({ kind: "ok", url: out.result.url });
+        onPublished(channel, content, "published", out.result.url);
+      } else {
+        setDirectStatus({ kind: "error", text: out.reason === "aspect" ? direct.aspect : out.reason === "meta" ? direct.metaRefused(out.message) : errors[out.error] });
+        onPublished(channel, content, "failed");
+      }
+      return;
+    }
     const outcome = await publish({
       channel,
       content,
@@ -167,12 +202,31 @@ export function PublishBar({ copy, content, clip, pageUrl, onPublished }: Props)
               <p className="py-10 text-xs text-muted-foreground">{content ? c.rendering : c.outcome.failed}</p>
             )}
           </div>
-          <Button type="button" className="h-10 w-full" onClick={onPublish} disabled={!ready} data-testid="publish-button">
-            {c.publishTo(channel.label)}
+          <Button type="button" className="h-10 w-full" onClick={onPublish} disabled={!ready || busy} data-testid="publish-button" data-route={route}>
+            {busy ? direct.publishing : route === "direct" ? direct.directButton(channel.label) : c.publishTo(channel.label)}
           </Button>
+          {route === "direct" && (
+            <p className="text-xs text-primary" data-testid="publish-direct-hint">
+              {direct.direct(channel.handle)}
+            </p>
+          )}
           {status && (
             <p className="text-xs text-muted-foreground" role="status">
               {c.outcome[status]}
+            </p>
+          )}
+          {directStatus && (
+            <p className={cn("text-xs", directStatus.kind === "ok" ? "text-muted-foreground" : "text-destructive")} role="status" data-testid="publish-direct-status">
+              {directStatus.kind === "ok" ? (
+                <>
+                  {direct.published}{" "}
+                  <a href={directStatus.url} target="_blank" rel="noopener noreferrer" className="text-primary underline-offset-4 hover:underline">
+                    {direct.view}
+                  </a>
+                </>
+              ) : (
+                directStatus.text
+              )}
             </p>
           )}
         </div>

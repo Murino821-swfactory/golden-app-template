@@ -133,7 +133,7 @@ export function weekPlan(weekStart: string, ideas: readonly Idea[] = IDEAS): Pla
 
 /** Successful publishes only — a cancelled share sheet is not a post. */
 export function isPublished(entry: Pick<PublishLogEntry, "outcome">): boolean {
-  return entry.outcome === "shared" || entry.outcome === "opened" || entry.outcome === "downloaded";
+  return entry.outcome === "shared" || entry.outcome === "opened" || entry.outcome === "downloaded" || entry.outcome === "published";
 }
 
 /** Whether this planned item went out in this week, by the log's `ref`. */

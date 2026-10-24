@@ -3,6 +3,7 @@ import { errorFromResponse } from "../lib/gitpulse/api";
 import { buildDigest, commitHighlights, weekStart, REPO_PATTERN, SAMPLE_DIGEST } from "../lib/gitpulse/github";
 import { seededRandom } from "../lib/gitpulse/music";
 import { composeShareText, recordTypeFor, sharePlan } from "../lib/gitpulse/share";
+import { instagramAspectOk, publishRouteFor } from "../lib/gitpulse/social";
 import { recapDurationInFrames, RECAP_FPS } from "../components/gitpulse/recap-video";
 import { gitpulseCopy } from "../lib/gitpulse/copy";
 import { TEXT_KINDS } from "../lib/gitpulse/types";
@@ -112,4 +113,37 @@ test("both locales carry the full studio vocabulary", () => {
     expect(copy.errors["quota-global"].length).toBeGreaterThan(10);
   }
   expect(gitpulseCopy("cs").page.title).not.toBe(gitpulseCopy("en").page.title);
+});
+
+test("direct publishing is the founder's route, on Facebook and Instagram only", () => {
+  expect(publishRouteFor("admin", "facebook")).toBe("direct");
+  expect(publishRouteFor("admin", "instagram")).toBe("direct");
+  expect(publishRouteFor("admin", "tiktok")).toBe("share");
+  expect(publishRouteFor("admin", "site")).toBe("share");
+  expect(publishRouteFor("owner", "facebook")).toBe("share");
+  expect(publishRouteFor(null, "instagram")).toBe("share");
+  expect(publishRouteFor(undefined, "facebook")).toBe("share");
+});
+
+test("instagram feed aspect window: the studio's square and og cards pass, a 9:16 visual does not", () => {
+  expect(instagramAspectOk(1080, 1080)).toBe(true);
+  expect(instagramAspectOk(1200, 630)).toBe(true);
+  expect(instagramAspectOk(1080, 1350)).toBe(true);
+  expect(instagramAspectOk(1080, 1920)).toBe(false);
+});
+
+test("a 403 from the publish route reads as forbidden", () => {
+  expect(errorFromResponse(403, { error: "forbidden" })).toBe("forbidden");
+  expect(errorFromResponse(403, {})).toBe("internal");
+});
+
+test("the direct route has its words in both locales", () => {
+  for (const locale of ["en", "cs"] as const) {
+    const copy = gitpulseCopy(locale);
+    expect(copy.publish.direct("@tokenwisefactory")).toContain("@tokenwisefactory");
+    expect(copy.publish.directButton("Instagram")).toContain("Instagram");
+    expect(copy.publish.metaRefused("x")).toContain("x");
+    for (const key of ["publishing", "published", "view", "needImage", "aspect"] as const) expect(copy.publish[key].length).toBeGreaterThan(0);
+    expect(copy.errors.forbidden.length).toBeGreaterThan(0);
+  }
 });
