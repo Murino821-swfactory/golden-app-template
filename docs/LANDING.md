@@ -52,7 +52,7 @@ Two kinds, all CSS, no JavaScript, no library (`app/landing.css`):
 
 | Where | On load (time) | On scroll (`animation-timeline`) |
 |---|---|---|
-| Hero | eyebrow → headline → subheadline → button → studio enter in turn (`.landing-enter`, nth-child delays) | copy drifts up and fades (`scroll(root)`, 0–600 px); the studio tilts from `rotateX(11deg)` flat as it rises (0–520 px); the film parallaxes at half speed (0–900 px) |
+| Hero | eyebrow → headline → subheadline → button sharpen into place in turn (opacity + blur, no translate: the template's hero-image test compares the headline's box mid-load with its settled box), then the studio rises (`.landing-enter`, nth-child delays) | copy drifts up and fades (`scroll(root)`, 0–600 px); the studio tilts from `rotateX(11deg)` flat as it rises (0–520 px); the film, 16 % taller than its box, slides down 7 % (0–900 px) — a translate, never a scale, so the layer keeps the hero's width |
 | Bento, steps, FAQ cards, band | — | rise on entry, siblings staggered by `--i` (`[data-reveal]`) |
 | Gallery | — | ≥ 1024 px: the block is 300 svh tall, the pin sticks for two screens and the strip slides `translateX(-100% + 100cqw)` over the `contain` range of its named view timeline; otherwise a horizontal snap strip |
 | How it works | — | the line draws itself (`stroke-dashoffset`, `entry 10% → cover 55%`) |
