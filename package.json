@@ -18,7 +18,8 @@
     "preview": "node scripts/preview.mjs",
     "test:packages": "npm test --workspaces --if-present",
     "prebuild": "tsx scripts/build-discovery.ts",
-    "test:inbox:emulator": "playwright test -c integration/inbox/playwright.config.ts"
+    "test:inbox:emulator": "playwright test -c integration/inbox/playwright.config.ts",
+    "test:record-focus:emulator": "playwright test -c integration/record-focus/playwright.config.ts"
   },
   "dependencies": {
     "@tokenwise/hex-map": "0.1.0",
