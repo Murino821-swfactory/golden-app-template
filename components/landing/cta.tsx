@@ -12,8 +12,9 @@ import { Eyebrow } from "./ui";
 
 /**
  * The closing band, then the name of the app as large as the page — the Indoobit page
- * ends the same way, its wordmark half cut by the bottom edge. The wordmark is
- * decoration (`aria-hidden`): the footer under it already names the app for everyone.
+ * ends the same way. The wordmark stays whole above the footer and dissolves at its foot
+ * (2026-10-24: cut by the section edge it read as the footer overlapping the page); it is
+ * decoration (`aria-hidden`), because the footer under it names the app for everyone.
  * Label and destination come from the `cta` pattern, as in the template's section.
  */
 export function CtaSection() {
@@ -25,7 +26,7 @@ export function CtaSection() {
   const href = action && action.startsWith("/") ? localePath(locale, action) : action;
 
   return (
-    <section id="cta" data-section="cta" className="landing-closing scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 pt-20 sm:pt-28">
+    <section id="cta" data-section="cta" className="landing-closing scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 pb-6 pt-20 sm:pt-28">
       <div data-reveal className="landing-band relative overflow-clip rounded-3xl px-6 py-14 text-center sm:px-12 sm:py-20">
         <Eyebrow>{words.cta.eyebrow}</Eyebrow>
         <h2 className="mt-5 text-balance text-3xl font-light tracking-[-0.02em] sm:text-5xl">{copy?.title ?? t("title")}</h2>

@@ -1,21 +1,25 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
 import { ICONS } from "@/lib/icons";
 import { landingCopy } from "@/lib/landing/copy";
 import { cn } from "@/lib/utils";
+import { ProjectGallery } from "./gallery";
 import { Eyebrow, Numeral } from "./ui";
 
 /**
  * What you get, as a bento: the first feature wide, the rest as cards, each with its
- * numeral and Lucide icon in the palette's colour — then the manifesto, one paragraph in
- * large type, the way the Indoobit page states what the product is not.
+ * numeral and Lucide icon in the palette's colour — then the live projects as pictures,
+ * then the manifesto, one paragraph in large type that lights up word by word as it
+ * scrolls into the middle of the screen (`app/landing.css`, `[data-word]`).
  *
  * Contract kept from the template's features section: the configured heading is the
  * only `h2`, and the section draws exactly one `svg` per feature with an icon (the
- * eyebrows and the manifesto's kicker are text, on purpose).
+ * eyebrows, the gallery and the manifesto's kicker are text, on purpose).
  */
+
 /**
  * Which cards span two columns, so every row of the bento is full. Three columns on a
  * desktop: six cards alternate wide-left, wide-right, wide-left (0, 3, 4); five get one
@@ -33,12 +37,30 @@ export function bentoSpan(index: number, count: number): { wide: boolean; classN
   };
 }
 
+/** Each word in its own span, numbered across the whole paragraph, so CSS can light them
+ * up one after another on scroll. Spaces stay as text, so copy and read-aloud are unchanged. */
+function Words({ text, from }: { text: string; from: number }) {
+  return (
+    <>
+      {text.split(" ").map((word, i) => (
+        <span key={i}>
+          {i > 0 && " "}
+          <span data-word style={{ "--i": from + i } as CSSProperties}>
+            {word}
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
 export function FeaturesSection() {
   const t = useTranslations("features");
   const locale = useLocale();
   const words = landingCopy(locale);
   const landing = useContent().landing;
   const features = landing?.features ?? [];
+  const leadWords = words.manifesto.lead.split(" ").length;
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
@@ -56,6 +78,7 @@ export function FeaturesSection() {
               key={feature.title + i}
               data-span={span.wide ? "wide" : "one"}
               data-reveal
+              style={{ "--i": i % 3 } as CSSProperties}
               className={cn("landing-card relative overflow-clip rounded-3xl p-6 sm:p-8", span.className)}
             >
               <Numeral index={i} className="absolute right-5 top-4" />
@@ -67,12 +90,17 @@ export function FeaturesSection() {
         })}
       </ul>
 
-      <div data-manifesto data-reveal className="mx-auto mt-24 flex max-w-4xl flex-col items-center gap-6 text-center sm:mt-32">
+      <ProjectGallery />
+
+      <div data-manifesto className="landing-manifesto mx-auto mt-24 flex max-w-4xl flex-col items-center gap-6 text-center sm:mt-32">
         <span data-kicker className="landing-eyebrow">
           {words.manifesto.kicker}
         </span>
         <p className="text-balance text-2xl font-light leading-snug tracking-[-0.02em] sm:text-4xl">
-          <strong className="font-medium text-primary">{words.manifesto.lead}</strong> {words.manifesto.body}
+          <strong className="font-medium text-primary">
+            <Words text={words.manifesto.lead} from={0} />
+          </strong>{" "}
+          <Words text={words.manifesto.body} from={leadWords} />
         </p>
       </div>
     </section>

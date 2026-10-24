@@ -41,7 +41,7 @@ function HeroVideoBackground({ video, poster }: { video: HeroVideo; poster: stri
   }, []);
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-      <video ref={ref} data-hero-video poster={poster} muted loop playsInline preload="metadata" className="h-full w-full object-cover">
+      <video ref={ref} data-hero-video poster={poster} muted loop playsInline preload="metadata" className="landing-hero-video h-full w-full object-cover">
         {video.sources.map((s) => (
           <source key={s.src} src={s.src} type={s.type} media={s.media} />
         ))}
@@ -88,23 +88,28 @@ export function HeroSection() {
       {HERO_VIDEO ? <HeroVideoBackground video={HERO_VIDEO} poster={hero.src ?? HERO_VIDEO.poster} /> : hero.src ? <HeroImageBackground key={hero.src} src={hero.src} /> : null}
 
       <div className="mx-auto w-full max-w-6xl px-4 pt-16 sm:pt-24">
-        <div className="flex flex-col items-center gap-6 text-center" style={backdrop ? { textShadow: HERO_TEXT_SHADOW } : undefined}>
-          <Eyebrow lines>{words.hero.eyebrow}</Eyebrow>
-          <h1 className="max-w-4xl text-balance text-[2.75rem] font-light leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-7xl">
+        {/* Each child enters in turn on load (.landing-enter, nth-child delays); the group
+            drifts up and fades as the page scrolls away (.landing-hero-copy). */}
+        <div className="landing-hero-copy flex flex-col items-center gap-6 text-center" style={backdrop ? { textShadow: HERO_TEXT_SHADOW } : undefined}>
+          <Eyebrow lines className="landing-enter">
+            {words.hero.eyebrow}
+          </Eyebrow>
+          <h1 className="landing-enter max-w-4xl text-balance text-[2.75rem] font-light leading-[1.02] tracking-[-0.03em] sm:text-6xl lg:text-7xl">
             {landing?.headline ?? t("title")}
           </h1>
-          <p className="max-w-2xl text-balance text-muted-foreground sm:text-lg">{landing?.subheadline ?? t("subtitle")}</p>
+          <p className="landing-enter max-w-2xl text-balance text-muted-foreground sm:text-lg">{landing?.subheadline ?? t("subtitle")}</p>
           {/* One next step, as the template's contract requires (tests/landing-action.spec.ts);
               Indoobit's second "Learn more" button is the fold-cut studio below instead. */}
           {href && (
-            <Button asChild size="lg" className="h-11 rounded-full px-6 text-sm">
+            <Button asChild size="lg" className="landing-enter h-11 rounded-full px-6 text-sm">
               <Link href={href}>{content.cta?.label ?? t("cta")}</Link>
             </Button>
           )}
         </div>
 
-        {/* The fold cuts the studio: the mask fades it into the page below. */}
-        <div className="landing-fold relative mt-14 h-[22rem] overflow-clip sm:mt-16 sm:h-[26rem]">
+        {/* The fold cuts the studio: the mask fades it into the page below. It rises on load
+            and tilts flat as the first scroll brings it up (.landing-frame). */}
+        <div className="landing-fold landing-enter relative mt-14 h-[22rem] overflow-clip sm:mt-16 sm:h-[26rem]">
           <StudioPreview />
         </div>
       </div>

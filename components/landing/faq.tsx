@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
 import { faqJsonLd } from "@/lib/faq-jsonld";
@@ -28,7 +29,7 @@ export function FaqSection() {
         </div>
         <div className="space-y-3">
           {faq.items.map((item, i) => (
-            <details key={i} data-reveal className="landing-card group rounded-2xl px-5 sm:px-6">
+            <details key={i} data-reveal style={{ "--i": i } as CSSProperties} className="landing-card group rounded-2xl px-5 sm:px-6">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium [&::-webkit-details-marker]:hidden">
                 {item.question}
                 <span aria-hidden className="landing-plus" />

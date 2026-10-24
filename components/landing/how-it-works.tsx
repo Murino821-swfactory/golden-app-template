@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
 import { landingCopy } from "@/lib/landing/copy";
@@ -50,7 +51,7 @@ export function HowItWorksSection() {
 
         <ol className={cn("landing-steps relative grid gap-10 lg:gap-6", four ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
           {block.steps.map((step, i) => (
-            <li key={i} data-reveal className={cn("relative flex gap-5 pl-6 lg:block lg:pl-0", i % 2 === 1 ? "lg:mt-60" : "lg:mt-7")}>
+            <li key={i} data-reveal style={{ "--i": i } as CSSProperties} className={cn("relative flex gap-5 pl-6 lg:block lg:pl-0", i % 2 === 1 ? "lg:mt-60" : "lg:mt-7")}>
               <span aria-hidden className="landing-tick" />
               <Numeral index={i} className="landing-step-numeral shrink-0" />
               <div className="lg:mt-3">
