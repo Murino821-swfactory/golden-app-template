@@ -13,6 +13,7 @@
       "sections": [
         "hero",
         "features",
+        "howItWorks",
         "faq",
         "cta"
       ]
@@ -113,6 +114,23 @@
             "description": "Manually trigger a quota reset or push a paused session back to active with a single action."
           }
         ],
+        "howItWorks": {
+          "heading": "How Continue works",
+          "steps": [
+            {
+              "title": "Sign in with Google",
+              "description": "Sign in to open your own private session table — your records stay on your account and are visible only to you."
+            },
+            {
+              "title": "Add a session",
+              "description": "Record each agent, its status, tokens used, the task, and whether it ran in Cloud API or Local Fallback mode."
+            },
+            {
+              "title": "Track and filter",
+              "description": "Review every session in one place and filter by Active, Paused, Waiting for Reset, or Completed at a glance."
+            }
+          ]
+        },
         "faq": {
           "heading": "Frequently asked questions",
           "items": [
@@ -190,6 +208,23 @@
             "description": "Activa manualmente un reset de cuota o devuelve una sesión pausada al estado activo con una sola acción."
           }
         ],
+        "howItWorks": {
+          "heading": "Cómo funciona Continue",
+          "steps": [
+            {
+              "title": "Inicia sesión con Google",
+              "description": "Inicia sesión para abrir tu propia tabla de sesiones privada: tus registros quedan en tu cuenta y solo tú los ves."
+            },
+            {
+              "title": "Añade una sesión",
+              "description": "Registra cada agente, su estado, los tokens usados, la tarea y si se ejecutó en modo Cloud API o Local Fallback."
+            },
+            {
+              "title": "Controla y filtra",
+              "description": "Revisa todas tus sesiones en un solo lugar y fíltralas por Activa, Pausada, Esperando reset o Completada."
+            }
+          ]
+        },
         "faq": {
           "heading": "Preguntas frecuentes",
           "items": [
