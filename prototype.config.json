@@ -165,14 +165,14 @@
       },
       "dashboard": {
         "title": "Your Content Studio",
-        "intro": "Your content queue. The studio has the three stories; the growth plan has this week's slots, the profile kit, the report and the leads."
+        "intro": "Your content queue. Add a repository, a video, an image, a sound, a Markdown file or a link — straight from your phone."
       },
       "dataGrid": {
         "entityLabel": "Content Item",
         "fieldLabels": {
           "title": "Title",
           "week": "Week Of",
-          "repository": "Repository",
+          "repository": "Source",
           "type": "Content Type",
           "status": "Status",
           "publishedAt": "Published At"
@@ -275,14 +275,14 @@
       },
       "dashboard": {
         "title": "Vaše obsahové studio",
-        "intro": "Vaše fronta obsahu. Studio má tři příběhy; plán růstu má sloty tohoto týdne, sadu pro profil, report a leady."
+        "intro": "Vaše fronta obsahu. Přidejte repozitář, video, obrázek, zvuk, soubor Markdown nebo odkaz — přímo z telefonu."
       },
       "dataGrid": {
         "entityLabel": "Obsah",
         "fieldLabels": {
           "title": "Název",
           "week": "Týden",
-          "repository": "Repozitář",
+          "repository": "Zdroj",
           "type": "Typ obsahu",
           "status": "Stav",
           "publishedAt": "Publikováno"

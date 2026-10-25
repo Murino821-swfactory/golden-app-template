@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { groupByField } from "@/lib/board";
-import { formatValue, type EntityRecord } from "@/lib/records";
+import type { EntityRecord } from "@/lib/records";
 import type { EntityField } from "@/lib/prototype-config";
+import { FieldValue } from "./field-value";
 
 /** Desktop: one column per option. Phone: the same groups stacked — no sideways page scroll. */
 export function Board({
@@ -35,10 +36,10 @@ export function Board({
               <li key={rec.id}>
                 <button type="button" data-record-id={rec.id} onClick={(event) => onOpen(rec, event.currentTarget)}
                   className="min-h-11 w-full rounded-md border border-border bg-card p-3 text-left text-sm focus-visible:outline-2 focus-visible:outline-ring">
-                  <span className="block font-medium">{formatValue(titleField, rec.values[titleField.key], yesNo)}</span>
+                  <span className="block font-medium"><FieldValue field={titleField} value={rec.values[titleField.key]} labels={yesNo} /></span>
                   {detailFields.map((f) => (
                     <span key={f.key} className="block text-xs text-muted-foreground">
-                      {f.label}: {formatValue(f, rec.values[f.key], yesNo)}
+                      {f.label}: <FieldValue field={f} value={rec.values[f.key]} labels={yesNo} />
                     </span>
                   ))}
                 </button>
