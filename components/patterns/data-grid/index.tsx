@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRecords } from "@/hooks/use-records";
-import { RECORD_LIMIT, filterRecords, formatValue, sortRecords, type EntityRecord, type SortKey } from "@/lib/records";
+import { RECORD_LIMIT, filterRecords, sortRecords, type EntityRecord, type SortKey } from "@/lib/records";
 import { cn } from "@/lib/utils";
 import { RecordDialog } from "./record-dialog";
 import { Board } from "./board";
+import { FieldValue } from "./field-value";
 import { config } from "@/lib/prototype-config";
 import { getDemoSlug } from "@/lib/demo-slug";
 
@@ -183,7 +184,7 @@ export function DataGrid() {
                     {fields.map((field) => (
                       <div key={field.key} className="flex justify-between gap-4 text-sm">
                         <dt className="text-muted-foreground">{field.label}</dt>
-                        <dd className="text-right">{formatValue(field, rec.values[field.key], yesNo)}</dd>
+                        <dd className="min-w-0 text-right"><FieldValue field={field} value={rec.values[field.key]} labels={yesNo} /></dd>
                       </div>
                     ))}
                   </dl>
@@ -217,7 +218,7 @@ export function DataGrid() {
                 {visible.map((rec) => (
                   <tr key={rec.id} className="border-b border-border last:border-0">
                     {fields.map((field) => (
-                      <td key={field.key} className="px-4 py-3">{formatValue(field, rec.values[field.key], yesNo)}</td>
+                      <td key={field.key} className="px-4 py-3"><FieldValue field={field} value={rec.values[field.key]} labels={yesNo} /></td>
                     ))}
                     <td className="px-2 py-1 text-right">
                       <Button variant="ghost" className="h-11" data-record-id={rec.id} onClick={(event) => openDialog(event.currentTarget, rec)}>{t("edit")}</Button>

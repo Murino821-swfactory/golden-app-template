@@ -1,4 +1,5 @@
 import type { ImageStyle, MusicMood, TextKind } from "./types";
+import type { FileKind, SourceKind } from "./source";
 
 /**
  * copy.ts — every string the creation studio shows, in the prototype's two locales. The
@@ -113,6 +114,19 @@ export interface GitpulseCopy {
     model: string;
     internal: string;
     network: string;
+  };
+  /** The content item's source picker (components/gitpulse/source-field.tsx). */
+  source: {
+    kinds: Record<SourceKind, string>;
+    choose: Record<FileKind, string>;
+    limits: Record<FileKind, string>;
+    repoPlaceholder: string;
+    urlPlaceholder: string;
+    replace: string;
+    remove: string;
+    open: string;
+    uploading: (percent: number) => string;
+    errors: { type: string; size: string; empty: string; url: string; upload: string; auth: string };
   };
 }
 
@@ -244,6 +258,25 @@ const en: GitpulseCopy = {
     internal: "Something broke on our side. Try again.",
     network: "No connection to the studio API.",
   },
+  source: {
+    kinds: { repository: "Repository", video: "Video", image: "Image", audio: "Sound", markdown: "Markdown", url: "Link" },
+    choose: { video: "Choose or record a video", image: "Choose or take a photo", audio: "Choose a sound file", markdown: "Choose a Markdown file" },
+    limits: { video: "MP4, MOV or WebM · up to 100 MB", image: "JPEG, PNG, HEIC, WebP or GIF · up to 20 MB", audio: "MP3, M4A, WAV or OGG · up to 25 MB", markdown: ".md · up to 1 MB" },
+    repoPlaceholder: "owner/name",
+    urlPlaceholder: "https://",
+    replace: "Replace",
+    remove: "Remove",
+    open: "Open",
+    uploading: (percent) => `Uploading ${percent} %`,
+    errors: {
+      type: "This tile doesn't take that file — pick another tile or another file.",
+      size: "The file is over the limit for this tile.",
+      empty: "The file is empty.",
+      url: "Enter a full link starting with https://",
+      upload: "The upload didn't finish. Check the connection and save again.",
+      auth: "Sign in again to upload.",
+    },
+  },
 };
 
 const cs: GitpulseCopy = {
@@ -373,6 +406,25 @@ const cs: GitpulseCopy = {
     model: "Model tentokrát nedodal výsledek. Zkuste to znovu.",
     internal: "Něco se pokazilo u nás. Zkuste to znovu.",
     network: "Studio API není dostupné.",
+  },
+  source: {
+    kinds: { repository: "Repozitář", video: "Video", image: "Obrázek", audio: "Zvuk", markdown: "Markdown", url: "Odkaz" },
+    choose: { video: "Vybrat nebo natočit video", image: "Vybrat nebo vyfotit obrázek", audio: "Vybrat zvukový soubor", markdown: "Vybrat soubor Markdown" },
+    limits: { video: "MP4, MOV nebo WebM · do 100 MB", image: "JPEG, PNG, HEIC, WebP nebo GIF · do 20 MB", audio: "MP3, M4A, WAV nebo OGG · do 25 MB", markdown: ".md · do 1 MB" },
+    repoPlaceholder: "vlastník/název",
+    urlPlaceholder: "https://",
+    replace: "Vyměnit",
+    remove: "Odebrat",
+    open: "Otevřít",
+    uploading: (percent) => `Nahrávám ${percent} %`,
+    errors: {
+      type: "Tahle dlaždice takový soubor nebere — zvolte jinou dlaždici nebo jiný soubor.",
+      size: "Soubor je nad limitem této dlaždice.",
+      empty: "Soubor je prázdný.",
+      url: "Zadejte celý odkaz začínající https://",
+      upload: "Nahrávání nedoběhlo. Zkontrolujte připojení a uložte znovu.",
+      auth: "Pro nahrání se znovu přihlaste.",
+    },
   },
 };
 
