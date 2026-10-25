@@ -26,7 +26,9 @@ factory-web's Firestore rules see nothing new.
   and previewed from the device: image, video player, audio player, the first lines of Markdown.
 - **Upload on Save.** The record dialog validates the value the field *will* store, then
   uploads (resumable, progress bar, cancelled if the dialog closes), then writes the record.
-  If the record write fails, the new file is deleted. Replacing a file uploads a new one and
+  If the record write fails, the new file is deleted. An unreachable bucket (no bucket, dead
+  connection) fails the save after ~1 minute (`STORAGE_RETRY_MS`) — the SDK's default retried
+  for ~17 minutes at "Uploading 0 %" (seen live 2026-10-26, before the bucket existed). Replacing a file uploads a new one and
   deletes the old one after the record is saved; deleting the record deletes its file.
 - **Where the bytes live.** Firebase Storage, default bucket of `sw-factory-d4ac5`
   (`sw-factory-d4ac5.firebasestorage.app` — the bucket prototypes are built with):

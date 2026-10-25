@@ -32,6 +32,14 @@ export const FILE_LIMITS: Record<FileKind, { maxBytes: number; accept: string }>
   markdown: { maxBytes: 1 * MB, accept: ".md,.markdown,text/markdown" },
 };
 
+/**
+ * How long the Storage SDK may keep retrying a failing request. It retries a network error
+ * (a refused CORS preflight, a dead connection) with doubling sleeps until one exceeds this
+ * budget — 60 s ends after ~63 s; the SDK's default 10 min sat at "Uploading 0 %" for ~17 min
+ * when the bucket did not exist (2026-10-26). A phone through a short tunnel still makes it.
+ */
+export const STORAGE_RETRY_MS = { upload: 60_000, operation: 30_000 } as const;
+
 /** Extension → content type. SVG is absent on purpose: it can carry script. */
 const BY_EXTENSION: Record<Exclude<FileKind, "markdown">, Record<string, string>> = {
   video: { mp4: "video/mp4", mov: "video/quicktime", m4v: "video/x-m4v", webm: "video/webm", "3gp": "video/3gpp", mkv: "video/x-matroska" },

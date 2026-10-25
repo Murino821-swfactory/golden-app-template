@@ -153,6 +153,23 @@ test("Markdown and sound previews, then both are stored", async ({ page }) => {
   expect(await objectExists(uploadPath(values["Voice note"]!))).toBe(true);
 });
 
+test("an unreachable bucket fails the save with a message instead of hanging", async ({ page }, info) => {
+  // 2026-10-26: with no default bucket the preflight is refused, the SDK sees a network error
+  // and — by default — retries for ~17 minutes at "Uploading 0 %".
+  test.skip(info.project.name !== "mobile", "the retry budget is the same on every viewport");
+  test.setTimeout(150_000);
+  await page.route("http://127.0.0.1:9189/**", (route) => route.abort("failed"));
+  const dialog = await openAdd(page);
+  await dialog.getByLabel("Title").fill("Offline clip");
+  await dialog.getByRole("radio", { name: copy.kinds.video }).check();
+  await dialog.locator('input[type="file"]').setInputFiles({ name: "clip.mp4", mimeType: "video/mp4", buffer: Buffer.alloc(64 * 1024, 3) });
+  const save = dialog.getByRole("button", { name: grid.save, exact: true });
+  await save.click();
+  await expect(dialog.getByRole("alert")).toHaveText(copy.errors.upload, { timeout: 100_000 });
+  await expect(save).toBeEnabled();
+  expect((await stored())["Offline clip"]).toBeUndefined();
+});
+
 async function openRecord(page: Page, title: string) {
   const mobile = page.viewportSize()!.width < 640;
   const gridEl = page.locator('[data-pattern="data-grid"]');

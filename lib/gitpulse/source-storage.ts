@@ -1,5 +1,6 @@
 import { getApp } from "firebase/app";
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { STORAGE_RETRY_MS } from "./source";
 
 /**
  * source-storage.ts — the one place a content item's file meets Firebase Storage.
@@ -9,7 +10,12 @@ import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } f
  * (NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET); factory-web `storage.rules` owns who may write.
  */
 
-const bucket = () => getStorage(getApp());
+function bucket() {
+  const storage = getStorage(getApp());
+  storage.maxUploadRetryTime = STORAGE_RETRY_MS.upload;
+  storage.maxOperationRetryTime = STORAGE_RETRY_MS.operation;
+  return storage;
+}
 
 /** Resumable, so a phone that drops the connection for a moment does not start over. */
 export function uploadFile(

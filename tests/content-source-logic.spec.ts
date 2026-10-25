@@ -3,6 +3,7 @@ import {
   FILE_KINDS,
   FILE_LIMITS,
   SOURCE_KINDS,
+  STORAGE_RETRY_MS,
   contentTypeFor,
   encodeSource,
   fileIssue,
@@ -97,6 +98,13 @@ test("a file is refused for its type or its size, before any upload", () => {
   expect(fileIssue("video", { name: "a.mp4", type: "video/mp4", size: 100 * mb + 1 })).toBe("size");
   expect(fileIssue("video", { name: "a.mp4", type: "video/mp4", size: 0 })).toBe("empty");
   expect(fileIssue("image", { name: "a.svg", type: "image/svg+xml", size: 10 })).toBe("type");
+});
+
+test("an unreachable bucket fails the save within about a minute, not the SDK's ten", () => {
+  // The SDK retries a network error (a refused CORS preflight, a dead connection) with
+  // doubling sleeps until one exceeds the budget: 60 s → ~63 s; its default 10 min → ~17 min.
+  expect(STORAGE_RETRY_MS.upload).toBe(60_000);
+  expect(STORAGE_RETRY_MS.operation).toBe(30_000);
 });
 
 test("the grid shows what the source is, not how it is stored", () => {
