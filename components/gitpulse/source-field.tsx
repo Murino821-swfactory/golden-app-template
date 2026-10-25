@@ -141,7 +141,7 @@ function SourceInput({ id, field, uid, value, onChange, invalid, describedBy, pr
             <label
               key={kind}
               className={cn(
-                "flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border px-1 text-center text-xs transition-colors motion-reduce:transition-none",
+                "relative flex min-h-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border px-1 text-center text-xs transition-colors motion-reduce:transition-none",
                 "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ring",
                 active ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:text-foreground"
               )}
@@ -155,7 +155,8 @@ function SourceInput({ id, field, uid, value, onChange, invalid, describedBy, pr
                   setPickError(null);
                   set({ kind });
                 }}
-                className="sr-only"
+                // The whole tile is the radio: a thumb anywhere on it picks the source.
+                className="absolute inset-0 z-10 size-full cursor-pointer appearance-none rounded-lg opacity-0"
               />
               <Icon className="size-5" aria-hidden />
               {copy.kinds[kind]}
@@ -166,12 +167,12 @@ function SourceInput({ id, field, uid, value, onChange, invalid, describedBy, pr
 
       {draft.kind === "repository" && (
         <Input id={id} className="h-11 text-base sm:text-sm" value={draft.repository} placeholder={copy.repoPlaceholder}
-          aria-label={copy.kinds.repository} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next"
+          aria-label={copy.repoLabel} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next"
           aria-invalid={invalid} aria-describedby={describedBy} onChange={(e) => set({ repository: e.target.value })} />
       )}
       {draft.kind === "url" && (
         <Input id={id} className="h-11 text-base sm:text-sm" type="url" inputMode="url" value={draft.url} placeholder={copy.urlPlaceholder}
-          aria-label={copy.kinds.url} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next"
+          aria-label={copy.urlLabel} autoCapitalize="none" autoCorrect="off" spellCheck={false} enterKeyHint="next"
           aria-invalid={invalid} aria-describedby={describedBy} onChange={(e) => set({ url: e.target.value })} />
       )}
       {isFileKind(draft.kind) && (

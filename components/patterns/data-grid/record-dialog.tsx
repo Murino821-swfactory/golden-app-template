@@ -200,7 +200,10 @@ export function RecordDialog({ open, onOpenChange, onCloseAutoFocus, fields, ent
 
           {formError && <p className="text-sm text-destructive" role="alert">{formError}</p>}
 
-          <div className="sticky bottom-0 -mx-5 flex flex-col-reverse gap-2 border-t border-border bg-card px-5 pt-3 pb-[max(0.25rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:flex-row sm:justify-between sm:border-0 sm:px-0 sm:pt-2 sm:pb-0">
+          {/* Sticky: however long the form grows (a video preview), Save stays on screen. Sticky
+              stops at the sheet's padding, so the bar reaches through it (negative bottom + margin)
+              and pads itself to cover what scrolls underneath, the home indicator included. */}
+          <div className="sticky bottom-[calc(-1*max(1.25rem,env(safe-area-inset-bottom)))] -mx-5 -mb-[max(1.25rem,env(safe-area-inset-bottom))] flex flex-col-reverse gap-2 border-t border-border bg-card px-5 pt-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:-mb-5 sm:bottom-[-1.25rem] sm:flex-row sm:justify-between sm:pb-5">
             {record && onDelete ? (
               confirming ? (
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">

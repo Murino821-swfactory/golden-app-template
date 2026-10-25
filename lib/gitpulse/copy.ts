@@ -120,7 +120,9 @@ export interface GitpulseCopy {
     kinds: Record<SourceKind, string>;
     choose: Record<FileKind, string>;
     limits: Record<FileKind, string>;
+    repoLabel: string;
     repoPlaceholder: string;
+    urlLabel: string;
     urlPlaceholder: string;
     replace: string;
     remove: string;
@@ -262,7 +264,9 @@ const en: GitpulseCopy = {
     kinds: { repository: "Repository", video: "Video", image: "Image", audio: "Sound", markdown: "Markdown", url: "Link" },
     choose: { video: "Choose or record a video", image: "Choose or take a photo", audio: "Choose a sound file", markdown: "Choose a Markdown file" },
     limits: { video: "MP4, MOV or WebM · up to 100 MB", image: "JPEG, PNG, HEIC, WebP or GIF · up to 20 MB", audio: "MP3, M4A, WAV or OGG · up to 25 MB", markdown: ".md · up to 1 MB" },
+    repoLabel: "Repository name",
     repoPlaceholder: "owner/name",
+    urlLabel: "Link address",
     urlPlaceholder: "https://",
     replace: "Replace",
     remove: "Remove",
@@ -411,7 +415,9 @@ const cs: GitpulseCopy = {
     kinds: { repository: "Repozitář", video: "Video", image: "Obrázek", audio: "Zvuk", markdown: "Markdown", url: "Odkaz" },
     choose: { video: "Vybrat nebo natočit video", image: "Vybrat nebo vyfotit obrázek", audio: "Vybrat zvukový soubor", markdown: "Vybrat soubor Markdown" },
     limits: { video: "MP4, MOV nebo WebM · do 100 MB", image: "JPEG, PNG, HEIC, WebP nebo GIF · do 20 MB", audio: "MP3, M4A, WAV nebo OGG · do 25 MB", markdown: ".md · do 1 MB" },
+    repoLabel: "Název repozitáře",
     repoPlaceholder: "vlastník/název",
+    urlLabel: "Adresa odkazu",
     urlPlaceholder: "https://",
     replace: "Vyměnit",
     remove: "Odebrat",
