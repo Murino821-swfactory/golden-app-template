@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { FirestoreError } from "firebase/firestore";
 import { ArrowDown, ArrowUp, Plus, Search } from "lucide-react";
@@ -14,6 +14,8 @@ import { RecordDialog } from "./record-dialog";
 import { Board } from "./board";
 import { config } from "@/lib/prototype-config";
 import { getDemoSlug } from "@/lib/demo-slug";
+
+type ReturnFocus = { opener: HTMLButtonElement; recordIds: string[] };
 
 /**
  * data-grid — the visitor's own records of the configured entity (spec 2026-09-29 §6.2).
@@ -29,7 +31,12 @@ export function DataGrid() {
   const [query, setQuery] = useState("");
   const [chip, setChip] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>(null);
-  const [dialog, setDialog] = useState<{ record?: EntityRecord } | null>(null);
+  const [dialog, setDialog] = useState<{ record?: EntityRecord; returnFocus: ReturnFocus } | null>(null);
+  const gridRef = useRef<HTMLElement>(null);
+  const addRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [returnFocus, setReturnFocus] = useState<ReturnFocus | null>(null);
+  const restoredFocus = useRef<ReturnFocus | null>(null);
 
   const chipField = fields.find((f) => f.type === "select");
   const boardField = fields.find((f) => f.key === config.patterns.dataGrid?.boardBy && f.type === "select");
@@ -59,16 +66,44 @@ export function DataGrid() {
     if (error) console.error("[data-grid] failed to load records:", error);
   }, [error]);
 
+  const openDialog = (opener: HTMLButtonElement, record?: EntityRecord) => {
+    // DOM order reflects board columns as well as sorted/filtered table and mobile rows.
+    const ids = Array.from(gridRef.current?.querySelectorAll<HTMLButtonElement>("[data-record-id]") ?? [])
+      .filter((button) => button.getClientRects().length > 0)
+      .map((button) => button.dataset.recordId!);
+    const index = record ? ids.indexOf(record.id) : -1;
+    setDialog({ record, returnFocus: { opener, recordIds: index < 0 ? [] : [
+      ...ids.slice(index), ...ids.slice(0, index).reverse(),
+    ] } });
+  };
+
+  useEffect(() => {
+    if (!returnFocus || dialog || loading || restoredFocus.current === returnFocus) return;
+    // Writes refresh and remount controls. Restore by record id once that refresh ends.
+    // If the opener disappeared: next surviving record, previous, Add, then Search when
+    // Add is disabled (e.g. creating the 200th record). Hidden responsive copies never win.
+    const buttons = Array.from(gridRef.current?.querySelectorAll<HTMLButtonElement>("[data-record-id]") ?? []);
+    const candidates = [returnFocus.opener,
+      ...returnFocus.recordIds.flatMap((id) => buttons.filter((button) => button.dataset.recordId === id)),
+      addRef.current, searchRef.current];
+    for (const control of candidates) {
+      if (!control?.isConnected || control.disabled || control.getClientRects().length === 0) continue;
+      control.focus();
+      if (document.activeElement === control) break;
+    }
+    restoredFocus.current = returnFocus;
+  }, [returnFocus, dialog, loading]);
+
   const nextSort = (key: string): SortKey =>
     sort?.key !== key ? { key, dir: "asc" } : sort.dir === "asc" ? { key, dir: "desc" } : null;
 
   return (
-    <section data-pattern="data-grid" className="space-y-4">
+    <section ref={gridRef} data-pattern="data-grid" className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-lg font-medium">
           {t("listHeading", { entity: entityLabel })} <span className="text-muted-foreground">({count})</span>
         </h3>
-        <Button className="h-11" disabled={atLimit || loading} onClick={() => setDialog({})}>
+        <Button ref={addRef} className="h-11" disabled={atLimit || loading} onClick={(event) => openDialog(event.currentTarget)}>
           <Plus className="size-4" aria-hidden />
           <span className="sr-only sm:not-sr-only">{t("addAction", { entity: entityLabel.toLowerCase() })}</span>
         </Button>
@@ -79,7 +114,7 @@ export function DataGrid() {
       <div className="relative">
         <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
         <label htmlFor="grid-search" className="sr-only">{t("searchLabel")}</label>
-        <Input id="grid-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)}
+        <Input ref={searchRef} id="grid-search" type="search" value={query} onChange={(e) => setQuery(e.target.value)}
           placeholder={t("searchLabel")} className="h-11 pl-9 text-base sm:text-sm" />
       </div>
 
@@ -142,7 +177,7 @@ export function DataGrid() {
           <ul className="space-y-3 sm:hidden">
             {visible.map((rec) => (
               <li key={rec.id}>
-                <button type="button" onClick={() => setDialog({ record: rec })}
+                <button type="button" data-record-id={rec.id} onClick={(event) => openDialog(event.currentTarget, rec)}
                   className="w-full rounded-lg border border-border bg-card p-4 text-left focus-visible:outline-2 focus-visible:outline-ring">
                   <dl className="space-y-1.5">
                     {fields.map((field) => (
@@ -185,7 +220,7 @@ export function DataGrid() {
                       <td key={field.key} className="px-4 py-3">{formatValue(field, rec.values[field.key], yesNo)}</td>
                     ))}
                     <td className="px-2 py-1 text-right">
-                      <Button variant="ghost" className="h-11" onClick={() => setDialog({ record: rec })}>{t("edit")}</Button>
+                      <Button variant="ghost" className="h-11" data-record-id={rec.id} onClick={(event) => openDialog(event.currentTarget, rec)}>{t("edit")}</Button>
                     </td>
                   </tr>
                 ))}
@@ -197,7 +232,7 @@ export function DataGrid() {
       )}
 
       {boardField && view === "board" && !loading && visible.length > 0 && (
-        <Board records={visible} fields={fields} boardField={boardField} onOpen={(record) => setDialog({ record })} />
+        <Board records={visible} fields={fields} boardField={boardField} onOpen={(record, opener) => openDialog(opener, record)} />
       )}
 
       {dialog && (
@@ -205,6 +240,10 @@ export function DataGrid() {
           key={dialog.record?.id ?? "new"}
           open
           onOpenChange={(open) => !open && setDialog(null)}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            setReturnFocus(dialog.returnFocus);
+          }}
           fields={fields}
           entityLabel={entityLabel}
           record={dialog.record}

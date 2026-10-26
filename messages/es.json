@@ -28,7 +28,11 @@
     "title": "Tu aplicación",
     "subtitle": "Creado con el Golden Stack",
     "cta": "Empezar",
-    "previewLabel": "Vista previa de la aplicación"
+    "previewLabel": "Vista previa de la aplicación",
+    "deviceLabel": "Vista previa en",
+    "deviceDesktop": "Ordenador",
+    "deviceTablet": "Tableta",
+    "devicePhone": "Móvil"
   },
   "features": {
     "title": "Funciones",
@@ -148,6 +152,8 @@
     "slow": "Está tardando más — recarga la página"
   },
   "inbox": {
+    "markReadError": "No se pudo marcar este mensaje como leído. Sigue sin leer. Inténtalo de nuevo.",
+    "retryMarkRead": "Reintentar marcar como leído",
     "title": "Mensajes",
     "empty": "Aún no hay mensajes. Los mensajes enviados desde el formulario de contacto aparecen aquí.",
     "ownerOnly": "Esta página es solo para la persona propietaria del prototipo.",
@@ -250,6 +256,7 @@
     "gestureMac": "Usa ⌘ + rueda para hacer zoom"
   },
   "footer": {
-    "generatedBy": "Generado por Tokenwise AI"
+    "generatedBy": "Generado por Tokenwise AI",
+    "builtBy": "Creado por"
   }
 }

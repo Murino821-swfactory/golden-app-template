@@ -18,7 +18,7 @@ function Inbox() {
   const locale = useLocale();
   const { available, resolved, status } = useOwnerRole();
   const view = inboxView({ available, role: resolved ? (status?.role ?? null) : undefined });
-  const { messages, loading, error, markRead } = useInbox(view === "ready");
+  const { messages, loading, error, markRead, readStatus } = useInbox(view === "ready");
 
   useEffect(() => {
     if (error) console.error("[inbox] failed to load:", error);
@@ -47,6 +47,7 @@ function Inbox() {
             <li key={m.id}>
               <details
                 className="rounded-lg border border-border bg-card px-4"
+                aria-busy={readStatus[m.id] === "pending"}
                 onToggle={(e) => {
                   if ((e.currentTarget as HTMLDetailsElement).open && !m.read) void markRead(m.id);
                 }}
@@ -61,6 +62,14 @@ function Inbox() {
                   </time>
                 </summary>
                 <div className="space-y-3 pb-4">
+                  {readStatus[m.id] === "failed" && (
+                    <div role="alert" className="space-y-2">
+                      <p className="text-sm text-destructive">{t("markReadError")}</p>
+                      <Button variant="outline" className="h-11" onClick={() => void markRead(m.id)}>
+                        {t("retryMarkRead")}
+                      </Button>
+                    </div>
+                  )}
                   {m.name && <p className="text-sm text-muted-foreground">{m.email}</p>}
                   {m.phone && (
                     <p className="text-sm">
