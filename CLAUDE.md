@@ -403,11 +403,14 @@ user. Spec and decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
 
-- **A prototype's header is tokenwise.sk's, 1:1 (founder decision 2026-09-28):** the
-  tokenwise.sk logo and the site's public nav (Articles … Privacy, Contact → `/?scene=9`),
-  every link absolute to `https://tokenwise.sk` — the adapter passes `siteOrigin`, because a
-  prototype is served from apps.tokenwise.sk. The palette, font, language, cart and sign-in
-  controls stay the prototype's. The app's name is in the footer and the `<title>`.
+- **A prototype's header carries tokenwise.sk's logo (founder decision 2026-09-28)**, linked
+  to `https://tokenwise.sk/`. The palette, font, language, cart and sign-in controls stay
+  the prototype's. The app's name is in the footer and the `<title>`.
+- **The site's public nav is in the footer, not the header (founder decision 2026-10-26):**
+  `components/layout/footer.tsx` renders `navFor("prototype", { siteOrigin })` (Articles …
+  Privacy, Contact → `/?scene=9`), every link absolute to tokenwise.sk, because a prototype
+  is served from apps.tokenwise.sk. The adapter `header.tsx` passes no `siteOrigin`, so the
+  bar and the phone menu carry no nav. Tests: `tests/header.spec.ts`.
 - **The controls are icons, no words (founder decision 2026-09-28, shared-ui 0.3.0):** a
   colour wheel (Change colour), `Aa` in the face on screen (font), the cart, the figure
   (Sign in). Their words live only in `aria-label` — so the `changeColourLabel`,
