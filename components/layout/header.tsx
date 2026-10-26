@@ -84,7 +84,11 @@ export function Header() {
       siteOrigin={TOKENWISE_SITE}
       logo={{ href: `${TOKENWISE_SITE}/`, text: "tokenwise", accent: ".sk" }}
       palette={config.theme.colorScheme}
-      font="inter"
+      // The first-visit face is the one the config names (`patterns.landing.font`, PR A) —
+      // the same value `app/shell.tsx` puts on <html>. Passing "inter" here while the
+      // document said otherwise left the switcher believing "inter" until hydration
+      // finished; a click in that window stepped from the wrong face (PR D).
+      font={config.patterns.landing?.font ?? "inter"}
       languages={config.locales.map((id) => ({
         code: id,
         name: LOCALE_NAMES[id] ?? id,
