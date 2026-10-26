@@ -1,12 +1,13 @@
 /**
  * color-schemes.ts (@tokenwise/shared-ui; moved from golden-app-template lib/ on 2026-09-25)
- * — the palettes a customer picks from, and the deterministic rule that turns two to four
+ * — the palettes a customer picks from, and the deterministic rule that turns two or more
  * colours into CSS roles.
  *
  * A palette was a PAIR [founder decision 2026-09-24]: the fifteen combinations the founder
  * supplied as images, in the order supplied — which is also the order the header's
- * "Change colour" button cycles through. Since 2026-10-26 a palette may have three or four
- * colours [founder decision]: the extra ones become accents (`derivePaletteRoles`). Deriving
+ * "Change colour" button cycles through. Since 2026-10-26 a palette may have more colours
+ * [founder decision]: the extra ones become accents (`derivePaletteRoles`), and the founder's
+ * first five such palettes have seven colours each. Deriving
  * roles instead of hand-writing them means a new palette is one line and needs no CSS work.
  *
  * The pair rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the
@@ -38,14 +39,16 @@ export const COLOR_SCHEME_IDS = [
   "ice-blue-ocean-blue",
   "honey-tan-jet-black",
   "burnt-orange-vanilla",
+  "deep-sea-blues",
+  "lime-lagoon",
+  "peacock-amber",
+  "mulled-spice",
+  "black-gold",
 ] as const;
 export type ColorSchemeId = (typeof COLOR_SCHEME_IDS)[number];
 
-/** Two to four hex colours without `#`. */
-export type PaletteColors =
-  | readonly [string, string]
-  | readonly [string, string, string]
-  | readonly [string, string, string, string];
+/** Two or more hex colours without `#`. */
+export type PaletteColors = readonly [string, string, ...string[]];
 
 export interface Palette {
   /** What a visitor reads. Proper names — never translated. */
@@ -79,6 +82,28 @@ export const PALETTES: Record<ColorSchemeId, Palette> = {
   "ice-blue-ocean-blue": { name: "Ice Blue & Ocean Blue", colors: ["CFFAFE", "0891B2"] },
   "honey-tan-jet-black": { name: "Honey Tan & Jet Black", colors: ["E3C586", "171717"] },
   "burnt-orange-vanilla": { name: "Burnt Orange & Vanilla", colors: ["FC6C26", "FFF4D6"] },
+  // Seven colours each, supplied as images on 2026-10-26 (top of the image first); the names
+  // are ours — the images carry none.
+  "deep-sea-blues": {
+    name: "Deep Sea Blues",
+    colors: ["9DB9CE", "6DAFD1", "3A9ED0", "0E5588", "052E55", "031F45", "041526"],
+  },
+  "lime-lagoon": {
+    name: "Lime Lagoon",
+    colors: ["9EBC0F", "11A516", "096C32", "0B305F", "3888A8", "11B6E6", "37D2E0"],
+  },
+  "peacock-amber": {
+    name: "Peacock Amber",
+    colors: ["C98819", "8E5012", "4F2E1A", "0A2130", "503272", "764BA5", "0595A1"],
+  },
+  "mulled-spice": {
+    name: "Mulled Spice",
+    colors: ["090802", "381307", "571F08", "EFA717", "F1DDA6", "82AB9C", "627357"],
+  },
+  "black-gold": {
+    name: "Black Gold",
+    colors: ["292C31", "070706", "2D1F11", "89612B", "AC8B56", "CDAD69", "F4E185"],
+  },
 };
 
 /**
@@ -170,16 +195,17 @@ const MAX_MUTED_PERCENT = 35;
  *
  * The darkest colour is the background and the lightest the text. With two colours the text
  * is also the accent — exactly the pair rule of 2026-09-24. A middle colour is the accent
- * (`primary`); of two middles, the one more readable on a card is the accent and the other
- * the second accent (`highlight`), which only decoration paints and so ships as supplied.
+ * (`primary`); of two or more middles, the one most readable on a card is the accent and the
+ * next the second accent (`highlight`), which only decoration paints and so ships as
+ * supplied. Further middles are kept in the palette as supplied and not painted.
  *
  * Contrast is checked against the SURFACE, not the background: the surface is the lighter
  * of the two planes text sits on, so text readable on a card is readable everywhere. An
  * accent under WCAG AA there is lifted toward white one percent at a time, like the text.
  */
 export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
-  if (colors.length < 2 || colors.length > 4) {
-    throw new Error(`A palette has 2 to 4 colours, got ${colors.length}`);
+  if (colors.length < 2) {
+    throw new Error(`A palette has at least 2 colours, got ${colors.length}`);
   }
   // Ties broken by the hex itself, so the order the colours were supplied in never matters.
   const sorted = [...colors].sort(
