@@ -17,11 +17,13 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Landing copy (headline, features) | `prototype.config.json` → `content.<locale>.landing` |
 | Chrome text (Sign in, Dashboard…) | `messages/<locale>.json` |
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
+| How the landing reads (editorial / story / document), its typeface | `prototype.config.json` → `patterns.landing.presentation` (omit = `editorial`), `patterns.landing.font` (omit = `inter`) — see "The editorial presentation" below |
+| Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
-| Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx` |
+| Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
-| AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below |
+| AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
 | "Edit texts" (copy rewrite) | `components/sections/copy-rewrite-panel.tsx`, `hooks/use-copy-rewrite.ts`, `lib/copy-rewrite.ts` — see "Copy rewrite" |
@@ -123,6 +125,8 @@ components/
   sections/              # Landing sections: hero, features, howItWorks, pricing, testimonials, faq, contact, cta
                          #   + hero-image-controls.tsx (creator/founder buttons under the hero)
                          #   + product-preview.tsx (sample records drawn in the hero)
+  editorial/             # The editorial presentation (default): hero, features, how-it-works, faq, cta,
+                         #   ui.tsx (Eyebrow, Numeral, DisplayText, TwoTone, Words), registry.ts, editorial.css
   patterns/data-grid/    # The grid: index.tsx, record-dialog.tsx (add/edit), board.tsx (boardBy view)
   dashboard/stats.tsx    # KPI cards (patterns.dashboard.kpis, or total + this month)
   owner/                 # owner-card-dialog.tsx (edit the public card), owner-links.tsx (dashboard)
@@ -134,6 +138,7 @@ hooks/
   use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
+  editorial.ts           # pure rules of the editorial page: bentoSpan, splitDisplay, heroObjectKind, heroNamePlacement
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
   records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
   records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
@@ -539,9 +544,10 @@ npm run test:packages    # shared-ui / hex-map package tests (must pass)
 
 ## OTH-117 — landing stories and discovery (2026-10-03)
 
-`patterns.landing.presentation` is `story` by default; `document` opts out. Desktop
-with a fine pointer, at least 1024×700 and no reduced-motion preference gets a sticky
-stage driven by native scrolling. Chapter buttons support keyboard navigation;
+`patterns.landing.presentation` was `story` by default until 2026-10-26; since then a config
+that names none reads as `editorial` (next section), and `story` must be named. Under
+`story`, desktop with a fine pointer, at least 1024×700 and no reduced-motion preference
+gets a sticky stage driven by native scrolling. Chapter buttons support keyboard navigation;
 `#contact` reveals its chapter. The header height is measured, not assumed. Long
 chapters can scroll within their panel. Mobile, short viewports, reduced motion,
 print and no JavaScript retain the same server-rendered document.
@@ -575,6 +581,53 @@ Validation: `npm run schema`, `npm run typecheck`, `npm run lint`,
 Prototype export browser gates read chrome, login and contact labels from the configured
 default locale bundle. They must not require English controls on a Slovak-first export.
 The synthetic real-provider reading-diary acceptance uses Slovak as its default language.
+
+## The editorial presentation — the default landing (2026-10-26)
+
+Founder decision (sw-factory `docs/decisions/2026-10-26-premium-prototype-design.md`, after
+the landings of mdx.so and its Indoobit case study): every new prototype opens as one long
+page in display typography. `patterns.landing.presentation` omitted or `editorial` →
+`app/[locale]/page.tsx` spreads `EDITORIAL_SECTIONS` (`components/editorial/registry.ts`)
+over `SECTION_REGISTRY`; `story` and `document` keep the shared sections. Same ids, same
+copy contract, same `data-section` markers — the suites that read the page keep holding.
+
+- **Hero** (`components/editorial/hero.tsx`): eyebrow pill between hairlines
+  (`content.<locale>.landing.eyebrow`, the app's name when there is none), `h1` set light with
+  ONE phrase in weight (`DisplayText` → `splitDisplay`: the first clause before a dash,
+  colon or full stop, else the last two words — the rendered text is the configured string,
+  character for character), two-tone subheadline, one pill action, and the product itself
+  in a lit frame cut by the fold: the grid's sample records (`ProductPreview`), else the
+  first three offers of `listings`, else no frame (`heroObjectKind`). `[data-app-name]`
+  appears exactly once — in the frame's title bar, in the eyebrow, or visually hidden
+  (`heroNamePlacement`). The frame never carries a link: the hero keeps its one action.
+- **Features**: a bento (`bentoSpan`: the first card wide except in a row of three) with
+  faint numerals; then the manifesto (`landing.manifesto { lead ≤ 90, body ≤ 280 }`) split
+  into `[data-word]` spans that light up on scroll. Still one `h2` and one `svg` per icon.
+- **How it works**: a glowing SVG line (`[data-glow-line]`) drawn by scroll through the
+  numbered steps; a vertical hairline on a phone. **FAQ**: `details` cards with a plus that
+  becomes a cross. **Closing**: the band, then the wordmark (`appName`, `aria-hidden`, sized
+  by its length) whole above the footer.
+- **Font**: `patterns.landing.font` (one of `FONT_IDS`) is the first-visit face
+  (`app/shell.tsx` `data-font`); the content call picks it by the idea's character (the
+  schema's description says how); Inter when absent. The header's font button cycles from
+  it and the choice persists as before.
+- **Colour**: every glow, hairline and gradient in `components/editorial/editorial.css` is a
+  `color-mix()` of palette tokens — `tests/editorial.spec.ts` greps the folder for a hex or
+  rgb() colour and fails on one. "Change colour" repaints the whole page.
+- **Motion**: all CSS, no library — a load sequence (opacity + blur, no translate: the
+  hero-image gate compares boxes), then scroll-driven `animation-timeline` behind
+  `@supports (animation-timeline: view()) and (animation-range: …)` and
+  `prefers-reduced-motion`. Without support or with reduced motion everything is at its
+  finished state. Decorative wrappers use `overflow: clip`, never `hidden` (a scroll
+  container would become the timeline's root). No `scroll-behavior: smooth`.
+- **AI hero image**: `hero-image.json` may carry `placement: "object"`; the editorial hero
+  then draws it as a figure beside the words (`[data-hero-object]`), with the words left
+  aligned and no text over the image. Without it — every image before 2026-10-26 — it is the
+  background exactly as the shared hero draws it. The server (factory-web) decides.
+- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep);
+  `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
+  exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
+  `tests/shared-header.spec.ts` reads the configured font as the first-visit face.
 
 ## Listings, required patterns, phone and profile (2026-10-09)
 
