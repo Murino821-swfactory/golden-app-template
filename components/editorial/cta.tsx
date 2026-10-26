@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
@@ -14,7 +15,9 @@ import { DISPLAY_H2 } from "./ui";
  * The closing band, then the name of the app as large as the page — the reference landings
  * end the same way. The wordmark stays whole above the footer and dissolves at its foot; it
  * is decoration (`aria-hidden`), because the footer under it names the app for everyone.
- * Label and destination come from the `cta` pattern, as in the shared section.
+ * Its size follows the name's length (`--editorial-chars`), so a long name fits the width
+ * instead of being cut at the edge, and wraps on a phone when even the smallest size would
+ * not. Label and destination come from the `cta` pattern, as in the shared section.
  */
 export function CtaSection() {
   const t = useTranslations("cta");
@@ -38,7 +41,12 @@ export function CtaSection() {
           </Button>
         )}
       </div>
-      <p data-wordmark aria-hidden="true" className="editorial-wordmark">
+      <p
+        data-wordmark
+        aria-hidden="true"
+        className="editorial-wordmark"
+        style={{ "--editorial-chars": Math.max(config.appName.length, 4) } as CSSProperties}
+      >
         {config.appName}
       </p>
     </section>

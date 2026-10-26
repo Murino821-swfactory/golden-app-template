@@ -246,12 +246,15 @@ details[open] .editorial-plus::before {
 .editorial-closing {
   container-type: inline-size;
 }
-/* Whole above the footer; the foot of the letters dissolves instead of being cut. */
+/* Whole above the footer; the foot of the letters dissolves instead of being cut. Sized by
+   the name's length so it spans the width without being cut at the edge (0.7em per
+   character covers the widest face); a name that would not fit at the smallest size wraps. */
 .editorial-wordmark {
   margin: 2.5rem 0 0;
   text-align: center;
-  white-space: nowrap;
-  font-size: clamp(2.75rem, 11.5cqw, 15rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: clamp(2rem, calc(100cqw / (var(--editorial-chars, 12) * 0.7)), 15rem);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.05em;

@@ -5,6 +5,7 @@ import { FONT_IDS, fontById } from "@tokenwise/shared-ui/theming";
 import { config, contentFor, landingPresentation, DEFAULT_PRESENTATION, PRESENTATIONS } from "../lib/prototype-config";
 import { bentoSpan, heroNamePlacement, heroObjectKind, splitDisplay } from "../lib/editorial";
 import { parsePublicState, parseStatus } from "../lib/hero-image";
+import { uiCopy } from "./ui-copy";
 
 /**
  * The editorial presentation (2026-10-26, sw-factory decision "premium prototype design"):
@@ -23,6 +24,10 @@ const copy = contentFor(config);
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 const editorial = landingPresentation(config) === "editorial";
 const landing = copy.landing;
+// A config without landing copy (the minimal fixture) renders the chrome bundle's starter
+// words, exactly as the shared hero does; the editorial hero keeps that fallback.
+const headline = landing?.headline ?? uiCopy.landing!.title!;
+const subheadline = landing?.subheadline ?? uiCopy.landing!.subtitle!;
 const SRC = "/newapp/test/hero-image/AAAAAAAAAAAAAAAAAAAA.jpg";
 const PIXEL = Buffer.from(
   "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AKp//2Q==",
@@ -50,10 +55,10 @@ test.describe("editorial presentation", () => {
     const hero = page.locator('[data-section="hero"]');
     await expect(hero.locator("[data-eyebrow]")).toHaveText(landing?.eyebrow ?? config.appName);
     const h1 = hero.locator("h1");
-    await expect(h1).toHaveText(landing!.headline!);
+    await expect(h1).toHaveText(headline);
     // One phrase carries the weight — the one emphasis the palette rule leaves.
     await expect(h1.locator("[data-display-emphasis]")).toHaveCount(1);
-    await expect(hero.locator("p").first()).toHaveText(landing!.subheadline!);
+    await expect(hero.locator("p").first()).toHaveText(subheadline);
     await expect(hero.locator("[data-app-name]")).toHaveCount(1);
     await expect(hero.locator("[data-app-name]")).toHaveText(config.appName);
   });
