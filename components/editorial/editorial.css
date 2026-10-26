@@ -182,6 +182,21 @@
 .editorial-frame-bar {
   position: relative;
 }
+/* A phone's bar has no room for the date beside the tabs: the date goes, the tabs take a
+   row of their own under the name, and the bar starts below the notch. */
+.editorial-frame[data-device="phone"] .editorial-frame-bar {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+  padding-top: 1.35rem;
+}
+.editorial-frame[data-device="phone"] [data-frame-meta] {
+  display: none;
+}
+.editorial-frame[data-device="phone"] .editorial-device-tabs {
+  flex-basis: 100%;
+  justify-content: center;
+  margin-left: 0;
+}
 @media (prefers-reduced-motion: no-preference) {
   .editorial-frame {
     transition: max-width 500ms cubic-bezier(0.2, 0.7, 0.2, 1), border-radius 500ms ease, padding 500ms ease;
