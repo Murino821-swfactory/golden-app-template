@@ -4,6 +4,8 @@ import {
   PALETTES,
   LEGACY_SCHEME_IDS,
   derivePairRoles,
+  derivePaletteRoles,
+  cssVariablesFor,
   rolesFor,
   nextSchemeId,
   assertReadable,
@@ -86,6 +88,11 @@ test.describe("the fifteen palettes", () => {
     test(`${id}: text and accent are one colour — a pair has two`, () => {
       const r = rolesFor(id);
       expect(r.primary).toBe(r.foreground);
+      expect(r.highlight).toBe(r.primary);
+    });
+
+    test(`${id}: the second accent reaches the CSS`, () => {
+      expect(cssVariablesFor(id)["--highlight"]).toBe(rolesFor(id).highlight);
     });
 
     const corrected = CORRECTED[id];
@@ -128,8 +135,23 @@ test.describe("the fifteen palettes", () => {
         primary: "#222222",
         muted: "#222222",
         foreground: "#222222",
+        highlight: "#222222",
       })
     ).toThrow(/"test".*foreground on background/);
+  });
+
+  test("assertReadable refuses an accent too dark to read as text", () => {
+    expect(() =>
+      assertReadable("dim-accent", {
+        background: "#000000",
+        surface: "#141414",
+        border: "#383838",
+        primary: "#330000",
+        muted: "#FFFFFF",
+        foreground: "#FFFFFF",
+        highlight: "#330000",
+      })
+    ).toThrow(/"dim-accent".*primary on surface/);
   });
 
   test("nextSchemeId walks the list and wraps after the last", () => {
@@ -152,6 +174,85 @@ test.describe("the fifteen palettes", () => {
   });
 });
 
+/**
+ * Palettes of three and four colours (founder 2026-10-26). The pair rule stays as it was —
+ * the fifteen above pin that — and the extra colours become accents: the darkest is the
+ * background, the lightest the text, the middle one the accent (`primary`), and a fourth
+ * the second accent (`highlight`), which only decoration paints.
+ */
+test.describe("palettes of three and four colours", () => {
+  function permutations<T>(items: readonly T[]): T[][] {
+    if (items.length <= 1) return [[...items]];
+    return items.flatMap((item, i) =>
+      permutations([...items.slice(0, i), ...items.slice(i + 1)]).map((rest) => [item, ...rest])
+    );
+  }
+
+  test("three colours: the middle one is the accent, and the only accent", () => {
+    const r = derivePaletteRoles(["F7F7FF", "FF8135", "0C142A"]);
+    expect(r.background).toBe("#0C142A");
+    expect(r.foreground).toBe("#F7F7FF");
+    expect(r.primary).toBe("#FF8135");
+    expect(r.highlight).toBe("#FF8135");
+  });
+
+  test("four colours: the more readable middle is the accent, the other the second accent", () => {
+    const r = derivePaletteRoles(["0055A6", "FFFFFF", "000000", "FF8135"]);
+    expect(r.background).toBe("#000000");
+    expect(r.foreground).toBe("#FFFFFF");
+    expect(r.primary).toBe("#FF8135");
+    expect(r.highlight).toBe("#0055A6");
+  });
+
+  test("the order the colours are supplied in does not matter", () => {
+    const colours = ["0055A6", "FFFFFF", "000000", "FF8135"] as const;
+    const expected = derivePaletteRoles(colours);
+    for (const order of permutations(colours)) {
+      expect(derivePaletteRoles(order)).toEqual(expected);
+    }
+  });
+
+  test("an accent too dark to read is lifted toward white, keeping its hue", () => {
+    const r = derivePaletteRoles(["000000", "640000", "FFFFFF"]);
+    expect(r.primary).not.toBe("#640000");
+    expect(contrastRatio(r.primary, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+    const [red, green, blue] = [1, 3, 5].map((i) => parseInt(r.primary.slice(i, i + 2), 16));
+    expect(red).toBeGreaterThan(green!);
+    expect(red).toBeGreaterThan(blue!);
+  });
+
+  test("the second accent is decoration and ships exactly as supplied", () => {
+    const r = derivePaletteRoles(["000000", "111111", "FF8135", "FFFFFF"]);
+    expect(r.primary).toBe("#FF8135");
+    expect(r.highlight).toBe("#111111");
+  });
+
+  test("every text a three- or four-colour palette paints meets WCAG AA", () => {
+    for (const colours of [
+      ["264653", "2A9D8F", "E9C46A", "F4A261"],
+      ["000000", "640000", "FFFFFF"],
+      ["421407", "6D542E", "FB3640"],
+    ]) {
+      const r = derivePaletteRoles(colours);
+      expect(() => assertReadable(colours.join("-"), r)).not.toThrow();
+    }
+  });
+
+  test("a palette has two to four colours", () => {
+    expect(() => derivePaletteRoles(["000000"])).toThrow(/2 to 4/);
+    expect(() => derivePaletteRoles(["000000", "111111", "222222", "333333", "FFFFFF"])).toThrow(
+      /2 to 4/
+    );
+  });
+
+  test("a pair derives exactly as the pair rule does", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      const [a, b] = PALETTES[id].colors;
+      expect(derivePaletteRoles([a, b])).toEqual(derivePairRoles([a, b]));
+    }
+  });
+});
+
 test.describe("colour scheme reaches the page", () => {
   test("html carries the configured scheme and its background", async ({ page }) => {
     await page.goto("./");
@@ -166,5 +267,10 @@ test.describe("colour scheme reaches the page", () => {
       getComputedStyle(document.documentElement).getPropertyValue("--background").trim()
     );
     expect(applied.toLowerCase()).toBe(expected);
+
+    const highlight = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue("--highlight").trim()
+    );
+    expect(highlight.toLowerCase()).toBe(rolesFor(config.theme.colorScheme).highlight.toLowerCase());
   });
 });

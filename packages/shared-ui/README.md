@@ -1,7 +1,7 @@
 # @tokenwise/shared-ui
 
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
-logo, nav, **Change colour** (15 palettes), **font** (10 faces), **language**, **cart**
+logo, nav, **Change colour** (palettes of 2–4 colours), **font** (10 faces), **language**, **cart**
 and **user**. A change to the header is one PR here.
 
 Colour, font, cart and sign-in are icons with no visible words — a colour wheel, `Aa`, a
