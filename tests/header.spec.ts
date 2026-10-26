@@ -36,9 +36,9 @@ function labelFor(id: (typeof COLOR_SCHEME_IDS)[number]): string {
 const SITE = "https://tokenwise.sk";
 
 test.describe("header identity", () => {
-  // Founder decision 2026-09-28: a prototype's header is tokenwise.sk's, 1:1 — the site's
-  // logo and nav, every link absolute to tokenwise.sk (the prototype is on another origin).
-  // The customer's name lives in the footer, the <title> and the page itself.
+  // Founder decision 2026-09-28: a prototype's header carries tokenwise.sk's logo, every
+  // link absolute to tokenwise.sk (the prototype is on another origin). The customer's name
+  // lives in the footer, the <title> and the page itself.
   test("the header is tokenwise.sk's: its logo leads to the site", async ({ page }) => {
     await page.goto("./");
     const logo = page.getByRole("banner").getByRole("link", { name: "tokenwise.sk" });
@@ -47,10 +47,11 @@ test.describe("header identity", () => {
     await expect(page.getByRole("banner").getByRole("link", { name: config.appName, exact: true })).toHaveCount(0);
   });
 
-  test("on a desktop the bar carries tokenwise.sk's nav, pointing at the site", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 800 });
+  // Founder decision 2026-10-26: tokenwise.sk's nav moved from the header to the footer —
+  // the bar keeps the logo and the controls, the links wait at the end of the page.
+  test("the footer carries tokenwise.sk's nav, pointing at the site", async ({ page }) => {
     await page.goto("./");
-    const nav = page.getByRole("banner").getByRole("navigation", { name: "Main" });
+    const nav = page.getByRole("contentinfo").getByRole("navigation", { name: "tokenwise.sk" });
     for (const [label, path] of [
       ["Articles", "/articles"],
       ["Arena", "/compare"],
@@ -64,13 +65,20 @@ test.describe("header identity", () => {
     }
   });
 
-  test("on a phone the same nav is in the menu", async ({ page }) => {
+  test("on a desktop the bar carries no nav", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("./");
+    await expect(page.getByRole("banner").getByRole("navigation", { name: "Main" })).toHaveCount(0);
+    await expect(page.getByRole("banner").getByRole("link", { name: "Articles", exact: true })).toHaveCount(0);
+  });
+
+  test("on a phone the menu carries no nav", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("./");
     await page.getByRole("button", { name: uiCopy.common.openMenu! }).click();
     const dialog = page.getByRole("dialog", { name: uiCopy.common.menu! });
-    await expect(dialog.getByRole("link", { name: "Articles", exact: true })).toHaveAttribute("href", `${SITE}/articles`);
-    await expect(dialog.getByRole("link", { name: "Contact", exact: true })).toHaveAttribute("href", `${SITE}/?scene=9`);
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "Articles", exact: true })).toHaveCount(0);
   });
 
   test("the footer names the customer's app, not the template", async ({ page }) => {
