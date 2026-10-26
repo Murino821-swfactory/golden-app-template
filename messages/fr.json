@@ -28,7 +28,11 @@
     "title": "Votre application",
     "subtitle": "Construit avec le Golden Stack",
     "cta": "Commencer",
-    "previewLabel": "Aperçu de l'application"
+    "previewLabel": "Aperçu de l'application",
+    "deviceLabel": "Aperçu sur",
+    "deviceDesktop": "Ordinateur",
+    "deviceTablet": "Tablette",
+    "devicePhone": "Téléphone"
   },
   "features": {
     "title": "Fonctionnalités",
@@ -59,10 +63,12 @@
     "title": "Contact",
     "email": "E-mail",
     "message": "Message",
+    "messageHint": "Au moins 10 caractères.",
     "send": "Envoyer",
     "sending": "Envoi…",
     "success": "Merci — votre message est en route. Nous vous répondrons bientôt.",
     "error": "L'envoi a échoué. Veuillez réessayer.",
+    "errorTooMany": "Trop de messages en peu de temps. Réessayez dans une heure.",
     "notConfigured": "Le formulaire de contact n'est pas configuré dans cet aperçu.",
     "name": "Nom (facultatif)",
     "ownerEdit": "Modifier les coordonnées",
@@ -146,6 +152,8 @@
     "slow": "Cela prend plus de temps — rechargez la page"
   },
   "inbox": {
+    "markReadError": "Impossible de marquer ce message comme lu. Il reste non lu. Veuillez réessayer.",
+    "retryMarkRead": "Réessayer de marquer comme lu",
     "title": "Messages",
     "empty": "Aucun message pour l'instant. Les messages envoyés via le formulaire de contact apparaissent ici.",
     "ownerOnly": "Cette page est réservée au propriétaire du prototype.",
@@ -248,6 +256,7 @@
     "gestureMac": "Utilisez ⌘ + molette pour zoomer"
   },
   "footer": {
-    "generatedBy": "Généré par Tokenwise AI"
+    "generatedBy": "Généré par Tokenwise AI",
+    "builtBy": "Créé par"
   }
 }
