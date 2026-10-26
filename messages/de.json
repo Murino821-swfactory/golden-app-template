@@ -59,10 +59,12 @@
     "title": "Kontakt",
     "email": "E-Mail",
     "message": "Nachricht",
+    "messageHint": "Mindestens 10 Zeichen.",
     "send": "Senden",
     "sending": "Wird gesendet…",
     "success": "Danke — Ihre Nachricht ist unterwegs. Wir melden uns in Kürze.",
     "error": "Beim Senden ist etwas schiefgelaufen. Bitte versuchen Sie es erneut.",
+    "errorTooMany": "Zu viele Nachrichten in kurzer Zeit. Bitte versuchen Sie es in einer Stunde erneut.",
     "notConfigured": "Das Kontaktformular ist in dieser Vorschau nicht eingerichtet.",
     "name": "Name (optional)",
     "ownerEdit": "Kontaktdaten bearbeiten",
@@ -146,6 +148,8 @@
     "slow": "Das dauert länger – lade die Seite neu"
   },
   "inbox": {
+    "markReadError": "Die Nachricht konnte nicht als gelesen markiert werden. Sie ist weiterhin ungelesen. Bitte versuchen Sie es erneut.",
+    "retryMarkRead": "Erneut als gelesen markieren",
     "title": "Nachrichten",
     "empty": "Noch keine Nachrichten. Nachrichten aus dem Kontaktformular erscheinen hier.",
     "ownerOnly": "Diese Seite ist nur für den Inhaber des Prototyps.",

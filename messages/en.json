@@ -59,10 +59,12 @@
     "title": "Contact",
     "email": "Email",
     "message": "Message",
+    "messageHint": "At least 10 characters.",
     "send": "Send",
     "sending": "Sending…",
     "success": "Thanks — your message is on its way. We'll get back to you soon.",
     "error": "Something went wrong sending that. Please try again.",
+    "errorTooMany": "Too many messages in a short time. Please try again in an hour.",
     "notConfigured": "The contact form isn't configured in this preview.",
     "name": "Name (optional)",
     "ownerEdit": "Edit contact details",
@@ -146,6 +148,8 @@
     "slow": "This is taking longer — reload the page"
   },
   "inbox": {
+    "markReadError": "Could not mark this message as read. It is still unread. Please try again.",
+    "retryMarkRead": "Retry marking as read",
     "title": "Messages",
     "empty": "No messages yet. Messages sent through the contact form appear here.",
     "ownerOnly": "This page is only for the prototype's owner.",

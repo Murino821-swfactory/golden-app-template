@@ -13,8 +13,8 @@ export function TestimonialsSection() {
 
   return (
     <section
-      data-section="testimonials"
-      className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
+      id="testimonials" data-section="testimonials"
+      className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24"
     >
       <h2 className="text-center text-3xl font-semibold tracking-tight">
         {t("title")}
