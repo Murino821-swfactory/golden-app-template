@@ -28,7 +28,11 @@
     "title": "Ihre App",
     "subtitle": "Gebaut mit dem Golden Stack",
     "cta": "Loslegen",
-    "previewLabel": "App-Vorschau"
+    "previewLabel": "App-Vorschau",
+    "deviceLabel": "Vorschau auf",
+    "deviceDesktop": "Desktop",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Handy"
   },
   "features": {
     "title": "Funktionen",
@@ -148,6 +152,8 @@
     "slow": "Das dauert länger – lade die Seite neu"
   },
   "inbox": {
+    "markReadError": "Die Nachricht konnte nicht als gelesen markiert werden. Sie ist weiterhin ungelesen. Bitte versuchen Sie es erneut.",
+    "retryMarkRead": "Erneut als gelesen markieren",
     "title": "Nachrichten",
     "empty": "Noch keine Nachrichten. Nachrichten aus dem Kontaktformular erscheinen hier.",
     "ownerOnly": "Diese Seite ist nur für den Inhaber des Prototyps.",
@@ -250,6 +256,7 @@
     "gestureMac": "Zoomen Sie mit ⌘ + Mausrad"
   },
   "footer": {
-    "generatedBy": "Erstellt von Tokenwise AI"
+    "generatedBy": "Erstellt von Tokenwise AI",
+    "builtBy": "Erstellt von"
   }
 }

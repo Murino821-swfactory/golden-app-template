@@ -163,7 +163,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contact" data-section="contact" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="contact" data-section="contact" className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <h2 className="text-center text-3xl font-semibold tracking-tight">{copy?.heading ?? t("title")}</h2>
       {copy?.intro && <p className="mx-auto mt-3 max-w-xl text-center text-muted-foreground">{copy.intro}</p>}
 

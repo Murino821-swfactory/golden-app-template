@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
 import { uiCopy } from "./ui-copy";
 
@@ -82,6 +82,22 @@ test.describe("contact form — configured", () => {
   test.skip(!process.env.NEXT_PUBLIC_DEMO_SLUG, "no demo slug — the form is the not-configured one");
   test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
 
+  /**
+   * Every field this config's form requires, so a test reaches the behaviour it names. A
+   * property or trades prototype asks for the phone (`contactForm.phone: "required"`), and
+   * without it the browser refuses the submit itself: the rate-limit test then waited for an
+   * alert no request could produce and failed every such prototype's smoke gate (reality-psd2,
+   * OTH-303, 2026-10-17). This suite runs only with a demo slug, so the template's own CI
+   * never executes it — the factory's smoke gate is where it first runs.
+   */
+  async function fillRequired(section: Locator, message: string) {
+    await section.locator("#contact-email").fill("visitor@example.com");
+    if (config.patterns.contactForm?.phone === "required") {
+      await section.locator("#contact-phone").fill("+421 900 000 000");
+    }
+    await section.locator("#contact-message").fill(message);
+  }
+
   test("a message shorter than the server minimum is refused without a request", async ({ page }) => {
     let requested = false;
     await page.route("**/api/prototype-contact", (route) => {
@@ -90,8 +106,7 @@ test.describe("contact form — configured", () => {
     });
     await page.goto("./");
     const section = page.locator('[data-section="contact"]');
-    await section.locator("#contact-email").fill("visitor@example.com");
-    await section.locator("#contact-message").fill("test      ");
+    await fillRequired(section, "test      ");
     await expect(section.locator("#contact-message-hint")).toHaveText(uiCopy.contact.messageHint!);
     await section.getByRole("button", { name: submitLabel, exact: true }).click();
     expect(await section.locator("#contact-message").evaluate((el: HTMLTextAreaElement) => el.validity.valid)).toBe(false);
@@ -99,15 +114,17 @@ test.describe("contact form — configured", () => {
   });
 
   test("a rate-limited send says so instead of a generic failure", async ({ page }) => {
-    await page.route("**/api/prototype-contact", (route) =>
-      route.fulfill({ status: 429, json: { error: "too many requests" } })
-    );
+    let requested = false;
+    await page.route("**/api/prototype-contact", (route) => {
+      requested = true;
+      void route.fulfill({ status: 429, json: { error: "too many requests" } });
+    });
     await page.goto("./");
     const section = page.locator('[data-section="contact"]');
-    await section.locator("#contact-email").fill("visitor@example.com");
-    await section.locator("#contact-message").fill("A question about the map data.");
+    await fillRequired(section, "A question about the map data.");
     await section.getByRole("button", { name: submitLabel, exact: true }).click();
     await expect(section.getByRole("alert")).toHaveText(uiCopy.contact.errorTooMany!);
+    expect(requested).toBe(true);
   });
 });
 
