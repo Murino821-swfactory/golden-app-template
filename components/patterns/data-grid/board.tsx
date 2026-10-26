@@ -15,7 +15,7 @@ export function Board({
   records: EntityRecord[];
   fields: EntityField[];
   boardField: EntityField;
-  onOpen: (record: EntityRecord) => void;
+  onOpen: (record: EntityRecord, opener: HTMLButtonElement) => void;
 }) {
   const t = useTranslations("dataGrid");
   const yesNo = { yes: t("yes"), no: t("no") };
@@ -33,7 +33,7 @@ export function Board({
           <ul className="space-y-2">
             {col.records.map((rec) => (
               <li key={rec.id}>
-                <button type="button" onClick={() => onOpen(rec)}
+                <button type="button" data-record-id={rec.id} onClick={(event) => onOpen(rec, event.currentTarget)}
                   className="min-h-11 w-full rounded-md border border-border bg-card p-3 text-left text-sm focus-visible:outline-2 focus-visible:outline-ring">
                   <span className="block font-medium">{formatValue(titleField, rec.values[titleField.key], yesNo)}</span>
                   {detailFields.map((f) => (

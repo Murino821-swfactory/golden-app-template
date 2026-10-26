@@ -18,7 +18,8 @@
         "listings",
         "contact",
         "cta"
-      ]
+      ],
+      "tone": "bold"
     },
     "dashboard": {},
     "authGoogle": {},
