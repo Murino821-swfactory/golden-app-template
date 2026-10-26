@@ -28,7 +28,11 @@
     "title": "Tu aplicación",
     "subtitle": "Creado con el Golden Stack",
     "cta": "Empezar",
-    "previewLabel": "Vista previa de la aplicación"
+    "previewLabel": "Vista previa de la aplicación",
+    "deviceLabel": "Vista previa en",
+    "deviceDesktop": "Ordenador",
+    "deviceTablet": "Tableta",
+    "devicePhone": "Móvil"
   },
   "features": {
     "title": "Funciones",
@@ -252,6 +256,7 @@
     "gestureMac": "Usa ⌘ + rueda para hacer zoom"
   },
   "footer": {
-    "generatedBy": "Generado por Tokenwise AI"
+    "generatedBy": "Generado por Tokenwise AI",
+    "builtBy": "Creado por"
   }
 }
