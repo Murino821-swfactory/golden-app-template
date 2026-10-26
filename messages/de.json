@@ -28,7 +28,11 @@
     "title": "Ihre App",
     "subtitle": "Gebaut mit dem Golden Stack",
     "cta": "Loslegen",
-    "previewLabel": "App-Vorschau"
+    "previewLabel": "App-Vorschau",
+    "deviceLabel": "Vorschau auf",
+    "deviceDesktop": "Desktop",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Handy"
   },
   "features": {
     "title": "Funktionen",
@@ -252,6 +256,7 @@
     "gestureMac": "Zoomen Sie mit ⌘ + Mausrad"
   },
   "footer": {
-    "generatedBy": "Erstellt von Tokenwise AI"
+    "generatedBy": "Erstellt von Tokenwise AI",
+    "builtBy": "Erstellt von"
   }
 }

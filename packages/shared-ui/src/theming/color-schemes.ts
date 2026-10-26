@@ -1,15 +1,17 @@
 /**
  * color-schemes.ts (@tokenwise/shared-ui; moved from golden-app-template lib/ on 2026-09-25)
- * — the fifteen palettes a customer picks from, and the deterministic rule
- * that turns a two-colour pair into CSS roles.
+ * — the palettes a customer picks from, and the deterministic rule that turns two or more
+ * colours into CSS roles.
  *
- * A palette is a PAIR [founder decision 2026-09-24]: the fifteen combinations the founder
+ * A palette was a PAIR [founder decision 2026-09-24]: the fifteen combinations the founder
  * supplied as images, in the order supplied — which is also the order the header's
- * "Change colour" button cycles through. Deriving roles instead of hand-writing them means
- * a sixteenth pair is one line and needs no CSS work.
+ * "Change colour" button cycles through. Since 2026-10-26 a palette may have more colours
+ * [founder decision]: the extra ones become accents (`derivePaletteRoles`), and the founder's
+ * first five such palettes have seven colours each. Deriving
+ * roles instead of hand-writing them means a new palette is one line and needs no CSS work.
  *
- * The rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the darker
- * colour is the background, the lighter is both text and accent. A pair whose text would
+ * The pair rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the
+ * darker colour is the background, the lighter is both text and accent. A pair whose text would
  * fall under WCAG AA on a card is corrected — the background is deepened toward black
  * first, then the text lifted toward white, one percent at a time — so the hue the founder
  * picked survives and only the contrast moves. Five of the fifteen are corrected; the
@@ -17,7 +19,7 @@
  *
  * Canonical documentation: sw-factory `docs/COLOR_SCHEMES.md`.
  *
- * Golden rule 1 (dark-only): the darker colour of a pair is always the background.
+ * Golden rule 1 (dark-only): the darkest colour of a palette is always the background.
  */
 
 /** Cycle order — the header's button walks this list and wraps after the last. */
@@ -37,14 +39,22 @@ export const COLOR_SCHEME_IDS = [
   "ice-blue-ocean-blue",
   "honey-tan-jet-black",
   "burnt-orange-vanilla",
+  "deep-sea-blues",
+  "lime-lagoon",
+  "peacock-amber",
+  "mulled-spice",
+  "black-gold",
 ] as const;
 export type ColorSchemeId = (typeof COLOR_SCHEME_IDS)[number];
+
+/** Two or more hex colours without `#`. */
+export type PaletteColors = readonly [string, string, ...string[]];
 
 export interface Palette {
   /** What a visitor reads. Proper names — never translated. */
   name: string;
   /** Exactly as the founder supplied them, top colour of the image first. */
-  colors: readonly [string, string];
+  colors: PaletteColors;
 }
 
 export const PALETTES: Record<ColorSchemeId, Palette> = {
@@ -72,6 +82,28 @@ export const PALETTES: Record<ColorSchemeId, Palette> = {
   "ice-blue-ocean-blue": { name: "Ice Blue & Ocean Blue", colors: ["CFFAFE", "0891B2"] },
   "honey-tan-jet-black": { name: "Honey Tan & Jet Black", colors: ["E3C586", "171717"] },
   "burnt-orange-vanilla": { name: "Burnt Orange & Vanilla", colors: ["FC6C26", "FFF4D6"] },
+  // Seven colours each, supplied as images on 2026-10-26 (top of the image first); the names
+  // are ours — the images carry none.
+  "deep-sea-blues": {
+    name: "Deep Sea Blues",
+    colors: ["9DB9CE", "6DAFD1", "3A9ED0", "0E5588", "052E55", "031F45", "041526"],
+  },
+  "lime-lagoon": {
+    name: "Lime Lagoon",
+    colors: ["9EBC0F", "11A516", "096C32", "0B305F", "3888A8", "11B6E6", "37D2E0"],
+  },
+  "peacock-amber": {
+    name: "Peacock Amber",
+    colors: ["C98819", "8E5012", "4F2E1A", "0A2130", "503272", "764BA5", "0595A1"],
+  },
+  "mulled-spice": {
+    name: "Mulled Spice",
+    colors: ["090802", "381307", "571F08", "EFA717", "F1DDA6", "82AB9C", "627357"],
+  },
+  "black-gold": {
+    name: "Black Gold",
+    colors: ["292C31", "070706", "2D1F11", "89612B", "AC8B56", "CDAD69", "F4E185"],
+  },
 };
 
 /**
@@ -99,6 +131,9 @@ export interface SchemeRoles {
   primary: string;
   muted: string;
   foreground: string;
+  /** The second accent: decoration only (glows, gradients), never text. `primary` when
+   * the palette has no fourth colour. */
+  highlight: string;
 }
 
 /** WCAG AA for normal text. Text below this does not ship. */
@@ -156,14 +191,29 @@ const MAX_DEEPEN_PERCENT = 70;
 const MAX_MUTED_PERCENT = 35;
 
 /**
- * The rule. Pure: same pair in, same roles out, no I/O, no config.
+ * The rule. Pure: same colours in, same roles out, whatever their order; no I/O, no config.
+ *
+ * The darkest colour is the background and the lightest the text. With two colours the text
+ * is also the accent — exactly the pair rule of 2026-09-24. A middle colour is the accent
+ * (`primary`); of two or more middles, the one most readable on a card is the accent and the
+ * next the second accent (`highlight`), which only decoration paints and so ships as
+ * supplied. Further middles are kept in the palette as supplied and not painted.
  *
  * Contrast is checked against the SURFACE, not the background: the surface is the lighter
- * of the two planes text sits on, so text readable on a card is readable everywhere.
+ * of the two planes text sits on, so text readable on a card is readable everywhere. An
+ * accent under WCAG AA there is lifted toward white one percent at a time, like the text.
  */
-export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
-  const [a, b] = pair;
-  const [dark, light] = relativeLuminance(a) <= relativeLuminance(b) ? [a, b] : [b, a];
+export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
+  if (colors.length < 2) {
+    throw new Error(`A palette has at least 2 colours, got ${colors.length}`);
+  }
+  // Ties broken by the hex itself, so the order the colours were supplied in never matters.
+  const sorted = [...colors].sort(
+    (x, y) => relativeLuminance(x) - relativeLuminance(y) || x.localeCompare(y)
+  );
+  const dark = sorted[0]!;
+  const light = sorted[sorted.length - 1]!;
+  const middles = sorted.slice(1, -1);
 
   let background = dark;
   let foreground = light;
@@ -185,6 +235,14 @@ export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
   }
 
   const surface = surfaceOf();
+  const [accent, second] = [...middles].sort(
+    (x, y) => contrastRatio(y, surface) - contrastRatio(x, surface) || x.localeCompare(y)
+  );
+  let primary = accent ?? foreground;
+  for (let percent = 1; percent <= 100 && contrastRatio(primary, surface) < WCAG_AA_TEXT; percent++) {
+    primary = mix(accent!, "FFFFFF", percent / 100);
+  }
+
   let muted = foreground;
   for (let percent = 1; percent <= MAX_MUTED_PERCENT; percent++) {
     const candidate = mix(foreground, background, percent / 100);
@@ -196,10 +254,16 @@ export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
     background: `#${background}`,
     surface: `#${surface}`,
     border: `#${mix(background, foreground, BORDER_MIX)}`,
-    primary: `#${foreground}`,
+    primary: `#${primary}`,
     muted: `#${muted}`,
     foreground: `#${foreground}`,
+    highlight: `#${second ?? primary}`,
   };
+}
+
+/** The pair rule, kept by name for the template forks whose tests import it. */
+export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
+  return derivePaletteRoles(pair);
 }
 
 /** Throws when any text the page paints would be unreadable. Called by the build. */
@@ -208,6 +272,9 @@ export function assertReadable(id: string, roles: SchemeRoles): void {
     ["foreground on background", roles.foreground, roles.background],
     ["foreground on surface", roles.foreground, roles.surface],
     ["muted on surface", roles.muted, roles.surface],
+    // `text-primary` paints words in the accent — a pair's accent is its text, a third
+    // colour's is not.
+    ["primary on surface", roles.primary, roles.surface],
     // `--primary-foreground` is the background (variablesFrom): a button's own text.
     ["button text on primary", roles.background, roles.primary],
   ];
@@ -223,7 +290,7 @@ export function assertReadable(id: string, roles: SchemeRoles): void {
 }
 
 export function rolesFor(id: ColorSchemeId): SchemeRoles {
-  const roles = derivePairRoles(PALETTES[id].colors);
+  const roles = derivePaletteRoles(PALETTES[id].colors);
   assertReadable(id, roles);
   return roles;
 }
@@ -242,8 +309,8 @@ export function cssVariablesFor(id: ColorSchemeId): Record<string, string> {
  * write rather than a rebuild. `html[data-scheme="x"]` is (0,1,1), which outranks both
  * `:root` and `.dark` in globals.css — no `!important`, no ordering dependency.
  *
- * Calling `cssVariablesFor` for all fifteen also runs `assertReadable` fifteen times at
- * build, so no palette the header can reach ships unchecked.
+ * Calling `cssVariablesFor` for every palette also runs `assertReadable` on each at build,
+ * so no palette the header can reach ships unchecked.
  */
 export function cssBlocksForAll(): string {
   return COLOR_SCHEME_IDS.map((id) => {
@@ -273,5 +340,6 @@ function variablesFrom(r: SchemeRoles): Record<string, string> {
     "--border": r.border,
     "--input": r.border,
     "--ring": r.primary,
+    "--highlight": r.highlight,
   };
 }

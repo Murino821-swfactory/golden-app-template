@@ -51,7 +51,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   return (
     <>
       <script data-site-jsonld type="application/ld+json" dangerouslySetInnerHTML={{ __html: landingJsonLd(locale) }} />
-      <LandingStory presentation={PRESENTATION} chapters={SECTIONS.map((id) => {
+      <LandingStory presentation={PRESENTATION} tone={config.patterns.landing?.tone ?? "light"} chapters={SECTIONS.map((id) => {
         const Section = REGISTRY[id];
         return { id, content: Section ? <Section /> : null };
       })} />

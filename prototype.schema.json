@@ -176,6 +176,14 @@
             "plus-jakarta-sans",
             "source-sans-3"
           ]
+        },
+        "tone": {
+          "description": "The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud.",
+          "type": "string",
+          "enum": [
+            "light",
+            "bold"
+          ]
         }
       },
       "required": [
@@ -1092,7 +1100,12 @@
               "chartreuse-pastel-deep-teal-green",
               "ice-blue-ocean-blue",
               "honey-tan-jet-black",
-              "burnt-orange-vanilla"
+              "burnt-orange-vanilla",
+              "deep-sea-blues",
+              "lime-lagoon",
+              "peacock-amber",
+              "mulled-spice",
+              "black-gold"
             ]
           }
         },
@@ -1149,6 +1162,14 @@
                   "space-grotesk",
                   "plus-jakarta-sans",
                   "source-sans-3"
+                ]
+              },
+              "tone": {
+                "description": "The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud.",
+                "type": "string",
+                "enum": [
+                  "light",
+                  "bold"
                 ]
               }
             },
