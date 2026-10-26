@@ -28,7 +28,11 @@
     "title": "Twoja aplikacja",
     "subtitle": "Zbudowane na Golden Stacku",
     "cta": "Zacznij",
-    "previewLabel": "Podgląd aplikacji"
+    "previewLabel": "Podgląd aplikacji",
+    "deviceLabel": "Podgląd na",
+    "deviceDesktop": "Komputer",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Telefon"
   },
   "features": {
     "title": "Funkcje",
@@ -252,6 +256,7 @@
     "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
   },
   "footer": {
-    "generatedBy": "Wygenerowane przez Tokenwise AI"
+    "generatedBy": "Wygenerowane przez Tokenwise AI",
+    "builtBy": "Stworzone przez"
   }
 }

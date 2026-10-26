@@ -28,7 +28,11 @@
     "title": "Az Ön alkalmazása",
     "subtitle": "A Golden Stackre építve",
     "cta": "Kezdés",
-    "previewLabel": "Alkalmazás előnézete"
+    "previewLabel": "Alkalmazás előnézete",
+    "deviceLabel": "Előnézet",
+    "deviceDesktop": "Számítógép",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Telefon"
   },
   "features": {
     "title": "Funkciók",
@@ -252,6 +256,7 @@
     "gestureMac": "Nagyításhoz használja a ⌘ + görgőt"
   },
   "footer": {
-    "generatedBy": "A Tokenwise AI által generálva"
+    "generatedBy": "A Tokenwise AI által generálva",
+    "builtBy": "Készítette"
   }
 }
