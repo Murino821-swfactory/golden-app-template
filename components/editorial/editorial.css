@@ -1,0 +1,409 @@
+/*
+ * editorial.css — the editorial presentation (default since 2026-10-26; sw-factory
+ * decision "premium prototype design"), after the landings of mdx.so and its Indoobit case
+ * study: eyebrow pills, display type, faint numerals, glowing cards, the product in a lit
+ * frame rising from the fold, a line that draws itself, a wordmark that dissolves above
+ * the footer.
+ *
+ * Every colour is a palette token (`--primary`, `--background`, `--card`, `--border`, …)
+ * mixed with `color-mix`, so "Change colour" in the header repaints all of it and no hue is
+ * written here (`tests/editorial.spec.ts` greps for one). Motion is scroll-driven CSS
+ * (`animation-timeline`) behind `@supports` and `prefers-reduced-motion`: a browser without
+ * it, or a reader who asked for calm, gets the finished state at once. No JavaScript.
+ *
+ * Shipped by `components/editorial/registry.ts`, so these rules exist only on a page that
+ * renders editorial sections.
+ */
+
+/* ── Tokens derived from the palette ─────────────────────────────────────────────── */
+[data-presentation="editorial"] {
+  --editorial-glow: color-mix(in oklab, var(--primary) 22%, transparent);
+  --editorial-glow-soft: color-mix(in oklab, var(--primary) 9%, transparent);
+  --editorial-void: color-mix(in oklab, var(--background) 72%, black);
+  --editorial-hairline: color-mix(in oklab, var(--primary) 35%, transparent);
+}
+
+/* ── Display type ────────────────────────────────────────────────────────────────── */
+.editorial-display {
+  font-size: clamp(2.75rem, 7vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+/* ── Eyebrow pill ────────────────────────────────────────────────────────────────── */
+.editorial-eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--editorial-hairline, color-mix(in oklab, var(--primary) 35%, transparent));
+  border-radius: 999px;
+  background: var(--editorial-glow-soft, color-mix(in oklab, var(--primary) 9%, transparent));
+  padding: 0.4rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+@media (min-width: 640px) {
+  .editorial-eyebrow-lines::before,
+  .editorial-eyebrow-lines::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 7rem;
+    height: 1px;
+  }
+  .editorial-eyebrow-lines::before {
+    right: calc(100% + 0.9rem);
+    background: linear-gradient(to left, var(--primary), transparent);
+  }
+  .editorial-eyebrow-lines::after {
+    left: calc(100% + 0.9rem);
+    background: linear-gradient(to right, var(--primary), transparent);
+  }
+}
+
+/* ── Numerals ────────────────────────────────────────────────────────────────────── */
+.editorial-numeral {
+  font-size: 3.25rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklab, var(--primary) 28%, transparent);
+}
+
+/* ── The one action: a pill that leans in on hover ───────────────────────────────── */
+.editorial-pill {
+  box-shadow: 0 14px 40px -14px color-mix(in oklab, var(--primary) 60%, transparent);
+  transition: transform 500ms cubic-bezier(0.625, 0.05, 0, 1), box-shadow 500ms ease;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-pill:hover {
+    transform: scale(0.97);
+    box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--primary) 80%, transparent);
+  }
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────────────── */
+.editorial-card {
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  background:
+    radial-gradient(120% 80% at 100% 0%, var(--editorial-glow-soft), transparent 60%),
+    color-mix(in oklab, var(--card) 85%, var(--background));
+  transition: border-color 300ms ease, transform 300ms ease;
+}
+.editorial-card:hover {
+  border-color: var(--editorial-hairline);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-card:hover {
+    transform: translateY(-2px);
+  }
+}
+.editorial-offer {
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+  background: color-mix(in oklab, var(--background) 60%, transparent);
+}
+
+/* ── Hero: the frame rising from the fold, the object beside the words ───────────── */
+.editorial-hero {
+  background:
+    radial-gradient(60% 50% at 50% 0%, var(--editorial-glow), transparent 70%),
+    var(--background);
+}
+.editorial-fold {
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+.editorial-frame {
+  position: relative;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
+  border-bottom: 0;
+  background: color-mix(in oklab, var(--editorial-void) 80%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 -1px 0 0 var(--editorial-hairline),
+    0 0 60px -10px var(--editorial-glow),
+    0 40px 120px -40px black;
+}
+/* The glowing top edge: a hairline that is brightest in the middle, like a lit bezel. */
+.editorial-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px 10% auto;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(to right, transparent, var(--primary), transparent);
+  filter: drop-shadow(0 0 8px var(--primary));
+}
+.editorial-object::before {
+  content: "";
+  position: absolute;
+  inset: 10% 5% 0;
+  z-index: -1;
+  border-radius: 999px;
+  background: var(--editorial-glow);
+  filter: blur(60px);
+}
+.editorial-object-image {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 1.5rem;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
+  box-shadow: 0 40px 120px -40px black, 0 0 60px -10px var(--editorial-glow);
+}
+
+/* ── How it works: the glowing line and the ticks ────────────────────────────────── */
+.editorial-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--border) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--border) 45%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(70% 70% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 50%, black 30%, transparent 100%);
+}
+.editorial-glow-line path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 6px var(--primary)) drop-shadow(0 0 22px var(--editorial-glow));
+}
+/* A phone reads the steps down one hairline instead. */
+.editorial-steps::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem auto 0.5rem 0.4rem;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+  filter: drop-shadow(0 0 6px var(--primary));
+}
+.editorial-tick {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .editorial-steps::before {
+    display: none;
+  }
+  .editorial-tick {
+    display: block;
+    width: 1px;
+    height: 4.5rem;
+    margin-left: 0.3rem;
+    background: linear-gradient(to bottom, transparent, var(--primary));
+    filter: drop-shadow(0 0 6px var(--primary));
+  }
+  .editorial-step-numeral {
+    display: block;
+    margin-top: 0.75rem;
+  }
+}
+
+/* ── FAQ: plus that becomes a cross ──────────────────────────────────────────────── */
+.editorial-plus {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--editorial-hairline);
+  border-radius: 999px;
+}
+.editorial-plus::before,
+.editorial-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7rem;
+  height: 1px;
+  background: var(--primary);
+  transform: translate(-50%, -50%);
+  transition: transform 300ms ease;
+}
+.editorial-plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+details[open] .editorial-plus::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+details[open] .editorial-plus::before {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+/* ── Closing band and wordmark ───────────────────────────────────────────────────── */
+.editorial-band {
+  border: 1px solid var(--editorial-hairline);
+  background:
+    radial-gradient(80% 120% at 50% 120%, var(--editorial-glow), transparent 60%),
+    color-mix(in oklab, var(--editorial-void) 70%, var(--card));
+}
+.editorial-closing {
+  container-type: inline-size;
+}
+/* Whole above the footer; the foot of the letters dissolves instead of being cut. Sized by
+   the name's length so it spans the width without being cut at the edge (0.7em per
+   character covers the widest face); a name that would not fit at the smallest size wraps. */
+.editorial-wordmark {
+  margin: 2.5rem 0 0;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: clamp(2rem, calc(100cqw / (var(--editorial-chars, 12) * 0.7)), 15rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  background: linear-gradient(to bottom, var(--foreground) 10%, color-mix(in oklab, var(--foreground) 35%, transparent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  user-select: none;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────────────────
+   Two kinds. On load, the hero enters in turn (time-based). Everything else is driven by
+   the scroll position itself (`animation-timeline`), so the page answers the hand and
+   never plays on its own. Both only where motion is wanted; the scroll kind also only
+   where `animation-range` is understood — a browser that knows the timeline but not the
+   range would map the whole pass to the animation and fade sections out as they leave. */
+@media (prefers-reduced-motion: no-preference) {
+  /* The copy sharpens into place without moving: the hero-image test compares the
+     headline's box mid-load with its settled box, so a translate here would read as
+     layout shift. The frame below, which nothing measures, does rise. */
+  .editorial-enter {
+    animation: editorial-enter-soft 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--d, 0s);
+  }
+  .editorial-hero-copy > :nth-child(1) { --d: 60ms; }
+  .editorial-hero-copy > :nth-child(2) { --d: 180ms; }
+  .editorial-hero-copy > :nth-child(3) { --d: 300ms; }
+  .editorial-hero-copy > :nth-child(4) { --d: 400ms; }
+  .editorial-object.editorial-enter { --d: 320ms; }
+  .editorial-fold.editorial-enter {
+    --d: 520ms;
+    animation-name: editorial-enter;
+  }
+}
+@keyframes editorial-enter-soft {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes editorial-enter {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) and (animation-range: entry 0% entry 40%) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Sections and cards rise as they enter; siblings follow one another (`--i`). */
+    [data-reveal] {
+      animation: editorial-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry calc(0% + var(--i, 0) * 6%) entry calc(40% + var(--i, 0) * 6%);
+    }
+    /* The hero answers the first scroll: copy drifts up and fades, the frame tilts flat
+       as it comes up to meet the eye. */
+    .editorial-hero-copy {
+      animation: editorial-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 600px;
+    }
+    .editorial-frame {
+      transform-origin: 50% 100%;
+      animation: editorial-tilt linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0px 520px;
+    }
+    /* The line draws itself through the steps. */
+    .editorial-glow-line path {
+      stroke-dashoffset: 1;
+      animation: editorial-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 55%;
+    }
+    /* The manifesto lights up word by word as it reaches the middle of the screen. */
+    .editorial-manifesto {
+      view-timeline-name: --manifesto;
+    }
+    [data-word] {
+      animation: editorial-word linear both;
+      animation-timeline: --manifesto;
+      animation-range: cover calc(6% + var(--i, 0) * 0.9%) cover calc(20% + var(--i, 0) * 0.9%);
+    }
+    /* The wordmark grows into place. */
+    .editorial-wordmark {
+      animation: editorial-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+@keyframes editorial-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes editorial-drift {
+  to {
+    opacity: 0.2;
+    transform: translateY(-70px);
+  }
+}
+@keyframes editorial-tilt {
+  from {
+    transform: perspective(1400px) rotateX(11deg) scale(0.96);
+  }
+  to {
+    transform: perspective(1400px) rotateX(0deg) scale(1);
+  }
+}
+@keyframes editorial-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes editorial-word {
+  from {
+    opacity: 0.18;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes editorial-rise {
+  from {
+    opacity: 0.3;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* No `scroll-behavior: smooth`: a hash set while a smooth scroll is still running is
+   dropped by Chromium, and the anchors test (OTH-144) walks the sections by hash in quick
+   succession. Anchors jump, as everywhere else in the template. */
