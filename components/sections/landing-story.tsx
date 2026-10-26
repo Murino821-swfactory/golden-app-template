@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
-/** All chapters ship as HTML. Only an eligible, hydrated desktop gets a sticky stage.
- * Native page scrolling drives it; there is no wheel interception or body scroll lock. */
+/** All chapters ship as HTML. Only the `story` presentation on an eligible, hydrated desktop
+ * gets a sticky stage; `editorial` (the default since 2026-10-26) and `document` are long
+ * pages. Native page scrolling drives the stage; there is no wheel interception or body
+ * scroll lock. `data-presentation` names which of the three the config chose. */
 export function LandingStory({ chapters, presentation }: {
   chapters: { id: string; content: ReactNode }[];
-  presentation?: "story" | "document";
+  presentation?: "editorial" | "story" | "document";
 }) {
   const root = useRef<HTMLDivElement>(null);
   const [story, setStory] = useState(false);
@@ -17,7 +19,7 @@ export function LandingStory({ chapters, presentation }: {
 
   useEffect(() => {
     const node = root.current;
-    if (!node || presentation === "document" || chapters.length < 2) return;
+    if (!node || presentation !== "story" || chapters.length < 2) return;
     const media = matchMedia("(min-width: 1024px) and (min-height: 700px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
     const syncMode = () => {
       node.style.setProperty("--story-top", `${document.querySelector("header")?.getBoundingClientRect().height ?? 76}px`);
@@ -85,7 +87,7 @@ export function LandingStory({ chapters, presentation }: {
   }
 
   return (
-    <div ref={root} data-landing-mode={story ? "story" : "document"}
+    <div ref={root} data-landing-mode={story ? "story" : "document"} data-presentation={presentation}
       style={{ "--chapters": chapters.length } as CSSProperties}
       onClickCapture={(event) => {
         if (!story || !(event.target instanceof Element)) return;
