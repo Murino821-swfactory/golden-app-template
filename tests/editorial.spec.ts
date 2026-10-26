@@ -13,7 +13,7 @@ import { uiCopy } from "./ui-copy";
  * chose (mdx.so, its Indoobit case study) — an eyebrow pill, a display headline set light
  * with one phrase in weight, one action, the product itself in a lit frame rising from the
  * fold, a bento of features with numerals, a manifesto that lights up word by word, a
- * glowing line through the steps, FAQ cards and a closing band under a giant wordmark. All
+ * glowing line through the steps, FAQ cards and a closing band over the brand block. All
  * of it in the palette's tokens (Change colour repaints it), in the configured face (Change
  * font keeps the shape), and with scroll-driven CSS motion that degrades to its finished
  * state. `landing-v2`, `landing-action`, `hero-image`, `smoke` and `seo` keep guarding the
@@ -140,14 +140,17 @@ test.describe("editorial presentation", () => {
     await expect(first.locator("p")).toBeVisible();
   });
 
-  test("closing band under the wordmark, which ends whole above the footer", async ({ page }) => {
+  test("closing band, then the brand block that ends whole above the footer", async ({ page }) => {
     test.skip(!sections.includes("cta"), "section not enabled");
     await page.goto("./");
-    const wordmark = page.locator('[data-section="cta"] [data-wordmark]');
-    await expect(wordmark).toHaveText(config.appName);
-    await expect(wordmark).toHaveAttribute("aria-hidden", "true");
+    const band = page.locator('[data-section="cta"] [data-reveal]').first();
+    await expect(band.locator("h2")).toHaveText(copy.cta?.title ?? uiCopy.cta!.title!);
+    // Since PR D the page closes on "Built by TOKENWISE" (editorial-v2.spec.ts), not on the
+    // app's name: the footer and the hero already name the app.
+    const mark = page.locator('[data-section="cta"] [data-brand-mark]');
+    await expect(mark).toHaveCount(1);
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    const box = (await wordmark.boundingBox())!;
+    const box = (await mark.boundingBox())!;
     const footer = (await page.getByRole("contentinfo").boundingBox())!;
     expect(box.y + box.height).toBeLessThanOrEqual(footer.y + 1);
   });

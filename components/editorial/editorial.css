@@ -119,8 +119,24 @@
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
 }
+.editorial-fold {
+  height: 20rem;
+}
+@media (min-width: 640px) {
+  .editorial-fold {
+    height: 24rem;
+  }
+}
+.editorial-fold[data-device="tablet"] {
+  height: 26rem;
+}
+.editorial-fold[data-device="phone"] {
+  height: 30rem;
+}
 .editorial-frame {
   position: relative;
+  max-width: 56rem;
+  container-type: inline-size;
   border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
   border-bottom: 0;
   background: color-mix(in oklab, var(--editorial-void) 80%, transparent);
@@ -129,6 +145,117 @@
     0 -1px 0 0 var(--editorial-hairline),
     0 0 60px -10px var(--editorial-glow),
     0 40px 120px -40px black;
+}
+/* The device switcher (PR D, after wismeo): the same frame narrows and rounds into a
+   tablet or a phone; the content inside reflows through the container query below. */
+.editorial-frame[data-device="tablet"] {
+  max-width: 34rem;
+  border-radius: 1.75rem 1.75rem 0 0;
+}
+.editorial-frame[data-device="phone"] {
+  max-width: 22rem;
+  border-radius: 2.5rem 2.5rem 0 0;
+  padding: 0.4rem 0.4rem 0;
+}
+.editorial-frame[data-device="phone"] .editorial-frame-bar::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: 4.5rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: var(--editorial-void);
+  transform: translateX(-50%);
+}
+.editorial-frame[data-device="tablet"] .editorial-frame-bar::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.5rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--editorial-void);
+  transform: translateX(-50%);
+}
+.editorial-frame-bar {
+  position: relative;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-frame {
+    transition: max-width 500ms cubic-bezier(0.2, 0.7, 0.2, 1), border-radius 500ms ease, padding 500ms ease;
+  }
+  .editorial-fold {
+    transition: height 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+.editorial-device-tabs {
+  gap: 0.125rem;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 999px;
+  padding: 0.125rem;
+  background: color-mix(in oklab, var(--background) 60%, transparent);
+}
+.editorial-device-tab {
+  min-height: 2rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+.editorial-device-tab:hover {
+  color: var(--foreground);
+}
+.editorial-device-tab[aria-selected="true"] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.editorial-device-tab:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+/* The offers inside the frame: three abreast in a desktop frame, one column in a phone. */
+.editorial-offers {
+  display: grid;
+  gap: 0.5rem;
+}
+@container (min-width: 30rem) {
+  .editorial-offers {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* The floating icon tiles (PR D, after the concept cards on mdx.so): glass squares at the
+   corners of the copy, each drifting on its own clock. Desktop only, decoration only. */
+.editorial-tile {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--editorial-hairline);
+  background: var(--editorial-glow-soft);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 20px 50px -20px black, 0 0 30px -12px var(--editorial-glow);
+}
+.editorial-tile:nth-child(1) { top: 6%; left: 3%; --delay: 0s; }
+.editorial-tile:nth-child(2) { top: 14%; right: 4%; --delay: -2s; }
+.editorial-tile:nth-child(3) { bottom: 18%; left: 9%; --delay: -4s; }
+.editorial-tile:nth-child(4) { bottom: 8%; right: 10%; --delay: -6s; }
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-tile {
+    animation: editorial-float 7s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+  }
+}
+@keyframes editorial-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
 }
 /* The glowing top edge: a hairline that is brightest in the middle, like a lit bezel. */
 .editorial-frame::before {
@@ -246,25 +373,152 @@ details[open] .editorial-plus::before {
 .editorial-closing {
   container-type: inline-size;
 }
-/* Whole above the footer; the foot of the letters dissolves instead of being cut. Sized by
-   the name's length so it spans the width without being cut at the edge (0.7em per
-   character covers the widest face); a name that would not fit at the smallest size wraps. */
-.editorial-wordmark {
+/* "Built by TOKENWISE" (PR D): the kicker, then the nine letters set across the whole width
+   in the header's fixed display face — the same brand as the logo — whole above the footer,
+   the foot of the letters dissolving instead of being cut. The width comes from the flex
+   spacing, the size from the container (9 letters at ~0.78em each). */
+.editorial-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
   margin: 2.5rem 0 0;
-  text-align: center;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  font-size: clamp(2rem, calc(100cqw / (var(--editorial-chars, 12) * 0.7)), 15rem);
-  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+.editorial-brand:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: 1rem;
+}
+.editorial-brand-letters {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  font-family: var(--shared-font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, calc(100cqw / (9 * 0.78)), 18rem);
   line-height: 1;
-  letter-spacing: -0.05em;
-  background: linear-gradient(to bottom, var(--foreground) 10%, color-mix(in oklab, var(--foreground) 35%, transparent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--foreground);
   user-select: none;
+  transition: color 300ms ease;
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+.editorial-brand:hover .editorial-brand-letters {
+  color: var(--primary);
+}
+[data-brand-letter] {
+  display: inline-block;
+}
+
+/* ── The concept strip (PR D): two rows looping in opposite directions ────────────── */
+.editorial-strip {
+  display: grid;
+  gap: 1rem;
+  margin: 4rem calc(-1 * var(--gutter)) 0;
+  padding-block: 0.5rem;
+  overflow: clip;
+}
+.editorial-strip-row {
+  display: flex;
+  width: max-content;
+  animation: editorial-marquee 48s linear infinite;
+}
+.editorial-strip-row[data-strip-row="b"] {
+  animation-direction: reverse;
+}
+.editorial-strip:hover .editorial-strip-row {
+  animation-play-state: paused;
+}
+.editorial-strip-tile {
+  flex: 0 0 auto;
+  width: 22rem;
+  aspect-ratio: 16 / 10;
+  margin-right: 1rem;
+  border-radius: 1.25rem;
+  overflow: clip;
+}
+@media (max-width: 639px) {
+  .editorial-strip-tile {
+    width: 15rem;
+    margin-right: 0.75rem;
+  }
+}
+.editorial-strip-picture {
+  margin: 0;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
+  box-shadow: 0 30px 80px -40px black, 0 0 40px -20px var(--editorial-glow);
+}
+.editorial-strip-picture img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.editorial-strip-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding: 1.25rem;
+}
+.editorial-strip-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.editorial-strip-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.editorial-strip-value {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+@keyframes editorial-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-strip-row {
+    animation: none;
+  }
+  .editorial-strip {
+    overflow-x: auto;
+  }
+}
+
+/* ── The bold tone (PR D): a heavy uppercase voice for the loud ideas ─────────────── */
+[data-tone="bold"] .editorial-display {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: color-mix(in oklab, var(--foreground) 72%, transparent);
+}
+[data-tone="bold"] .editorial-display [data-display-emphasis] {
+  font-weight: 700;
+  color: var(--foreground);
+}
+[data-tone="bold"] .editorial-h2 {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+[data-tone="bold"] .editorial-numeral {
+  font-weight: 500;
+}
+[data-tone="bold"] .editorial-strip-title {
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 /* ── Motion ─────────────────────────────────────────────────────────────────────────
@@ -349,11 +603,11 @@ details[open] .editorial-plus::before {
       animation-timeline: --manifesto;
       animation-range: cover calc(6% + var(--i, 0) * 0.9%) cover calc(20% + var(--i, 0) * 0.9%);
     }
-    /* The wordmark grows into place. */
-    .editorial-wordmark {
+    /* The brand's letters rise into place one after another. */
+    [data-brand-letter] {
       animation: editorial-rise linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 100%;
+      animation-range: entry calc(0% + var(--i, 0) * 4%) entry calc(60% + var(--i, 0) * 4%);
     }
   }
 }

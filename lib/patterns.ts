@@ -42,7 +42,12 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "components/editorial/how-it-works.tsx",
     "components/editorial/faq.tsx",
     "components/editorial/cta.tsx",
+    "components/editorial/brand-mark.tsx",
+    "components/editorial/strip.tsx",
     "lib/editorial.ts",
+    "lib/screens.ts",
+    "hooks/use-screens.ts",
+    "public/_preview/screens.json",
   ],
   dashboard: ["app/[locale]/dashboard/page.tsx", "components/dashboard/stats.tsx", "lib/kpi.ts"],
   authGoogle: [

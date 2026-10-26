@@ -28,7 +28,11 @@
     "title": "Votre application",
     "subtitle": "Construit avec le Golden Stack",
     "cta": "Commencer",
-    "previewLabel": "Aperçu de l'application"
+    "previewLabel": "Aperçu de l'application",
+    "deviceLabel": "Aperçu sur",
+    "deviceDesktop": "Ordinateur",
+    "deviceTablet": "Tablette",
+    "devicePhone": "Téléphone"
   },
   "features": {
     "title": "Fonctionnalités",
@@ -252,6 +256,7 @@
     "gestureMac": "Utilisez ⌘ + molette pour zoomer"
   },
   "footer": {
-    "generatedBy": "Généré par Tokenwise AI"
+    "generatedBy": "Généré par Tokenwise AI",
+    "builtBy": "Créé par"
   }
 }

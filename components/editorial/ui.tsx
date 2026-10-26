@@ -81,7 +81,7 @@ export function Words({ text, from }: { text: string; from: number }) {
 }
 
 /** A section's heading: light, tight, balanced. */
-export const DISPLAY_H2 = "max-w-3xl text-balance text-3xl font-light leading-[1.05] tracking-[-0.02em] sm:text-5xl";
+export const DISPLAY_H2 = "editorial-h2 max-w-3xl text-balance text-3xl font-light leading-[1.05] tracking-[-0.02em] sm:text-5xl";
 
 /** A section's head: the heading centred, with the eyebrow when there is one. */
 export function SectionHead({ children }: { children: ReactNode }) {
