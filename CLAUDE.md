@@ -534,8 +534,11 @@ Pricing and testimonials remain locked.
 `NEXT_PUBLIC_SITE_ORIGIN` must be the real HTTP(S) origin without a path. The harness
 already supplies it for prototypes; factory-web supplies `https://tokenwise.sk` for
 `/demo/golden`. `NEXT_PUBLIC_BASE_PATH` remains separate. Canonical, localized OG/Twitter,
-hreflang including x-default, WebSite/WebPage JSON-LD, sitemap and generated llms.txt
-use the configured content. FAQ keeps its existing FAQPage JSON-LD. Login, dashboard
+hreflang including x-default, WebSite/WebPage/WebApplication JSON-LD, sitemap and
+generated llms.txt use the configured content. The WebApplication node names the product
+(description plus a featureList drawn from the features section, when rendered) so search
+and AI engines can answer "what is this app"; it carries no offers or rating. FAQ keeps
+its existing FAQPage JSON-LD. Login, dashboard
 and inbox receive noindex/nofollow and clear inherited public-page canonical/social
 metadata. Discovery excludes private sample records and unrendered sections. An
 unconfigured local build has relative URLs and an empty sitemap, rather than a made-up

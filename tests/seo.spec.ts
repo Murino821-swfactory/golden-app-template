@@ -12,6 +12,12 @@ test("search and AI discovery use the rendered localized copy", async ({ page })
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", publicUrl(locale));
     const graph = JSON.parse((await page.locator("[data-site-jsonld]").textContent())!)["@graph"];
     expect(graph.find((item: { "@type": string }) => item["@type"] === "WebPage")).toMatchObject({ description: copy.description, inLanguage: locale });
+    // The product node: an engine reads WebApplication to answer "what is this app". Its
+    // featureList must name exactly the features the page renders, never more.
+    const app = graph.find((item: { "@type": string }) => item["@type"] === "WebApplication");
+    expect(app).toMatchObject({ name: config.appName, description: copy.description, applicationCategory: "BusinessApplication" });
+    const features = config.patterns.landing?.sections.includes("features") ? (copy.landing?.features ?? []).map((f) => f.title) : [];
+    expect(app.featureList ?? []).toEqual(features);
   }
   const llms = await page.request.get("llms.txt");
   expect(llms.status()).toBe(200);

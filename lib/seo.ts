@@ -55,11 +55,27 @@ export const privateMetadata: Metadata = {
 export function landingJsonLd(locale: string): string {
   const copy = contentFor(config, locale);
   const url = publicUrl(locale);
+  // featureList names only what the features section actually renders — the same honesty
+  // rule llmsText follows. No section, no featureList; nothing is claimed that a visitor
+  // cannot see on the page.
+  const sections = new Set(config.patterns.landing?.sections ?? []);
+  const featureList = sections.has("features")
+    ? (copy.landing?.features ?? []).map((feature) => feature.title)
+    : [];
   const doc = {
     "@context": "https://schema.org",
     "@graph": [
       { "@type": "WebSite", name: config.appName, description: copy.description, inLanguage: config.locales, ...(siteOrigin() ? { url: publicUrl(config.defaultLocale) } : {}) },
       { "@type": "WebPage", name: copy.landing?.headline ?? config.appName, description: copy.description, inLanguage: locale, ...(siteOrigin() ? { url } : {}) },
+      // The product itself. WebSite/WebPage describe a page; this says "the thing this page
+      // is about is a web application" — the node a search engine or an AI assistant reads
+      // to answer "what is <app> and what does it do". Every prototype here is a browser
+      // app, so it is always accurate; `applicationCategory` is the broad default since the
+      // template serves business/productivity tools. No `offers` and no `aggregateRating`:
+      // the config carries no price or review, and discovery must not invent either.
+      { "@type": "WebApplication", name: config.appName, description: copy.description, applicationCategory: "BusinessApplication", operatingSystem: "Any", inLanguage: config.locales,
+        ...(featureList.length ? { featureList } : {}),
+        ...(siteOrigin() ? { url: publicUrl(config.defaultLocale) } : {}) },
     ],
   };
   return JSON.stringify(doc).replace(/</g, "\\u003c");
