@@ -20,7 +20,7 @@
         "contact",
         "cta"
       ],
-      "presentation": "story"
+      "font": "space-grotesk"
     },
     "dashboard": {},
     "authGoogle": {},
@@ -185,7 +185,12 @@
             }
           ]
         },
-        "featuresHeading": "What is already built?"
+        "featuresHeading": "What is already built?",
+        "eyebrow": "Prototypes from one config",
+        "manifesto": {
+          "lead": "A prototype is this template, unchanged, plus one file.",
+          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
+        }
       },
       "dashboard": {
         "title": "Dashboard"
