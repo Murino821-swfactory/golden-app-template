@@ -1,23 +1,26 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
-import { bentoSpan } from "@/lib/editorial";
+import { useScreens } from "@/hooks/use-screens";
+import { bentoSpan, conceptTilesFor } from "@/lib/editorial";
 import { ICONS } from "@/lib/icons";
-import { type Feature } from "@/lib/prototype-config";
+import { config, type Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { ConceptStrip } from "./strip";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
 /**
  * What the product does, as a bento: the first card wide, the rest as cards, each with its
- * numeral and Lucide icon in the palette's colour — then, when the customer's copy has one,
- * the manifesto: one paragraph in large type that lights up word by word as it scrolls into
- * the middle of the screen (`editorial.css`, `[data-word]`).
+ * numeral and Lucide icon in the palette's colour — then the concept strip (the product's
+ * own tiles in two rows sliding past each other, `strip.tsx`) and, when the customer's copy
+ * has one, the manifesto: one paragraph in large type that lights up word by word as it
+ * scrolls into the middle of the screen (`editorial.css`, `[data-word]`).
  *
  * Contract kept from the shared features section: the configured heading is the only
- * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals and
- * the manifesto are text, on purpose).
+ * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
+ * strip and the manifesto are text or pictures, on purpose).
  */
 
 const TRANSLATION_FALLBACK: Feature[] = [
@@ -28,10 +31,14 @@ const TRANSLATION_FALLBACK: Feature[] = [
 
 export function FeaturesSection() {
   const t = useTranslations("features");
-  const landing = useContent().landing;
+  const locale = useLocale();
+  const content = useContent();
+  const landing = content.landing;
   const features = landing?.features ?? TRANSLATION_FALLBACK;
   const manifesto = landing?.manifesto;
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
+  const screens = useScreens();
+  const tiles = conceptTilesFor(config, content, locale, screens);
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
@@ -59,6 +66,8 @@ export function FeaturesSection() {
           );
         })}
       </ul>
+
+      <ConceptStrip tiles={tiles} />
 
       {manifesto && (
         <div data-manifesto className="editorial-manifesto mx-auto mt-24 flex max-w-4xl flex-col items-center gap-6 text-center sm:mt-32">

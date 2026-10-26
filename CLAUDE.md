@@ -621,7 +621,23 @@ copy contract, same `data-section` markers — the suites that read the page kee
   then draws it as a figure beside the words (`[data-hero-object]`), with the words left
   aligned and no text over the image. Without it — every image before 2026-10-26 — it is the
   background exactly as the shared hero draws it. The server (factory-web) decides.
-- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep);
+- **Second round (PR D, 2026-10-26)**: the page closes on **"Built by TOKENWISE"**
+  (`components/editorial/brand-mark.tsx`: one link to tokenwise.sk with `utm_content=<slug>`,
+  the kicker is chrome `footer.builtBy`, the nine letters are decoration in
+  `--shared-font-display`) — the app's name is no longer set as a wordmark. The **concept
+  strip** (`strip.tsx`, inside features): two rows of the product's own tiles looping in
+  opposite directions (`conceptTilesFor`: offers → records → KPIs → features → questions, at
+  most ten, none under four; real screens from `_preview/screens.json` when the pipeline
+  published them — `lib/screens.ts`, static `public/_preview/screens.json` = `{"screens":[]}`
+  so sandbox and CI get a 200), `aria-hidden`, no links, no `svg`. The **device switcher** on
+  the hero frame (`data-device`: desktop / tablet / phone; chrome `landing.device*`; the frame
+  narrows and rounds, the offers reflow through a container query; hidden under 640 px) and a
+  dated title bar. **Floating icon tiles** (`[data-floating-tile]`, up to four feature icons,
+  desktop only, only without an AI object). **Tone**: `patterns.landing.tone` `light`
+  (default) | `bold` (uppercase heavy headline; `data-tone` on the page root; the content call
+  picks it for loud ideas). The header adapter passes the configured font as the switcher's
+  default (`components/layout/header.tsx`).
+- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
   `tests/shared-header.spec.ts` reads the configured font as the first-visit face.

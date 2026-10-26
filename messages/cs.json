@@ -28,7 +28,11 @@
     "title": "Vaše aplikace",
     "subtitle": "Postaveno na Golden Stacku",
     "cta": "Začít",
-    "previewLabel": "Ukázka aplikace"
+    "previewLabel": "Ukázka aplikace",
+    "deviceLabel": "Náhled na",
+    "deviceDesktop": "Počítač",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Mobil"
   },
   "features": {
     "title": "Funkce",
@@ -252,6 +256,7 @@
     "gestureMac": "Mapu přiblížíte pomocí ⌘ + kolečko"
   },
   "footer": {
-    "generatedBy": "Vytvořeno pomocí Tokenwise AI"
+    "generatedBy": "Vytvořeno pomocí Tokenwise AI",
+    "builtBy": "Vytvořilo"
   }
 }

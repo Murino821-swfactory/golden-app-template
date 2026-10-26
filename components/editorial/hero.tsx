@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
@@ -12,10 +12,11 @@ import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
+import { ICONS } from "@/lib/icons";
 import { landingActionHref } from "@/lib/landing-action";
 import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
-import { config } from "@/lib/prototype-config";
+import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
@@ -28,6 +29,11 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * and CTA from `prototype.config.json`, exactly one link, `[data-app-name]` once, the
  * creator's hero-image and "Edit texts" controls.
  *
+ * PR D (2026-10-26): the frame carries a device switcher (desktop, tablet, phone — the
+ * frame narrows and rounds like a device, the content reflows through a container query;
+ * no screenshots, no JavaScript morph) and a dated title bar; up to four feature icons
+ * float as glass tiles around the headline on a desktop when there is no AI object.
+ *
  * The AI hero image keeps both shapes (`lib/hero-image.ts`): `background` fills the hero
  * under the words exactly as the shared hero draws it; `object` is a figure beside the
  * words, lit from behind, with no text over it to keep readable.
@@ -37,6 +43,8 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  */
 
 const listings = config.patterns.listings;
+const DEVICES = ["desktop", "tablet", "phone"] as const;
+type Device = (typeof DEVICES)[number];
 
 /** The AI background, as the shared hero draws it: full-bleed, under the words, faded into the page. */
 function HeroBackground({ src }: { src: string }) {
@@ -77,13 +85,31 @@ function HeroObject({ src }: { src: string }) {
   );
 }
 
+/** Up to four of the product's own icons as glass tiles floating around the headline —
+ * decoration, desktop only, and only when no AI object already gives the hero its object. */
+function FloatingTiles({ icons }: { icons: IconId[] }) {
+  if (icons.length === 0) return null;
+  return (
+    <div aria-hidden className="editorial-tiles pointer-events-none absolute inset-0 hidden lg:block">
+      {icons.slice(0, 4).map((id, i) => {
+        const Icon = ICONS[id];
+        return (
+          <span key={id} data-floating-tile aria-hidden="true" className="editorial-tile" style={{ "--i": i } as CSSProperties}>
+            <Icon className="size-5 text-primary" aria-hidden />
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 /** The first offers of the catalogue, drawn the way the cards draw them — without links,
  * so the hero keeps its one action. Not `h3`s: the hero's only heading is the headline. */
 function HeroOffers({ cards }: { cards: ListingCard[] }) {
   const t = useTranslations("listings");
   const locale = useLocale();
   return (
-    <ul data-hero-offers className="grid gap-2 sm:grid-cols-3">
+    <ul data-hero-offers className="editorial-offers">
       {cards.map((card) => {
         const price = card.price !== undefined && listings?.currency ? formatPrice(card.price, listings.currency, locale) : null;
         return (
@@ -112,6 +138,7 @@ export function HeroSection() {
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
   const eyebrow = landing?.eyebrow;
+  const [device, setDevice] = useState<Device>("desktop");
 
   const samples = config.patterns.dataGrid ? (content.dataGrid?.sampleRecords?.length ?? 0) : 0;
   const offers = listings ? listingCards(listings, content.listings).slice(0, 3) : [];
@@ -121,6 +148,10 @@ export function HeroSection() {
 
   const background = hero.src && hero.placement === "background" ? hero.src : null;
   const object = hero.src && hero.placement === "object" ? hero.src : null;
+  const icons = Array.from(new Set((landing?.features ?? []).flatMap((f) => (f.icon ? [f.icon] : []))));
+  // The title bar's date, like a dated concept: the month this document was built in.
+  const built = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date());
+  const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
 
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
@@ -133,9 +164,10 @@ export function HeroSection() {
         )}
       >
         {/* Each child enters in turn on load (.editorial-enter, nth-child delays); the group
-            drifts up and fades as the page scrolls away (.editorial-hero-copy). */}
+            drifts up and fades as the page scrolls away (.editorial-hero-copy). The floating
+            tiles come last, so the delays of the four pieces of copy stay where they are. */}
         <div
-          className={cn("editorial-hero-copy flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
+          className={cn("editorial-hero-copy relative flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
           style={background ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
@@ -162,6 +194,7 @@ export function HeroSection() {
               {config.appName}
             </span>
           )}
+          {!object && <FloatingTiles icons={icons} />}
         </div>
 
         {object && <HeroObject src={object} />}
@@ -170,18 +203,36 @@ export function HeroSection() {
       {hasFrame && (
         <div className="mx-auto w-full max-w-6xl px-4">
           {/* The fold cuts the frame: the mask fades it into the page below. It rises on
-              load and tilts flat as the first scroll brings it up (.editorial-frame). */}
-          <div className="editorial-fold editorial-enter relative mt-14 h-[20rem] overflow-clip sm:mt-16 sm:h-[24rem]">
-            <div data-hero-frame className="editorial-frame mx-auto w-full max-w-4xl rounded-t-3xl">
-              <div className="flex items-center gap-1.5 px-4 py-3">
+              load and tilts flat as the first scroll brings it up (.editorial-frame); the
+              device switcher narrows it to a tablet or a phone (data-device). */}
+          <div data-device={device} className="editorial-fold editorial-enter relative mt-14 overflow-clip sm:mt-16">
+            <div data-hero-frame data-device={device} className="editorial-frame mx-auto w-full rounded-t-3xl">
+              <div className="editorial-frame-bar flex items-center gap-1.5 px-4 py-2">
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
-                <span data-app-name className="ml-2 text-xs font-medium text-muted-foreground">
+                <span data-app-name className="ml-2 truncate text-xs font-medium text-muted-foreground">
                   {config.appName}
                 </span>
+                <span data-frame-meta suppressHydrationWarning className="ml-auto hidden shrink-0 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:inline">
+                  {built}
+                </span>
+                <div data-device-tabs role="tablist" aria-label={t("deviceLabel")} className="editorial-device-tabs ml-3 hidden shrink-0 sm:flex">
+                  {DEVICES.map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      role="tab"
+                      aria-selected={device === d}
+                      onClick={() => setDevice(d)}
+                      className="editorial-device-tab"
+                    >
+                      {deviceLabel[d]}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="px-3 pb-3 sm:px-4 sm:pb-4">{kind === "preview" ? <ProductPreview /> : <HeroOffers cards={offers} />}</div>
+              <div className="editorial-frame-screen px-3 pb-3 sm:px-4 sm:pb-4">{kind === "preview" ? <ProductPreview /> : <HeroOffers cards={offers} />}</div>
             </div>
           </div>
         </div>

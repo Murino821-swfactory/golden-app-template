@@ -81,6 +81,10 @@ export const PRESENTATIONS = ["editorial", "story", "document"] as const;
 export type Presentation = (typeof PRESENTATIONS)[number];
 export const DEFAULT_PRESENTATION: Presentation = "editorial";
 
+/** The two typographic voices of the editorial page (PR D, 2026-10-26): light is the default. */
+export const TONES = ["light", "bold"] as const;
+export type Tone = (typeof TONES)[number];
+
 /** The faces a prototype may open in: `@tokenwise/shared-ui`'s cycle, as a closed enum. */
 const FONT_CHOICES = [...FONT_IDS] as [FontId, ...FontId[]];
 
@@ -309,6 +313,10 @@ export const PATTERN_SCHEMAS = {
       .enum(FONT_CHOICES)
       .optional()
       .describe("The typeface a first-time visitor sees; they can switch later. Choose by the idea's character: outfit, montserrat, space-grotesk or plus-jakarta-sans (geometric) for tech, SaaS and tools; inter or source-sans-3 (humanist) for services, advice and anything formal; nunito or varela-round (rounded) for family, leisure, pets and wellbeing; lexend (technical) for data, finance and operations; archivo-black (industrial display) for sport, events and bold brands. Omit for inter."),
+    tone: z
+      .enum(TONES)
+      .optional()
+      .describe("The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud."),
   }),
   dashboard: z.object({
     kpis: z

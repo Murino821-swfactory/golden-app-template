@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowUpRight } from "lucide-react";
@@ -9,15 +8,13 @@ import { useContent } from "@/hooks/use-content";
 import { landingActionHref } from "@/lib/landing-action";
 import { localePath } from "@/lib/locale-routing";
 import { config } from "@/lib/prototype-config";
+import { BrandMark } from "./brand-mark";
 import { DISPLAY_H2 } from "./ui";
 
 /**
- * The closing band, then the name of the app as large as the page — the reference landings
- * end the same way. The wordmark stays whole above the footer and dissolves at its foot; it
- * is decoration (`aria-hidden`), because the footer under it names the app for everyone.
- * Its size follows the name's length (`--editorial-chars`), so a long name fits the width
- * instead of being cut at the edge, and wraps on a phone when even the smallest size would
- * not. Label and destination come from the `cta` pattern, as in the shared section.
+ * The closing band, then the brand block "Built by TOKENWISE" (`brand-mark.tsx`) whole
+ * above the footer — the reference landings end on their own letters the same way. Label
+ * and destination of the band's action come from the `cta` pattern, as in the shared section.
  */
 export function CtaSection() {
   const t = useTranslations("cta");
@@ -41,14 +38,7 @@ export function CtaSection() {
           </Button>
         )}
       </div>
-      <p
-        data-wordmark
-        aria-hidden="true"
-        className="editorial-wordmark"
-        style={{ "--editorial-chars": Math.max(config.appName.length, 4) } as CSSProperties}
-      >
-        {config.appName}
-      </p>
+      <BrandMark />
     </section>
   );
 }
