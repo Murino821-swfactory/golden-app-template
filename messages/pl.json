@@ -163,7 +163,8 @@
     "reply": "Odpowiedz",
     "back": "Wróć do przeglądu",
     "regarding": "Dotyczy: {title}",
-    "call": "Zadzwoń"
+    "call": "Zadzwoń",
+    "idea": "Pomysł z czatu"
   },
   "howItWorks": {
     "title": "Jak to działa"
@@ -258,5 +259,35 @@
   "footer": {
     "generatedBy": "Wygenerowane przez Tokenwise AI",
     "builtBy": "Stworzone przez"
+  },
+  "showcase": {
+    "label": "Więcej aplikacji od tokenwise",
+    "kinds": {
+      "factory-web": "Ta strona",
+      "gitpulse-studio": "Marketing dla deweloperów",
+      "wellnesspodhajska": "Ośrodek",
+      "wismeo": "Inwestowanie w nieruchomości",
+      "law-expert": "Kancelaria prawna",
+      "gameday": "Drużyny sportowe",
+      "collectibles": "Kolekcjonerzy",
+      "propcheck": "Dane o nieruchomościach",
+      "cv-matcher": "Rekrutacja"
+    }
+  },
+  "ideaChat": {
+    "open": "Zaproponuj ulepszenie",
+    "title": "Ulepsz tę aplikację",
+    "greeting": "Chcesz ulepszyć tę aplikację? Czekam na Twój pomysł.",
+    "notConfigured": "Czat wysyła pomysły w opublikowanej aplikacji, nie w tym podglądzie.",
+    "ideaLabel": "Twój pomysł",
+    "placeholder": "Co ta aplikacja powinna robić lepiej?",
+    "hint": "Co najmniej 10 znaków.",
+    "email": "E-mail (opcjonalnie) — do odpowiedzi właściciela",
+    "send": "Wyślij pomysł",
+    "sending": "Wysyłanie…",
+    "sent": "Dziękuję! Twój pomysł jest teraz zadaniem na pulpicie właściciela aplikacji.",
+    "error": "Coś poszło nie tak. Spróbuj ponownie.",
+    "tooMany": "Zbyt wiele pomysłów w krótkim czasie. Spróbuj ponownie za godzinę.",
+    "close": "Zamknij"
   }
 }

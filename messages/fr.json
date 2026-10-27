@@ -163,7 +163,8 @@
     "reply": "Répondre",
     "back": "Retour au tableau de bord",
     "regarding": "Objet : {title}",
-    "call": "Appeler"
+    "call": "Appeler",
+    "idea": "Idée du chat"
   },
   "howItWorks": {
     "title": "Comment ça marche"
@@ -258,5 +259,35 @@
   "footer": {
     "generatedBy": "Généré par Tokenwise AI",
     "builtBy": "Créé par"
+  },
+  "showcase": {
+    "label": "D'autres applications créées par tokenwise",
+    "kinds": {
+      "factory-web": "Ce site",
+      "gitpulse-studio": "Marketing pour développeurs",
+      "wellnesspodhajska": "Station thermale",
+      "wismeo": "Investissement immobilier",
+      "law-expert": "Cabinet d'avocats",
+      "gameday": "Équipes sportives",
+      "collectibles": "Collectionneurs",
+      "propcheck": "Données immobilières",
+      "cv-matcher": "Recrutement"
+    }
+  },
+  "ideaChat": {
+    "open": "Proposer une amélioration",
+    "title": "Améliorer cette application",
+    "greeting": "Envie d'améliorer cette application ? J'ai hâte de découvrir votre idée.",
+    "notConfigured": "Le chat envoie les idées depuis l'application publiée, pas depuis cet aperçu.",
+    "ideaLabel": "Votre idée",
+    "placeholder": "Que devrait mieux faire cette application ?",
+    "hint": "Au moins 10 caractères.",
+    "email": "E-mail (facultatif) — pour la réponse du propriétaire",
+    "send": "Envoyer l'idée",
+    "sending": "Envoi…",
+    "sent": "Merci ! Votre idée est maintenant une tâche sur le tableau de bord du propriétaire.",
+    "error": "L'envoi a échoué. Veuillez réessayer.",
+    "tooMany": "Trop d'idées en peu de temps. Réessayez dans une heure.",
+    "close": "Fermer"
   }
 }
