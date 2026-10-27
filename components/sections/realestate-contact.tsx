@@ -17,7 +17,11 @@ import { cardIsEmpty, fullName, mapsHref, telHref, websiteHref, websiteText, typ
 import { cn } from "@/lib/utils";
 import { DISPLAY_H2, DisplayText, Eyebrow, Glow, PillButton, SECTION } from "./realestate-landing-ui";
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "submitting" | "success" | "error" | "tooMany";
+
+/** The server's bounds (factory-web `validatePrototypeContact`), as the template form enforces them. */
+const MESSAGE_MIN = 10;
+const MESSAGE_MAX = 5000;
 
 /**
  * This prototype's contact section: the template's `contact.tsx` — the same form, the
@@ -143,6 +147,10 @@ export function RealEstateContact() {
         }),
       });
       const body = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+      if (res.status === 429) {
+        setStatus("tooMany");
+        return;
+      }
       if (!res.ok || !body?.ok) throw new Error(`prototype-contact responded ${res.status}`);
       selectInquiry(null);
       setStatus("success");
@@ -232,7 +240,25 @@ export function RealEstateContact() {
                     <label htmlFor="contact-message" className={LABEL}>
                       {t("message")}
                     </label>
-                    <textarea id="contact-message" name="message" rows={4} required className={cn(FIELD, "min-h-28 resize-y")} value={message} onChange={(event) => setMessage(event.target.value)} />
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      rows={4}
+                      required
+                      maxLength={MESSAGE_MAX}
+                      aria-describedby="contact-message-hint"
+                      className={cn(FIELD, "min-h-28 resize-y")}
+                      value={message}
+                      onChange={(event) => {
+                        // The server counts the trimmed text, so plain minLength would pass padding.
+                        const next = event.target.value;
+                        event.target.setCustomValidity(next && next.trim().length < MESSAGE_MIN ? t("messageHint") : "");
+                        setMessage(next);
+                      }}
+                    />
+                    <p id="contact-message-hint" className="text-xs text-muted-foreground">
+                      {t("messageHint")}
+                    </p>
                   </div>
 
                   {/* Honeypot. A bot that fills every input in the DOM fills this one; a sighted
@@ -248,9 +274,9 @@ export function RealEstateContact() {
                   </div>
                 </fieldset>
 
-                {status === "error" && (
+                {(status === "error" || status === "tooMany") && (
                   <p className="text-sm text-destructive" role="alert">
-                    {t("error")}
+                    {t(status === "tooMany" ? "errorTooMany" : "error")}
                   </p>
                 )}
 
