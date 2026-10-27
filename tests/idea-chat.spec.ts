@@ -57,7 +57,9 @@ test.describe("idea chat — the floating chatbot", () => {
     await send.click();
     await expect(dialog.locator('[data-idea-bubble="you"]')).toHaveText(IDEA);
     await expect(dialog.locator('[data-idea-bubble="bot"]').last()).toHaveText(copy.sent!);
-    expect(body).toMatchObject({ slug, idea: IDEA, page: "/" });
+    // The page the visitor was on, as the browser has it — `/newapp/<slug>/` on a published
+    // prototype (the VM's smoke serves it there too), `/` in CI.
+    expect(body).toMatchObject({ slug, idea: IDEA, page: new URL(page.url()).pathname });
   });
 });
 
