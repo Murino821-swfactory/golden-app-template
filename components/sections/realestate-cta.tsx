@@ -55,7 +55,7 @@ export function RealEstateCta() {
           ))}
         </div>
       </div>
-      <section data-section="cta" className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+      <section id="cta" data-section="cta" className="scroll-mt-24 mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
       <div className="grid overflow-hidden rounded-3xl bg-secondary ring-1 ring-foreground/10 sm:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`${BASE_PATH}/images/keys-handover-800.webp`} srcSet={`${BASE_PATH}/images/keys-handover-800.webp 800w, ${BASE_PATH}/images/keys-handover.webp 1024w`} sizes="(min-width: 640px) 40vw, 100vw" alt="" decoding="async" loading="lazy" className="aspect-square w-full object-cover sm:h-full" />
