@@ -12,9 +12,11 @@
     "landing": {
       "sections": [
         "hero",
-        "faq"
-      ],
-      "presentation": "document"
+        "features",
+        "howItWorks",
+        "faq",
+        "cta"
+      ]
     },
     "cta": {
       "href": "#book-library"
@@ -42,10 +44,57 @@
               "answer": "Only the search text when you press Search. Diary entries and answers stay on your device."
             }
           ]
+        },
+        "eyebrow": "A reading diary for young readers",
+        "manifesto": {
+          "lead": "Reading counts when you remember the story.",
+          "body": "Reading Diary asks what happened before a book joins the diary, so every entry shows real reading, and everything stays on the reader's own device."
+        },
+        "featuresHeading": "What your diary can do",
+        "features": [
+          {
+            "icon": "search",
+            "title": "Find any book",
+            "description": "Search Open Library by title or author. Only the search text leaves the device."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Show what you remember",
+            "description": "Starter books come with a reviewed quiz; any other book asks for three written story answers."
+          },
+          {
+            "icon": "book-open",
+            "title": "Your own diary",
+            "description": "Every finished story lands in your diary with your answers, ready to read again."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Stays on your device",
+            "description": "The diary lives in this browser. Download a copy whenever you like, or delete it."
+          }
+        ],
+        "howItWorks": {
+          "heading": "How does a book get into the diary?",
+          "steps": [
+            {
+              "title": "Find the book",
+              "description": "Pick a starter book or search Open Library."
+            },
+            {
+              "title": "Answer the story questions",
+              "description": "A short quiz, or three answers in your own words."
+            },
+            {
+              "title": "Keep it in your diary",
+              "description": "The entry stays on this device; download a copy any time."
+            }
+          ]
         }
       },
       "cta": {
-        "label": "Find my next entry"
+        "label": "Find my next entry",
+        "title": "Your next story is waiting.",
+        "subtitle": "Find a book and add your first entry in a few minutes."
       }
     },
     "sk": {
@@ -69,10 +118,57 @@
               "answer": "Iba hľadaný text po stlačení Hľadať. Odpovede a denník zostávajú v zariadení."
             }
           ]
+        },
+        "eyebrow": "Čitateľský denník pre žiakov",
+        "manifesto": {
+          "lead": "Čítanie sa počíta, keď si pamätáš príbeh.",
+          "body": "Čitateľský denník sa najprv opýta, čo sa v knihe stalo, až potom ju pridá. Každý záznam tak ukazuje skutočné čítanie a všetko zostáva v zariadení čitateľa."
+        },
+        "featuresHeading": "Čo tvoj denník vie",
+        "features": [
+          {
+            "icon": "search",
+            "title": "Nájdi akúkoľvek knihu",
+            "description": "Hľadaj v Open Library podľa názvu alebo autora. Zo zariadenia odíde iba hľadaný text."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Ukáž, čo si pamätáš",
+            "description": "Úvodné knihy majú overený kvíz, pri ostatných napíšeš tri odpovede o príbehu."
+          },
+          {
+            "icon": "book-open",
+            "title": "Tvoj vlastný denník",
+            "description": "Každý prečítaný príbeh pribudne do denníka aj s tvojimi odpoveďami."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Zostáva v zariadení",
+            "description": "Denník je v tomto prehliadači. Kópiu si stiahneš kedykoľvek, alebo ho vymažeš."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako sa kniha dostane do denníka?",
+          "steps": [
+            {
+              "title": "Nájdi knihu",
+              "description": "Vyber si úvodnú knihu alebo hľadaj v Open Library."
+            },
+            {
+              "title": "Odpovedz na otázky o príbehu",
+              "description": "Krátky kvíz alebo tri odpovede vlastnými slovami."
+            },
+            {
+              "title": "Ulož si ju do denníka",
+              "description": "Záznam zostane v tomto zariadení a kópiu si stiahneš kedykoľvek."
+            }
+          ]
         }
       },
       "cta": {
-        "label": "Pridať prečítanú knihu"
+        "label": "Pridať prečítanú knihu",
+        "title": "Tvoj ďalší príbeh čaká.",
+        "subtitle": "Nájdi knihu a pridaj prvý záznam za pár minút."
       }
     }
   }
