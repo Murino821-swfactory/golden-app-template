@@ -13,6 +13,7 @@ import type { EntityField } from "@/lib/prototype-config";
 export interface RecordDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCloseAutoFocus?: (event: Event) => void;
   fields: EntityField[];
   entityLabel: string;
   /** Absent = add mode. */
@@ -38,7 +39,7 @@ function initialValues(fields: EntityField[], record?: EntityRecord): Record<str
   return out;
 }
 
-export function RecordDialog({ open, onOpenChange, fields, entityLabel, record, count, onSave, onDelete }: RecordDialogProps) {
+export function RecordDialog({ open, onOpenChange, onCloseAutoFocus, fields, entityLabel, record, count, onSave, onDelete }: RecordDialogProps) {
   const t = useTranslations("dataGrid");
   const tc = useTranslations("common");
   const [values, setValues] = useState(() => initialValues(fields, record));
@@ -86,7 +87,7 @@ export function RecordDialog({ open, onOpenChange, fields, entityLabel, record, 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent closeLabel={tc("close")}>
+      <DialogContent closeLabel={tc("close")} onCloseAutoFocus={onCloseAutoFocus}>
         <DialogTitle>{record ? t("editTitle", { entity: entityLabel }) : t("addTitle", { entity: entityLabel })}</DialogTitle>
         <DialogDescription className="sr-only">{entityLabel}</DialogDescription>
         <form onSubmit={handleSubmit} className="mt-4 space-y-4" noValidate>

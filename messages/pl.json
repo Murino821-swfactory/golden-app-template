@@ -28,7 +28,11 @@
     "title": "Twoja aplikacja",
     "subtitle": "Zbudowane na Golden Stacku",
     "cta": "Zacznij",
-    "previewLabel": "Podgląd aplikacji"
+    "previewLabel": "Podgląd aplikacji",
+    "deviceLabel": "Podgląd na",
+    "deviceDesktop": "Komputer",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Telefon"
   },
   "features": {
     "title": "Funkcje",
@@ -148,6 +152,8 @@
     "slow": "To trwa dłużej — odśwież stronę"
   },
   "inbox": {
+    "markReadError": "Nie udało się oznaczyć wiadomości jako przeczytanej. Nadal jest nieprzeczytana. Spróbuj ponownie.",
+    "retryMarkRead": "Ponów oznaczenie jako przeczytane",
     "title": "Wiadomości",
     "empty": "Na razie brak wiadomości. Wiadomości z formularza kontaktowego pojawią się tutaj.",
     "ownerOnly": "Ta strona jest tylko dla właściciela prototypu.",
@@ -250,6 +256,7 @@
     "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
   },
   "footer": {
-    "generatedBy": "Wygenerowane przez Tokenwise AI"
+    "generatedBy": "Wygenerowane przez Tokenwise AI",
+    "builtBy": "Stworzone przez"
   }
 }
