@@ -434,7 +434,9 @@ details[open] .editorial-plus::before {
 .editorial-strip {
   display: grid;
   gap: 1rem;
-  margin: 4rem calc(-1 * var(--gutter)) 0;
+  /* Bleeds exactly through the section's `px-4` (1rem at every width): `--gutter` grows to
+     1.5rem from 640px, and a wider negative margin overflowed the page by 8px there. */
+  margin: 4rem -1rem 0;
   padding-block: 0.5rem;
   overflow: clip;
 }
