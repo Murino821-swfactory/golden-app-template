@@ -28,7 +28,11 @@
     "title": "Twoja aplikacja",
     "subtitle": "Zbudowane na Golden Stacku",
     "cta": "Zacznij",
-    "previewLabel": "Podgląd aplikacji"
+    "previewLabel": "Podgląd aplikacji",
+    "deviceLabel": "Podgląd na",
+    "deviceDesktop": "Komputer",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Telefon"
   },
   "features": {
     "title": "Funkcje",
@@ -59,10 +63,12 @@
     "title": "Kontakt",
     "email": "E-mail",
     "message": "Wiadomość",
+    "messageHint": "Co najmniej 10 znaków.",
     "send": "Wyślij",
     "sending": "Wysyłanie…",
     "success": "Dziękujemy — wiadomość jest w drodze. Wkrótce się odezwiemy.",
     "error": "Nie udało się wysłać wiadomości. Spróbuj ponownie.",
+    "errorTooMany": "Zbyt wiele wiadomości w krótkim czasie. Spróbuj ponownie za godzinę.",
     "notConfigured": "Formularz kontaktowy nie jest skonfigurowany w tym podglądzie.",
     "name": "Imię (opcjonalnie)",
     "ownerEdit": "Edytuj dane kontaktowe",
@@ -146,6 +152,8 @@
     "slow": "To trwa dłużej — odśwież stronę"
   },
   "inbox": {
+    "markReadError": "Nie udało się oznaczyć wiadomości jako przeczytanej. Nadal jest nieprzeczytana. Spróbuj ponownie.",
+    "retryMarkRead": "Ponów oznaczenie jako przeczytane",
     "title": "Wiadomości",
     "empty": "Na razie brak wiadomości. Wiadomości z formularza kontaktowego pojawią się tutaj.",
     "ownerOnly": "Ta strona jest tylko dla właściciela prototypu.",
@@ -248,6 +256,7 @@
     "gestureMac": "Przybliżaj mapę za pomocą ⌘ + kółko"
   },
   "footer": {
-    "generatedBy": "Wygenerowane przez Tokenwise AI"
+    "generatedBy": "Wygenerowane przez Tokenwise AI",
+    "builtBy": "Stworzone przez"
   }
 }

@@ -17,16 +17,25 @@
 
 export type HeroRole = "owner" | "admin";
 export type Generation = "idle" | "pending" | "failed";
+/**
+ * Where the image is drawn (2026-10-26): `background` — the default, and the only shape
+ * before this date — fills the hero under the words; `object` is a figure beside them, the
+ * one hero object of the editorial presentation, with no text over it to keep readable.
+ * The server decides; a value this page does not know reads as `background`.
+ */
+export type HeroPlacement = "background" | "object";
 
 export interface PublicHeroState {
   visible: boolean;
   src?: string;
+  placement?: HeroPlacement;
 }
 
 export interface HeroStatus {
   role: HeroRole;
   visible: boolean;
   src?: string;
+  placement?: HeroPlacement;
   generation: Generation;
   ownerCanGenerate: boolean;
   lastFailureCode?: string;
@@ -45,7 +54,9 @@ function isSafeSrc(value: unknown): value is string {
 export function parsePublicState(body: unknown): PublicHeroState {
   if (typeof body !== "object" || body === null) return { visible: false };
   const b = body as Record<string, unknown>;
-  if (b.visible === true && isSafeSrc(b.src)) return { visible: true, src: b.src };
+  if (b.visible === true && isSafeSrc(b.src)) {
+    return { visible: true, src: b.src, ...(b.placement === "object" ? { placement: "object" as const } : {}) };
+  }
   return { visible: false };
 }
 
@@ -63,6 +74,7 @@ export function parseStatus(body: unknown): HeroStatus | null {
   };
   if (isSafeSrc(b.src)) status.src = b.src;
   if (typeof b.lastFailureCode === "string") status.lastFailureCode = b.lastFailureCode;
+  if (b.placement === "object") status.placement = "object";
   return status;
 }
 

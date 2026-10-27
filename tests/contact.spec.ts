@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
 import { uiCopy } from "./ui-copy";
 
@@ -69,6 +69,62 @@ test.describe("contact form — no demo slug", () => {
 
     expect(requested).toBe(false);
     await expect(section.getByRole("status")).toContainText(uiCopy.contact.notConfigured!);
+  });
+});
+
+/**
+ * A configured form (every deployed prototype; the factory smoke gate builds WITH the slug).
+ * The endpoint rejects a message under 10 trimmed characters as a bare 400, which the form
+ * used to show as "something went wrong" (founder on agromapa, 2026-10-17), so the form
+ * now refuses it before any request.
+ */
+test.describe("contact form — configured", () => {
+  test.skip(!process.env.NEXT_PUBLIC_DEMO_SLUG, "no demo slug — the form is the not-configured one");
+  test.skip(!config.patterns.contactForm, "contactForm pattern not enabled in this config");
+
+  /**
+   * Every field this config's form requires, so a test reaches the behaviour it names. A
+   * property or trades prototype asks for the phone (`contactForm.phone: "required"`), and
+   * without it the browser refuses the submit itself: the rate-limit test then waited for an
+   * alert no request could produce and failed every such prototype's smoke gate (reality-psd2,
+   * OTH-303, 2026-10-17). This suite runs only with a demo slug, so the template's own CI
+   * never executes it — the factory's smoke gate is where it first runs.
+   */
+  async function fillRequired(section: Locator, message: string) {
+    await section.locator("#contact-email").fill("visitor@example.com");
+    if (config.patterns.contactForm?.phone === "required") {
+      await section.locator("#contact-phone").fill("+421 900 000 000");
+    }
+    await section.locator("#contact-message").fill(message);
+  }
+
+  test("a message shorter than the server minimum is refused without a request", async ({ page }) => {
+    let requested = false;
+    await page.route("**/api/prototype-contact", (route) => {
+      requested = true;
+      void route.fulfill({ json: { ok: true } });
+    });
+    await page.goto("./");
+    const section = page.locator('[data-section="contact"]');
+    await fillRequired(section, "test      ");
+    await expect(section.locator("#contact-message-hint")).toHaveText(uiCopy.contact.messageHint!);
+    await section.getByRole("button", { name: submitLabel, exact: true }).click();
+    expect(await section.locator("#contact-message").evaluate((el: HTMLTextAreaElement) => el.validity.valid)).toBe(false);
+    expect(requested).toBe(false);
+  });
+
+  test("a rate-limited send says so instead of a generic failure", async ({ page }) => {
+    let requested = false;
+    await page.route("**/api/prototype-contact", (route) => {
+      requested = true;
+      void route.fulfill({ status: 429, json: { error: "too many requests" } });
+    });
+    await page.goto("./");
+    const section = page.locator('[data-section="contact"]');
+    await fillRequired(section, "A question about the map data.");
+    await section.getByRole("button", { name: submitLabel, exact: true }).click();
+    await expect(section.getByRole("alert")).toHaveText(uiCopy.contact.errorTooMany!);
+    expect(requested).toBe(true);
   });
 });
 

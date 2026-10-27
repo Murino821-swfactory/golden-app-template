@@ -1,0 +1,28 @@
+{
+  "name": "@tokenwise/hex-map",
+  "version": "0.1.0",
+  "private": true,
+  "description": "H3 hexagon maps for MapLibre: cells to GeoJSON, colour scales, layer specs and area-weighted aggregation of polygon data.",
+  "license": "UNLICENSED",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "tsx --test test/*.test.ts",
+    "build:agro-land": "tsx datasets/agro-land/build.ts"
+  },
+  "dependencies": {
+    "h3-js": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/shapefile": "^0.6.4",
+    "proj4": "^2.20.2",
+    "shapefile": "^0.6.6",
+    "tsx": "^4.23.13"
+  }
+}
