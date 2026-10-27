@@ -163,7 +163,8 @@
     "reply": "Antworten",
     "back": "Zurück zur Übersicht",
     "regarding": "Betrifft: {title}",
-    "call": "Anrufen"
+    "call": "Anrufen",
+    "idea": "Idee aus dem Chat"
   },
   "howItWorks": {
     "title": "So funktioniert es"
@@ -258,5 +259,35 @@
   "footer": {
     "generatedBy": "Erstellt von Tokenwise AI",
     "builtBy": "Erstellt von"
+  },
+  "showcase": {
+    "label": "Weitere Apps von tokenwise",
+    "kinds": {
+      "factory-web": "Diese Website",
+      "gitpulse-studio": "Entwickler-Marketing",
+      "wellnesspodhajska": "Resort",
+      "wismeo": "Immobilieninvestment",
+      "law-expert": "Anwaltskanzlei",
+      "gameday": "Sportteams",
+      "collectibles": "Sammler",
+      "propcheck": "Immobiliendaten",
+      "cv-matcher": "Recruiting"
+    }
+  },
+  "ideaChat": {
+    "open": "Verbesserung vorschlagen",
+    "title": "Diese App verbessern",
+    "greeting": "Möchtest du diese App verbessern? Ich freue mich auf deine Idee.",
+    "notConfigured": "Der Chat sendet Ideen in der veröffentlichten App, nicht in dieser Vorschau.",
+    "ideaLabel": "Deine Idee",
+    "placeholder": "Was sollte diese App besser machen?",
+    "hint": "Mindestens 10 Zeichen.",
+    "email": "E-Mail (optional) — für die Antwort des Inhabers",
+    "send": "Idee senden",
+    "sending": "Wird gesendet…",
+    "sent": "Danke! Deine Idee ist jetzt eine Aufgabe im Dashboard des App-Inhabers.",
+    "error": "Beim Senden ist etwas schiefgelaufen. Bitte versuche es erneut.",
+    "tooMany": "Zu viele Ideen in kurzer Zeit. Bitte versuche es in einer Stunde erneut.",
+    "close": "Schließen"
   }
 }
