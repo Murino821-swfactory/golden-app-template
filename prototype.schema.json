@@ -250,7 +250,8 @@
                 "/",
                 "/dashboard",
                 "/login",
-                "/messages"
+                "/messages",
+                "/checkin"
               ]
             },
             {
@@ -1234,7 +1235,8 @@
                       "/",
                       "/dashboard",
                       "/login",
-                      "/messages"
+                      "/messages",
+                      "/checkin"
                     ]
                   },
                   {
