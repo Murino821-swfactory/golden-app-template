@@ -533,6 +533,13 @@ owner's inbox on the prototype as a message of `kind: "idea"` (`/messages` shows
   published app and the form is disabled (`ideaChatView`, pure, `tests/idea-chat.spec.ts`).
 - The state table is `lib/idea-chat.ts`; the component holds no logic. Texts: `ideaChat`
   in all 8 `messages/*.json`; the inbox badge `inbox.idea`.
+- **A standalone product built from this template** (own Firebase project — cv-matcher,
+  law-expert) has no demo slug and no `/api` on its host. It builds with
+  `NEXT_PUBLIC_PRODUCT_SLUG=<its key>` (`getProductSlug()` in `lib/demo-slug.ts`: the idea's
+  `slug`, the strip's own tile left out, `utm_content`) and
+  `NEXT_PUBLIC_IDEA_API=https://tokenwise.sk/api/prototype-idea` (`ideaApiUrl`; the function
+  answers CORS for any origin, the product's CSP `connect-src` must allow tokenwise.sk).
+- The strip never shows the app's own tile (`showcaseFor(slug)`).
 
 ## Firestore rules — owned by factory-web, not here
 

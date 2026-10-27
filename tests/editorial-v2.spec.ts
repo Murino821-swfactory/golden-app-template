@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
 import { existsSync } from "node:fs";
 import { BRAND_LETTERS, brandHref, stripRows } from "../lib/editorial";
-import { SHOWCASE, showcaseHref, showcaseImage } from "../lib/showcase";
+import { SHOWCASE, showcaseFor, showcaseHref, showcaseImage } from "../lib/showcase";
+import { getProductSlug } from "../lib/demo-slug";
 import { uiCopy } from "./ui-copy";
 
 /**
@@ -18,7 +19,7 @@ const copy = contentFor(config);
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 const editorial = landingPresentation(config) === "editorial";
 const tone = config.patterns.landing?.tone ?? "light";
-const slug = process.env.NEXT_PUBLIC_DEMO_SLUG || null;
+const slug = process.env.NEXT_PUBLIC_PRODUCT_SLUG || process.env.NEXT_PUBLIC_DEMO_SLUG || null;
 const icons = Array.from(new Set((copy.landing?.features ?? []).flatMap((f) => (f.icon ? [f.icon] : [])))).length;
 
 async function opacityOf(page: Page, selector: string): Promise<string[]> {
@@ -61,11 +62,12 @@ test.describe("editorial v2 — brand block, strip, devices, tiles, tone", () =>
     const strip = page.locator('[data-section="features"] [data-strip]');
     await expect(strip).toHaveCount(1);
     await expect(strip).toHaveAttribute("aria-label", uiCopy.showcase!.label!);
-    const [a, b] = stripRows(SHOWCASE);
+    const shown = showcaseFor(slug);
+    const [a, b] = stripRows(shown);
     await expect(strip.locator('[data-strip-row="a"] [data-strip-tile]')).toHaveCount(a.length * 2);
     await expect(strip.locator('[data-strip-row="b"] [data-strip-tile]')).toHaveCount(b.length * 2);
     // The first copy of a row is the accessible one; the echo is filler for the loop.
-    await expect(strip.locator("[data-showcase]")).toHaveCount(SHOWCASE.length);
+    await expect(strip.locator("[data-showcase]")).toHaveCount(shown.length);
     const echoes = strip.locator("[data-strip-echo]");
     await expect(echoes).toHaveCount(2);
     await expect(echoes.first()).toHaveAttribute("aria-hidden", "true");
@@ -79,7 +81,7 @@ test.describe("editorial v2 — brand block, strip, devices, tiles, tone", () =>
     await expect(first).toContainText("tokenwise.sk");
     const kinds = (uiCopy.showcase as unknown as { kinds: Record<string, string> }).kinds;
     await expect(first.locator(".editorial-strip-eyebrow")).toHaveText(kinds["factory-web"]!);
-    for (const item of SHOWCASE) {
+    for (const item of shown) {
       const res = await page.request.get(`.${showcaseImage("", item)}`);
       expect(res.status(), item.key).toBe(200);
       expect(res.headers()["content-type"]).toContain("image/webp");
@@ -187,6 +189,30 @@ test.describe("editorial v2 (pure)", () => {
     expect(showcaseHref(SHOWCASE[0]!, "faunatrack")).toBe("https://tokenwise.sk/?utm_source=prototype&utm_medium=showcase&utm_content=faunatrack");
     expect(showcaseHref(SHOWCASE[2]!, null)).toBe("https://wellnesspodhajska-63bcd.web.app/en?utm_source=prototype&utm_medium=showcase");
     expect(showcaseImage("/newapp/x", SHOWCASE[0]!)).toBe("/newapp/x/showcase/factory-web.webp");
+  });
+
+  test("a product never advertises itself: its own tile leaves the strip, every other stays in order", () => {
+    expect(showcaseFor(null)).toEqual(SHOWCASE);
+    expect(showcaseFor("faunatrack")).toEqual(SHOWCASE);
+    const own = showcaseFor("law-expert");
+    expect(own.map((i) => i.key)).toEqual(SHOWCASE.filter((i) => i.key !== "law-expert").map((i) => i.key));
+    expect(stripRows(own).map((r) => r.length)).toEqual([4, 4]);
+  });
+
+  test("the product slug: a standalone product's own name first, else the demo tenant's slug", () => {
+    const saved = { product: process.env.NEXT_PUBLIC_PRODUCT_SLUG, demo: process.env.NEXT_PUBLIC_DEMO_SLUG };
+    try {
+      process.env.NEXT_PUBLIC_PRODUCT_SLUG = "";
+      process.env.NEXT_PUBLIC_DEMO_SLUG = "";
+      expect(getProductSlug()).toBeNull();
+      process.env.NEXT_PUBLIC_DEMO_SLUG = "rohace";
+      expect(getProductSlug()).toBe("rohace");
+      process.env.NEXT_PUBLIC_PRODUCT_SLUG = "cv-matcher";
+      expect(getProductSlug()).toBe("cv-matcher");
+    } finally {
+      process.env.NEXT_PUBLIC_PRODUCT_SLUG = saved.product ?? "";
+      process.env.NEXT_PUBLIC_DEMO_SLUG = saved.demo ?? "";
+    }
   });
 
   test("the schema offers the tone to the content call", () => {
