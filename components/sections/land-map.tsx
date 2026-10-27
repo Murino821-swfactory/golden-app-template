@@ -262,7 +262,7 @@ export function LandMapSection() {
   }, [open, data]);
 
   return (
-    <section id="map" data-section="listings" data-land-map className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="listings" data-section="listings" data-land-map className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <h2 className="text-balance text-center text-3xl font-semibold tracking-tight">{copy.heading}</h2>
       <p className="mx-auto mt-3 max-w-2xl text-center text-muted-foreground">{copy.intro}</p>
       <p className="mx-auto mt-4 flex max-w-2xl items-start justify-center gap-2 text-center text-xs text-muted-foreground">
