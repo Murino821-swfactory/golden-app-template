@@ -5,8 +5,6 @@
 @import "@tokenwise/shared-ui/styles.css";
 /* Tailwind 4 does not scan node_modules; without this the header renders unstyled. */
 @source "../packages/shared-ui/src";
-/* This demo's landing (components/landing/*): glows, numerals, the self-drawing line. */
-@import "./landing.css";
 
 @custom-variant dark (&:is(.dark *));
 
