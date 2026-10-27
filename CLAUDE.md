@@ -19,7 +19,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
 | How the landing reads (editorial / story / document), its typeface | `prototype.config.json` → `patterns.landing.presentation` (omit = `editorial`), `patterns.landing.font` (omit = `inter`) — see "The editorial presentation" below |
 | Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
-| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the fifteen pairs and the rule) |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the twenty palettes and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
@@ -403,11 +403,14 @@ user. Spec and decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
 
-- **A prototype's header is tokenwise.sk's, 1:1 (founder decision 2026-09-28):** the
-  tokenwise.sk logo and the site's public nav (Articles … Privacy, Contact → `/?scene=9`),
-  every link absolute to `https://tokenwise.sk` — the adapter passes `siteOrigin`, because a
-  prototype is served from apps.tokenwise.sk. The palette, font, language, cart and sign-in
-  controls stay the prototype's. The app's name is in the footer and the `<title>`.
+- **A prototype's header carries tokenwise.sk's logo (founder decision 2026-09-28)**, linked
+  to `https://tokenwise.sk/`. The palette, font, language, cart and sign-in controls stay
+  the prototype's. The app's name is in the footer and the `<title>`.
+- **The site's public nav is in the footer, not the header (founder decision 2026-10-26):**
+  `components/layout/footer.tsx` renders `navFor("prototype", { siteOrigin })` (Articles …
+  Privacy, Contact → `/?scene=9`), every link absolute to tokenwise.sk, because a prototype
+  is served from apps.tokenwise.sk. The adapter `header.tsx` passes no `siteOrigin`, so the
+  bar and the phone menu carry no nav. Tests: `tests/header.spec.ts`.
 - **The controls are icons, no words (founder decision 2026-09-28, shared-ui 0.3.0):** a
   colour wheel (Change colour), `Aa` in the face on screen (font), the cart, the figure
   (Sign in). Their words live only in `aria-label` — so the `changeColourLabel`,
@@ -501,14 +504,20 @@ latent only because `deploy:production` is hosting-only here.
 
 ## Tailwind Colors (DO NOT HARDCODE)
 
-All fifteen palettes ship in every build as `html[data-scheme="<id>"]` rules
+Every palette ships in every build as `html[data-scheme="<id>"]` rules
 (`cssBlocksForAll()` in `@tokenwise/shared-ui`, rendered by `ThemeBootstrap`), and the header's **Change colour** button
 steps to the next one by writing that attribute — so a hardcoded colour is not merely
 off-brand, it is the one thing on the page that will not repaint when the visitor clicks.
 The choice persists in `localStorage`; `prototype.config.json` still decides what a
-first-time visitor sees. A palette is a two-colour pair: the darker colour is the
-background, the lighter is both text and accent (`primary` = `foreground`), so emphasis
-comes from weight, underline or a filled surface — never from a second hue.
+first-time visitor sees. A palette has two or more colours (`derivePaletteRoles`): the
+darkest is the background and the lightest the text — fifteen pairs, then five palettes of
+seven colours (2026-10-26). In a pair the text is also the accent
+(`primary` = `foreground`), so emphasis comes from weight, underline or a filled surface. A
+middle colour is the accent (`primary`, lifted toward white until it reads on a card); of
+several middles the most readable is the accent and the next the second accent `--highlight`,
+which only decoration paints — the editorial glows, the frame's lit edge and the numerals.
+Further middles stay in the data, unpainted. Never set words in `--highlight`: it is not
+checked for contrast. In a palette of two or three colours `--highlight` = `--primary`.
 
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.

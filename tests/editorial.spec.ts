@@ -262,4 +262,15 @@ test.describe("editorial (pure)", () => {
       expect(source, `${file} writes an rgb()/hsl() colour`).not.toMatch(/\b(rgb|hsl)a?\(/);
     }
   });
+
+  test("glows, the frame's edge and the numerals paint the second accent; words keep the first", () => {
+    // `--highlight` is a four-colour palette's second accent and `--primary` in every other
+    // palette, so a pair's page paints exactly as before (tests/color-schemes.spec.ts).
+    const css = readFileSync(resolve(__dirname, "../components/editorial/editorial.css"), "utf-8");
+    expect(css).toMatch(/--editorial-glow:\s*color-mix\(in oklab, var\(--highlight, var\(--primary\)\)/);
+    expect(css).toMatch(/\.editorial-numeral \{[^}]*var\(--highlight, var\(--primary\)\)/);
+    expect(css).toMatch(/\.editorial-frame::before \{[^}]*var\(--highlight, var\(--primary\)\)/);
+    // The soft glow sits under the eyebrow's words, so it stays on the readable accent.
+    expect(css).toMatch(/--editorial-glow-soft:\s*color-mix\(in oklab, var\(--primary\) 9%/);
+  });
 });
