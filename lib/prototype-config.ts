@@ -668,7 +668,7 @@ export const prototypeConfigSchema = z
   .superRefine((cfg, ctx) => {
     const sections = cfg.patterns.landing?.sections ?? [];
     const href = cfg.patterns.cta?.href;
-    if (href?.startsWith("#") && !sections.some((id) => href === `#${id}` || href === `#chapter-${id}`)) {
+    if (href?.startsWith("#") && href !== "#book-library" && !sections.some((id) => href === `#${id}` || href === `#chapter-${id}`)) {
       ctx.addIssue({
         code: "custom",
         path: ["patterns", "cta", "href"],
