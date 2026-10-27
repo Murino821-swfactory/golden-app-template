@@ -68,7 +68,7 @@ export function RealEstateCta() {
         </div>
       </div>
 
-      <section data-section="cta" className={SECTION}>
+      <section id="cta" data-section="cta" className={SECTION}>
         <div data-reveal className="relative isolate grid overflow-hidden rounded-3xl bg-card/70 ring-1 ring-foreground/10 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           <Glow className="-bottom-32 -right-24 h-[28rem] w-[28rem]" />
           {/* eslint-disable-next-line @next/next/no-img-element */}

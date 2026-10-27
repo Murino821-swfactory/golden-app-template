@@ -29,7 +29,7 @@ export function RealEstateHowItWorks() {
   if (!block) return null; // zod requires the copy whenever this section is enabled
 
   return (
-    <section data-section="howItWorks" className={cn(SECTION, "overflow-hidden")}>
+    <section id="howItWorks" data-section="howItWorks" className={cn(SECTION, "overflow-hidden")}>
       <Glow className="left-1/2 top-0 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2" />
       <div data-reveal className="mx-auto max-w-3xl text-center">
         <h2 className={DISPLAY_H2}>
@@ -61,7 +61,7 @@ export function RealEstateFeatures() {
   return (
     // The one deeper band of the page — the reference's black section — derived from the
     // palette's background, so it follows "Change colour" like everything else.
-    <section data-section="features" className="w-full bg-[color-mix(in_oklab,var(--background)_70%,black)] py-20 sm:py-28 lg:py-36">
+    <section id="features" data-section="features" className="scroll-mt-24 w-full bg-[color-mix(in_oklab,var(--background)_70%,black)] py-20 sm:py-28 lg:py-36">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         <div data-reveal className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <h2 className={cn(DISPLAY_H2, "max-w-2xl")}>
@@ -99,7 +99,7 @@ export function RealEstateUseCases() {
   const copy = useContent().useCases;
   if (!copy) return null;
   return (
-    <section data-section="useCases" className={SECTION}>
+    <section id="useCases" data-section="useCases" className={SECTION}>
       <div data-reveal className="max-w-3xl">
         <h2 className={DISPLAY_H2}>
           <DisplayText text={copy.heading} />
@@ -126,7 +126,7 @@ export function RealEstateComparison() {
   if (!copy) return null;
   const label = "text-[11px] font-semibold uppercase tracking-[0.22em]";
   return (
-    <section data-section="comparison" className={SECTION}>
+    <section id="comparison" data-section="comparison" className={SECTION}>
       <div data-reveal className="mx-auto max-w-3xl text-center">
         <h2 className={DISPLAY_H2}>
           <DisplayText text={copy.heading} />
@@ -164,7 +164,7 @@ export function RealEstateFaq() {
   if (!faq) return null; // zod requires the copy whenever this section is enabled
 
   return (
-    <section data-section="faq" className={cn(SECTION, "max-w-3xl")}>
+    <section id="faq" data-section="faq" className={cn(SECTION, "max-w-3xl")}>
       <div data-reveal className="text-center">
         <h2 className={DISPLAY_H2}>
           <DisplayText text={faq.heading ?? t("title")} />

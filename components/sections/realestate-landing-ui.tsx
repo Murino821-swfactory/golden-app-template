@@ -154,4 +154,4 @@ export const DISPLAY_H2 =
   "text-balance text-4xl font-light leading-[1.02] tracking-[-0.03em] sm:text-5xl lg:text-6xl";
 
 /** The breathing room every section of the landing keeps. */
-export const SECTION = "relative isolate mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:py-36";
+export const SECTION = "scroll-mt-24 relative isolate mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28 lg:py-36";
