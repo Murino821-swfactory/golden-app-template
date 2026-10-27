@@ -131,7 +131,7 @@ export function GameSection() {
   const over = state.status === "over";
 
   return (
-    <section data-section="game" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="game" data-section="game" className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-semibold tracking-tight">{block.heading ?? t("statsHeading")}</h2>
         {block.intro && <p className="mt-4 text-muted-foreground">{block.intro}</p>}
