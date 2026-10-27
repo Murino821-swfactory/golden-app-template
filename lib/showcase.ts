@@ -28,6 +28,11 @@ export const SHOWCASE: readonly ShowcaseItem[] = [
   { key: "cv-matcher", name: "CV Matcher", href: "https://cvmatcher.tokenwise.sk/" },
 ];
 
+/** The strip on one app: every product except the app itself — a product never advertises itself. */
+export function showcaseFor(slug: string | null): readonly ShowcaseItem[] {
+  return slug ? SHOWCASE.filter((item) => item.key !== slug) : SHOWCASE;
+}
+
 /** The picture of one product, under this build's base path. */
 export function showcaseImage(basePath: string, item: ShowcaseItem): string {
   return `${basePath}/showcase/${item.key}.webp`;
