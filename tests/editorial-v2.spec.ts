@@ -89,6 +89,16 @@ test.describe("editorial v2 — brand block, strip, devices, tiles, tone", () =>
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(await page.evaluate(() => window.innerWidth));
   });
 
+  test("the strip never widens the page: 640, 768 and 1024px, where the gutter is wider than the section's padding", async ({ page }, info) => {
+    test.skip(!sections.includes("features") || info.project.name === "mobile", "desktop viewports only");
+    for (const width of [640, 768, 1024]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("./");
+      await page.locator("[data-strip]").waitFor();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth), `${width}px`).toBeLessThanOrEqual(width);
+    }
+  });
+
   test("the strip stands still under reduced motion", async ({ page }) => {
     test.skip(!sections.includes("features"), "no strip in this config");
     await page.emulateMedia({ reducedMotion: "reduce" });
