@@ -19,7 +19,7 @@ for real estate agents and agencies. Read `docs/REALESTATE_WORKSPACE.md` first.
 | Data model, store (localStorage), actions, metrics, seed, copy (EN+SK), documents | `lib/realestate/*.ts` |
 | Views, shell, rail, UI primitives | `components/realestate/*.tsx` |
 | Routes | `app/[locale]/workspace/**` (+ `app/(default)/workspace/**` re-exports) |
-| Landing (2026-10-19, after mdx.so — `docs/REALESTATE_WORKSPACE.md` §7) | `components/sections/realestate-landing-ui.tsx` (display primitives), `realestate-hero.tsx`, `realestate-landing.tsx`, `realestate-contact.tsx`, `realestate-cta.tsx`, `components/motion/landing-reveal.tsx`, `components/layout/footer-wordmark.tsx` (registered in `app/[locale]/page.tsx`) |
+| Landing (2026-10-27: the golden template's editorial page, 1:1 like GameDay — `docs/REALESTATE_WORKSPACE.md` §7) | `components/editorial/*` (template files) for hero, features + showcase strip, how it works, FAQ, closing band; this prototype's own use cases, comparison and contact in `components/sections/realestate-{landing,contact}.tsx` + `realestate-landing-ui.tsx`, scroll reveal `components/motion/landing-reveal.tsx` (registered in `app/[locale]/page.tsx`) |
 | Hooks | `hooks/use-workspace.ts`, `hooks/use-selected.ts` |
 | Images (Gemini, static WebP) | `public/images/` |
 | Tests | `tests/realestate-logic.spec.ts`, `tests/realestate.spec.ts` |

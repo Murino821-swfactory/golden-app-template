@@ -13,24 +13,25 @@ async function fresh(page: Page, path: string) {
 }
 
 test.describe("real estate workspace", () => {
-  test("the landing opens with the rail, the dossier and both plans", async ({ page }) => {
+  // Since 2026-10-27 the landing is the golden template's editorial page (founder: "1:1 like
+  // GameDay"): the showcase strip of tokenwise's products, "Built by TOKENWISE" at the foot;
+  // the 2026-10-19 rail, dossier, plans and app-name wordmark are gone.
+  test("the landing is the golden template's editorial page", async ({ page }) => {
     await page.goto("./");
-    await expect(page.locator("[data-landing-rail] li")).toHaveCount(7);
-    await expect(page.locator("[data-hero-dossier]")).toBeVisible();
-    await expect(page.getByTestId("landing-plans").locator("article")).toHaveCount(2);
-    await expect(page.locator("[data-product-preview]")).toHaveCount(0);
+    await expect(page.locator('[data-presentation="editorial"]')).toHaveCount(1);
+    await expect(page.locator('[data-section="features"] [data-strip]')).toHaveCount(1);
+    await expect(page.locator("[data-brand-mark]")).toHaveCount(1);
+    await expect(page.locator("[data-landing-rail], [data-hero-dossier], [data-footer-wordmark]")).toHaveCount(0);
   });
 
-  // The landing's display language (2026-10-19, after mdx.so): the one hero action is a
-  // pill, the foot of the page carries the app's name large, and the scroll reveal never
-  // leaves a block hidden — after a scroll to the end every block is in, and with reduced
-  // motion nothing ever waited.
-  test("the landing wears the display design: the pill action, the wordmark, nothing left hidden", async ({ page }) => {
+  // The use cases and comparison keep the display language of 2026-10-19: the scroll reveal
+  // never leaves a block hidden — after a scroll to the end every block is in, and with
+  // reduced motion nothing ever waited.
+  test("the landing keeps one pill action and leaves nothing hidden", async ({ page }) => {
     await page.goto("./");
     const action = page.locator('[data-section="hero"] a');
     await expect(action).toHaveCount(1);
     await expect(action).toHaveCSS("border-top-left-radius", /^(?!0px)/);
-    await expect(page.getByRole("contentinfo").locator("[data-footer-wordmark]")).toHaveText("Realitný maklér");
     await page.evaluate(async () => {
       for (let y = 0; y <= document.documentElement.scrollHeight; y += 300) {
         window.scrollTo({ top: y, behavior: "instant" });
@@ -53,8 +54,7 @@ test.describe("real estate workspace", () => {
     await page.goto("./sk");
     await expect(page.getByRole("heading", { level: 1, name: "Každá ponuka, klient a obchod — od prvého dopytu po kľúče", exact: true })).toBeVisible();
     await expect(page.locator('[data-section="hero"] a')).toHaveText("Otvoriť demo priestor");
-    await expect(page.locator("[data-footer-wordmark]")).toHaveText("Realitný maklér");
-    await expect(page.locator("[data-landing-rail] li")).toHaveCount(7);
+    await expect(page.locator('[data-section="features"] [data-strip]')).toHaveCount(1);
   });
 
   test("opens on today's desk with KPIs and things that need attention", async ({ page }) => {

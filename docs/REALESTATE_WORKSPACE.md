@@ -156,7 +156,18 @@ Slovak: the same at `/sk/workspace`.
 - The template's `pricing` section remains locked for hand-written configs; if the founder
   wants prices on the landing they go into `lib/realestate/copy.ts` → `landing.plans`.
 
-## 7. Landing design (2026-10-19) — after mdx.so
+## 7. Landing design
+
+**Since 2026-10-27** (founder: the golden template's landing "1:1 like GameDay") the hero,
+features (bento, showcase strip of tokenwise's other products, manifesto), how it works, FAQ
+and closing band ("Built by TOKENWISE") are the template's editorial sections
+(`components/editorial/*`, `presentation` omitted = editorial); the eyebrow and manifesto are
+in `prototype.config.json`. Use cases, comparison and the contact form below keep the
+2026-10-19 design. The 2026-10-19 hero (dossier, rail), closing band (plans), app-name
+wordmark and their three Gemini pictures were removed; git history has them. The rest of
+this section is the record of that earlier design.
+
+### 2026-10-19 — after mdx.so (superseded in part, see above)
 
 Founder request: "edit the page after the design of https://mdx.so/". What was taken from
 the reference, and how it was fitted to the golden product rules (dark-only, one-hue
