@@ -90,7 +90,7 @@ const FONT_CHOICES = [...FONT_IDS] as [FontId, ...FontId[]];
 
 /** Public paths with a page in app/(default). Locale and base-path prefixes are
  * applied by routing, never invented by the composition model. */
-export const LANDING_CTA_ROUTES = ["/", "/dashboard", "/login", "/messages"] as const;
+export const LANDING_CTA_ROUTES = ["/", "/dashboard", "/login", "/messages", "/checkin"] as const;
 
 /** Field types the generic `data-grid` and `map-base` patterns can render. Closed enum —
  * a new type is a deliberate decision with a decision record, not a config typo. */
