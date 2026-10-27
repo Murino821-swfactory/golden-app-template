@@ -5,7 +5,7 @@ test.describe("inbox logic", () => {
   test("parseMessage: e-mail and text are required; read = readAt set", () => {
     const at = { toDate: () => new Date("2026-09-29T10:00:00Z") };
     expect(parseMessage("m1", { email: "a@b.sk", message: "Hi there!", readAt: null, createdAt: at })).toEqual({
-      id: "m1", email: "a@b.sk", message: "Hi there!", createdAt: new Date("2026-09-29T10:00:00Z"), read: false,
+      id: "m1", email: "a@b.sk", message: "Hi there!", kind: "contact", createdAt: new Date("2026-09-29T10:00:00Z"), read: false,
     });
     expect(parseMessage("m2", { email: "a@b.sk", message: "x", name: "Alex", readAt: at, createdAt: at })?.read).toBe(true);
     expect(parseMessage("m2", { email: "a@b.sk", message: "x", name: "Alex", readAt: at, createdAt: at })?.name).toBe("Alex");
@@ -14,6 +14,9 @@ test.describe("inbox logic", () => {
     const withExtras = parseMessage("m4", { email: "a@b.sk", message: "x", phone: "+421 900", listingId: "offer-1", listingTitle: "Byt", createdAt: at });
     expect(withExtras).toMatchObject({ phone: "+421 900", listing: { id: "offer-1", title: "Byt" } });
     expect(parseMessage("m5", { email: "a@b.sk", message: "x", listingId: "offer-1", createdAt: at })).not.toHaveProperty("listing");
+    // An idea from the chat (2026-10-27): kind "idea", possibly with no address at all.
+    expect(parseMessage("m6", { email: "", message: "Add a PDF export", kind: "idea", createdAt: at })).toMatchObject({ kind: "idea", email: "" });
+    expect(parseMessage("m7", { email: "a@b.sk", message: "x", kind: "nonsense", createdAt: at })?.kind).toBe("contact");
   });
   test("inboxView: not configured, checking, forbidden, ready — never a Firestore call for a stranger", () => {
     expect(inboxView({ available: false, role: undefined })).toBe("not-configured");
@@ -23,8 +26,9 @@ test.describe("inbox logic", () => {
     expect(inboxView({ available: true, role: "admin" })).toBe("ready");
   });
   test("replyHref and unreadCount", () => {
-    const msg = { id: "m", email: "lead@example.com", message: "Hi", createdAt: new Date(0), read: false };
+    const msg = { id: "m", email: "lead@example.com", message: "Hi", kind: "contact" as const, createdAt: new Date(0), read: false };
     expect(replyHref(msg, "Unbroken & Co")).toBe("mailto:lead@example.com?subject=Re%3A%20Unbroken%20%26%20Co");
+    expect(replyHref({ ...msg, email: "", kind: "idea" }, "X")).toBeNull();
     expect(unreadCount([msg, { ...msg, read: true }])).toBe(1);
   });
 });
