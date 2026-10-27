@@ -1,9 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { getDemoSlug } from "@/lib/demo-slug";
+import { getProductSlug } from "@/lib/demo-slug";
 import { stripRows } from "@/lib/editorial";
-import { SHOWCASE, showcaseHref, showcaseImage, type ShowcaseItem } from "@/lib/showcase";
+import { showcaseFor, showcaseHref, showcaseImage, type ShowcaseItem } from "@/lib/showcase";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -19,8 +19,8 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
  */
 export function ShowcaseStrip() {
   const t = useTranslations("showcase");
-  const slug = getDemoSlug();
-  const rows = stripRows(SHOWCASE);
+  const slug = getProductSlug();
+  const rows = stripRows(showcaseFor(slug));
   return (
     <div data-strip role="group" aria-label={t("label")} className="editorial-strip">
       {rows.map((row, r) => (

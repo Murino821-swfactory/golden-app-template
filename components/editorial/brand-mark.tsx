@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
-import { getDemoSlug } from "@/lib/demo-slug";
+import { getProductSlug } from "@/lib/demo-slug";
 import { BRAND_LETTERS, brandHref } from "@/lib/editorial";
 
 /**
@@ -17,7 +17,7 @@ import { BRAND_LETTERS, brandHref } from "@/lib/editorial";
 export function BrandMark() {
   const t = useTranslations("footer");
   return (
-    <a data-brand-mark href={brandHref(getDemoSlug())} target="_blank" rel="noopener noreferrer" className="editorial-brand">
+    <a data-brand-mark href={brandHref(getProductSlug())} target="_blank" rel="noopener noreferrer" className="editorial-brand">
       <span data-brand-kicker className="editorial-eyebrow">
         {t("builtBy")}
       </span>
