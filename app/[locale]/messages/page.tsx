@@ -56,6 +56,9 @@ function Inbox() {
                   {!m.read && (
                     <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-medium text-primary-foreground">{t("unread")}</span>
                   )}
+                  {m.kind === "idea" && (
+                    <span data-inbox-idea className="rounded-full border border-primary px-2 py-0.5 text-xs font-medium text-primary">{t("idea")}</span>
+                  )}
                   <span className="font-medium">{m.name ?? m.email}</span>
                   <time className="ml-auto text-xs text-muted-foreground" dateTime={m.createdAt.toISOString()}>
                     {m.createdAt.toLocaleString(locale)}
@@ -82,9 +85,11 @@ function Inbox() {
                     <p data-inbox-listing className="text-sm font-medium">{t("regarding", { title: m.listing.title })}</p>
                   )}
                   <p className="whitespace-pre-wrap text-sm">{m.message}</p>
-                  <Button asChild variant="outline" className="h-11">
-                    <a href={replyHref(m, config.appName)}>{t("reply")}</a>
-                  </Button>
+                  {replyHref(m, config.appName) && (
+                    <Button asChild variant="outline" className="h-11">
+                      <a href={replyHref(m, config.appName)!}>{t("reply")}</a>
+                    </Button>
+                  )}
                 </div>
               </details>
             </li>
