@@ -163,7 +163,8 @@
     "reply": "Válasz",
     "back": "Vissza az áttekintéshez",
     "regarding": "Tárgy: {title}",
-    "call": "Hívás"
+    "call": "Hívás",
+    "idea": "Ötlet a chatből"
   },
   "howItWorks": {
     "title": "Így működik"
@@ -258,5 +259,35 @@
   "footer": {
     "generatedBy": "A Tokenwise AI által generálva",
     "builtBy": "Készítette"
+  },
+  "showcase": {
+    "label": "További tokenwise-alkalmazások",
+    "kinds": {
+      "factory-web": "Ez az oldal",
+      "gitpulse-studio": "Fejlesztői marketing",
+      "wellnesspodhajska": "Üdülőhely",
+      "wismeo": "Ingatlanbefektetés",
+      "law-expert": "Ügyvédi iroda",
+      "gameday": "Sportcsapatok",
+      "collectibles": "Gyűjtők",
+      "propcheck": "Ingatlanadatok",
+      "cv-matcher": "Toborzás"
+    }
+  },
+  "ideaChat": {
+    "open": "Fejlesztés javaslása",
+    "title": "Az alkalmazás fejlesztése",
+    "greeting": "Szeretnéd jobbá tenni ezt az alkalmazást? Várom az ötletedet.",
+    "notConfigured": "A chat a közzétett alkalmazásban küld ötleteket, ebben az előnézetben nem.",
+    "ideaLabel": "Az ötleted",
+    "placeholder": "Mit kellene ennek az alkalmazásnak jobban csinálnia?",
+    "hint": "Legalább 10 karakter.",
+    "email": "E-mail (nem kötelező) — a tulajdonos válaszához",
+    "send": "Ötlet küldése",
+    "sending": "Küldés…",
+    "sent": "Köszönöm! Az ötleted most már feladat az alkalmazás tulajdonosának irányítópultján.",
+    "error": "A küldés nem sikerült. Próbáld újra.",
+    "tooMany": "Túl sok ötlet rövid idő alatt. Próbáld újra egy óra múlva.",
+    "close": "Bezárás"
   }
 }
