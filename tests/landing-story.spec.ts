@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
-import { config } from "../lib/prototype-config";
+import { config, landingPresentation } from "../lib/prototype-config";
 
 const sections = config.patterns.landing?.sections ?? [];
-const stageEnabled = sections.length > 1 && config.patterns.landing?.presentation !== "document";
+// The stage is the `story` presentation's alone; editorial (the default) and document are long pages.
+const stageEnabled = sections.length > 1 && landingPresentation(config) === "story";
 
 test("native scroll changes chapters while the stage stays in place", async ({ page }, info) => {
   test.skip(!stageEnabled || info.project.name === "mobile", "desktop enhancement only");

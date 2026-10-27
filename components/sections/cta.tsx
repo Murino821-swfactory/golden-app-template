@@ -21,8 +21,8 @@ export function CtaSection() {
 
   return (
     <section
-      data-section="cta"
-      className="mx-auto w-full max-w-5xl px-4 py-16 text-center sm:py-24"
+      id="cta" data-section="cta"
+      className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 text-center sm:py-24"
     >
       <div className="rounded-2xl bg-secondary px-6 py-12">
         <h2 className="text-3xl font-semibold tracking-tight">{copy?.title ?? t("title")}</h2>

@@ -9,6 +9,7 @@ import {
   fetchPublicHeroState,
   parseStatus,
   postHeroAction,
+  type HeroPlacement,
   type HeroStatus,
   type PublicHeroState,
 } from "@/lib/hero-image";
@@ -25,6 +26,8 @@ const ACTIONS_AVAILABLE = BASE_PATH.startsWith("/newapp/");
 export interface UseHeroImage {
   /** The image to paint behind the hero, if any. */
   src: string | null;
+  /** Where `src` is drawn: under the words, or as an object beside them (editorial hero). */
+  placement: HeroPlacement;
   /** Present only for the prototype's creator or the founder. */
   status: HeroStatus | null;
   timedOut: boolean;
@@ -157,5 +160,7 @@ export function useHeroImage(): UseHeroImage {
       ? publicState.src
       : null;
 
-  return { src, status: current, timedOut, working, generate, setVisible };
+  const placement: HeroPlacement = (current ? current.placement : publicState.placement) ?? "background";
+
+  return { src, placement, status: current, timedOut, working, generate, setVisible };
 }
