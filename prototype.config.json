@@ -133,7 +133,9 @@
         "title": "Today's Check-In"
       },
       "cta": {
-        "label": "Start your first check-in"
+        "label": "Start your first check-in",
+        "title": "Start a streak that survives a bad day.",
+        "subtitle": "Your first check-in takes under ten seconds."
       },
       "contactForm": {
         "heading": "Get in touch",
