@@ -56,6 +56,8 @@ keeps the device copy. Research and decisions: sw-factory
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
+| Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
 
 ## Critical Rules for Fast Implementation
@@ -516,6 +518,29 @@ in the **sw-factory** repo.
 - A rewrite changes `content` only. `dataGrid.sampleRecords` are example DATA and are never
   rewritten; `appName`, `patterns`, the theme and the languages never change.
 
+## Idea chat (2026-10-27)
+
+A floating launcher (`[data-idea-launcher]`, bottom right, every page — mounted in
+`app/shell.tsx`) opens a chat whose first line is "Want to improve this app? I'm looking
+forward to your idea." The visitor writes the idea (and optionally an e-mail), and the
+server files it as a task on the OWNER's dashboard: factory-web `prototypeIdea`
+(`POST /api/prototype-idea`, site root, anonymous, same honeypot and rate limits as the
+contact form) — the founder's board (`tasks`, project `golden-app-template`) for the golden
+demo (slug `golden`), the portal project's `issues` for an adopted prototype, else the
+owner's inbox on the prototype as a message of `kind: "idea"` (`/messages` shows the badge).
+
+- No request before the visitor sends; without a slug the bot says the chat works on the
+  published app and the form is disabled (`ideaChatView`, pure, `tests/idea-chat.spec.ts`).
+- The state table is `lib/idea-chat.ts`; the component holds no logic. Texts: `ideaChat`
+  in all 8 `messages/*.json`; the inbox badge `inbox.idea`.
+- **A standalone product built from this template** (own Firebase project — cv-matcher,
+  law-expert) has no demo slug and no `/api` on its host. It builds with
+  `NEXT_PUBLIC_PRODUCT_SLUG=<its key>` (`getProductSlug()` in `lib/demo-slug.ts`: the idea's
+  `slug`, the strip's own tile left out, `utm_content`) and
+  `NEXT_PUBLIC_IDEA_API=https://tokenwise.sk/api/prototype-idea` (`ideaApiUrl`; the function
+  answers CORS for any origin, the product's CSP `connect-src` must allow tokenwise.sk).
+- The strip never shows the app's own tile (`showcaseFor(slug)`).
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -659,12 +684,14 @@ copy contract, same `data-section` markers — the suites that read the page kee
 - **Second round (PR D, 2026-10-26)**: the page closes on **"Built by TOKENWISE"**
   (`components/editorial/brand-mark.tsx`: one link to tokenwise.sk with `utm_content=<slug>`,
   the kicker is chrome `footer.builtBy`, the nine letters are decoration in
-  `--shared-font-display`) — the app's name is no longer set as a wordmark. The **concept
-  strip** (`strip.tsx`, inside features): two rows of the product's own tiles looping in
-  opposite directions (`conceptTilesFor`: offers → records → KPIs → features → questions, at
-  most ten, none under four; real screens from `_preview/screens.json` when the pipeline
-  published them — `lib/screens.ts`, static `public/_preview/screens.json` = `{"screens":[]}`
-  so sandbox and CI get a 200), `aria-hidden`, no links, no `svg`. The **device switcher** on
+  `--shared-font-display`) — the app's name is no longer set as a wordmark. The **showcase
+  strip** (`strip.tsx`, inside features; founder 2026-10-27, replaced the product's own
+  concept tiles): two rows of tokenwise's nine live products looping in opposite directions —
+  a FIXED element on every prototype, an advertisement for the factory's other work.
+  `lib/showcase.ts` lists them, `public/showcase/<key>.webp` (640 × 400) ships the pictures,
+  the kinds are chrome (`showcase.kinds` in all 8 bundles); the tiles are links tagged
+  `utm_medium=showcase`, the first copy of a row accessible, the echo `aria-hidden`; no `svg`.
+  The **device switcher** on
   the hero frame (`data-device`: desktop / tablet / phone; chrome `landing.device*`; the frame
   narrows and rounds, the offers reflow through a container query; hidden under 640 px) and a
   dated title bar. **Floating icon tiles** (`[data-floating-tile]`, up to four feature icons,

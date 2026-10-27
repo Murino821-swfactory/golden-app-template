@@ -1,6 +1,8 @@
 {
   "appName": "Unbroken",
-  "locales": ["en"],
+  "locales": [
+    "en"
+  ],
   "defaultLocale": "en",
   "theme": {
     "colorScheme": "yellow"
@@ -10,6 +12,7 @@
       "sections": [
         "hero",
         "features",
+        "howItWorks",
         "faq",
         "cta",
         "contact"
@@ -102,13 +105,37 @@
               "answer": "Yes. You can add a daily reminder to your calendar and share a streak card with the people keeping you accountable, so checking in becomes part of your routine."
             }
           ]
+        },
+        "eyebrow": "Daily habits for busy people",
+        "manifesto": {
+          "lead": "Progress is a habit, not a perfect record.",
+          "body": "Unbroken counts the days you showed up, not the one you missed. Five taps a day keep work, fitness, mind, relationships and habits in balance, and a shield covers the day life gets in the way."
+        },
+        "howItWorks": {
+          "heading": "How does a day with Unbroken look?",
+          "steps": [
+            {
+              "title": "Tap your five pillars",
+              "description": "Yes or no for Work, Fitness, Mind, Relationships and Habits: the whole day in under ten seconds."
+            },
+            {
+              "title": "Earn XP and shields",
+              "description": "Every tap earns XP, and seven days in a row earn a shield that covers a missed day."
+            },
+            {
+              "title": "Keep it going",
+              "description": "Share your streak card, set a calendar reminder and pick up the same streak on another device."
+            }
+          ]
         }
       },
       "dashboard": {
         "title": "Today's Check-In"
       },
       "cta": {
-        "label": "Start your first check-in"
+        "label": "Start your first check-in",
+        "title": "Start a streak that survives a bad day.",
+        "subtitle": "Your first check-in takes under ten seconds."
       },
       "contactForm": {
         "heading": "Get in touch",
