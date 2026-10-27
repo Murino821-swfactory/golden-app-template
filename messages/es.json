@@ -163,7 +163,8 @@
     "reply": "Responder",
     "back": "Volver al panel",
     "regarding": "Sobre: {title}",
-    "call": "Llamar"
+    "call": "Llamar",
+    "idea": "Idea del chat"
   },
   "howItWorks": {
     "title": "Cómo funciona"
@@ -258,5 +259,35 @@
   "footer": {
     "generatedBy": "Generado por Tokenwise AI",
     "builtBy": "Creado por"
+  },
+  "showcase": {
+    "label": "Más aplicaciones creadas por tokenwise",
+    "kinds": {
+      "factory-web": "Este sitio",
+      "gitpulse-studio": "Marketing para desarrolladores",
+      "wellnesspodhajska": "Resort",
+      "wismeo": "Inversión inmobiliaria",
+      "law-expert": "Despacho de abogados",
+      "gameday": "Equipos deportivos",
+      "collectibles": "Coleccionistas",
+      "propcheck": "Datos inmobiliarios",
+      "cv-matcher": "Selección de personal"
+    }
+  },
+  "ideaChat": {
+    "open": "Proponer una mejora",
+    "title": "Mejorar esta aplicación",
+    "greeting": "¿Quieres mejorar esta aplicación? Estoy deseando conocer tu idea.",
+    "notConfigured": "El chat envía ideas desde la aplicación publicada, no desde esta vista previa.",
+    "ideaLabel": "Tu idea",
+    "placeholder": "¿Qué debería hacer mejor esta aplicación?",
+    "hint": "Al menos 10 caracteres.",
+    "email": "Correo (opcional) — para la respuesta del propietario",
+    "send": "Enviar idea",
+    "sending": "Enviando…",
+    "sent": "¡Gracias! Tu idea ya es una tarea en el panel del propietario de la aplicación.",
+    "error": "Algo salió mal al enviar. Inténtalo de nuevo.",
+    "tooMany": "Demasiadas ideas en poco tiempo. Inténtalo de nuevo en una hora.",
+    "close": "Cerrar"
   }
 }
