@@ -28,7 +28,11 @@
     "title": "Vaša aplikácia",
     "subtitle": "Postavené na Golden Stacku",
     "cta": "Začať",
-    "previewLabel": "Ukážka aplikácie"
+    "previewLabel": "Ukážka aplikácie",
+    "deviceLabel": "Náhľad na",
+    "deviceDesktop": "Počítač",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Mobil"
   },
   "features": {
     "title": "Funkcie",
@@ -59,10 +63,12 @@
     "title": "Kontakt",
     "email": "E-mail",
     "message": "Správa",
+    "messageHint": "Aspoň 10 znakov.",
     "send": "Odoslať",
     "sending": "Odosiela sa…",
     "success": "Ďakujeme — vaša správa je na ceste. Čoskoro sa vám ozveme.",
     "error": "Správu sa nepodarilo odoslať. Skúste to znova.",
+    "errorTooMany": "Príliš veľa správ za krátky čas. Skúste to znova o hodinu.",
     "notConfigured": "Kontaktný formulár nie je v tomto náhľade nastavený.",
     "name": "Meno (nepovinné)",
     "ownerEdit": "Upraviť kontaktné údaje",
@@ -146,6 +152,8 @@
     "slow": "Trvá to dlhšie — obnov stránku"
   },
   "inbox": {
+    "markReadError": "Správu sa nepodarilo označiť ako prečítanú. Stále je neprečítaná. Skúste to znova.",
+    "retryMarkRead": "Znova označiť ako prečítané",
     "title": "Správy",
     "empty": "Zatiaľ žiadne správy. Správy z kontaktného formulára sa zobrazia tu.",
     "ownerOnly": "Táto stránka je len pre vlastníka prototypu.",
@@ -262,6 +270,7 @@
     "seconds": "{count} s"
   },
   "footer": {
-    "generatedBy": "Vytvorené pomocou Tokenwise AI"
+    "generatedBy": "Vytvorené pomocou Tokenwise AI",
+    "builtBy": "Vytvorilo"
   }
 }

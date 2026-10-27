@@ -28,7 +28,7 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
-import { COLOR_SCHEME_IDS, LEGACY_SCHEME_IDS } from "@tokenwise/shared-ui/theming";
+import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */
@@ -70,6 +70,28 @@ export const SECTION_IDS = [
 ] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
+
+/**
+ * How the landing reads (2026-10-26, sw-factory decision "premium prototype design").
+ * `editorial` — the default — is one long page in the order of the sections, set in display
+ * typography, with the product itself in a lit frame and scroll-driven motion; `story`
+ * keeps a desktop stage in place while chapters enter on native scroll; `document` is the
+ * plain long page without choreography. A config that names none reads as `editorial`.
+ */
+export const PRESENTATIONS = ["editorial", "story", "document"] as const;
+export type Presentation = (typeof PRESENTATIONS)[number];
+export const DEFAULT_PRESENTATION: Presentation = "editorial";
+
+/** The two typographic voices of the editorial page (PR D, 2026-10-26): light is the default. */
+export const TONES = ["light", "bold"] as const;
+export type Tone = (typeof TONES)[number];
+
+/** The faces a prototype may open in: `@tokenwise/shared-ui`'s cycle, as a closed enum. */
+const FONT_CHOICES = [...FONT_IDS] as [FontId, ...FontId[]];
+
+/** Public paths with a page in app/(default). Locale and base-path prefixes are
+ * applied by routing, never invented by the composition model. */
+export const LANDING_CTA_ROUTES = ["/", "/dashboard", "/login", "/messages"] as const;
 
 /** Field types the generic `data-grid` and `map-base` patterns can render. Closed enum —
  * a new type is a deliberate decision with a decision record, not a config typo. */
@@ -284,7 +306,18 @@ export function listingCopyIssues(listings: ListingsPattern, copy: ListingsCopy 
 export const PATTERN_SCHEMAS = {
   landing: z.object({
     sections: z.array(z.enum(SECTION_IDS)).min(1),
-    presentation: z.enum(["story", "document"]).optional().describe("Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages."),
+    presentation: z
+      .enum(PRESENTATIONS)
+      .optional()
+      .describe("How the page reads. Omit for editorial (the default): one long page with display typography, the product in a lit frame and scroll-driven motion. story keeps a desktop stage in place while chapters enter on native scroll. document is the plain long page. Mobile, reduced motion and no JavaScript always read a long page."),
+    font: z
+      .enum(FONT_CHOICES)
+      .optional()
+      .describe("The typeface a first-time visitor sees; they can switch later. Choose by the idea's character: outfit, montserrat, space-grotesk or plus-jakarta-sans (geometric) for tech, SaaS and tools; inter or source-sans-3 (humanist) for services, advice and anything formal; nunito or varela-round (rounded) for family, leisure, pets and wellbeing; lexend (technical) for data, finance and operations; archivo-black (industrial display) for sport, events and bold brands. Omit for inter."),
+    tone: z
+      .enum(TONES)
+      .optional()
+      .describe("The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud."),
   }),
   dashboard: z.object({
     kpis: z
@@ -299,11 +332,15 @@ export const PATTERN_SCHEMAS = {
   /** Nothing to configure — Google sign-in is the same everywhere by design. */
   authGoogle: z.object({}),
   cta: z.object({
-    href: z.string().min(1).describe(
-      "Use an existing destination: /login with authGoogle, /dashboard with dashboard, " +
-      "#contact when contact is a landing section, or #chapter-<section> for a rendered " +
-      "landing section (for example #chapter-features). Never invent /app, /signup, " +
-      "#start, download routes, or features not present in the template."
+    href: z.union([
+      z.enum(LANDING_CTA_ROUTES),
+      z.string().regex(/^#[a-zA-Z][a-zA-Z0-9-]*$/),
+      z.url({ protocol: /^https?$/ }),
+    ]).describe(
+      "Use an exported destination: /, /login, /dashboard or /messages; prefer /login " +
+      "with authGoogle and /dashboard with dashboard. A #<section> or #chapter-<section> " +
+      "anchor must name a rendered landing section (for example #features or #chapter-features). " +
+      "Absolute HTTP(S) URLs are allowed. Never invent /app, /signup, #start or download routes."
     ),
   }),
   contactForm: z.object({
@@ -444,6 +481,16 @@ export const CONTENT_SCHEMAS = {
      * the sections fall back to `messages/*.json` placeholders for local dev. */
     headline: z.string().min(1).optional(),
     subheadline: z.string().min(1).optional(),
+    eyebrow: z
+      .string().min(1).max(40).optional()
+      .describe("Two to five words in a small pill above the headline: the product's category or promise, e.g. 'Fleet tracking for small depots'. Never the app's name (it is shown elsewhere), never a sentence."),
+    manifesto: z
+      .object({
+        lead: z.string().min(1).max(90).describe("The claim, in one short sentence."),
+        body: z.string().min(1).max(280).describe("One or two sentences that explain the claim, in the customer's words."),
+      })
+      .optional()
+      .describe("What the product stands for, set large after the features and lit up word by word as the visitor scrolls. No hype adjectives, no invented facts."),
     features: z.array(featureSchema).min(1).max(6).optional(),
     featuresHeading: z
       .string().min(1).max(60).optional()
@@ -630,6 +677,14 @@ export const prototypeConfigSchema = z
   })
   .superRefine((cfg, ctx) => {
     const sections = cfg.patterns.landing?.sections ?? [];
+    const href = cfg.patterns.cta?.href;
+    if (href?.startsWith("#") && !sections.some((id) => href === `#${id}` || href === `#chapter-${id}`)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["patterns", "cta", "href"],
+        message: "CTA anchor must name a rendered landing section id or chapter-<section> id",
+      });
+    }
     if (new Set(sections).size !== sections.length) {
       ctx.addIssue({ code: "custom", path: ["patterns", "landing", "sections"], message: "Landing sections must be unique" });
     }
@@ -996,6 +1051,11 @@ export function contentFor(
   locale: string = cfg.defaultLocale
 ): LocaleContent {
   return cfg.content[locale] ?? cfg.content[cfg.defaultLocale]!;
+}
+
+/** The presentation this config reads in — `editorial` unless it names another. Pure. */
+export function landingPresentation(cfg: Pick<PrototypeConfig, "patterns">): Presentation {
+  return cfg.patterns.landing?.presentation ?? DEFAULT_PRESENTATION;
 }
 
 /** True when the customer enabled this pattern. Presence of the structure slice IS the switch. */

@@ -28,7 +28,11 @@
     "title": "Az Ön alkalmazása",
     "subtitle": "A Golden Stackre építve",
     "cta": "Kezdés",
-    "previewLabel": "Alkalmazás előnézete"
+    "previewLabel": "Alkalmazás előnézete",
+    "deviceLabel": "Előnézet",
+    "deviceDesktop": "Számítógép",
+    "deviceTablet": "Tablet",
+    "devicePhone": "Telefon"
   },
   "features": {
     "title": "Funkciók",
@@ -59,10 +63,12 @@
     "title": "Kapcsolat",
     "email": "E-mail",
     "message": "Üzenet",
+    "messageHint": "Legalább 10 karakter.",
     "send": "Küldés",
     "sending": "Küldés folyamatban…",
     "success": "Köszönjük — az üzenete úton van. Hamarosan jelentkezünk.",
     "error": "Az üzenet küldése nem sikerült. Kérjük, próbálja újra.",
+    "errorTooMany": "Túl sok üzenet rövid idő alatt. Próbálja újra egy óra múlva.",
     "notConfigured": "A kapcsolatfelvételi űrlap nincs beállítva ebben az előnézetben.",
     "name": "Név (nem kötelező)",
     "ownerEdit": "Kapcsolati adatok szerkesztése",
@@ -146,6 +152,8 @@
     "slow": "Ez tovább tart – töltsd újra az oldalt"
   },
   "inbox": {
+    "markReadError": "Nem sikerült olvasottként megjelölni az üzenetet. Továbbra is olvasatlan. Próbálja újra.",
+    "retryMarkRead": "Megjelölés újra olvasottként",
     "title": "Üzenetek",
     "empty": "Még nincs üzenet. A kapcsolatfelvételi űrlapon küldött üzenetek itt jelennek meg.",
     "ownerOnly": "Ez az oldal csak a prototípus tulajdonosának szól.",
@@ -262,6 +270,7 @@
     "seconds": "{count} mp"
   },
   "footer": {
-    "generatedBy": "A Tokenwise AI által generálva"
+    "generatedBy": "A Tokenwise AI által generálva",
+    "builtBy": "Készítette"
   }
 }

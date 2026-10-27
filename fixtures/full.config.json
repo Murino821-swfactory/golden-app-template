@@ -20,7 +20,8 @@
         "listings",
         "contact",
         "cta"
-      ]
+      ],
+      "font": "outfit"
     },
     "dashboard": {
       "kpis": [
@@ -201,6 +202,11 @@
               "answer": "Yes. Open it from the list and edit any field."
             }
           ]
+        },
+        "eyebrow": "Fleet tracking for small depots",
+        "manifesto": {
+          "lead": "Every route on one map, for the whole team.",
+          "body": "Register a route once and the dispatch desk, the drivers and the office all see the same picture, on any phone."
         }
       },
       "dashboard": {
@@ -343,6 +349,11 @@
               "answer": "Áno. Otvorte ju v zozname a upravte ľubovoľné pole."
             }
           ]
+        },
+        "eyebrow": "Sledovanie vozidiel pre malé depá",
+        "manifesto": {
+          "lead": "Každá trasa na jednej mape, pre celý tím.",
+          "body": "Trasu zapíšete raz a dispečing, vodiči aj kancelária vidia ten istý obraz, na každom telefóne."
         }
       },
       "dashboard": {
