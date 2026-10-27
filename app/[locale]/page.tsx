@@ -1,14 +1,11 @@
 import { type ComponentType } from "react";
-import { RealEstateHero } from "@/components/sections/realestate-hero";
-import { RealEstateCta } from "@/components/sections/realestate-cta";
+import { HeroSection } from "@/components/sections/hero";
+import { FeaturesSection } from "@/components/sections/features";
+import { HowItWorksSection } from "@/components/sections/how-it-works";
+import { FaqSection } from "@/components/sections/faq";
+import { CtaSection } from "@/components/sections/cta";
 import { RealEstateContact } from "@/components/sections/realestate-contact";
-import {
-  RealEstateComparison,
-  RealEstateFaq,
-  RealEstateFeatures,
-  RealEstateHowItWorks,
-  RealEstateUseCases,
-} from "@/components/sections/realestate-landing";
+import { RealEstateComparison, RealEstateUseCases } from "@/components/sections/realestate-landing";
 import { LandingReveal } from "@/components/motion/landing-reveal";
 import { PricingSection } from "@/components/sections/pricing";
 import { TestimonialsSection } from "@/components/sections/testimonials";
@@ -27,19 +24,19 @@ import { EDITORIAL_SECTIONS } from "@/components/editorial/registry";
 // thing that decides what renders here.
 const SECTIONS: string[] = config.patterns.landing?.sections ?? [];
 
-// realitny-makler: every rendered section is this prototype's own, set in the landing's
-// display language after mdx.so (2026-10-19, `components/sections/realestate-*.tsx`); the
-// template's files stay untouched so a refresh merges clean. The sections this config
-// does not render keep the template's components, so the registry stays complete.
+// realitny-makler: since 2026-10-27 the landing is the golden template's editorial page
+// (hero, features with the showcase strip, how it works, FAQ, closing band — founder: "1:1
+// like GameDay"). Use cases, comparison and the contact form stay this prototype's own,
+// in the display language of 2026-10-19 (`components/sections/realestate-*.tsx`).
 const SECTION_REGISTRY: Record<string, ComponentType> = {
-  hero: RealEstateHero,
-  features: RealEstateFeatures,
-  howItWorks: RealEstateHowItWorks,
+  hero: HeroSection,
+  features: FeaturesSection,
+  howItWorks: HowItWorksSection,
   pricing: PricingSection,
   testimonials: TestimonialsSection,
-  faq: RealEstateFaq,
+  faq: FaqSection,
   contact: RealEstateContact,
-  cta: RealEstateCta,
+  cta: CtaSection,
   useCases: RealEstateUseCases,
   comparison: RealEstateComparison,
   listings: ListingsSection,
