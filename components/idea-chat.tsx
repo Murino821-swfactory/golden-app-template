@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { getDemoSlug } from "@/lib/demo-slug";
+import { getProductSlug } from "@/lib/demo-slug";
 import { IDEA_MAX, ideaChatView, ideaPayload, postIdea, validateIdea, type IdeaStatus } from "@/lib/idea-chat";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
  */
 export function IdeaChat() {
   const t = useTranslations("ideaChat");
-  const slug = getDemoSlug();
+  const slug = getProductSlug();
   const [open, setOpen] = useState(false);
   const [idea, setIdea] = useState("");
   const [email, setEmail] = useState("");

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { IDEA_API, IDEA_MAX, IDEA_MIN, ideaChatView, ideaPayload, validateIdea } from "../lib/idea-chat";
+import { IDEA_API, IDEA_MAX, IDEA_MIN, ideaApiUrl, ideaChatView, ideaPayload, validateIdea } from "../lib/idea-chat";
 import { uiCopy } from "./ui-copy";
 
 /**
@@ -10,7 +10,7 @@ import { uiCopy } from "./ui-copy";
  * CI) says so instead of pretending.
  */
 
-const slug = process.env.NEXT_PUBLIC_DEMO_SLUG || null;
+const slug = process.env.NEXT_PUBLIC_PRODUCT_SLUG || process.env.NEXT_PUBLIC_DEMO_SLUG || null;
 const copy = uiCopy.ideaChat!;
 const IDEA = "Add a monthly PDF export of my records, with the totals at the top.";
 
@@ -77,6 +77,12 @@ test.describe("idea chat (pure)", () => {
     expect(ideaChatView({ slug: "x", status: "sent", ideaValid: true })).toEqual({ bot: "sent", canType: false, canSend: false });
     expect(ideaChatView({ slug: "x", status: "error", ideaValid: true })).toEqual({ bot: "error", canType: true, canSend: true });
     expect(ideaChatView({ slug: "x", status: "tooMany", ideaValid: true })).toEqual({ bot: "tooMany", canType: true, canSend: false });
+  });
+
+  test("ideaApiUrl: the site root's API on a prototype; a standalone product names tokenwise.sk's", () => {
+    expect(ideaApiUrl(undefined)).toBe(IDEA_API);
+    expect(ideaApiUrl("")).toBe(IDEA_API);
+    expect(ideaApiUrl("https://tokenwise.sk/api/prototype-idea")).toBe("https://tokenwise.sk/api/prototype-idea");
   });
 
   test("ideaPayload: trimmed, the e-mail only when given, the page always", () => {
