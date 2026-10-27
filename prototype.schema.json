@@ -153,11 +153,36 @@
           }
         },
         "presentation": {
-          "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+          "description": "How the page reads. Omit for editorial (the default): one long page with display typography, the product in a lit frame and scroll-driven motion. story keeps a desktop stage in place while chapters enter on native scroll. document is the plain long page. Mobile, reduced motion and no JavaScript always read a long page.",
           "type": "string",
           "enum": [
+            "editorial",
             "story",
             "document"
+          ]
+        },
+        "font": {
+          "description": "The typeface a first-time visitor sees; they can switch later. Choose by the idea's character: outfit, montserrat, space-grotesk or plus-jakarta-sans (geometric) for tech, SaaS and tools; inter or source-sans-3 (humanist) for services, advice and anything formal; nunito or varela-round (rounded) for family, leisure, pets and wellbeing; lexend (technical) for data, finance and operations; archivo-black (industrial display) for sport, events and bold brands. Omit for inter.",
+          "type": "string",
+          "enum": [
+            "outfit",
+            "inter",
+            "nunito",
+            "lexend",
+            "archivo-black",
+            "montserrat",
+            "varela-round",
+            "space-grotesk",
+            "plus-jakarta-sans",
+            "source-sans-3"
+          ]
+        },
+        "tone": {
+          "description": "The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud.",
+          "type": "string",
+          "enum": [
+            "light",
+            "bold"
           ]
         }
       },
@@ -218,9 +243,26 @@
       "type": "object",
       "properties": {
         "href": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Use an existing destination: /login with authGoogle, /dashboard with dashboard, #contact when contact is a landing section, or #chapter-<section> for a rendered landing section (for example #chapter-features). Never invent /app, /signup, #start, download routes, or features not present in the template."
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "/",
+                "/dashboard",
+                "/login",
+                "/messages"
+              ]
+            },
+            {
+              "type": "string",
+              "pattern": "^#[a-zA-Z][a-zA-Z0-9-]*$"
+            },
+            {
+              "type": "string",
+              "format": "uri"
+            }
+          ],
+          "description": "Use an exported destination: /, /login, /dashboard or /messages; prefer /login with authGoogle and /dashboard with dashboard. A #<section> or #chapter-<section> anchor must name a rendered landing section (for example #features or #chapter-features). Absolute HTTP(S) URLs are allowed. Never invent /app, /signup, #start or download routes."
         }
       },
       "required": [
@@ -605,6 +647,34 @@
         "subheadline": {
           "type": "string",
           "minLength": 1
+        },
+        "eyebrow": {
+          "description": "Two to five words in a small pill above the headline: the product's category or promise, e.g. 'Fleet tracking for small depots'. Never the app's name (it is shown elsewhere), never a sentence.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "manifesto": {
+          "description": "What the product stands for, set large after the features and lit up word by word as the visitor scrolls. No hype adjectives, no invented facts.",
+          "type": "object",
+          "properties": {
+            "lead": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 90,
+              "description": "The claim, in one short sentence."
+            },
+            "body": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 280,
+              "description": "One or two sentences that explain the claim, in the customer's words."
+            }
+          },
+          "required": [
+            "lead",
+            "body"
+          ]
         },
         "features": {
           "minItems": 1,
@@ -1030,7 +1100,12 @@
               "chartreuse-pastel-deep-teal-green",
               "ice-blue-ocean-blue",
               "honey-tan-jet-black",
-              "burnt-orange-vanilla"
+              "burnt-orange-vanilla",
+              "deep-sea-blues",
+              "lime-lagoon",
+              "peacock-amber",
+              "mulled-spice",
+              "black-gold"
             ]
           }
         },
@@ -1065,11 +1140,36 @@
                 }
               },
               "presentation": {
-                "description": "Story keeps a desktop stage in place while chapters enter on native scroll. Mobile, reduced motion and no JavaScript use a document. Omit for story; choose document for long-form pages.",
+                "description": "How the page reads. Omit for editorial (the default): one long page with display typography, the product in a lit frame and scroll-driven motion. story keeps a desktop stage in place while chapters enter on native scroll. document is the plain long page. Mobile, reduced motion and no JavaScript always read a long page.",
                 "type": "string",
                 "enum": [
+                  "editorial",
                   "story",
                   "document"
+                ]
+              },
+              "font": {
+                "description": "The typeface a first-time visitor sees; they can switch later. Choose by the idea's character: outfit, montserrat, space-grotesk or plus-jakarta-sans (geometric) for tech, SaaS and tools; inter or source-sans-3 (humanist) for services, advice and anything formal; nunito or varela-round (rounded) for family, leisure, pets and wellbeing; lexend (technical) for data, finance and operations; archivo-black (industrial display) for sport, events and bold brands. Omit for inter.",
+                "type": "string",
+                "enum": [
+                  "outfit",
+                  "inter",
+                  "nunito",
+                  "lexend",
+                  "archivo-black",
+                  "montserrat",
+                  "varela-round",
+                  "space-grotesk",
+                  "plus-jakarta-sans",
+                  "source-sans-3"
+                ]
+              },
+              "tone": {
+                "description": "The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud.",
+                "type": "string",
+                "enum": [
+                  "light",
+                  "bold"
                 ]
               }
             },
@@ -1127,9 +1227,26 @@
             "type": "object",
             "properties": {
               "href": {
-                "type": "string",
-                "minLength": 1,
-                "description": "Use an existing destination: /login with authGoogle, /dashboard with dashboard, #contact when contact is a landing section, or #chapter-<section> for a rendered landing section (for example #chapter-features). Never invent /app, /signup, #start, download routes, or features not present in the template."
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "/",
+                      "/dashboard",
+                      "/login",
+                      "/messages"
+                    ]
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "^#[a-zA-Z][a-zA-Z0-9-]*$"
+                  },
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                ],
+                "description": "Use an exported destination: /, /login, /dashboard or /messages; prefer /login with authGoogle and /dashboard with dashboard. A #<section> or #chapter-<section> anchor must name a rendered landing section (for example #features or #chapter-features). Absolute HTTP(S) URLs are allowed. Never invent /app, /signup, #start or download routes."
               }
             },
             "required": [
@@ -1410,6 +1527,34 @@
                 "subheadline": {
                   "type": "string",
                   "minLength": 1
+                },
+                "eyebrow": {
+                  "description": "Two to five words in a small pill above the headline: the product's category or promise, e.g. 'Fleet tracking for small depots'. Never the app's name (it is shown elsewhere), never a sentence.",
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "manifesto": {
+                  "description": "What the product stands for, set large after the features and lit up word by word as the visitor scrolls. No hype adjectives, no invented facts.",
+                  "type": "object",
+                  "properties": {
+                    "lead": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 90,
+                      "description": "The claim, in one short sentence."
+                    },
+                    "body": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 280,
+                      "description": "One or two sentences that explain the claim, in the customer's words."
+                    }
+                  },
+                  "required": [
+                    "lead",
+                    "body"
+                  ]
                 },
                 "features": {
                   "minItems": 1,

@@ -6,7 +6,7 @@ export function UseCasesSection() {
   const copy = useContent().useCases;
   if (!copy) return null;
   return (
-    <section data-section="useCases" className="mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
+    <section id="useCases" data-section="useCases" className="scroll-mt-24 mx-auto w-full max-w-5xl px-4 py-16 sm:py-24">
       <h2 className="text-balance text-center text-3xl font-semibold tracking-tight">{copy.heading}</h2>
       <ol className="mt-10 grid gap-4 sm:grid-cols-2">
         {copy.items.map((item, i) => (
