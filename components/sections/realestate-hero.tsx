@@ -61,7 +61,7 @@ export function RealEstateHero() {
   const hero = useHeroImage();
 
   return (
-    <section data-section="hero" className="relative isolate w-full overflow-hidden">
+    <section id="hero" data-section="hero" className="scroll-mt-24 relative isolate w-full overflow-hidden">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         {hero.src ? (
           <GeneratedBackground key={hero.src} src={hero.src} />
