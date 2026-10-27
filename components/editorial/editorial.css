@@ -7,7 +7,9 @@
  *
  * Every colour is a palette token (`--primary`, `--background`, `--card`, `--border`, …)
  * mixed with `color-mix`, so "Change colour" in the header repaints all of it and no hue is
- * written here (`tests/editorial.spec.ts` greps for one). Motion is scroll-driven CSS
+ * written here (`tests/editorial.spec.ts` greps for one). Glows, the frame's lit edge and the
+ * numerals take `--highlight`, a four-colour palette's second accent — `--primary` in every
+ * other palette — so words and the action stay on the accent that is checked for contrast. Motion is scroll-driven CSS
  * (`animation-timeline`) behind `@supports` and `prefers-reduced-motion`: a browser without
  * it, or a reader who asked for calm, gets the finished state at once. No JavaScript.
  *
@@ -17,7 +19,7 @@
 
 /* ── Tokens derived from the palette ─────────────────────────────────────────────── */
 [data-presentation="editorial"] {
-  --editorial-glow: color-mix(in oklab, var(--primary) 22%, transparent);
+  --editorial-glow: color-mix(in oklab, var(--highlight, var(--primary)) 22%, transparent);
   --editorial-glow-soft: color-mix(in oklab, var(--primary) 9%, transparent);
   --editorial-void: color-mix(in oklab, var(--background) 72%, black);
   --editorial-hairline: color-mix(in oklab, var(--primary) 35%, transparent);
@@ -73,7 +75,7 @@
   line-height: 1;
   letter-spacing: -0.05em;
   font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--primary) 28%, transparent);
+  color: color-mix(in oklab, var(--highlight, var(--primary)) 28%, transparent);
 }
 
 /* ── The one action: a pill that leans in on hover ───────────────────────────────── */
@@ -279,8 +281,8 @@
   inset: -1px 10% auto;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(to right, transparent, var(--primary), transparent);
-  filter: drop-shadow(0 0 8px var(--primary));
+  background: linear-gradient(to right, transparent, var(--primary), var(--highlight, var(--primary)), transparent);
+  filter: drop-shadow(0 0 8px var(--highlight, var(--primary)));
 }
 .editorial-object::before {
   content: "";
