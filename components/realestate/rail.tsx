@@ -70,27 +70,3 @@ export function DealRail({ deal, onJump, compact, className }: { deal: Deal; onJ
     </ol>
   );
 }
-
-/** The landing's version: seven stations with words, lit in sequence on load. */
-export function LandingRail({ labels, caption }: { labels: string[]; caption: string }) {
-  return (
-    <figure data-landing-rail className="w-full">
-      <ol className="grid" style={{ gridTemplateColumns: `repeat(${labels.length}, minmax(0, 1fr))` }}>
-        {labels.map((label, i) => (
-          <li key={label} className="relative flex flex-col items-center text-center">
-            {i > 0 && <span aria-hidden className="rail-track absolute left-0 right-1/2 top-[11px] h-0.5 bg-foreground/15" style={{ animationDelay: `${i * 160 - 80}ms` }} />}
-            {i < labels.length - 1 && <span aria-hidden className="rail-track absolute left-1/2 right-0 top-[11px] h-0.5 bg-foreground/15" style={{ animationDelay: `${i * 160 + 80}ms` }} />}
-            <span aria-hidden className="rail-station relative z-10 flex size-6 items-center justify-center rounded-full bg-foreground/15 ring-4 ring-background" style={{ animationDelay: `${i * 160}ms` }}>
-              <span className="size-2 rounded-full bg-background" />
-            </span>
-            <span className="mt-2 hidden text-[11px] font-medium leading-tight text-muted-foreground sm:block sm:text-xs">{label}</span>
-          </li>
-        ))}
-      </ol>
-      <figcaption className="mt-3 text-center text-xs text-muted-foreground">
-        <span className="block sm:hidden">{labels.join(" → ")}</span>
-        <span className="block">{caption}</span>
-      </figcaption>
-    </figure>
-  );
-}

@@ -228,33 +228,6 @@
   [data-story-navigation] { display: none; }
 }
 
-/* The landing's rail lights up station by station on load — one orchestrated moment,
-   nothing else on the page moves. Reduced motion shows the finished state. */
-@keyframes rail-station-on {
-  from { background-color: color-mix(in oklab, var(--foreground) 15%, transparent); transform: scale(0.85); }
-  to { background-color: var(--foreground); transform: scale(1); }
-}
-@keyframes rail-track-on {
-  from { background-color: color-mix(in oklab, var(--foreground) 15%, transparent); }
-  to { background-color: color-mix(in oklab, var(--foreground) 70%, transparent); }
-}
-[data-landing-rail] .rail-station {
-  animation: rail-station-on 420ms ease-out both;
-}
-[data-landing-rail] .rail-track {
-  animation: rail-track-on 320ms ease-out both;
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-landing-rail] .rail-station,
-  [data-landing-rail] .rail-track {
-    animation: none;
-    background-color: var(--foreground);
-  }
-  [data-landing-rail] .rail-track {
-    background-color: color-mix(in oklab, var(--foreground) 70%, transparent);
-  }
-}
-
 /* Print is paper, not a theme: dark surfaces waste ink and light text vanishes on white.
    `:root[data-scheme]` (0,2,0) outranks the palette rules `html[data-scheme="x"]` (0,1,1).
    The site chrome, the workspace navigation and every drawer control stay off the page;
@@ -277,19 +250,11 @@
   }
 }
 
-/* The landing's motion (2026-10-19, after mdx.so). The hero fades in on load — opacity
-   only, so nothing the hero-image gate measures ever moves — and every block further down
-   waits a little below its place until scrolled to (`components/motion/landing-reveal.tsx`
+/* The use cases' and comparison's motion (2026-10-19, after mdx.so): every block waits a
+   little below its place until scrolled to (`components/motion/landing-reveal.tsx`
    marks it `pending`, then `in`). Without JavaScript, with reduced motion or already on
    screen at hydration, a block carries neither state and is simply visible. */
 @media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-  [data-hero-fade] {
-    animation: hero-fade 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    animation-delay: var(--hero-delay, 0ms);
-  }
   [data-reveal="pending"] {
     opacity: 0;
     transform: translateY(28px);
@@ -299,13 +264,5 @@
       opacity 900ms cubic-bezier(0.2, 0.7, 0.2, 1),
       transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
     transition-delay: calc(var(--reveal-delay, 0) * 90ms);
-  }
-}
-@keyframes hero-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }

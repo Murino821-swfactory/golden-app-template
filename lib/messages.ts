@@ -1,4 +1,5 @@
-/** The owner's inbox — contact-form messages stored by factory-web `prototypeContact`. Pure. */
+/** The owner's inbox — contact-form messages stored by factory-web `prototypeContact`, and the
+ * ideas the chat files for an unadopted prototype (`prototypeIdea`, `kind: "idea"`). Pure. */
 import type { OwnerRole } from "./owner-contact";
 
 export interface InboxMessage {
@@ -9,6 +10,8 @@ export interface InboxMessage {
   /** The offer (pattern `listings`) the visitor asked about, as it was titled when sent. */
   listing?: { id: string; title: string };
   message: string;
+  /** `idea` = filed by the idea chat; the e-mail may then be empty. */
+  kind: "contact" | "idea";
   createdAt: Date;
   read: boolean;
 }
@@ -28,6 +31,7 @@ export function parseMessage(id: string, data: Record<string, unknown>): InboxMe
       ? { listing: { id: data.listingId, title: data.listingTitle } }
       : {}),
     message: data.message,
+    kind: data.kind === "idea" ? "idea" : "contact",
     createdAt: created && typeof created.toDate === "function" ? created.toDate() : new Date(0),
     read: Boolean(readAt),
   };
@@ -42,7 +46,8 @@ export function inboxView({ available, role }: { available: boolean; role: Owner
   return role ? "ready" : "forbidden";
 }
 
+/** null when the sender left no address (an idea from the chat). */
 export const replyHref = (msg: InboxMessage, appName: string) =>
-  `mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${appName}`)}`;
+  msg.email ? `mailto:${msg.email}?subject=${encodeURIComponent(`Re: ${appName}`)}` : null;
 
 export const unreadCount = (messages: readonly InboxMessage[]) => messages.filter((m) => !m.read).length;

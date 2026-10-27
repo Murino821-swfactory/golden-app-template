@@ -12,15 +12,14 @@
     "landing": {
       "sections": [
         "hero",
-        "howItWorks",
         "features",
         "useCases",
         "comparison",
+        "howItWorks",
         "faq",
         "contact",
         "cta"
-      ],
-      "presentation": "document"
+      ]
     },
     "authGoogle": {},
     "dashboard": {},
@@ -121,6 +120,11 @@
               "answer": "They are demo drafts filled with the deal's data, in Slovak and English, meant to show the flow. Every contract must be reviewed by a lawyer before signing."
             }
           ]
+        },
+        "eyebrow": "CRM for real estate agents",
+        "manifesto": {
+          "lead": "A deal is a rail, not a pile of e-mails.",
+          "body": "Every listing, client and contract sits on one desk, and each station of a sale or a lease has its checklist, so nothing is forgotten between the first inquiry and the keys."
         }
       },
       "dashboard": {
@@ -277,6 +281,11 @@
               "answer": "Sú to demo návrhy vyplnené dátami obchodu, v slovenčine aj angličtine, ktoré ukazujú tok. Každú zmluvu musí pred podpisom skontrolovať advokát."
             }
           ]
+        },
+        "eyebrow": "CRM pre realitných maklérov",
+        "manifesto": {
+          "lead": "Obchod je koľaj, nie kopa e-mailov.",
+          "body": "Každá ponuka, klient a zmluva sú na jednom stole a každá stanica predaja či prenájmu má svoj kontrolný zoznam, takže od prvého dopytu po kľúče sa na nič nezabudne."
         }
       },
       "dashboard": {
