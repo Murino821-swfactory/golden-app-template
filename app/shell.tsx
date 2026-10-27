@@ -63,13 +63,14 @@ export async function PrototypeShell({
     // write rather than a rebuild. `data-scheme` starts on the palette the customer picked
     // in the wizard — that is what a first-time visitor sees — and the bootstrap script
     // below overrides it only for a visitor who chose differently on this device.
-    // `data-font` works the same way: `inter` for every first visit, the visitor's pick
-    // after that.
+    // `data-font` works the same way: the face the config names for this prototype
+    // (`patterns.landing.font`, 2026-10-26) — `inter` when it names none — for every first
+    // visit, the visitor's pick after that.
     <html
       lang={locale}
       className={cn("font-sans", "dark")}
       data-scheme={config.theme.colorScheme}
-      data-font="inter"
+      data-font={config.patterns.landing?.font ?? "inter"}
       // ThemeBootstrap rewrites data-scheme / data-font before React hydrates; the
       // mismatch is the point, not a bug.
       suppressHydrationWarning

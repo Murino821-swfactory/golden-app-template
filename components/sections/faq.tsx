@@ -13,7 +13,7 @@ export function FaqSection() {
   if (!faq) return null; // zod requires the copy whenever this section is enabled
 
   return (
-    <section data-section="faq" className="mx-auto w-full max-w-3xl px-4 py-16 sm:py-24">
+    <section id="faq" data-section="faq" className="scroll-mt-24 mx-auto w-full max-w-3xl px-4 py-16 sm:py-24">
       <h2 className="text-center text-3xl font-semibold tracking-tight">{faq.heading ?? t("title")}</h2>
       <div className="mt-8 divide-y divide-border rounded-lg border border-border">
         {faq.items.map((item, i) => (

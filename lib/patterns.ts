@@ -32,6 +32,22 @@ export const PATTERN_IMPLEMENTATIONS: Record<PatternId, readonly string[]> = {
     "components/sections/product-preview.tsx",
     "components/sections/how-it-works.tsx",
     "lib/faq-jsonld.ts",
+    // The editorial presentation (default since 2026-10-26): the same sections, laid out as
+    // one long page in display typography. Rules in lib/editorial.ts, styles beside them.
+    "components/editorial/registry.ts",
+    "components/editorial/editorial.css",
+    "components/editorial/ui.tsx",
+    "components/editorial/hero.tsx",
+    "components/editorial/features.tsx",
+    "components/editorial/how-it-works.tsx",
+    "components/editorial/faq.tsx",
+    "components/editorial/cta.tsx",
+    "components/editorial/brand-mark.tsx",
+    "components/editorial/strip.tsx",
+    "lib/editorial.ts",
+    "lib/screens.ts",
+    "hooks/use-screens.ts",
+    "public/_preview/screens.json",
   ],
   dashboard: ["app/[locale]/dashboard/page.tsx", "components/dashboard/stats.tsx", "lib/kpi.ts"],
   authGoogle: [
