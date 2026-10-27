@@ -18,8 +18,7 @@
         "faq",
         "contact",
         "cta"
-      ],
-      "presentation": "document"
+      ]
     },
     "listings": {
       "categories": [
@@ -272,6 +271,11 @@
               "answer": "Yes. We have family suites for up to four guests and can recommend trails and activities suited to children of different ages."
             }
           ]
+        },
+        "eyebrow": "Mountain stays in the Western Tatras",
+        "manifesto": {
+          "lead": "Less planning, more mountains.",
+          "body": "Rooms, wellness and guided trails sit in one place, so you choose your stay in minutes and spend the rest of the time outdoors in the Roháče valley."
         }
       },
       "listings": {
@@ -475,6 +479,11 @@
               "answer": "Tak. Dysponujemy apartamentami rodzinnymi dla do czterech osób i możemy polecić szlaki oraz aktywności dostosowane do dzieci w różnym wieku."
             }
           ]
+        },
+        "eyebrow": "Górski wypoczynek w Tatrach Zachodnich",
+        "manifesto": {
+          "lead": "Mniej planowania, więcej gór.",
+          "body": "Pokoje, wellness i wycieczki z przewodnikiem są w jednym miejscu, więc wybierasz pobyt w kilka minut, a resztę czasu spędzasz w dolinie Roháče."
         }
       },
       "listings": {
