@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
-import { HERO_VIDEO, type HeroVideo } from "@/lib/hero-video";
 import { cn } from "@/lib/utils";
 import { HeroImageControls } from "./hero-image-controls";
 import { CopyRewriteControls } from "./copy-rewrite-panel";
@@ -54,35 +53,6 @@ function HeroBackground({ src }: { src: string }) {
   );
 }
 
-/** The demo's looping video (`lib/hero-video.ts`); the poster stays when it cannot play. */
-function HeroVideoBackground({ video, poster }: { video: HeroVideo; poster: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    el.play().catch(() => undefined);
-  }, []);
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-      <video
-        ref={ref}
-        data-hero-video
-        poster={poster}
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        className="h-full w-full object-cover"
-      >
-        {video.sources.map((s) => (
-          <source key={s.src} src={s.src} type={s.type} media={s.media} />
-        ))}
-      </video>
-      <div className="absolute inset-0" style={{ background: heroOverlayBackground() }} />
-    </div>
-  );
-}
-
 export function HeroSection() {
   const t = useTranslations("landing");
   const content = useContent();
@@ -95,11 +65,7 @@ export function HeroSection() {
 
   return (
     <section id="hero" data-section="hero" className="scroll-mt-24 relative isolate w-full overflow-hidden">
-      {HERO_VIDEO ? (
-        <HeroVideoBackground video={HERO_VIDEO} poster={hero.src ?? HERO_VIDEO.poster} />
-      ) : hero.src ? (
-        <HeroBackground key={hero.src} src={hero.src} />
-      ) : null}
+      {hero.src ? <HeroBackground key={hero.src} src={hero.src} /> : null}
       <div
         className={cn(
           "mx-auto grid w-full max-w-5xl gap-10 px-4 py-20 sm:py-28",
@@ -111,7 +77,7 @@ export function HeroSection() {
             "flex flex-col items-center gap-6 text-center",
             hasPreview && "lg:items-start lg:text-left"
           )}
-          style={hero.src || HERO_VIDEO ? { textShadow: HERO_TEXT_SHADOW } : undefined}
+          style={hero.src ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <p data-app-name className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
             {config.appName}

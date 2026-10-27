@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { IdeaChat } from "@/components/idea-chat";
 import { config } from "@/lib/prototype-config";
 import { landingMetadata } from "@/lib/seo";
 import { ThemeBootstrap } from "@tokenwise/shared-ui";
@@ -88,6 +89,8 @@ export async function PrototypeShell({
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
+            {/* The idea chat's launcher floats over every page (founder, 2026-10-27). */}
+            <IdeaChat />
           </AuthProvider>
         </NextIntlClientProvider>
       </body>

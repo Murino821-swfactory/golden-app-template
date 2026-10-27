@@ -16,8 +16,7 @@
         "howItWorks",
         "faq",
         "cta"
-      ],
-      "presentation": "document"
+      ]
     },
     "authGoogle": {},
     "dashboard": {},
@@ -161,6 +160,11 @@
               "answer": "You do. Captions, images and the Markdown article are files in your browser; the content queue is your own sandbox."
             }
           ]
+        },
+        "eyebrow": "Your week in git, ready to post",
+        "manifesto": {
+          "lead": "GitPulse Studio is a publishing desk, not another scheduler.",
+          "body": "Every post starts from something you can check — a live project list, a public git history, a game you just played — never from an invented customer or a made-up number."
         }
       },
       "dashboard": {
@@ -176,7 +180,31 @@
           "type": "Content Type",
           "status": "Status",
           "publishedAt": "Published At"
-        }
+        },
+        "sampleRecords": [
+          {
+            "title": "GameDay: e-mail sign-in next to Google",
+            "week": "2026-10-12",
+            "repository": "gameday",
+            "type": "Blog",
+            "status": "Published",
+            "publishedAt": "2026-10-17"
+          },
+          {
+            "title": "Law Expert: \"Search more\" keeps every page",
+            "week": "2026-10-19",
+            "repository": "law-expert",
+            "type": "Facebook",
+            "status": "In Review"
+          },
+          {
+            "title": "Golden template: the editorial landing",
+            "week": "2026-10-26",
+            "repository": "golden-app-template",
+            "type": "Instagram",
+            "status": "Draft"
+          }
+        ]
       },
       "cta": {
         "label": "Open the studio",
@@ -271,6 +299,11 @@
               "answer": "Vám. Popisky, obrázky a Markdown článek jsou soubory ve vašem prohlížeči; fronta obsahu je váš vlastní sandbox."
             }
           ]
+        },
+        "eyebrow": "Týden v gitu, připravený k publikování",
+        "manifesto": {
+          "lead": "GitPulse Studio je publikační stůl, ne další plánovač.",
+          "body": "Každý příspěvek vychází z něčeho, co si můžete ověřit — ze seznamu živých projektů, z veřejné git historie, ze hry, kterou jste právě dohráli — nikdy z vymyšleného zákazníka nebo smyšleného čísla."
         }
       },
       "dashboard": {
@@ -286,7 +319,31 @@
           "type": "Typ obsahu",
           "status": "Stav",
           "publishedAt": "Publikováno"
-        }
+        },
+        "sampleRecords": [
+          {
+            "title": "GameDay: přihlášení e-mailem vedle Google",
+            "week": "2026-10-12",
+            "repository": "gameday",
+            "type": "Blog",
+            "status": "Published",
+            "publishedAt": "2026-10-17"
+          },
+          {
+            "title": "Law Expert: „Hledat další“ drží všechny stránky",
+            "week": "2026-10-19",
+            "repository": "law-expert",
+            "type": "Facebook",
+            "status": "In Review"
+          },
+          {
+            "title": "Golden template: editoriální landing",
+            "week": "2026-10-26",
+            "repository": "golden-app-template",
+            "type": "Instagram",
+            "status": "Draft"
+          }
+        ]
       },
       "cta": {
         "label": "Otevřít studio",

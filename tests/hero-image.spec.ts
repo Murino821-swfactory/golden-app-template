@@ -7,7 +7,6 @@ import {
   type HeroControlsInput,
 } from "../lib/hero-image";
 import { HERO_FADE_START, heroOverlayBackground } from "../lib/hero-overlay";
-import { HERO_VIDEO } from "../lib/hero-video";
 
 /**
  * The AI hero background (sw-factory spec 2026-09-25-prototype-hero-image-design.md).
@@ -166,19 +165,6 @@ test.describe("the hero background, as a visitor sees it", () => {
 
     await fakeState(page, { body: JSON.stringify({ visible: true, src: SRC }) });
     await page.goto("./");
-    if (HERO_VIDEO) {
-      // This demo ships a looping video (lib/hero-video.ts): the AI image becomes its poster.
-      const video = page.locator("[data-hero-video]");
-      await expect(video).toHaveCount(1);
-      await expect(video).toHaveAttribute("poster", SRC);
-      await expect(page.locator("[data-hero-image]")).toHaveCount(0);
-      expect(await heroBoxes(page)).toEqual(without);
-      const hero = await page.locator('[data-section="hero"]').boundingBox();
-      const layer = await video.boundingBox();
-      expect(layer && hero && Math.round(layer.width)).toBe(hero && Math.round(hero.width));
-      expect(errors).toEqual([]);
-      return;
-    }
     const img = page.locator("[data-hero-image]");
     await expect(img).toHaveCount(1);
     await expect(img).toHaveAttribute("alt", "");

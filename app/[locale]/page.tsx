@@ -11,7 +11,6 @@ import { UseCasesSection } from "@/components/sections/use-cases";
 import { ComparisonSection } from "@/components/sections/comparison";
 import { ListingsSection } from "@/components/sections/listings";
 import { LandingStory } from "@/components/sections/landing-story";
-import { GITPULSE_SECTIONS } from "@/components/landing/registry";
 import { landingJsonLd } from "@/lib/seo";
 import { config, landingPresentation } from "@/lib/prototype-config";
 import { EDITORIAL_SECTIONS } from "@/components/editorial/registry";
@@ -37,8 +36,6 @@ const SECTION_REGISTRY: Record<string, ComponentType> = {
   useCases: UseCasesSection,
   comparison: ComparisonSection,
   listings: ListingsSection,
-  // This demo's own presentation of the same sections (components/landing/registry.ts).
-  ...GITPULSE_SECTIONS,
 };
 
 // The presentation decides which components draw the same sections (2026-10-26): editorial
