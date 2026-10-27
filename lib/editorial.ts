@@ -6,8 +6,6 @@
  * the components in `components/editorial/editorial.css`.
  */
 
-import { formatPrice, listingCards } from "./listings";
-import { entityFieldsFor, type LocaleContent, type PrototypeConfig } from "./prototype-config";
 import { cn } from "./utils";
 
 export interface BentoSpan {
@@ -114,88 +112,9 @@ export function brandHref(slug: string | null): string {
   return url.toString();
 }
 
-export type ConceptTile =
-  | { kind: "image"; src: string; alt: string; title: string }
-  | { kind: "text"; eyebrow: string; title: string; value?: string };
-
-export interface TextTile {
-  eyebrow: string;
-  title: string;
-  value?: string;
-}
-
-export interface ConceptSources {
-  /** Real screenshots of the prototype's pages, when the pipeline published them. */
-  screens?: ReadonlyArray<{ src: string; alt: string }>;
-  offers?: ReadonlyArray<TextTile>;
-  records?: ReadonlyArray<TextTile>;
-  kpis?: ReadonlyArray<TextTile>;
-  features?: ReadonlyArray<TextTile>;
-  questions?: ReadonlyArray<TextTile>;
-}
-
-/** Fewer tiles than this and the strip is not drawn — a loop of two cards reads as a bug. */
-export const STRIP_MIN = 4;
-export const STRIP_MAX = 10;
-
-/**
- * What the two-row concept strip shows: the prototype's own screens when there are enough
- * of them, else the product's words in the order a visitor would want them — offers,
- * records, the dashboard's numbers, the features, the questions. At most ten tiles.
- */
-export function conceptTiles(sources: ConceptSources): ConceptTile[] {
-  const screens = sources.screens ?? [];
-  if (screens.length >= STRIP_MIN) {
-    return screens.slice(0, STRIP_MAX).map((s) => ({ kind: "image", src: s.src, alt: s.alt, title: s.alt }));
-  }
-  const text = [
-    ...(sources.offers ?? []),
-    ...(sources.records ?? []),
-    ...(sources.kpis ?? []),
-    ...(sources.features ?? []),
-    ...(sources.questions ?? []),
-  ];
-  return text.slice(0, STRIP_MAX).map((t) => ({ kind: "text", ...t }));
-}
-
-/** The two rows of the strip: the first half and the second, the second never longer. */
+/** The two rows of the showcase strip (`lib/showcase.ts`): the first half and the second, the second never longer. */
 export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
   const half = Math.ceil(tiles.length / 2);
   return [tiles.slice(0, half), tiles.slice(half)];
 }
 
-
-/**
- * The strip's sources read off the shipped config and the copy of one language. Pure, so
- * the test can pin the order on the config the repo ships. Booleans make poor tile titles
- * and are skipped; a record's title is its first other field, its value the second.
- */
-export function conceptTilesFor(
-  cfg: PrototypeConfig,
-  copy: LocaleContent,
-  locale: string,
-  screens: ReadonlyArray<{ src: string; alt: string }>
-): ConceptTile[] {
-  const listings = cfg.patterns.listings;
-  const offers: TextTile[] = listings
-    ? listingCards(listings, copy.listings).map((card) => ({
-        eyebrow: card.categoryLabel,
-        title: card.title,
-        ...(card.price !== undefined && listings.currency ? { value: formatPrice(card.price, listings.currency, locale) } : {}),
-      }))
-    : [];
-  const fields = entityFieldsFor(cfg, locale).filter((f) => f.type !== "boolean");
-  const records: TextTile[] = (copy.dataGrid?.sampleRecords ?? []).flatMap((sample) => {
-    const [first, second] = fields;
-    if (!first || sample[first.key] === undefined) return [];
-    const value = second && sample[second.key] !== undefined ? `${second.label}: ${String(sample[second.key])}` : undefined;
-    return [{ eyebrow: copy.dataGrid?.entityLabel ?? "", title: String(sample[first.key]), ...(value ? { value } : {}) }];
-  });
-  const kpis: TextTile[] = Object.values(copy.dashboard?.kpiLabels ?? {}).map((label) => ({
-    eyebrow: copy.dashboard?.title ?? "",
-    title: label,
-  }));
-  const features: TextTile[] = (copy.landing?.features ?? []).map((f) => ({ eyebrow: copy.landing?.featuresHeading ?? "", title: f.title }));
-  const questions: TextTile[] = (copy.landing?.faq?.items ?? []).map((q) => ({ eyebrow: copy.landing?.faq?.heading ?? "", title: q.question }));
-  return conceptTiles({ screens, offers, records, kpis, features, questions });
-}

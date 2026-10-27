@@ -163,7 +163,8 @@
     "reply": "Odpovedať",
     "back": "Späť na prehľad",
     "regarding": "Ohľadom: {title}",
-    "call": "Zavolať"
+    "call": "Zavolať",
+    "idea": "Nápad z chatu"
   },
   "howItWorks": {
     "title": "Ako to funguje"
@@ -272,5 +273,35 @@
   "footer": {
     "generatedBy": "Vytvorené pomocou Tokenwise AI",
     "builtBy": "Vytvorilo"
+  },
+  "showcase": {
+    "label": "Ďalšie aplikácie od tokenwise",
+    "kinds": {
+      "factory-web": "Táto stránka",
+      "gitpulse-studio": "Marketing pre vývojárov",
+      "wellnesspodhajska": "Rezort",
+      "wismeo": "Investície do nehnuteľností",
+      "law-expert": "Advokátska prax",
+      "gameday": "Športové tímy",
+      "collectibles": "Zberatelia",
+      "propcheck": "Dáta o nehnuteľnostiach",
+      "cv-matcher": "Nábor"
+    }
+  },
+  "ideaChat": {
+    "open": "Navrhnúť vylepšenie",
+    "title": "Vylepšiť túto aplikáciu",
+    "greeting": "Chceš vylepšiť túto aplikáciu? Teším sa na tvoj nápad.",
+    "notConfigured": "Chat odosiela nápady na zverejnenej aplikácii, nie v tomto náhľade.",
+    "ideaLabel": "Tvoj nápad",
+    "placeholder": "Čo by mala táto aplikácia robiť lepšie?",
+    "hint": "Aspoň 10 znakov.",
+    "email": "E-mail (nepovinné) — pre odpoveď vlastníka",
+    "send": "Odoslať nápad",
+    "sending": "Odosiela sa…",
+    "sent": "Ďakujem! Tvoj nápad je teraz úlohou na dashboarde vlastníka aplikácie.",
+    "error": "Nápad sa nepodarilo odoslať. Skús to znova.",
+    "tooMany": "Príliš veľa nápadov za krátky čas. Skús to znova o hodinu.",
+    "close": "Zavrieť"
   }
 }
