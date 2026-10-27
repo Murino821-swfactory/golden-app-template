@@ -19,9 +19,18 @@ test("section hashes reveal their chapter in both story and document presentatio
   // Changing it before hydration finishes can be overwritten by router initialization.
   await page.goto(`./#${sections.at(-1) ?? ""}`);
   for (const id of [...sections].reverse()) {
-    await page.evaluate((hash) => { location.hash = hash; }, id);
     const target = page.locator(`[id="${id}"]`);
-    await expect(target).toBeInViewport();
+    // A landing that hydrates slowly gets one late scroll back to the hash it loaded with,
+    // after the hash already names the next section (realitny-makler, 2026-10-27). Setting
+    // the same hash again is no navigation, so a retry clears it first; every section must
+    // still be reached by its own hash.
+    await expect(async () => {
+      await page.evaluate((hash) => {
+        if (location.hash === `#${hash}`) history.replaceState(history.state, "", location.pathname + location.search);
+        location.hash = hash;
+      }, id);
+      await expect(target).toBeInViewport({ timeout: 1_000 });
+    }).toPass({ timeout: 10_000 });
     await expect(target).toBeVisible();
     await expect(target.locator("xpath=..")).not.toHaveAttribute("inert", "");
   }
