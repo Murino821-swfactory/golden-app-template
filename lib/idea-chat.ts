@@ -7,10 +7,17 @@
  * prototype, else the owner's inbox on the prototype.
  *
  * Like the contact form, the request is anonymous and the API lives at the SITE ROOT
- * (tokenwise.sk / apps.tokenwise.sk), never under the base path.
+ * (tokenwise.sk / apps.tokenwise.sk), never under the base path. A standalone product on
+ * its own host has no such route: it builds with `NEXT_PUBLIC_IDEA_API` set to tokenwise.sk's
+ * absolute URL (the function answers CORS for any origin).
  */
 
 export const IDEA_API = "/api/prototype-idea";
+
+/** Where the idea goes: the build's override (a standalone product), else the site root's API. */
+export function ideaApiUrl(override: string | undefined): string {
+  return override || IDEA_API;
+}
 export const IDEA_MIN = 10;
 export const IDEA_MAX = 2000;
 
@@ -70,7 +77,7 @@ export function ideaPayload(input: { slug: string; idea: string; email: string; 
 }
 
 export async function postIdea(payload: IdeaPayload): Promise<{ status: number; ok: boolean }> {
-  const res = await fetch(IDEA_API, {
+  const res = await fetch(ideaApiUrl(process.env.NEXT_PUBLIC_IDEA_API), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
