@@ -1,7 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { FONT_FAMILIES, FONT_IDS, nextFontId } from "@tokenwise/shared-ui/theming";
+import { FONT_FAMILIES, FONT_IDS, fontById, nextFontId } from "@tokenwise/shared-ui/theming";
 import sharedUiPackage from "../packages/shared-ui/package.json";
 import { config } from "../lib/prototype-config";
 import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
@@ -14,6 +14,11 @@ import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
  */
 
 const ROOT = resolve(__dirname, "..");
+// The face a first visit is set in: the one the config names for this prototype (2026-10-26,
+// `patterns.landing.font`), Inter when it names none. The cycle, the persistence and the
+// fallback below are the same whichever face the page starts on.
+const DEFAULT_FONT = config.patterns.landing?.font ?? "inter";
+const DEFAULT_POSITION = FONT_IDS.indexOf(DEFAULT_FONT) + 1;
 const VERSION = sharedUiPackage.version;
 
 function sources(dir: string): string[] {
@@ -109,36 +114,36 @@ test.describe("at 390px", () => {
 test.describe("font", () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
-  test("a first visit is set in Inter", async ({ page }) => {
+  test("a first visit is set in the configured face — Inter when the config names none", async ({ page }) => {
     await page.goto("./");
-    await expect(page.locator("html")).toHaveAttribute("data-font", "inter");
+    await expect(page.locator("html")).toHaveAttribute("data-font", DEFAULT_FONT);
     const family = await page.evaluate(() => getComputedStyle(document.body).fontFamily);
-    expect(family).toContain("Inter");
+    expect(family).toContain(fontById(DEFAULT_FONT).name);
   });
 
   test("one click steps to the next face, the whole cycle wraps", async ({ page }) => {
     await page.goto("./");
-    let expected: (typeof FONT_IDS)[number] = "inter";
+    let expected: (typeof FONT_IDS)[number] = DEFAULT_FONT;
     for (let i = 0; i < FONT_IDS.length; i++) {
       await fontButton(page).click();
       expected = nextFontId(expected);
       await expect(page.locator("html")).toHaveAttribute("data-font", expected);
     }
-    expect(expected).toBe("inter");
+    expect(expected).toBe(DEFAULT_FONT);
   });
 
   test("its accessible name says which face is on screen and where it sits", async ({ page }) => {
     await page.goto("./");
-    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: "Inter", position: 2, total: FONT_IDS.length }));
+    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: fontById(DEFAULT_FONT).name, position: DEFAULT_POSITION, total: FONT_IDS.length }));
     await fontButton(page).click();
-    const next = FONT_FAMILIES.find((f) => f.id === nextFontId("inter"))!;
-    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: next.name, position: 3, total: FONT_IDS.length }));
+    const next = FONT_FAMILIES.find((f) => f.id === nextFontId(DEFAULT_FONT))!;
+    await expect(fontButton(page)).toHaveAttribute("aria-label", formatLabel(uiCopy.common.changeFontLabel!, { name: next.name, position: (DEFAULT_POSITION % FONT_IDS.length) + 1, total: FONT_IDS.length }));
   });
 
   test("the choice survives a reload and is in place before the header is parsed", async ({ page }) => {
     await page.goto("./");
     await fontButton(page).click();
-    const next = nextFontId("inter");
+    const next = nextFontId(DEFAULT_FONT);
     await expect(page.locator("html")).toHaveAttribute("data-font", next);
 
     // Records html[data-font] at the moment the parser inserts the <header> — before
@@ -167,7 +172,7 @@ test.describe("font", () => {
   test("an unknown stored font falls back to the default", async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("font", "comic-sans"));
     await page.goto("./");
-    await expect(page.locator("html")).toHaveAttribute("data-font", "inter");
+    await expect(page.locator("html")).toHaveAttribute("data-font", DEFAULT_FONT);
   });
 });
 

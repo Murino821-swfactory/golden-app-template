@@ -64,7 +64,7 @@ export function HeroSection() {
   const hasPreview = Boolean(config.patterns.dataGrid && content.dataGrid?.sampleRecords?.length);
 
   return (
-    <section data-section="hero" className="relative isolate w-full overflow-hidden">
+    <section id="hero" data-section="hero" className="scroll-mt-24 relative isolate w-full overflow-hidden">
       {hero.src ? <HeroBackground key={hero.src} src={hero.src} /> : null}
       <div
         className={cn(

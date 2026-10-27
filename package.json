@@ -17,11 +17,13 @@
     "deploy:production": "npm run build && firebase deploy --only hosting",
     "preview": "node scripts/preview.mjs",
     "test:packages": "npm test --workspaces --if-present",
-    "prebuild": "tsx scripts/build-discovery.ts"
+    "prebuild": "tsx scripts/build-discovery.ts",
+    "test:inbox:emulator": "playwright test -c integration/inbox/playwright.config.ts",
+    "test:record-focus:emulator": "playwright test -c integration/record-focus/playwright.config.ts"
   },
   "dependencies": {
     "@tokenwise/hex-map": "0.1.0",
-    "@tokenwise/shared-ui": "0.3.0",
+    "@tokenwise/shared-ui": "0.4.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.2.6",
     "firebase": "^12.19.0",
@@ -42,6 +44,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "serve": "^14.2.6",
