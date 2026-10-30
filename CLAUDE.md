@@ -630,3 +630,13 @@ real-estate specific. Record: sw-factory `docs/decisions/2026-10-09-listings-pat
   (https only, checked on the server and again at render). The owner types them; no model
   writes the card. factory-web must be deployed first — an older server refuses a card
   with these fields.
+
+## Task board (T-15, 2026-10-30)
+
+All work lives on the [factory task board](https://tokenwise.sk/admin/local?task=T-15), per the
+[single-source decision](https://github.com/Murino821-swfactory/sw-factory/blob/main/docs/decisions/2026-10-27-task-board-single-source.md). New findings go to Backlog;
+founder-only actions use a `[Founder]` task. Do not create a TASKLIST, TODO, TECH_DEBT
+or roadmap of open work in Markdown. Docs describe behaviour, decisions and repeatable
+procedures. Checkboxes belong only in a spec's acceptance criteria; those describe a
+contract, not task status. Historical plans belong in `docs/archive/`, outside agent
+context. Keep generated Next.js `AGENTS.md` instructions at the root.
