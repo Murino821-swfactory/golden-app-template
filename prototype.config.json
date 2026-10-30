@@ -1,28 +1,49 @@
 {
-  "appName": "Golden App Template",
+  "appName": "EstateTrack",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "fluorescent-cyan-oxford-blue"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
+        "howItWorks",
         "useCases",
         "comparison",
-        "howItWorks",
-        "faq",
         "listings",
+        "faq",
         "contact",
         "cta"
       ],
-      "font": "space-grotesk"
+      "font": "lexend",
+      "tone": "light"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalProperties",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "avgRent",
+          "field": "monthlyRent",
+          "agg": "avg"
+        },
+        {
+          "id": "activeShare",
+          "field": "status",
+          "agg": "share",
+          "value": "active"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
@@ -30,9 +51,11 @@
     "contactForm": {
       "phone": "optional"
     },
+    "useCases": {},
+    "comparison": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "property",
         "fields": [
           {
             "key": "name",
@@ -40,89 +63,85 @@
             "required": true
           },
           {
-            "key": "category",
+            "key": "type",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "residential",
+              "commercial",
+              "mixed"
+            ],
+            "required": true
+          },
+          {
+            "key": "monthlyRent",
+            "type": "number",
+            "required": true
+          },
+          {
+            "key": "monthlyMortgage",
+            "type": "number"
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "active",
+              "vacant",
+              "maintenance"
             ]
           },
           {
-            "key": "opened",
+            "key": "leaseExpiry",
             "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "starter",
+        "professional",
+        "enterprise"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "properties"
         },
         {
-          "key": "rooms"
+          "key": "users"
         }
       ],
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
-          "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
-          }
-        },
-        {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "id": "plan-starter",
+          "category": "starter",
+          "price": 19,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "properties": 5,
+            "users": 1
+          }
+        },
+        {
+          "id": "plan-professional",
+          "category": "professional",
+          "price": 49,
+          "pricePeriod": "month",
+          "attributes": {
+            "properties": 20,
+            "users": 3
+          }
+        },
+        {
+          "id": "plan-enterprise",
+          "category": "enterprise",
+          "price": 99,
+          "pricePeriod": "month",
+          "attributes": {
+            "properties": 99,
+            "users": 10
           }
         }
       ]
@@ -130,182 +149,493 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "EstateTrack centralises cash flow, mortgages, and leases for property investors and shows real purchasing power for the next acquisition.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Property portfolio management",
+        "headline": "Your entire property portfolio, finally under control",
+        "subheadline": "For real estate investors and landlords who want to replace scattered spreadsheets with one dashboard that tracks cash flow, mortgages, and leases.",
+        "manifesto": {
+          "lead": "Every property you own is a data point you can act on.",
+          "body": "EstateTrack turns your portfolio into a live picture of income, debt, and equity — so you can decide on your next purchase from facts, not guesswork."
+        },
+        "featuresHeading": "Everything a property investor needs in one place",
         "features": [
           {
-            "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "icon": "wallet",
+            "title": "Cash Flow Tracking",
+            "description": "Log monthly rent and expenses per property so you always know your net income position across the whole portfolio."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "receipt",
+            "title": "Mortgage Management",
+            "description": "Record every mortgage balance, interest rate, and repayment so your debt is visible and organised in one register."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "file-text",
+            "title": "Lease Register",
+            "description": "Store tenant details and lease expiry dates so you see upcoming renewals before a unit goes vacant."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Purchasing Capacity",
+            "description": "See your current equity and available borrowing headroom calculated from the portfolio data you already record."
+          },
+          {
+            "icon": "building-2",
+            "title": "Portfolio Overview",
+            "description": "View all your properties on one screen with current status, monthly rent, and mortgage payment side by side."
+          },
+          {
+            "icon": "calendar",
+            "title": "Renewal Visibility",
+            "description": "Know which leases expire soonest so you can plan tenant conversations or advertising well ahead of time."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in four steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Add your properties",
+              "description": "Enter each property with its purchase price, current estimated value, and mortgage details to start building your portfolio."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Record income and costs",
+              "description": "Log monthly rent, mortgage payments, and regular expenses to track net cash flow for every property."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Register your leases",
+              "description": "Add tenant names, lease start and end dates so upcoming renewals appear automatically in your dashboard."
+            },
+            {
+              "title": "Review your buying power",
+              "description": "Check total portfolio equity and borrowing headroom in real time to assess readiness for your next acquisition."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Common questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "How many properties can I track?",
+              "answer": "Your plan sets the property limit. Starter covers up to 5 properties, Professional up to 20, and Enterprise supports larger portfolios without a fixed cap."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can I add multiple mortgages for one property?",
+              "answer": "Yes. Each property record holds its own mortgage details, and you can update the balance and interest rate at any time."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Does EstateTrack work for commercial as well as residential properties?",
+              "answer": "Yes. You can categorise each property as residential, commercial, or mixed-use and track all types inside the same portfolio."
+            },
+            {
+              "question": "How is purchasing capacity calculated?",
+              "answer": "EstateTrack uses the equity values and mortgage balances you record to show your current borrowing headroom — you apply your own lender criteria to that number."
+            },
+            {
+              "question": "Is my financial data stored securely?",
+              "answer": "Sign-in is handled through Google OAuth and all portfolio data is stored under your own account, visible only to you."
+            },
+            {
+              "question": "Can I share access with a business partner or accountant?",
+              "answer": "Multi-user access is available on the Professional and Enterprise plans, letting a small team view and update the same portfolio."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Portfolio",
+        "intro": "Track cash flow, mortgage balances, and lease status across all your properties, and check your current purchasing capacity at a glance.",
+        "kpiLabels": {
+          "totalProperties": "Total Properties",
+          "avgRent": "Avg Monthly Rent",
+          "activeShare": "Occupied Rate"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "label": "Start Tracking",
+        "title": "Take control of your property portfolio",
+        "subtitle": "Sign in and start recording your properties, cash flow, and leases — your purchasing capacity updates as you go."
       },
       "contactForm": {
         "heading": "Get in touch",
-        "submitLabel": "Send message"
-      },
-      "dataGrid": {
-        "entityLabel": "Location",
-        "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
-        },
-        "sampleRecords": [
-          {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
+        "submitLabel": "Send message",
+        "intro": "Have a question about managing your portfolio with EstateTrack? We reply within one business day."
       },
       "useCases": {
-        "heading": "What can you try here?",
+        "heading": "Built for how property investors actually work",
         "items": [
           {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
+            "title": "The new landlord",
+            "situation": "You own two or three properties and track rent, mortgages, and costs across a mix of spreadsheets and paper notes.",
+            "action": "Add each property to EstateTrack, log the mortgage and current rent, and immediately see your consolidated net cash flow in one place."
           },
           {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
+            "title": "The growing investor",
+            "situation": "Your portfolio has grown to ten or more properties and you need a clear equity position before approaching a lender for the next purchase.",
+            "action": "Open the dashboard, review total portfolio equity and outstanding mortgage balances, and calculate how much borrowing headroom is available for a new acquisition."
+          },
+          {
+            "title": "The lease manager",
+            "situation": "Several tenancies are expiring in the coming months and you want to plan renewals before units sit vacant and income drops.",
+            "action": "Check the lease register for the nearest expiry dates and prepare renewal offers or new-tenant advertising well ahead of each deadline."
           }
         ]
       },
       "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
+        "heading": "From spreadsheets to a live portfolio dashboard",
+        "beforeLabel": "Spreadsheets",
+        "afterLabel": "EstateTrack",
         "rows": [
           {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
+            "topic": "Cash flow visibility",
+            "before": "Net income calculated by hand from several files, updated only when you remember to open them.",
+            "after": "Monthly cash flow shown per property and across the whole portfolio from the data you record."
           },
           {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
+            "topic": "Mortgage tracking",
+            "before": "Balances and rates kept in separate notes or sheets, easy to lose and slow to update.",
+            "after": "Every mortgage logged against its property with the current balance and interest rate in one register."
           },
           {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "topic": "Lease renewals",
+            "before": "Expiry dates buried in contracts or a personal calendar, easy to overlook until the last moment.",
+            "after": "All lease expiry dates listed in the dashboard so you see which renewals are coming up and can act early."
+          },
+          {
+            "topic": "Purchasing capacity",
+            "before": "Equity position worked out manually each time you want to talk to a lender, starting from scratch.",
+            "after": "Buying power shown automatically from the equity and mortgage data already recorded in your portfolio."
+          }
+        ]
+      },
+      "dataGrid": {
+        "entityLabel": "Property",
+        "fieldLabels": {
+          "name": "Property Name",
+          "type": "Type",
+          "monthlyRent": "Monthly Rent (€)",
+          "monthlyMortgage": "Monthly Mortgage (€)",
+          "status": "Status",
+          "leaseExpiry": "Lease Expiry"
+        },
+        "sampleRecords": [
+          {
+            "name": "Apartment 4B, Maple Court",
+            "type": "residential",
+            "monthlyRent": 1200,
+            "monthlyMortgage": 650,
+            "status": "active",
+            "leaseExpiry": "2026-10-01"
+          },
+          {
+            "name": "Unit 7, Commerce House",
+            "type": "commercial",
+            "monthlyRent": 2400,
+            "monthlyMortgage": 1100,
+            "status": "active",
+            "leaseExpiry": "2026-09-30"
+          },
+          {
+            "name": "22 Birchwood Drive",
+            "type": "residential",
+            "monthlyRent": 950,
+            "monthlyMortgage": 520,
+            "status": "vacant",
+            "leaseExpiry": "2026-09-01"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Choose the plan that fits your portfolio",
+        "intro": "EstateTrack is available on three plans — pick the one that matches the size of your portfolio and your team.",
+        "notice": "These plans are illustrative examples and do not represent live pricing or confirmed product tiers.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "starter": "Starter",
+          "professional": "Professional",
+          "enterprise": "Enterprise"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "properties": "Properties",
+          "users": "Team members"
         },
+        "inquireLabel": "Ask about this plan",
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "plan-starter": {
+            "title": "Starter Plan",
+            "summary": "Track up to 5 properties with full cash flow, mortgage, and lease records. Designed for new landlords building their first portfolio.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Up to 5 properties",
+              "1 team member",
+              "Cash flow & mortgage tracking",
+              "Lease register with expiry dates"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "plan-professional": {
+            "title": "Professional Plan",
+            "summary": "Manage up to 20 properties across residential and commercial types, with multi-user access for small teams or investment partnerships.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Up to 20 properties",
+              "Up to 3 team members",
+              "Board view by property status",
+              "Purchasing capacity tools"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "plan-enterprise": {
+            "title": "Enterprise Plan",
+            "summary": "No fixed property limit and up to 10 team members — built for active investors running large or mixed-use portfolios.",
+            "highlights": [
+              "Unlimited properties",
+              "Up to 10 team members",
+              "Full portfolio analytics",
+              "Priority support"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "EstateTrack centralizuje cash flow, hypotéky a zmluvy pre investorov do nehnuteľností a zobrazuje kúpnu kapacitu na ďalší nákup.",
+      "landing": {
+        "eyebrow": "Správa realitného portfólia",
+        "headline": "Celé vaše realitné portfólio konečne pod kontrolou",
+        "subheadline": "Pre investorov do nehnuteľností a prenajímateľov, ktorí chcú nahradiť roztratené tabuľky jedným dashboardom na sledovanie cash flow, hypoték a nájomných zmlúv.",
+        "manifesto": {
+          "lead": "Každá nehnuteľnosť, ktorú vlastníte, je údaj, podľa ktorého môžete konať.",
+          "body": "EstateTrack premení vaše portfólio na živý obraz príjmov, dlhov a vlastného imania — aby ste sa pri každom ďalšom nákupe rozhodovali na základe faktov, nie odhadov."
         },
-        "inquireLabel": "Ask about this offer"
+        "featuresHeading": "Všetko pre investora do nehnuteľností na jednom mieste",
+        "features": [
+          {
+            "icon": "wallet",
+            "title": "Sledovanie cash flow",
+            "description": "Zaznamenávajte mesačný nájom a výdavky za každú nehnuteľnosť, aby ste vždy poznali čistý príjem celého portfólia."
+          },
+          {
+            "icon": "receipt",
+            "title": "Správa hypoték",
+            "description": "Evidujte každú hypotéku, úrokovú sadzbu a zostatok, aby ste mali všetky dlhy prehľadne usporiadané na jednom mieste."
+          },
+          {
+            "icon": "file-text",
+            "title": "Register nájomných zmlúv",
+            "description": "Uložte údaje nájomníkov a dátumy skončenia zmlúv, aby ste videli blížiace sa obnovy skôr, ako jednotka ostane prázdna."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Kúpna kapacita",
+            "description": "Pozrite si aktuálne vlastné imanie a dostupný úverový priestor vypočítaný z dát, ktoré už o portfóliu evidujete."
+          },
+          {
+            "icon": "building-2",
+            "title": "Prehľad portfólia",
+            "description": "Zobrazte si všetky nehnuteľnosti na jednej obrazovke s aktuálnym stavom, mesačným nájmom a splátkou hypotéky vedľa seba."
+          },
+          {
+            "icon": "calendar",
+            "title": "Prehľad obnôv zmlúv",
+            "description": "Vedzte, ktoré nájomné zmluvy skončia najskôr, aby ste mohli vopred plánovať obnovu alebo hľadanie nájomníkov."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Spustite sa za štyri kroky",
+          "steps": [
+            {
+              "title": "Pridajte nehnuteľnosti",
+              "description": "Zadajte každú nehnuteľnosť s kúpnou cenou, aktuálnou odhadnou hodnotou a údajmi o hypotéke a začnite budovať portfólio."
+            },
+            {
+              "title": "Zaznamenajte príjmy a náklady",
+              "description": "Uložte mesačný nájom, splátky hypotéky a pravidelné výdavky, aby ste sledovali čistý cash flow za každú nehnuteľnosť."
+            },
+            {
+              "title": "Evidujte nájomné zmluvy",
+              "description": "Zadajte mená nájomníkov, dátumy začiatku a skončenia zmluvy, aby sa blížiace sa obnovy zobrazili vo vašom dashboarde."
+            },
+            {
+              "title": "Skontrolujte kúpnu silu",
+              "description": "Pozrite si celkové vlastné imanie portfólia a dostupný úverový priestor v reálnom čase a zhodnoťte pripravenosť na ďalší nákup."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Koľko nehnuteľností môžem sledovať?",
+              "answer": "Počet nehnuteľností závisí od zvoleného plánu. Plán Štarter pokrýva až 5 nehnuteľností, Profesionál až 20 a Enterprise je určený pre väčšie portfóliá bez pevného stropu."
+            },
+            {
+              "question": "Môžem k jednej nehnuteľnosti pridať viac hypoték?",
+              "answer": "Áno. Každý záznam nehnuteľnosti uchováva vlastné údaje o hypotéke a zostatok i úrokovú sadzbu môžete kedykoľvek aktualizovať."
+            },
+            {
+              "question": "Funguje EstateTrack aj pre komerčné nehnuteľnosti?",
+              "answer": "Áno. Každú nehnuteľnosť môžete zaradiť ako rezidenčnú, komerčnú alebo zmiešanú a sledovať všetky typy v rovnakom portfóliu."
+            },
+            {
+              "question": "Ako sa vypočítava kúpna kapacita?",
+              "answer": "EstateTrack používa hodnoty vlastného imania a zostatky hypoték, ktoré evidujete, aby zobrazil váš aktuálny úverový priestor — vlastné kritériá veriteľa si k tomu číslu prinesiete sami."
+            },
+            {
+              "question": "Sú moje finančné údaje v bezpečí?",
+              "answer": "Prihlasovanie prebieha cez Google OAuth a všetky údaje portfólia sú uložené vo vašom vlastnom účte, viditeľné iba pre vás."
+            },
+            {
+              "question": "Môžem zdieľať prístup s obchodným partnerom alebo účtovníkom?",
+              "answer": "Viacužívateľský prístup je dostupný v plánoch Profesionál a Enterprise, čo umožňuje malému tímu prezerať a upravovať rovnaké portfólio."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Moje portfólio",
+        "intro": "Sledujte cash flow, zostatky hypoték a stav nájomných zmlúv pre všetky nehnuteľnosti a skontrolujte aktuálnu kúpnu kapacitu na prvý pohľad.",
+        "kpiLabels": {
+          "totalProperties": "Celkom nehnuteľností",
+          "avgRent": "Priem. mesačný nájom",
+          "activeShare": "Obsadenosť"
+        }
+      },
+      "cta": {
+        "label": "Začať sledovať",
+        "title": "Prevezmite kontrolu nad svojím realitným portfóliom",
+        "subtitle": "Prihláste sa a začnite evidovať nehnuteľnosti, cash flow a nájomné zmluvy — kúpna kapacita sa aktualizuje priebežne."
+      },
+      "contactForm": {
+        "heading": "Napíšte nám",
+        "submitLabel": "Odoslať správu",
+        "intro": "Máte otázku k správe portfólia s EstateTrack? Odpovieme vám do jedného pracovného dňa."
+      },
+      "useCases": {
+        "heading": "Navrhnuté pre to, ako investori skutočne pracujú",
+        "items": [
+          {
+            "title": "Nový prenajímateľ",
+            "situation": "Vlastníte dve alebo tri nehnuteľnosti a sledujete nájom, hypotéky a výdavky v rôznych tabuľkách a papierových poznámkach.",
+            "action": "Pridajte každú nehnuteľnosť do EstateTrack, zaznamenajte hypotéku a aktuálny nájom a okamžite uvidíte konsolidovaný čistý cash flow na jednom mieste."
+          },
+          {
+            "title": "Rastúci investor",
+            "situation": "Vaše portfólio narástlo na desať a viac nehnuteľností a pred rozhovorom s veriteľom potrebujete poznať svoju pozíciu vlastného imania.",
+            "action": "Otvorte dashboard, skontrolujte celkové vlastné imanie portfólia a zostatok hypoték a vypočítajte, koľko úverového priestoru máte na novú akvizíciu."
+          },
+          {
+            "title": "Správca nájomných zmlúv",
+            "situation": "Niekoľko nájomných zmlúv vyprší v nasledujúcich mesiacoch a chcete plánovať obnovu skôr, ako jednotky ostanú prázdne a príjmy klesnú.",
+            "action": "Skontrolujte register nájomných zmlúv s najbližšími dátumami skončenia a vopred pripravte ponuky na obnovu alebo inzerciu pre nových nájomníkov."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Od tabuliek k živému dashboardu portfólia",
+        "beforeLabel": "Tabuľky",
+        "afterLabel": "EstateTrack",
+        "rows": [
+          {
+            "topic": "Prehľad cash flow",
+            "before": "Čistý príjem vypočítaný ručne z viacerých súborov, aktualizovaný iba vtedy, keď si na to spomeniete.",
+            "after": "Mesačný cash flow zobrazený za každú nehnuteľnosť aj za celé portfólio z evidovaných dát."
+          },
+          {
+            "topic": "Sledovanie hypoték",
+            "before": "Zostatky a sadzby hypoték zapisované oddelene, ľahko stratiteľné alebo dlho neaktualizované.",
+            "after": "Každá hypotéka evidovaná pri príslušnej nehnuteľnosti so zostatkom a úrokovou sadzbou na jednom mieste."
+          },
+          {
+            "topic": "Obnova nájomných zmlúv",
+            "before": "Dátumy skončenia zmlúv ukryté v dokumentoch alebo osobnom kalendári, ľahko prehliadnuteľné až na poslednú chvíľu.",
+            "after": "Všetky dátumy skončenia zmlúv prehľadne v dashboarde, takže obnovu plánujete vopred."
+          },
+          {
+            "topic": "Kúpna kapacita",
+            "before": "Pozícia vlastného imania vypočítaná ručne od začiatku pred každým rozhovorom s veriteľom.",
+            "after": "Kúpna sila odvodená automaticky z dát o vlastnom imaní a hypotékach, ktoré už evidujete."
+          }
+        ]
+      },
+      "dataGrid": {
+        "entityLabel": "Nehnuteľnosť",
+        "fieldLabels": {
+          "name": "Názov nehnuteľnosti",
+          "type": "Typ",
+          "monthlyRent": "Mesačný nájom (€)",
+          "monthlyMortgage": "Mesačná splátka hypotéky (€)",
+          "status": "Stav",
+          "leaseExpiry": "Skončenie nájomnej zmluvy"
+        },
+        "sampleRecords": [
+          {
+            "name": "Byt 4B, Javorová brána",
+            "type": "residential",
+            "monthlyRent": 1200,
+            "monthlyMortgage": 650,
+            "status": "active",
+            "leaseExpiry": "2026-10-01"
+          },
+          {
+            "name": "Jednotka 7, Obchodný dom Centrum",
+            "type": "commercial",
+            "monthlyRent": 2400,
+            "monthlyMortgage": 1100,
+            "status": "active",
+            "leaseExpiry": "2026-09-30"
+          },
+          {
+            "name": "Brezová 22",
+            "type": "residential",
+            "monthlyRent": 950,
+            "monthlyMortgage": 520,
+            "status": "vacant",
+            "leaseExpiry": "2026-09-01"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Zvoľte plán, ktorý vyhovuje vášmu portfóliu",
+        "intro": "EstateTrack je dostupný v troch plánoch — vyberte ten, ktorý zodpovedá veľkosti vášho portfólia a tímu.",
+        "notice": "Tieto plány sú ilustratívnymi príkladmi a nepredstavujú záväznú cenovú ponuku ani aktuálne produktové úrovne.",
+        "categoryLabels": {
+          "starter": "Štarter",
+          "professional": "Profesionál",
+          "enterprise": "Enterprise"
+        },
+        "attributeLabels": {
+          "properties": "Nehnuteľnosti",
+          "users": "Členovia tímu"
+        },
+        "inquireLabel": "Spýtať sa na plán",
+        "items": {
+          "plan-starter": {
+            "title": "Plán Štarter",
+            "summary": "Sledujte až 5 nehnuteľností vrátane cash flow, evidencie hypoték a nájomných zmlúv. Ideálny pre nových prenajímateľov budujúcich prvé portfólio.",
+            "highlights": [
+              "Až 5 nehnuteľností",
+              "1 člen tímu",
+              "Sledovanie cash flow a hypoték",
+              "Register zmlúv s dátumami skončenia"
+            ]
+          },
+          "plan-professional": {
+            "title": "Plán Profesionál",
+            "summary": "Spravujte až 20 nehnuteľností rôznych typov s viacužívateľským prístupom pre malé tímy alebo investičné partnerstvá.",
+            "highlights": [
+              "Až 20 nehnuteľností",
+              "Až 3 členovia tímu",
+              "Kanban a dashboard pohľad",
+              "Nástroje kúpnej kapacity"
+            ]
+          },
+          "plan-enterprise": {
+            "title": "Plán Enterprise",
+            "summary": "Bez pevného limitu nehnuteľností a až 10 členov tímu — určený pre aktívnych investorov spravujúcich veľké alebo zmiešané portfóliá.",
+            "highlights": [
+              "Neobmedzený počet nehnuteľností",
+              "Až 10 členov tímu",
+              "Plná analytika portfólia",
+              "Prioritná podpora"
+            ]
+          }
+        }
       }
     }
   }
