@@ -111,11 +111,9 @@ client portal. Each is an integration or a server, and this prototype has neithe
 8. Settings: export JSON (data stays with the recruiter), reset to demo.
 Slovak: the same at `/sk/workspace`.
 
-## 5. Follow-ups
+## 5. Work tracking
 
-- Cloud sync per signed-in account (shared desk for an agency) — needs its own Firestore
-  rules in factory-web; the store's adapter is the seam.
-- ÚPSVaR monthly placement report template (SK) from `placements` [OVERIŤ the current form].
-- E-mail templates (submittal to client, interview invite) — copy only, `mailto:` first.
-- The retired `hero-image` controls are not rendered on this landing; the "Edit texts"
-  panel is.
+The standalone product and its organization sync are tracked in [T-48](https://tokenwise.sk/admin/local?task=T-48).
+ÚPSVaR reporting and e-mail templates belong to that task; this prototype remains a local
+browser workspace. Do not add product Firestore rules to the shared prototype tenant.
+The retired hero-image controls are not rendered on this landing; the Edit texts panel is.

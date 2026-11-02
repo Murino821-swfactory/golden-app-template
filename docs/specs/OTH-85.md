@@ -94,10 +94,10 @@ Implement a pure client-side CV & Job Description Analyzer in TypeScript:
   - **Mitigation**: Add `@media print` CSS utility styles to hide chrome navigation and format report cleanly for print/PDF export.
 
 ## Edge Cases
-- [ ] User clears one or both text fields: UI resets gracefully showing empty/placeholder state without crashing.
-- [ ] Job Description contains no identifiable standard skills: Fallback gracefully to word frequency/ngram overlap and display an appropriate notice.
-- [ ] Single click sample loader selected while text exists: Replaces inputs with sample data and triggers immediate re-analysis.
-- [ ] Large input text (> 10,000 words): Analysis executes performantly on client without blocking UI thread.
+- User clears one or both text fields: UI resets gracefully showing empty/placeholder state without crashing.
+- Job Description contains no identifiable standard skills: Fallback gracefully to word frequency/ngram overlap and display an appropriate notice.
+- Single click sample loader selected while text exists: Replaces inputs with sample data and triggers immediate re-analysis.
+- Large input text (> 10,000 words): Analysis executes performantly on client without blocking UI thread.
 
 ## Acceptance Criteria
 - [ ] **Dual Input Interface**: CV text area on the left, Job Description text area on the right.
