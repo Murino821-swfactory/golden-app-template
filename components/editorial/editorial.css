@@ -301,6 +301,132 @@
   box-shadow: 0 40px 120px -40px black, 0 0 60px -10px var(--editorial-glow);
 }
 
+/* ── Light loops (T-340): Blender renders, relit by the palette ──────────────────────
+   After vercel.com's backlit prism, apple.com's rising orb and framer.com's glowing prompt
+   box. Each loop is neutral light on black (`scripts/motion/<name>.py`): `screen` lets the
+   black vanish into whatever the page is painted with, and the tint layer above the video
+   hands the light the palette's second accent through `color` — hue and saturation from the
+   palette, brightness from the render — so the hottest light stays white and "Change colour"
+   relights the loop like every other glow. `z-index: -1` inside an isolated parent: above
+   the parent's background, under its words. */
+.editorial-light {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.editorial-light video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.editorial-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--highlight, var(--primary));
+  mix-blend-mode: color;
+}
+/* The eclipse: a square centred on the headline, its edge dissolved, so no viewport ever
+   sees where the video ends. */
+.editorial-light-hero {
+  --light-size: min(124vw, 62rem);
+  --light-centre: 13rem;
+  top: calc(var(--light-centre) - var(--light-size) / 2);
+  left: 50%;
+  width: var(--light-size);
+  height: var(--light-size);
+  margin-left: calc(var(--light-size) / -2);
+  mask-image: radial-gradient(closest-side, black 64%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, black 64%, transparent 100%);
+}
+@media (min-width: 640px) {
+  .editorial-light-hero {
+    --light-centre: 17.5rem;
+  }
+}
+/* The ribbons: the whole band, dimmed where its words sit. */
+.editorial-light-band {
+  inset: 0;
+  mask-image: radial-gradient(46% 40% at 50% 46%, color-mix(in oklab, black 12%, transparent), black 100%);
+  -webkit-mask-image: radial-gradient(46% 40% at 50% 46%, color-mix(in oklab, black 12%, transparent), black 100%);
+}
+/* Where the corona crosses the headline both are the accent; a halo of the page's own
+   background keeps every letter readable on the light. */
+.editorial-hero:has([data-hero-light]) .editorial-display {
+  text-shadow:
+    0 0 0.35em color-mix(in oklab, var(--background) 70%, transparent),
+    0 0 0.08em color-mix(in oklab, var(--background) 80%, transparent);
+}
+.editorial-band {
+  isolation: isolate;
+}
+
+/* The running edge (after framer.com's prompt box): a short arc of light travels round the
+   frame's border, the ring cut from a conic gradient by two masks, the glow a drop shadow
+   of the ring. Only where motion is wanted; otherwise the frame keeps its still lit top. */
+@property --editorial-run {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.editorial-run {
+  display: none;
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px var(--highlight, var(--primary)));
+}
+.editorial-run::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--editorial-run),
+    transparent 0turn 0.7turn,
+    color-mix(in oklab, var(--highlight, var(--primary)) 55%, transparent) 0.9turn,
+    var(--highlight, var(--primary)) 0.985turn,
+    transparent 1turn
+  );
+  /* The prefixed pair first: in Chromium `-webkit-mask` is an alias that resets the
+     composite, and `xor` is not a standard value — written last, it left "add" and the
+     whole frame filled with a wedge of light. Standard last, so it wins where understood. */
+  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  mask-composite: exclude;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-run {
+    display: block;
+  }
+  .editorial-run::before {
+    animation: editorial-run 7s linear infinite;
+  }
+  /* The eclipse fades in after the words, then sinks and grows as the first scroll
+     carries the headline away. */
+  .editorial-light-hero {
+    animation: editorial-light-in 1800ms ease-out 250ms both;
+  }
+}
+@keyframes editorial-run {
+  to {
+    --editorial-run: 1turn;
+  }
+}
+@keyframes editorial-light-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* ── How it works: the glowing line and the ticks ────────────────────────────────── */
 .editorial-grid {
   background-image:
@@ -622,6 +748,11 @@ details[open] .editorial-plus::before {
       animation-timeline: scroll(root);
       animation-range: 0px 520px;
     }
+    .editorial-light-hero {
+      animation: editorial-light-in 1800ms ease-out 250ms both, editorial-light-away linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range: normal, 0px 700px;
+    }
     /* The line draws itself through the steps. */
     .editorial-glow-line path {
       stroke-dashoffset: 1;
@@ -660,6 +791,11 @@ details[open] .editorial-plus::before {
   to {
     opacity: 0.2;
     transform: translateY(-70px);
+  }
+}
+@keyframes editorial-light-away {
+  to {
+    transform: translateY(12%) scale(1.14);
   }
 }
 @keyframes editorial-tilt {

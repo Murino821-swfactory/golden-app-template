@@ -30,6 +30,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
@@ -673,7 +674,24 @@ copy contract, same `data-section` markers — the suites that read the page kee
   (default) | `bold` (uppercase heavy headline; `data-tone` on the page root; the content call
   picks it for loud ideas). The header adapter passes the configured font as the switcher's
   default (`components/layout/header.tsx`).
-- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone);
+- **Third round — light loops (T-340, 2026-11-05)**, after framer.com, vercel.com, linear.app and
+  apple.com's MacBook Pro display page: two seamless 8 s loops rendered in **Blender**
+  (`scripts/motion/<name>.py`, encoded by `scripts/motion/encode.sh` into
+  `public/motion/<name>.{webm,mp4,webp}`, `lib/editorial.ts` `MOTION_LOOPS`/`motionLoop`, budget
+  `MOTION_BUDGET_BYTES` per loop). `hero-light` — an eclipse behind the headline (a dark orb, a
+  corona whose bright arc walks the rim, two small pearls, a light streak once per loop; after
+  Vercel's backlit prism and Apple's rising orb) — renders only when no AI image owns the hero;
+  `closing-light` — ribbons of light behind the closing band. `LightLoop`
+  (`components/editorial/light-loop.tsx`): `preload="none"`, plays only on screen and only without
+  reduced motion (the WebP still otherwise), decoration only. The renders are grey light on black:
+  `.editorial-light` screens them onto the page and a `color`-blended layer of
+  `var(--highlight, var(--primary))` gives them the palette's hue — "Change colour" relights them,
+  no colour is encoded. The hero frame gets a **running edge** (`[data-frame-run]`, after Framer's
+  prompt box): an arc of light travels round its border (conic gradient + `@property` angle),
+  hidden under reduced motion. To change a loop: edit the scene, render
+  (`blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`, Blender 5.2,
+  OptiX), encode, keep the budget test green.
+- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
   `tests/shared-header.spec.ts` reads the configured font as the first-visit face.
