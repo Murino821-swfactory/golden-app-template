@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import { config, landingPresentation } from "../lib/prototype-config";
+import { config, contentFor, landingPresentation } from "../lib/prototype-config";
 import { MOTION_BUDGET_BYTES, MOTION_LOOPS, motionLoop } from "../lib/editorial";
 
 /**
@@ -14,6 +14,7 @@ import { MOTION_BUDGET_BYTES, MOTION_LOOPS, motionLoop } from "../lib/editorial"
  */
 
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
+const landing = contentFor(config).landing;
 const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const SRC = "/newapp/test/hero-image/AAAAAAAAAAAAAAAAAAAA.jpg";
@@ -117,6 +118,135 @@ test.describe("editorial motion — light loops and the running edge", () => {
     expect(await band.evaluate((el) => getComputedStyle(el).isolation)).toBe("isolate");
     await band.scrollIntoViewIfNeeded();
     await expect.poll(() => light.locator("video").evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);
+  });
+});
+
+/**
+ * The Apple round (T-340, founder 2026-11-06, after apple.com/macbook-pro/proled-xdr-display):
+ * Apple's motion, driven by CSS alone — a `view()` timeline flips a registered custom property
+ * and a container style query turns that flip into a timed transition, so a group arrives in
+ * 0.24–0.32 s with delays of 0.08 / 0.16 / 0.2 s on Apple's two curves; the manifesto holds
+ * still while its words light up (Apple's Display), How it works pins on a desktop and switches
+ * its active step (Apple's Performance), and the footer's index links arrive with `link-in`.
+ */
+const firstEntry = (list: string) => list.split(",")[0]!.trim();
+
+test.describe("editorial motion — the Apple round", () => {
+  test.skip(!editorial, "this config does not use the editorial presentation");
+
+  test("staggered fade-in: a group arrives in turn, 0.08 / 0.16 / 0.2 s, opacity and position on the ease-out", async ({ page }) => {
+    test.skip(!sections.includes("features") || !landing?.features, "no bento");
+    await page.goto("./");
+    const bento = page.locator('[data-section="features"] [data-bento]');
+    await expect(bento).toHaveAttribute("data-stagger");
+    const cards = bento.locator("> li");
+    const timing = await cards.evaluateAll((els) =>
+      els.slice(0, 3).map((el) => {
+        const cs = getComputedStyle(el);
+        return { delay: cs.transitionDelay, duration: cs.transitionDuration, ease: cs.transitionTimingFunction, property: cs.transitionProperty };
+      })
+    );
+    expect(timing.map((t) => firstEntry(t.delay))).toEqual(["0.08s", "0.16s", "0.2s"].slice(0, timing.length));
+    expect(timing[0]!.property.startsWith("opacity, translate")).toBe(true);
+    expect(timing[0]!.duration.startsWith("0.28s, 0.32s")).toBe(true);
+    expect(timing[0]!.ease.startsWith("cubic-bezier(0.33, 1, 0.68, 1)")).toBe(true);
+    // Out of view the group waits; brought into view it arrives.
+    const faq = page.locator('[data-section="faq"] [data-stagger] > [data-reveal]').first();
+    if (sections.includes("faq") && (await faq.count())) {
+      expect(await faq.evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
+      await faq.scrollIntoViewIfNeeded();
+      await expect.poll(() => faq.evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+    }
+  });
+
+  test("curves: Apple's ease-in-out for UI state and its ease-out for arrivals — no third curve", () => {
+    const css = readFileSync(resolve(__dirname, "../components/editorial/editorial.css"), "utf-8");
+    expect(css).toMatch(/--editorial-ease: cubic-bezier\(0\.4, 0, 0\.6, 1\);/);
+    expect(css).toMatch(/--editorial-ease-out: cubic-bezier\(0\.33, 1, 0\.68, 1\);/);
+    expect(css.match(/cubic-bezier\(/g)).toHaveLength(2);
+  });
+
+  test("Display: the manifesto holds still while its words light up", async ({ page }) => {
+    test.skip(!sections.includes("features") || !landing?.manifesto, "no manifesto");
+    await page.goto("./");
+    const pin = page.locator("[data-manifesto-pin]");
+    await expect(pin).toHaveCount(1);
+    const manifesto = pin.locator("[data-manifesto]");
+    expect(await manifesto.evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
+    const top = await pin.evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+    const height = await pin.evaluate((el) => el.getBoundingClientRect().height);
+    const vh = await page.evaluate(() => window.innerHeight);
+    expect(height).toBeGreaterThan(vh * 1.5);
+    const lit = () => manifesto.locator("[data-word]").evaluateAll((els) => els.filter((el) => getComputedStyle(el).opacity === "1").length);
+    const at = async (f: number) => {
+      await page.evaluate((y) => window.scrollTo(0, y), top + (height - vh) * f);
+      await page.waitForTimeout(150);
+      return { lit: await lit(), y: (await manifesto.boundingBox())!.y };
+    };
+    const early = await at(0.1);
+    const late = await at(0.9);
+    expect(late.lit).toBeGreaterThan(early.lit);
+    expect(Math.abs(late.y - early.y)).toBeLessThan(2);
+  });
+
+  test("Performance: on a desktop How it works pins and switches its active step as the page scrolls", async ({ page }, info) => {
+    test.skip(!sections.includes("howItWorks") || !landing?.howItWorks, "no steps");
+    await page.goto("./");
+    const pin = page.locator("[data-steps-pin]");
+    await expect(pin).toHaveCount(1);
+    const steps = pin.locator("ol > li");
+    const n = landing!.howItWorks!.steps.length;
+    await expect(pin.locator("ol")).toHaveAttribute("data-steps", String(n));
+    const stage = pin.locator("[data-steps-stage]");
+    if (info.project.name === "mobile") {
+      expect(await stage.evaluate((el) => getComputedStyle(el).position)).not.toBe("sticky");
+      return;
+    }
+    expect(await stage.evaluate((el) => getComputedStyle(el).position)).toBe("sticky");
+    const top = await pin.evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+    const height = await pin.evaluate((el) => el.getBoundingClientRect().height);
+    const vh = await page.evaluate(() => window.innerHeight);
+    expect(height).toBeGreaterThan(vh * 1.5);
+    // The lit step, once the 0.3 s crossfade has settled: exactly one at full opacity, the rest dimmed.
+    const lit = async () => {
+      const o = await steps.evaluateAll((els) => els.map((el) => getComputedStyle(el).opacity));
+      return o.filter((v) => v === "1").length === 1 && o.every((v) => v === "1" || Number(v) <= 0.3) ? o.indexOf("1") : -1;
+    };
+    const scrollTo = (f: number) => page.evaluate((y) => window.scrollTo(0, y), top + (height - vh) * f);
+    await scrollTo(0.05);
+    await expect.poll(lit).toBe(0);
+    await scrollTo(1.5 / n);
+    await expect.poll(lit).toBe(1);
+    await scrollTo(0.98);
+    await expect.poll(lit).toBe(n - 1);
+  });
+
+  test("index: the footer's links arrive with link-in — 4 px from above, 0.32 s, 20 ms apart after 0.28 s", async ({ page }) => {
+    await page.goto("./");
+    const index = page.locator("footer [data-index]");
+    await expect(index).toHaveCount(1);
+    const links = index.locator("> a");
+    const first = links.first();
+    expect(await first.evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
+    expect(await first.evaluate((el) => getComputedStyle(el).translate)).toBe("0px -4px");
+    const delays = await links.evaluateAll((els) => els.slice(0, 3).map((el) => getComputedStyle(el).transitionDelay.split(",")[0]!.trim()));
+    expect(delays).toEqual(["0.28s", "0.3s", "0.32s"]);
+    expect(await first.evaluate((el) => getComputedStyle(el).transitionDuration.split(",")[0]!.trim())).toBe("0.32s");
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => links.last().evaluate((el) => getComputedStyle(el).opacity)).toBe("1");
+  });
+
+  test("reduced motion: nothing waits, nothing pins — every group, step, word and link at rest", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("./");
+    const opacities = await page.locator("[data-stagger] > [data-reveal], footer [data-index] > a, [data-steps-pin] ol > li, [data-word]").evaluateAll((els) =>
+      els.map((el) => getComputedStyle(el).opacity)
+    );
+    expect(opacities.every((o) => o === "1")).toBe(true);
+    for (const sel of ["[data-steps-stage]", "[data-manifesto]"]) {
+      const el = page.locator(sel);
+      if (await el.count()) expect(await el.evaluate((e) => getComputedStyle(e).position)).not.toBe("sticky");
+    }
   });
 });
 

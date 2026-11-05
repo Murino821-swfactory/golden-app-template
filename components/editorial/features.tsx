@@ -15,7 +15,8 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  * numeral and Lucide icon in the palette's colour — then the showcase strip (tokenwise's
  * live products in two rows sliding past each other, `strip.tsx` — a fixed element on every
  * prototype, founder 2026-10-27) and, when the customer's copy has one, the manifesto: one paragraph in large type that lights up word by word as it
- * scrolls into the middle of the screen (`editorial.css`, `[data-word]`).
+ * scrolls into the middle of the screen (`editorial.css`, `[data-word]`). Since T-340 the cards
+ * arrive as one staggered group (`data-stagger`) and the manifesto is pinned while it lights up.
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -42,7 +43,7 @@ export function FeaturesSection() {
         <h2 className={DISPLAY_H2}>{landing?.featuresHeading ?? t("title")}</h2>
       </SectionHead>
 
-      <ul data-bento className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul data-bento data-stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, i) => {
           const Icon = feature.icon ? ICONS[feature.icon] : null;
           const span = bentoSpan(i, features.length);
@@ -65,14 +66,22 @@ export function FeaturesSection() {
 
       <ShowcaseStrip />
 
+      {/* Apple's Display (T-340): the paragraph holds still in a taller pin while its words
+          light up one after another — `editorial.css`, `--words` spreads them over the pin. */}
       {manifesto && (
-        <div data-manifesto className="editorial-manifesto mx-auto mt-24 flex max-w-4xl flex-col items-center gap-6 text-center sm:mt-32">
-          <p className="text-balance text-2xl font-light leading-snug tracking-[-0.02em] sm:text-4xl">
-            <strong className="font-medium text-primary">
-              <Words text={manifesto.lead} from={0} />
-            </strong>{" "}
-            <Words text={manifesto.body} from={leadWords} />
-          </p>
+        <div
+          data-manifesto-pin
+          className="editorial-manifesto-pin mt-24 sm:mt-32"
+          style={{ "--words": leadWords + manifesto.body.split(" ").length } as CSSProperties}
+        >
+          <div data-manifesto className="editorial-manifesto mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center">
+            <p className="text-balance text-2xl font-light leading-snug tracking-[-0.02em] sm:text-4xl">
+              <strong className="font-medium text-primary">
+                <Words text={manifesto.lead} from={0} />
+              </strong>{" "}
+              <Words text={manifesto.body} from={leadWords} />
+            </p>
+          </div>
         </div>
       )}
     </section>

@@ -652,6 +652,22 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `prefers-reduced-motion`. Without support or with reduced motion everything is at its
   finished state. Decorative wrappers use `overflow: clip`, never `hidden` (a scroll
   container would become the timeline's root). No `scroll-behavior: smooth`.
+  **Apple round (T-340, 2026-11-06, values read from apple.com's own CSS):** two curves only,
+  `--editorial-ease` (0.4, 0, 0.6, 1) for UI state and `--editorial-ease-out` (0.33, 1, 0.68,
+  1) for arrivals (the test counts exactly two `cubic-bezier(` in `editorial.css`). Groups
+  (`data-stagger` on the bento, the steps, the FAQ list, the closing section) arrive in turn:
+  the group's `view()` timeline flips the registered `--editorial-seen` 0 → 1 and a container
+  style query turns it into a timed transition of its `[data-reveal]` children — opacity
+  0.28 s + `translate` 0.32 s, delays 0.08 / 0.16 / 0.2 s by `--i` (`translate`, so a card's
+  hover `transform` keeps its own transition). The footer's index (`data-index`) uses Apple's
+  `link-in`: 4 px from above, 0.32 s, 0.28 s + 20 ms per link. `animation-play-state` driven
+  by an animated custom property does NOT work (Chromium ignores it) — keep the style-query
+  form. **Display**: the manifesto sits sticky in `[data-manifesto-pin]` (200svh, the
+  `--manifesto` timeline) and its words light up across the pin with a passing glow
+  (`--words`). **Performance**: on ≥ 1024 × 720 How it works pins (`[data-steps-pin]` →
+  `[data-steps-stage]` sticky), `--editorial-step` steps through `editorial-steps-3|4` and a
+  style query lights one step, dims the rest (0.3) and the line draws up to it. The hero's
+  load sequence uses the same stagger (0.32 s; 80 / 160 / 200 / 240 ms).
 - **AI hero image**: `hero-image.json` may carry `placement: "object"`; the editorial hero
   then draws it as a figure beside the words (`[data-hero-object]`), with the words left
   aligned and no text over the image. Without it — every image before 2026-10-26 — it is the
