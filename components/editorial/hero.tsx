@@ -18,6 +18,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
 /**
@@ -40,6 +41,11 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  *
  * `overflow-clip`, not `-hidden`: a hidden overflow is a scroll container, and the
  * scroll-driven reveals in `editorial.css` would measure against it instead of the page.
+ *
+ * T-340 (after vercel.com's backlit prism, apple.com's rising orb and framer.com's prompt
+ * box): with no AI image the headline stands in front of an eclipse — a Blender loop of a
+ * corona walking the rim of a dark orb (`LightLoop`, tinted by the palette) — and a light
+ * runs along the frame's edge. An AI image owns the hero, so it gets no eclipse.
  */
 
 const listings = config.patterns.listings;
@@ -156,6 +162,7 @@ export function HeroSection() {
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
+      {!background && !object && <LightLoop name="hero-light" marker="data-hero-light" className="editorial-light-hero" />}
 
       <div
         className={cn(
@@ -207,6 +214,7 @@ export function HeroSection() {
               device switcher narrows it to a tablet or a phone (data-device). */}
           <div data-device={device} className="editorial-fold editorial-enter relative mt-14 overflow-clip sm:mt-16">
             <div data-hero-frame data-device={device} className="editorial-frame mx-auto w-full rounded-t-3xl">
+              <span aria-hidden="true" data-frame-run className="editorial-run" />
               <div className="editorial-frame-bar flex items-center gap-1.5 px-4 py-2">
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />

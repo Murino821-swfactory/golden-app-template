@@ -118,3 +118,33 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
   return [tiles.slice(0, half), tiles.slice(half)];
 }
 
+
+/**
+ * The light loops (T-340, after framer.com, vercel.com, linear.app and apple.com): short
+ * seamless videos rendered in Blender from `scripts/motion/<name>.py` — neutral light on
+ * black, so the page screens them onto any palette and tints them with the palette's second
+ * accent (`editorial.css`, `.editorial-light`). `hero-light` is the eclipse behind the
+ * headline, `closing-light` the ribbons behind the closing band.
+ */
+export const MOTION_LOOPS = ["hero-light", "closing-light"] as const;
+export type MotionLoopName = (typeof MOTION_LOOPS)[number];
+
+export interface MotionLoop {
+  poster: string;
+  sources: { src: string; type: string }[];
+}
+
+/** One loop's files under this build's base path: VP9 WebM first, H.264 MP4 for Safari, a WebP still. */
+export function motionLoop(basePath: string, name: MotionLoopName): MotionLoop {
+  const base = `${basePath}/motion/${name}`;
+  return {
+    poster: `${base}.webp`,
+    sources: [
+      { src: `${base}.webm`, type: "video/webm" },
+      { src: `${base}.mp4`, type: "video/mp4" },
+    ],
+  };
+}
+
+/** What one loop's three files may weigh together — every prototype ships every loop. */
+export const MOTION_BUDGET_BYTES = 1_200_000;
