@@ -126,7 +126,18 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
  * accent (`editorial.css`, `.editorial-light`). `hero-light` is the eclipse behind the
  * headline, `closing-light` the ribbons behind the closing band.
  */
-export const MOTION_LOOPS = ["hero-light", "closing-light"] as const;
+export const MOTION_LOOPS = [
+  "hero-light",
+  "closing-light",
+  // T-368 — the three proposals (`lib/scene.ts`): the backlight, the device, the orb; the stage
+  // light and the glass layers it reveals; the glass and chrome study.
+  "stage-field",
+  "stage-slab",
+  "stage-orb",
+  "beam-cone",
+  "beam-layers",
+  "glass-objects",
+] as const;
 export type MotionLoopName = (typeof MOTION_LOOPS)[number];
 
 export interface MotionLoop {

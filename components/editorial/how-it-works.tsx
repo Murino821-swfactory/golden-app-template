@@ -3,7 +3,9 @@
 import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
+import { SCENE, sceneLoops } from "@/lib/scene";
 import { cn } from "@/lib/utils";
+import { ScrubClip } from "./scrub-clip";
 import { DISPLAY_H2, GridBackdrop, Numeral, SectionHead } from "./ui";
 
 /**
@@ -18,7 +20,11 @@ import { DISPLAY_H2, GridBackdrop, Numeral, SectionHead } from "./ui";
  * a taller box; `[data-steps-stage]`, sticky) and the page's scroll walks through the steps —
  * one is lit, the others dim, the line draws up to it. A phone, a short window, reduced motion
  * or a browser without scroll timelines get the steps as before, arriving as a staggered group.
+ *
+ * T-368: the `beam` scene puts a scrubbed Blender clip behind the stage (`data-steps-light`).
  */
+const LOOPS = sceneLoops(SCENE);
+
 export function HowItWorksSection() {
   const t = useTranslations("howItWorks");
   const block = useContent().landing?.howItWorks;
@@ -30,7 +36,10 @@ export function HowItWorksSection() {
     <section id="howItWorks" data-section="howItWorks" className="scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 py-20 sm:py-28">
       <GridBackdrop />
       <div data-steps-pin className="editorial-steps-pin">
-        <div data-steps-stage className="editorial-steps-stage">
+        <div data-steps-stage data-scrub-stage className="editorial-steps-stage">
+          {/* T-368 beam: glass layers assemble under the stage light as the pin walks the steps —
+              the scroll scrubs the clip (`ScrubClip`); a phone plays it once as it comes into view. */}
+          {LOOPS.steps && <ScrubClip name={LOOPS.steps} marker="data-steps-light" runway="[data-steps-pin]" className="editorial-light-steps" />}
           <SectionHead>
             <h2 className={DISPLAY_H2}>{block.heading ?? t("title")}</h2>
           </SectionHead>

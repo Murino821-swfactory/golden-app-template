@@ -31,6 +31,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| The three motion scenes to choose from (T-368): build-time `NEXT_PUBLIC_EDITORIAL_SCENE`, scrubbed clips | `lib/scene.ts`, `components/editorial/scenes.css`, `scrub-clip.tsx`, `scripts/motion/{stage-*,beam-*,glass-*}.py` — see "The editorial presentation", fourth round |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
@@ -707,6 +708,33 @@ copy contract, same `data-section` markers — the suites that read the page kee
   hidden under reduced motion. To change a loop: edit the scene, render
   (`blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`, Blender 5.2,
   OptiX), encode, keep the budget test green.
+- **Fourth round — three scenes to choose from (T-368, 2026-11-07)**, after the founder read the
+  pattern catalogue of framer / apple / lovable / vercel / linear and asked for Apple's quality:
+  things appearing in turn, light against dark, a lot of motion, video, scenes rendered in
+  Blender. `lib/scene.ts` reads **`NEXT_PUBLIC_EDITORIAL_SCENE`** at build time (`stage` | `beam` |
+  `glass`; unset = the page above) and names it on the page root (`data-scene`); `sceneLoops()`
+  says which loop stands behind the hero, the close, the first feature card and How it works;
+  `components/editorial/scenes.css` holds every rule, all under `[data-scene="…"]`, so a build
+  without a scene is byte-for-byte the third round. **stage** — the backlight (`stage-field`,
+  Apple's local dimming: whole zones switching on behind the headline), the frame's screen
+  turning on after it rises, cards flaring like dimming zones as they arrive (`--editorial-seen`
+  starts the keyframes), the manifesto on a **bright panel** (`.editorial-bright`: the palette
+  turned over — ink becomes paper, the accent pulled toward the old paper for contrast; full
+  bleed by `box-shadow` + `clip-path`, never by width; the token stash lives on the page root
+  because a custom property may not read itself), the device in the first card (`stage-slab`,
+  `data-card-light`), the orb rising behind the close (`stage-orb`). **beam** — one stage light
+  through haze with dust (`beam-cone`), a sheen crossing the frame on the first scroll, every
+  group **lit in by a wipe** (a mask twice the item's width moved across it) instead of faded,
+  a spot that follows the reader from section to section, glass layers assembling under the
+  beam as the steps advance (`beam-layers`, `ScrubClip` in `scrub-clip.tsx`: inside the steps'
+  pin the clip's time follows `pinProgress()`; a phone plays it once; encoded with `GOP=12`).
+  **glass** — frosted glass and chrome drifting either side of the headline (`glass-objects`),
+  the frame and the cards as glass (blur, a specular hairline), items dealt onto the page with a
+  tilt from depth (`rotate` / `scale`), the manifesto's words sharpening out of a blur, the FAQ
+  on a bright pane. Previews: four static exports served from the PC (`out-0`, `out-stage`,
+  `out-beam`, `out-glass`). After the founder's pick that scene becomes the default and the
+  other two leave with their loops — no prototype ships light it never shows. Tests:
+  `tests/editorial-scenes.spec.ts` (pure always; the page cases read the same variable).
 - **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
