@@ -2,21 +2,23 @@ import { test, expect } from "@playwright/test";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
-import { MOTION_BUDGET_BYTES, MOTION_LOOPS, motionLoop } from "../lib/editorial";
+import { MOTION_BUDGET_BYTES, MOTION_LOOPS, MOTION_SMALL_QUERY, motionLoop } from "../lib/editorial";
 
 /**
  * Editorial motion, third round (T-340, 2026-11-05: after framer.com, vercel.com, linear.app
- * and apple.com's MacBook Pro display page). Two light loops rendered in Blender — the eclipse
- * behind the hero's headline and the light ribbons behind the closing band — shipped as
- * neutral light on black and tinted by the palette in CSS, and a light that runs along the
- * hero frame's edge (Framer's prompt box). `editorial.spec.ts` and `editorial-v2.spec.ts`
- * keep guarding the earlier rounds.
+ * and apple.com's MacBook Pro display page): light loops rendered in Blender behind the hero's
+ * headline and the closing band — neutral light on black, tinted by the palette in CSS — and a
+ * light that runs along the hero frame's edge (Framer's prompt box). Since T-369 the loops are
+ * the stage scene's (`stage-field`, `stage-orb`; `tests/editorial-stage.spec.ts` covers what the
+ * stage adds). `editorial.spec.ts` and `editorial-v2.spec.ts` keep guarding the earlier rounds.
  */
 
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 const landing = contentFor(config).landing;
 const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+/** The file a loop's `<source>` names on this screen: the half-width one on a phone (T-369). */
+const shown = (small: boolean, source: { src: string; small: string }) => (small ? source.small : source.src);
 const SRC = "/newapp/test/hero-image/AAAAAAAAAAAAAAAAAAAA.jpg";
 const PIXEL = Buffer.from(
   "/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=",
@@ -26,18 +28,21 @@ const PIXEL = Buffer.from(
 test.describe("editorial motion — light loops and the running edge", () => {
   test.skip(!editorial, "this config does not use the editorial presentation");
 
-  test("hero light: the eclipse loop behind the headline — decoration, tinted by the palette, playing", async ({ page }) => {
+  test("hero light: the backlight loop behind the headline — decoration, tinted by the palette, playing", async ({ page }) => {
     test.skip(!sections.includes("hero"), "no hero");
     await page.goto("./");
     const hero = page.locator('[data-section="hero"]');
     const light = hero.locator("[data-hero-light]");
     await expect(light).toHaveCount(1);
     await expect(light).toHaveAttribute("aria-hidden", "true");
-    const loop = motionLoop(BASE, "hero-light");
+    const loop = motionLoop(BASE, "stage-field");
     const video = light.locator("video");
     await expect(video).toHaveAttribute("poster", loop.poster);
+    // The sources arrive once the screen is known (no `<source>` in the static HTML).
+    const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
+    await expect(video.locator("source")).toHaveCount(loop.sources.length);
     expect(await video.locator("source").evaluateAll((els) => els.map((el) => [el.getAttribute("src"), el.getAttribute("type")]))).toEqual(
-      loop.sources.map((s) => [s.src, s.type])
+      loop.sources.map((s) => [shown(small, s), s.type])
     );
     expect(await video.evaluate((v: HTMLVideoElement) => [v.muted, v.loop, v.playsInline])).toEqual([true, true, true]);
     // Neutral light on black, screened onto the page; the tint layer gives it the palette's hue.
@@ -69,7 +74,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
     expect(await page.locator("[data-hero-light]").evaluate((el) => getComputedStyle(el).animationName)).toBe("none");
   });
 
-  test("hero light: an AI image owns the hero — no eclipse beside an object", async ({ page }) => {
+  test("hero light: an AI image owns the hero — no light beside an object", async ({ page }) => {
     test.skip(!sections.includes("hero"), "no hero");
     await page.route("**/hero-image.json", (route) =>
       route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ visible: true, src: SRC, placement: "object" }) })
@@ -106,14 +111,15 @@ test.describe("editorial motion — light loops and the running edge", () => {
     expect(await run.evaluate((el) => getComputedStyle(el).display)).toBe("none");
   });
 
-  test("closing: light ribbons behind the band, under its words", async ({ page }) => {
+  test("closing: the orb behind the band, under its words", async ({ page }) => {
     test.skip(!sections.includes("cta"), "no closing section");
     await page.goto("./");
     const band = page.locator('[data-section="cta"] .editorial-band');
     const light = band.locator("[data-closing-light]");
     await expect(light).toHaveCount(1);
     await expect(light).toHaveAttribute("aria-hidden", "true");
-    await expect(light.locator("video source").first()).toHaveAttribute("src", motionLoop(BASE, "closing-light").sources[0]!.src);
+    const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
+    await expect(light.locator("video source").first()).toHaveAttribute("src", shown(small, motionLoop(BASE, "stage-orb").sources[0]!));
     expect(await light.evaluate((el) => getComputedStyle(el).zIndex)).toBe("-1");
     expect(await band.evaluate((el) => getComputedStyle(el).isolation)).toBe("isolate");
     await band.scrollIntoViewIfNeeded();
@@ -251,24 +257,29 @@ test.describe("editorial motion — the Apple round", () => {
 });
 
 test.describe("editorial motion (pure)", () => {
-  test("motionLoop: WebM before MP4 under the base path, and a still for the poster", () => {
-    expect(motionLoop("/newapp/x", "hero-light")).toEqual({
-      poster: "/newapp/x/motion/hero-light.webp",
+  test("motionLoop: WebM before MP4 under the base path, a phone file beside each, and a still for the poster", () => {
+    expect(motionLoop("/newapp/x", "stage-field")).toEqual({
+      poster: "/newapp/x/motion/stage-field.webp",
       sources: [
-        { src: "/newapp/x/motion/hero-light.webm", type: "video/webm" },
-        { src: "/newapp/x/motion/hero-light.mp4", type: "video/mp4" },
+        { src: "/newapp/x/motion/stage-field.webm", type: "video/webm", small: "/newapp/x/motion/stage-field-sm.webm" },
+        { src: "/newapp/x/motion/stage-field.mp4", type: "video/mp4", small: "/newapp/x/motion/stage-field-sm.mp4" },
       ],
     });
-    expect(motionLoop("", "closing-light").poster).toBe("/motion/closing-light.webp");
+    expect(motionLoop("", "stage-orb").poster).toBe("/motion/stage-orb.webp");
   });
 
-  test("every loop ships its three files, and together they stay inside the budget", () => {
+  test("every loop ships its three files inside the budget, and a phone file weighs at most 60 % of its full one", () => {
+    const path = (p: string) => resolve(__dirname, "../public", `.${p}`);
     for (const name of MOTION_LOOPS) {
       const loop = motionLoop("", name);
-      const files = [loop.poster, ...loop.sources.map((s) => s.src)].map((p) => resolve(__dirname, "../public", `.${p}`));
+      const files = [loop.poster, ...loop.sources.map((s) => s.src)].map(path);
       for (const file of files) expect(existsSync(file), file).toBe(true);
       const bytes = files.reduce((sum, file) => sum + statSync(file).size, 0);
       expect(bytes, `${name}: ${bytes} bytes`).toBeLessThanOrEqual(MOTION_BUDGET_BYTES);
+      for (const source of loop.sources) {
+        expect(existsSync(path(source.small)), source.small).toBe(true);
+        expect(statSync(path(source.small)).size, source.small).toBeLessThanOrEqual(statSync(path(source.src)).size * 0.6);
+      }
     }
   });
 

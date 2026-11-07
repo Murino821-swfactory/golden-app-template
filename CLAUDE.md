@@ -31,6 +31,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, orb, phone files | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
@@ -694,19 +695,40 @@ copy contract, same `data-section` markers — the suites that read the page kee
   apple.com's MacBook Pro display page: two seamless 8 s loops rendered in **Blender**
   (`scripts/motion/<name>.py`, encoded by `scripts/motion/encode.sh` into
   `public/motion/<name>.{webm,mp4,webp}`, `lib/editorial.ts` `MOTION_LOOPS`/`motionLoop`, budget
-  `MOTION_BUDGET_BYTES` per loop). `hero-light` — an eclipse behind the headline (a dark orb, a
-  corona whose bright arc walks the rim, two small pearls, a light streak once per loop; after
-  Vercel's backlit prism and Apple's rising orb) — renders only when no AI image owns the hero;
-  `closing-light` — ribbons of light behind the closing band. `LightLoop`
-  (`components/editorial/light-loop.tsx`): `preload="none"`, plays only on screen and only without
-  reduced motion (the WebP still otherwise), decoration only. The renders are grey light on black:
+  `MOTION_BUDGET_BYTES` per loop). The round's own loops (`hero-light`, an eclipse; `closing-light`,
+  ribbons) left with T-369 — the loops are the stage's (fourth round); the hero's renders only
+  when no AI image owns the hero. `LightLoop` (`components/editorial/light-loop.tsx`):
+  `preload="none"`, plays only on screen and only without reduced motion (the WebP still
+  otherwise), decoration only; a phone (`MOTION_SMALL_QUERY`, the `sm` breakpoint) gets the
+  half-width `<name>-sm` files, swapped in before the first byte loads — Chromium does not honour
+  `media` on a video's `<source>`, so the component does it. The renders are grey light on black:
   `.editorial-light` screens them onto the page and a `color`-blended layer of
   `var(--highlight, var(--primary))` gives them the palette's hue — "Change colour" relights them,
   no colour is encoded. The hero frame gets a **running edge** (`[data-frame-run]`, after Framer's
   prompt box): an arc of light travels round its border (conic gradient + `@property` angle),
   hidden under reduced motion. To change a loop: edit the scene, render
   (`blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`, Blender 5.2,
-  OptiX), encode, keep the budget test green.
+  OptiX), encode twice (the full loop, then `STILL=0 scripts/motion/encode.sh <name>-sm <frames>
+  <half width> <half height>`), keep the budget test green (three files per loop inside the
+  budget, each phone file at most 60 % of its full one).
+- **Fourth round — the stage (T-368 → T-369, 2026-11-07/08)**, after the founder read the pattern
+  catalogue of framer / apple / lovable / vercel / linear and asked for Apple's quality: things
+  appearing in turn, light against dark, a lot of motion, video, scenes rendered in Blender. Three
+  proposals were built behind a build-time switch and previewed on the PC (`stage`, `beam`,
+  `glass`; history at c6a24a2); the founder chose **stage**, and T-369 made it the editorial page
+  itself — the switch, the other two scenes and their loops left the repository (no prototype
+  ships light it never shows). `components/editorial/stage.css` holds every rule, all under
+  `[data-presentation="editorial"]` and loaded after `editorial.css`, whose light rules it
+  refines: the **backlight** (`stage-field`, Apple's local dimming — whole zones switching on
+  behind the headline), the frame's **screen turning on** after it rises (`editorial-screen-on`),
+  cards **flaring like dimming zones** as they arrive (`--editorial-seen` starts
+  `editorial-zone-on` / `editorial-numeral-on`), the manifesto on a **bright panel**
+  (`.editorial-bright`: the palette turned over — ink becomes paper, the accent pulled toward the
+  old paper for contrast; full bleed by `box-shadow` + `clip-path`, never by width; the token
+  stash lives on the page root because a custom property may not read itself), the **device in
+  the first card** (`stage-slab`, `data-card-light`; under the words on a phone, on the far side
+  from 640px), the **orb rising** behind the close (`stage-orb`, `editorial-orb-rise` on a view
+  timeline). Tests: `tests/editorial-stage.spec.ts`.
 - **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
