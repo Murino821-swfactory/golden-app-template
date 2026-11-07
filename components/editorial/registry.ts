@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import "./editorial.css";
-import "./scenes.css";
+import "./stage.css";
 import { CtaSection } from "./cta";
 import { FaqSection } from "./faq";
 import { FeaturesSection } from "./features";

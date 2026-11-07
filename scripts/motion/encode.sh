@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Encode a rendered light loop (T-340) into the three files the page ships:
+# Encode a rendered light loop (T-340) into the files the page ships:
 #   public/motion/<name>.webm (VP9), .mp4 (H.264, Safari), .webp (the still: poster and reduced motion).
 # Usage: scripts/motion/encode.sh <name> <frames-dir> <width> <height> [poster-frame]
-# GOP=12 shortens the keyframe interval for a clip the scroll scrubs (T-368 `beam-layers`): a seek lands on a
-# keyframe at most half a second away instead of decoding up to ten seconds of frames. Costs bytes; loops omit it.
+# STILL=0 skips the still — the phone variant of a loop (`<name>-sm`, half the width, T-369) shares the
+# full loop's poster. GOP=<n> shortens the keyframe interval for a clip that is seeked rather than played.
 # The frames are the PNG sequence `blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`
 # writes (f_0001.png …). Grey light on black; the page tints it, so no colour is encoded.
 set -euo pipefail
@@ -18,6 +18,10 @@ ffmpeg -v error -y -framerate 24 -i "$frames/f_%04d.png" -vf "$scale" -c:v libvp
   -row-mt 1 -deadline good -cpu-used 1 -pass 2 "${gop[@]}" -an "$out/$name.webm"
 ffmpeg -v error -y -framerate 24 -i "$frames/f_%04d.png" -vf "$scale" -c:v libx264 -preset slow -tune grain -crf "${X264_CRF:-30}" \
   -profile:v high -movflags +faststart "${gop[@]}" -an "$out/$name.mp4"
-ffmpeg -v error -y -i "$frames/f_${poster}.png" -vf "scale=${w}:${h}:flags=lanczos" -c:v libwebp -quality 82 "$out/$name.webp"
+files=("$name.webm" "$name.mp4")
+if [ "${STILL:-1}" = 1 ]; then
+  ffmpeg -v error -y -i "$frames/f_${poster}.png" -vf "scale=${w}:${h}:flags=lanczos" -c:v libwebp -quality 82 "$out/$name.webp"
+  files+=("$name.webp")
+fi
 rm -f ffmpeg2pass-0.log
-for f in "$name.webm" "$name.mp4" "$name.webp"; do printf "%-22s %7d B\n" "$f" "$(stat -c %s "$out/$f")"; done
+for f in "${files[@]}"; do printf "%-22s %7d B\n" "$f" "$(stat -c %s "$out/$f")"; done

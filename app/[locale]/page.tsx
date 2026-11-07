@@ -14,7 +14,6 @@ import { LandingStory } from "@/components/sections/landing-story";
 import { landingJsonLd } from "@/lib/seo";
 import { config, landingPresentation } from "@/lib/prototype-config";
 import { EDITORIAL_SECTIONS } from "@/components/editorial/registry";
-import { SCENE } from "@/lib/scene";
 
 // ONE source of truth for sections: prototype.config.json (P5). This used to also be
 // readable from a `?sections=` URL param, wired for a wizard iframe preview that stopped
@@ -52,7 +51,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   return (
     <>
       <script data-site-jsonld type="application/ld+json" dangerouslySetInnerHTML={{ __html: landingJsonLd(locale) }} />
-      <LandingStory presentation={PRESENTATION} tone={config.patterns.landing?.tone ?? "light"} scene={PRESENTATION === "editorial" ? SCENE : null} chapters={SECTIONS.map((id) => {
+      <LandingStory presentation={PRESENTATION} tone={config.patterns.landing?.tone ?? "light"} chapters={SECTIONS.map((id) => {
         const Section = REGISTRY[id];
         return { id, content: Section ? <Section /> : null };
       })} />

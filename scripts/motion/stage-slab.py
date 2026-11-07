@@ -1,6 +1,6 @@
 """T-368 scene A "stage" — the device: a dark glass slab standing on the right of the frame, turning slowly as a
 light sweeps across its face, a faint grid of LEDs breathing under its glass. The first feature card shows it
-(`scenes.css` keeps the words on the left). Grey light on black; the page tints it with the palette. Seamless loop.
+(`stage.css` keeps the words on the left). Grey light on black; the page tints it with the palette. Seamless loop.
 Run: blender -b --factory-startup -P scripts/motion/stage-slab.py -- --out DIR [--anim] [--w 1280 --h 720] [--spp 64]
 Encode: scripts/motion/encode.sh stage-slab DIR 1280 720"""
 import math, os, sys

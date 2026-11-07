@@ -7,13 +7,11 @@ import { useTranslations } from "next-intl";
  * gets a sticky stage; `editorial` (the default since 2026-10-26) and `document` are long
  * pages. Native page scrolling drives the stage; there is no wheel interception or body
  * scroll lock. `data-presentation` names which of the three the config chose. */
-export function LandingStory({ chapters, presentation, tone, scene }: {
+export function LandingStory({ chapters, presentation, tone }: {
   chapters: { id: string; content: ReactNode }[];
   presentation?: "editorial" | "story" | "document";
   /** The editorial page's typographic voice (`patterns.landing.tone`); `data-tone` on the root. */
   tone?: "light" | "bold";
-  /** The editorial page's motion proposal (T-368, `lib/scene.ts`); `data-scene` on the root, absent for none. */
-  scene?: "stage" | "beam" | "glass" | null;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const [story, setStory] = useState(false);
@@ -91,7 +89,7 @@ export function LandingStory({ chapters, presentation, tone, scene }: {
   }
 
   return (
-    <div ref={root} data-landing-mode={story ? "story" : "document"} data-presentation={presentation} data-tone={tone} data-scene={scene ?? undefined}
+    <div ref={root} data-landing-mode={story ? "story" : "document"} data-presentation={presentation} data-tone={tone}
       style={{ "--chapters": chapters.length } as CSSProperties}
       onClickCapture={(event) => {
         if (!story || !(event.target instanceof Element)) return;

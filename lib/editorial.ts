@@ -123,36 +123,32 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
  * The light loops (T-340, after framer.com, vercel.com, linear.app and apple.com): short
  * seamless videos rendered in Blender from `scripts/motion/<name>.py` — neutral light on
  * black, so the page screens them onto any palette and tints them with the palette's second
- * accent (`editorial.css`, `.editorial-light`). `hero-light` is the eclipse behind the
- * headline, `closing-light` the ribbons behind the closing band.
+ * accent (`editorial.css`, `.editorial-light`). Since T-369 (the founder's pick of the `stage`
+ * scene among the three of T-368, `stage.css`) the loops are the stage's: `stage-field`, a
+ * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card;
+ * `stage-orb`, the orb rising behind the close.
  */
-export const MOTION_LOOPS = [
-  "hero-light",
-  "closing-light",
-  // T-368 — the three proposals (`lib/scene.ts`): the backlight, the device, the orb; the stage
-  // light and the glass layers it reveals; the glass and chrome study.
-  "stage-field",
-  "stage-slab",
-  "stage-orb",
-  "beam-cone",
-  "beam-layers",
-  "glass-objects",
-] as const;
+export const MOTION_LOOPS = ["stage-field", "stage-slab", "stage-orb"] as const;
 export type MotionLoopName = (typeof MOTION_LOOPS)[number];
 
 export interface MotionLoop {
   poster: string;
-  sources: { src: string; type: string }[];
+  /** VP9 WebM first, H.264 MP4 for Safari; `small` is the same file at half the width
+   * (`<name>-sm`), what a phone loads (`MOTION_SMALL_QUERY`, `LightLoop`). */
+  sources: { src: string; type: string; small: string }[];
 }
 
-/** One loop's files under this build's base path: VP9 WebM first, H.264 MP4 for Safari, a WebP still. */
+/** A phone, by the page's own `sm` breakpoint (`@media (min-width: 640px)` everywhere in the editorial styles). */
+export const MOTION_SMALL_QUERY = "(max-width: 639px)";
+
+/** One loop's files under this build's base path. */
 export function motionLoop(basePath: string, name: MotionLoopName): MotionLoop {
   const base = `${basePath}/motion/${name}`;
   return {
     poster: `${base}.webp`,
     sources: [
-      { src: `${base}.webm`, type: "video/webm" },
-      { src: `${base}.mp4`, type: "video/mp4" },
+      { src: `${base}.webm`, type: "video/webm", small: `${base}-sm.webm` },
+      { src: `${base}.mp4`, type: "video/mp4", small: `${base}-sm.mp4` },
     ],
   };
 }
