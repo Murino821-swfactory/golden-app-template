@@ -19,6 +19,7 @@ import { DISPLAY_H2, GridBackdrop, Numeral, SectionHead } from "./ui";
  * one is lit, the others dim, the line draws up to it. A phone, a short window, reduced motion
  * or a browser without scroll timelines get the steps as before, arriving as a staggered group.
  */
+
 export function HowItWorksSection() {
   const t = useTranslations("howItWorks");
   const block = useContent().landing?.howItWorks;

@@ -1,0 +1,204 @@
+/*
+ * stage.css — the backlight: the editorial page's motion scene since T-369 (2026-11-08), the
+ * founder's pick among the three proposals of T-368 (stage, beam, glass — the other two live in
+ * the history at c6a24a2) after apple.com's ProLED XDR page, the one he found richest in the
+ * pattern catalogue: things appear in turn, light against dark, a lot of motion, video, and
+ * scenes rendered in Blender.
+ *
+ *   A board of mini-LEDs behind the headline, whole zones switching on (`stage-field`); the
+ *   frame's screen turns on after the frame rises; each card lights up like a dimming zone as
+ *   it arrives, its numeral flaring; the manifesto on a bright panel (Apple's big words on
+ *   white); a device rendered in the first card (`stage-slab`); an orb rising behind the close
+ *   (`stage-orb`). Every rule sits under the editorial root (`[data-presentation="editorial"]`)
+ *   and loads after `editorial.css`, whose light rules it refines.
+ *
+ * Rules of the house kept: every colour a palette token through color-mix (the no-hex test greps
+ * this folder); the two curves only (`--editorial-ease`, `--editorial-ease-out`); scroll-driven
+ * motion behind `@supports` and `prefers-reduced-motion`; `overflow: clip`, never hidden.
+ */
+
+/* ── The device in the first card fills it; the card is isolated so the light stays inside ── */
+.editorial-light-card {
+  inset: 0;
+}
+
+/* A bright panel: the palette turned over — the ink becomes the paper. Every editorial rule
+   reads tokens, so redefining them on the panel repaints it; the accent is pulled toward the
+   old paper so it keeps its contrast on the new one. The stash lives one level up because a
+   custom property may not read itself — on the page root, above every section. Full-bleed by
+   shadow, not by width: the page's scroll width never grows — and the same shadow paints the
+   panel `--bright-bleed` taller at both ends without touching the box, so a sticky child keeps
+   its whole runway (padding on a pin would shorten it). */
+[data-presentation="editorial"] {
+  --editorial-ink: var(--foreground);
+  --editorial-paper: var(--background);
+  --editorial-accent: var(--primary);
+}
+.editorial-bright {
+  --background: var(--editorial-ink);
+  --foreground: var(--editorial-paper);
+  --card: color-mix(in oklab, var(--editorial-ink) 94%, var(--editorial-paper));
+  --primary: color-mix(in oklab, var(--editorial-accent) 55%, var(--editorial-paper));
+  --muted-foreground: color-mix(in oklab, var(--editorial-paper) 72%, var(--editorial-ink));
+  --border: color-mix(in oklab, var(--editorial-paper) 18%, var(--editorial-ink));
+  color: var(--foreground);
+  background: var(--background);
+  --bright-bleed: 0px;
+  box-shadow: 0 0 0 100vmax var(--background);
+  clip-path: inset(calc(var(--bright-bleed) * -1) -100vmax);
+}
+
+/* ── The backlight behind the headline: a 2:1 band, its edge dissolved ─────────────────── */
+[data-presentation="editorial"] .editorial-light-hero {
+  --light-w: min(175vw, 104rem);
+  --light-h: calc(var(--light-w) / 2);
+  --light-centre: 17rem;
+  top: calc(var(--light-centre) - var(--light-h) / 2);
+  left: 50%;
+  width: var(--light-w);
+  height: var(--light-h);
+  margin-left: calc(var(--light-w) / -2);
+  mask-image: radial-gradient(52% 50% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(52% 50% at 50% 50%, black 30%, transparent 100%);
+}
+@media (min-width: 640px) {
+  [data-presentation="editorial"] .editorial-light-hero {
+    --light-centre: 23rem;
+  }
+}
+
+/* The frame's screen is dark when the frame rises, then its backlight comes on — a flicker,
+   as a panel does — and the product is lit. */
+[data-presentation="editorial"] .editorial-frame-screen {
+  position: relative;
+}
+[data-presentation="editorial"] .editorial-frame-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--editorial-void);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-presentation="editorial"] .editorial-frame-screen::after {
+    animation: editorial-screen-on 1500ms var(--editorial-ease) 560ms both;
+  }
+}
+@keyframes editorial-screen-on {
+  0%, 52% {
+    opacity: 1;
+  }
+  58% {
+    opacity: 0.4;
+    background: color-mix(in oklab, var(--highlight, var(--primary)) 40%, var(--editorial-void));
+  }
+  64% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The device in the first card: under the words on a phone (the card grows to hold it), on
+   the card's far side from 640px, where the words keep the near side. */
+[data-presentation="editorial"] [data-bento] > li:first-child {
+  isolation: isolate;
+  min-height: 26rem;
+}
+[data-presentation="editorial"] .editorial-light-card {
+  mask-image: linear-gradient(to bottom, transparent 28%, black 58%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 28%, black 58%);
+}
+[data-presentation="editorial"] .editorial-light-card video {
+  object-position: 50% 100%;
+}
+@media (min-width: 640px) {
+  [data-presentation="editorial"] [data-bento] > li:first-child {
+    min-height: 22rem;
+  }
+  [data-presentation="editorial"] .editorial-light-card {
+    mask-image: linear-gradient(to right, transparent 0%, black 42%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 42%);
+  }
+  [data-presentation="editorial"] .editorial-light-card video {
+    object-position: 78% 50%;
+  }
+}
+
+/* The manifesto on a bright panel: the pin's height, breathing 5rem beyond it at both ends. */
+[data-presentation="editorial"] .editorial-manifesto-pin {
+  --bright-bleed: 5rem;
+  margin-top: 6rem;
+}
+
+/* The orb rises behind the close: the loop sits low in the band and comes up as the band
+   arrives (scroll-driven, below). */
+[data-presentation="editorial"] .editorial-light-band {
+  inset: auto -10% -45%;
+  height: 170%;
+  mask-image: radial-gradient(50% 55% at 50% 60%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(50% 55% at 50% 60%, black 40%, transparent 100%);
+}
+[data-presentation="editorial"] .editorial-light-band video {
+  object-position: 50% 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════════════
+   Motion — same gates as editorial.css: scroll timelines understood, motion wanted
+   ══════════════════════════════════════════════════════════════════════════════════════ */
+@supports (animation-timeline: view()) and (animation-range: entry 0% entry 40%) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* A card switches on as it arrives: a flare of the accent along its edge, the numeral lit
+       to full and settling — a dimming zone coming up. Only once the group is seen. */
+    @container style(--editorial-seen: 1) {
+      [data-presentation="editorial"] [data-bento] > li {
+        animation: editorial-zone-on 1100ms var(--editorial-ease-out) var(--editorial-delay, 0s) both;
+      }
+      [data-presentation="editorial"] [data-bento] > li .editorial-numeral {
+        animation: editorial-numeral-on 1500ms var(--editorial-ease-out) calc(var(--editorial-delay, 0s) + 180ms) both;
+      }
+    }
+    /* The orb comes up as the band arrives. */
+    [data-presentation="editorial"] .editorial-light-band {
+      animation: editorial-orb-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+  }
+}
+@keyframes editorial-zone-on {
+  0% {
+    box-shadow: inset 0 0 0 1px transparent, 0 0 0 0 transparent;
+  }
+  38% {
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--highlight, var(--primary)) 75%, transparent), 0 0 56px -8px var(--editorial-glow);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px transparent, 0 0 0 0 transparent;
+  }
+}
+@keyframes editorial-numeral-on {
+  0% {
+    color: color-mix(in oklab, var(--highlight, var(--primary)) 28%, transparent);
+  }
+  32% {
+    color: var(--highlight, var(--primary));
+    text-shadow: 0 0 0.5em var(--editorial-glow);
+  }
+  100% {
+    color: color-mix(in oklab, var(--highlight, var(--primary)) 28%, transparent);
+    text-shadow: 0 0 0 transparent;
+  }
+}
+@keyframes editorial-orb-rise {
+  from {
+    transform: translateY(38%);
+    opacity: 0.4;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

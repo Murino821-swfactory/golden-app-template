@@ -7,6 +7,7 @@ import { bentoSpan } from "@/lib/editorial";
 import { ICONS } from "@/lib/icons";
 import type { Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { LightLoop } from "./light-loop";
 import { ShowcaseStrip } from "./strip";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
@@ -17,6 +18,10 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  * prototype, founder 2026-10-27) and, when the customer's copy has one, the manifesto: one paragraph in large type that lights up word by word as it
  * scrolls into the middle of the screen (`editorial.css`, `[data-word]`). Since T-340 the cards
  * arrive as one staggered group (`data-stagger`) and the manifesto is pinned while it lights up.
+ *
+ * T-368/T-369 (the stage): the first card carries the rendered device (`data-card-light`,
+ * `stage-slab`), the manifesto's pin is a bright panel and the cards switch on like dimming
+ * zones (`stage.css`).
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -55,6 +60,9 @@ export function FeaturesSection() {
               style={{ "--i": i % 3 } as CSSProperties}
               className={cn("editorial-card relative overflow-clip rounded-3xl p-6 sm:p-8", span.className)}
             >
+              {/* T-368 stage: the first card holds the product as an object — a device rendered
+                  in Blender, turning under a light (`stage.css` keeps it on the card's far side). */}
+              {i === 0 && <LightLoop name="stage-slab" marker="data-card-light" className="editorial-light-card" />}
               <Numeral index={i} className="absolute right-5 top-4" />
               {Icon && <Icon className="size-6 text-primary" aria-hidden />}
               <h3 className={cn("mt-8 text-xl font-medium tracking-tight", span.wide && "lg:text-3xl lg:font-light")}>{feature.title}</h3>
@@ -71,7 +79,7 @@ export function FeaturesSection() {
       {manifesto && (
         <div
           data-manifesto-pin
-          className="editorial-manifesto-pin mt-24 sm:mt-32"
+          className="editorial-manifesto-pin editorial-bright mt-24 sm:mt-32"
           style={{ "--words": leadWords + manifesto.body.split(" ").length } as CSSProperties}
         >
           <div data-manifesto className="editorial-manifesto mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center">

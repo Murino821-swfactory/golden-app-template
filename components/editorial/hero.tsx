@@ -42,10 +42,11 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * `overflow-clip`, not `-hidden`: a hidden overflow is a scroll container, and the
  * scroll-driven reveals in `editorial.css` would measure against it instead of the page.
  *
- * T-340 (after vercel.com's backlit prism, apple.com's rising orb and framer.com's prompt
- * box): with no AI image the headline stands in front of an eclipse — a Blender loop of a
- * corona walking the rim of a dark orb (`LightLoop`, tinted by the palette) — and a light
- * runs along the frame's edge. An AI image owns the hero, so it gets no eclipse.
+ * T-340/T-368 (after vercel.com's backlit prism, apple.com's local dimming and framer.com's
+ * prompt box): with no AI image the headline stands in front of the backlight — a Blender loop
+ * of a board of mini-LEDs, whole zones switching on (`LightLoop`, tinted by the palette; placed
+ * by `stage.css`) — and a light runs along the frame's edge. An AI image owns the hero, so it
+ * gets no light.
  */
 
 const listings = config.patterns.listings;
@@ -162,7 +163,9 @@ export function HeroSection() {
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
-      {!background && !object && <LightLoop name="hero-light" marker="data-hero-light" className="editorial-light-hero" />}
+      {/* The backlight (T-368 stage, `stage.css`): a board of mini-LEDs behind the headline,
+          whole zones switching on; an AI image owns the hero, so it gets no light. */}
+      {!background && !object && <LightLoop name="stage-field" marker="data-hero-light" className="editorial-light-hero" />}
 
       <div
         className={cn(
