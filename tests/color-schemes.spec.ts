@@ -17,7 +17,7 @@ import {
   TONAL_MIN_COLOURS,
   WCAG_AA_TEXT,
 } from "@tokenwise/shared-ui/theming";
-import { config } from "../lib/prototype-config";
+import { config, landingPresentation } from "../lib/prototype-config";
 
 /**
  * The contrast floor under the deterministic pair rule.
@@ -475,6 +475,9 @@ test.describe("colour scheme reaches the page", () => {
   });
 
   test("under a tonal palette every card and step takes its own light; under the configured palette they paint the page's accent", async ({ page }) => {
+    // The series paints the editorial bento and steps; a config without them has nothing to show.
+    const sections: readonly string[] = config.patterns.landing?.sections ?? [];
+    test.skip(landingPresentation(config) !== "editorial" || !sections.includes("features"), "no editorial bento in this config");
     await page.goto("./");
     const cards = page.locator("[data-bento] > li");
     const steps = page.locator("[data-steps] > li");
