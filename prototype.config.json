@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Yoga studio",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,300 +13,560 @@
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
+        "faq",
         "contact",
         "cta"
       ],
-      "font": "space-grotesk"
+      "font": "nunito",
+      "tone": "light"
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalBookings",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "attendedClasses",
+          "field": "status",
+          "agg": "share",
+          "value": "attended"
+        },
+        {
+          "id": "upcomingClasses",
+          "field": "status",
+          "agg": "share",
+          "value": "booked"
+        }
+      ]
+    },
     "cta": {
-      "href": "/login"
+      "href": "#contact"
     },
     "contactForm": {
       "phone": "optional"
     },
-    "dataGrid": {
-      "entity": {
-        "key": "location",
-        "fields": [
-          {
-            "key": "name",
-            "type": "text",
-            "required": true
-          },
-          {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
-          }
-        ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
-      },
-      "zoom": 7
-    },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "hatha",
+        "vinyasa",
+        "restorative",
+        "meditation"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "duration",
+          "unit": "min"
         },
         {
-          "key": "rooms"
+          "key": "spots"
         }
       ],
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "hatha-morning",
+          "category": "hatha",
+          "price": 12,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "duration": 60,
+            "spots": 15
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "id": "vinyasa-flow",
+          "category": "vinyasa",
+          "price": 14,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "duration": 75,
+            "spots": 12
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "restorative-evening",
+          "category": "restorative",
+          "price": 12,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "duration": 90,
+            "spots": 10
+          }
+        },
+        {
+          "id": "morning-meditation",
+          "category": "meditation",
+          "price": 10,
+          "pricePeriod": "once",
+          "attributes": {
+            "duration": 45,
+            "spots": 20
+          }
+        },
+        {
+          "id": "advanced-vinyasa",
+          "category": "vinyasa",
+          "price": 16,
+          "pricePeriod": "once",
+          "attributes": {
+            "duration": 90,
+            "spots": 8
+          }
+        },
+        {
+          "id": "prenatal-hatha",
+          "category": "hatha",
+          "price": 13,
+          "pricePeriod": "once",
+          "attributes": {
+            "duration": 60,
+            "spots": 10
           }
         }
       ]
+    },
+    "dataGrid": {
+      "entity": {
+        "key": "booking",
+        "fields": [
+          {
+            "key": "className",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "timeSlot",
+            "type": "text"
+          },
+          {
+            "key": "instructor",
+            "type": "text"
+          },
+          {
+            "key": "status",
+            "type": "select",
+            "options": [
+              "booked",
+              "attended",
+              "cancelled"
+            ]
+          }
+        ]
+      },
+      "boardBy": "status"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Book yoga classes at Yoga studio and track your personal practice — browse the schedule, reserve a spot and manage your sessions online.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Yoga class booking",
+        "headline": "Every class you attend brings you closer to balance",
+        "subheadline": "Yoga studio visitors browse the weekly schedule, reserve a spot and keep track of every session they have attended.",
+        "featuresHeading": "Everything you need for your practice",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "calendar",
+            "title": "Browse the Schedule",
+            "description": "View all upcoming yoga classes by style, day and time so you can plan your week."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Reserve Your Spot",
+            "description": "Book a place in any class in seconds and receive a confirmation straight away."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "Track Your Practice",
+            "description": "See every class you have booked or attended and watch your practice grow over time."
+          },
+          {
+            "icon": "users",
+            "title": "Choose Your Style",
+            "description": "Filter classes by type — from gentle Hatha to dynamic Vinyasa — and find the right fit for you."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How to book a class",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Log in with your Google account to access your personal booking dashboard."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Pick a class",
+              "description": "Browse the schedule and select the class that suits your day and experience level."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Reserve your spot",
+              "description": "Confirm your booking and receive a summary of your reserved session."
+            },
+            {
+              "title": "Show up and practise",
+              "description": "Arrive at the studio and enjoy your class — your attendance is recorded automatically."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions about booking",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Do I need an account to book a class?",
+              "answer": "Yes. Sign in with your Google account to book classes and track your sessions in your personal dashboard."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "How many spots are available per class?",
+              "answer": "Each class has a limited number of spots, displayed on the class card. Once a class is full it shows as unavailable."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Can I cancel my reservation?",
+              "answer": "You can review your bookings from your dashboard. Contact us if you need help making a change."
+            },
+            {
+              "question": "What styles of yoga do you offer?",
+              "answer": "We offer Hatha, Vinyasa, Restorative and Meditation classes, suitable for a range of experience levels from beginner to advanced."
+            },
+            {
+              "question": "What should I bring to class?",
+              "answer": "Wear comfortable clothing and bring a water bottle. Yoga mats are available at the studio, but you are welcome to bring your own."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Bookings",
+        "intro": "Here are all the yoga classes you have booked. Add a new session, check your attendance or update an existing booking below.",
+        "kpiLabels": {
+          "totalBookings": "Total Sessions",
+          "attendedClasses": "Classes Attended",
+          "upcomingClasses": "Upcoming Bookings"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "label": "Get in touch",
+        "title": "Ready to step onto the mat?",
+        "subtitle": "Send us a message and we will help you find the right class and time slot for you."
       },
       "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "heading": "Contact us",
+        "submitLabel": "Send message",
+        "intro": "Have a question about a class or need help with a booking? Write to us and we will get back to you shortly."
+      },
+      "listings": {
+        "heading": "Our yoga classes",
+        "intro": "Choose from a range of yoga styles and skill levels. Each class is led by an experienced instructor in a welcoming studio environment.",
+        "notice": "These classes are illustrative examples — the owner will update the schedule with live sessions before opening.",
+        "categoryLabels": {
+          "hatha": "Hatha Yoga",
+          "vinyasa": "Vinyasa Flow",
+          "restorative": "Restorative Yoga",
+          "meditation": "Meditation"
+        },
+        "attributeLabels": {
+          "duration": "Duration",
+          "spots": "Spots"
+        },
+        "inquireLabel": "Ask about this class",
+        "items": {
+          "hatha-morning": {
+            "title": "Morning Hatha for Beginners",
+            "summary": "A gentle morning class focusing on foundational postures, breathing and body awareness. Ideal for those new to yoga or returning after a break.",
+            "highlights": [
+              "Beginner friendly",
+              "Breath-led practice",
+              "Mats available"
+            ]
+          },
+          "vinyasa-flow": {
+            "title": "Vinyasa Flow — Intermediate",
+            "summary": "A flowing sequence that links movement with breath, building strength and flexibility. Suitable for practitioners with some yoga experience.",
+            "highlights": [
+              "Movement and breath",
+              "Strength and flexibility",
+              "Intermediate level"
+            ]
+          },
+          "restorative-evening": {
+            "title": "Evening Restorative Session",
+            "summary": "A slow, supported practice using props to help the body release tension and prepare for restful sleep. All levels welcome.",
+            "highlights": [
+              "Props provided",
+              "Deep relaxation",
+              "All levels"
+            ]
+          },
+          "morning-meditation": {
+            "title": "Morning Meditation",
+            "summary": "A guided meditation session to start the day with clarity and calm. No previous meditation experience required.",
+            "highlights": [
+              "Guided practice",
+              "No experience needed",
+              "45 minutes"
+            ]
+          },
+          "advanced-vinyasa": {
+            "title": "Advanced Vinyasa Challenge",
+            "summary": "A demanding practice for experienced yogis exploring advanced postures, arm balances and transitions. Prior Vinyasa experience required.",
+            "highlights": [
+              "Advanced postures",
+              "Arm balances",
+              "Experienced practitioners"
+            ]
+          },
+          "prenatal-hatha": {
+            "title": "Prenatal Hatha Yoga",
+            "summary": "A safe and nurturing class for expectant mothers, focusing on comfort, breathing and gentle movement throughout pregnancy.",
+            "highlights": [
+              "For expectant mothers",
+              "Safe and gentle",
+              "Qualified instructor"
+            ]
+          }
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Booking",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "className": "Class",
+          "date": "Date",
+          "timeSlot": "Time",
+          "instructor": "Instructor",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "className": "Morning Hatha for Beginners",
+            "date": "2026-10-20",
+            "timeSlot": "07:30",
+            "instructor": "Jana K.",
+            "status": "attended"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "className": "Vinyasa Flow — Intermediate",
+            "date": "2026-10-27",
+            "timeSlot": "18:00",
+            "instructor": "Peter N.",
+            "status": "attended"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
+            "className": "Evening Restorative Session",
+            "date": "2026-11-05",
+            "timeSlot": "19:30",
+            "instructor": "Jana K.",
+            "status": "booked"
           }
         ]
+      }
+    },
+    "sk": {
+      "description": "Rezervujte si hodiny jogy v Yoga studio a sledujte svoju prax — prezerajte rozvrh, zarezervujte miesto a spravujte hodiny online.",
+      "landing": {
+        "eyebrow": "Rezervácia hodín jogy",
+        "headline": "Každá hodina ťa posúva bližšie k rovnováhe",
+        "subheadline": "Návštevníci štúdia si prezerajú týždenný rozvrh, rezervujú miesto a sledujú každú absolvovanú hodinu.",
+        "featuresHeading": "Všetko, čo potrebuješ pre svoju prax",
+        "features": [
+          {
+            "icon": "calendar",
+            "title": "Prezeraj rozvrh",
+            "description": "Zobraz všetky nadchádzajúce hodiny jogy podľa štýlu, dňa a času, aby si mohol/la plánovať týždeň."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Zarezervuj miesto",
+            "description": "Zarezervuj si miesto na ľubovoľnej hodine za pár sekúnd a dostaneš okamžité potvrdenie."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Sleduj svoju prax",
+            "description": "Pozri si každú hodinu, ktorú si zarezervoval/la alebo absolvoval/la, a sleduj, ako tvoja prax rastie."
+          },
+          {
+            "icon": "users",
+            "title": "Vyber si štýl",
+            "description": "Filtruj hodiny podľa typu — od jemnej Hatha jogy až po dynamický Vinyasa flow — a nájdi tú správnu."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako si rezervovať hodinu",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa pomocou Google účtu a získajte prístup k svojmu osobnému prehľadu rezervácií."
+            },
+            {
+              "title": "Vyberte hodinu",
+              "description": "Prezrite si rozvrh a vyberte hodinu, ktorá vyhovuje vášmu dňu a úrovni skúseností."
+            },
+            {
+              "title": "Zarezervujte miesto",
+              "description": "Potvrďte rezerváciu a dostanete zhrnutie vašej zarezervovanej hodiny."
+            },
+            {
+              "title": "Príďte a cvičte",
+              "description": "Dostavte sa do štúdia a užite si hodinu — vaša účasť sa zaznamená automaticky."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Otázky o rezervácii",
+          "items": [
+            {
+              "question": "Potrebujem účet na rezerváciu hodiny?",
+              "answer": "Áno. Prihláste sa pomocou Google účtu, aby ste si mohli rezervovať hodiny a sledovať svoje návštevy v osobnom prehľade."
+            },
+            {
+              "question": "Koľko miest je dostupných na každej hodine?",
+              "answer": "Každá hodina má obmedzený počet miest, ktorý je zobrazený na karte hodiny. Keď je kapacita naplnená, hodina sa zobrazí ako nedostupná."
+            },
+            {
+              "question": "Môžem zrušiť svoju rezerváciu?",
+              "answer": "Rezervácie môžete spravovať zo svojho prehľadu. Ak potrebujete pomoc so zmenou, kontaktujte nás."
+            },
+            {
+              "question": "Aké štýly jogy ponúkate?",
+              "answer": "Ponúkame hodiny Hatha jogy, Vinyasy, Restoratívnej jogy a meditácie, vhodné pre rôzne úrovne od začiatočníkov až po pokročilých."
+            },
+            {
+              "question": "Čo si mám priniesť na hodinu?",
+              "answer": "Noste pohodlné oblečenie a prineste si fľašu s vodou. Podložky sú k dispozícii v štúdiu, môžete si však priniesť vlastnú."
+            }
+          ]
+        }
       },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
+      "dashboard": {
+        "title": "Moje rezervácie",
+        "intro": "Tu sú všetky jogové hodiny, ktoré ste si zarezervovali. Pridajte novú hodinu, skontrolujte dochádzku alebo aktualizujte existujúcu rezerváciu.",
+        "kpiLabels": {
+          "totalBookings": "Celkom hodín",
+          "attendedClasses": "Absolvované hodiny",
+          "upcomingClasses": "Nadchádzajúce rezervácie"
+        }
       },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
-          }
-        ]
+      "cta": {
+        "label": "Napíšte nám",
+        "title": "Pripravení vstúpiť na podložku?",
+        "subtitle": "Pošlite nám správu a pomôžeme vám nájsť tú správnu hodinu aj termín."
+      },
+      "contactForm": {
+        "heading": "Kontaktujte nás",
+        "submitLabel": "Odoslať správu",
+        "intro": "Máte otázku k hodine alebo potrebujete pomoc s rezerváciou? Napíšte nám a ozveme sa vám čo najskôr."
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Naše hodiny jogy",
+        "intro": "Vyberte si z rôznych štýlov jogy a úrovní. Každú hodinu vedie skúsený inštruktor v príjemnom prostredí štúdia.",
+        "notice": "Tieto hodiny sú ilustračné príklady — majiteľ ich pred otvorením nahradí skutočným rozvrhom.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "hatha": "Hatha joga",
+          "vinyasa": "Vinyasa flow",
+          "restorative": "Restoratívna joga",
+          "meditation": "Meditácia"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "duration": "Trvanie",
+          "spots": "Miesta"
         },
+        "inquireLabel": "Opýtať sa na hodinu",
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "hatha-morning": {
+            "title": "Ranná Hatha pre začiatočníkov",
+            "summary": "Jemná ranná hodina zameraná na základné polohy, dýchanie a vnímanie tela. Ideálna pre tých, ktorí začínajú s jogou alebo sa vracajú po prestávke.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Vhodné pre začiatočníkov",
+              "Prax vedená dýchaním",
+              "Podložky k dispozícii"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "vinyasa-flow": {
+            "title": "Vinyasa flow — mierne pokročilí",
+            "summary": "Plynulá sekvencia prepájajúca pohyb s dýchaním, rozvíjajúca silu a flexibilitu. Vhodné pre cvičencov s určitými skúsenosťami s jogou.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Pohyb a dýchanie",
+              "Sila a flexibilita",
+              "Mierne pokročilí"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "restorative-evening": {
+            "title": "Večerná restoratívna hodina",
+            "summary": "Pomalá, podporovaná prax s pomôckami pomáhajúca telu uvoľniť napätie a pripraviť sa na kvalitný spánok. Vhodné pre všetky úrovne.",
+            "highlights": [
+              "Pomôcky zahrnuté",
+              "Hlboká relaxácia",
+              "Všetky úrovne"
+            ]
+          },
+          "morning-meditation": {
+            "title": "Ranná meditácia",
+            "summary": "Vedená meditačná hodina na začiatok dňa s jasnosťou a pokojom. Predchádzajúce skúsenosti s meditáciou nie sú potrebné.",
+            "highlights": [
+              "Vedená prax",
+              "Bez predchádzajúcich skúseností",
+              "45 minút"
+            ]
+          },
+          "advanced-vinyasa": {
+            "title": "Pokročilá Vinyasa — výzva",
+            "summary": "Náročná prax pre skúsených jogínov skúmajúcich pokročilé polohy, rovnováhu na rukách a prechody. Vyžadujú sa predchádzajúce skúsenosti s Vinyasou.",
+            "highlights": [
+              "Pokročilé polohy",
+              "Rovnováha na rukách",
+              "Pre skúsených cvičencov"
+            ]
+          },
+          "prenatal-hatha": {
+            "title": "Prenatálna Hatha joga",
+            "summary": "Bezpečná a starostlivá hodina určená nastávajúcim mamičkám, zameraná na pohodlie, dýchanie a jemný pohyb počas tehotenstva.",
+            "highlights": [
+              "Pre nastávajúce mamičky",
+              "Bezpečná a jemná",
+              "Kvalifikovaný inštruktor"
+            ]
           }
+        }
+      },
+      "dataGrid": {
+        "entityLabel": "Rezervácia",
+        "fieldLabels": {
+          "className": "Hodina",
+          "date": "Dátum",
+          "timeSlot": "Čas",
+          "instructor": "Inštruktor",
+          "status": "Stav"
         },
-        "inquireLabel": "Ask about this offer"
+        "sampleRecords": [
+          {
+            "className": "Ranná Hatha pre začiatočníkov",
+            "date": "2026-10-20",
+            "timeSlot": "07:30",
+            "instructor": "Jana K.",
+            "status": "attended"
+          },
+          {
+            "className": "Vinyasa flow — mierne pokročilí",
+            "date": "2026-10-27",
+            "timeSlot": "18:00",
+            "instructor": "Peter N.",
+            "status": "attended"
+          },
+          {
+            "className": "Večerná restoratívna hodina",
+            "date": "2026-11-05",
+            "timeSlot": "19:30",
+            "instructor": "Jana K.",
+            "status": "booked"
+          }
+        ]
       }
     }
   }
