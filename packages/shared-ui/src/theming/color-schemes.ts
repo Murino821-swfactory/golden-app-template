@@ -7,7 +7,10 @@
  * supplied as images, in the order supplied — which is also the order the header's
  * "Change colour" button cycles through. Since 2026-10-26 a palette may have more colours
  * [founder decision]: the extra ones become accents (`derivePaletteRoles`), and the founder's
- * first five such palettes have seven colours each. Deriving
+ * first five such palettes have seven colours each. Since 2026-11-08 a palette of twenty
+ * colours is TONAL (T-371, `deriveTonalRoles`): nothing is mixed any more — its four darkest
+ * colours are the grounds, its four lightest the inks and the twelve between the lights, a
+ * series every card of the page takes one of. Deriving
  * roles instead of hand-writing them means a new palette is one line and needs no CSS work.
  *
  * The pair rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the
@@ -44,6 +47,16 @@ export const COLOR_SCHEME_IDS = [
   "peacock-amber",
   "mulled-spice",
   "black-gold",
+  "aurora-night",
+  "ember-forge",
+  "neon-tokyo",
+  "desert-dusk",
+  "coral-reef",
+  "moss-lantern",
+  "royal-velvet",
+  "glacier-mint",
+  "candy-arcade",
+  "clay-kiln",
 ] as const;
 export type ColorSchemeId = (typeof COLOR_SCHEME_IDS)[number];
 
@@ -104,6 +117,100 @@ export const PALETTES: Record<ColorSchemeId, Palette> = {
     name: "Black Gold",
     colors: ["292C31", "070706", "2D1F11", "89612B", "AC8B56", "CDAD69", "F4E185"],
   },
+  // Twenty colours each — the tonal tier (T-371, 2026-11-08), designed in-house for the
+  // founder's third category: four grounds (page, card, raised plane, border), four inks
+  // (words, a card's words, the raised plane's words, muted) and twelve lights. Listed in
+  // that order for a reader; the rule sorts by luminance and does not care.
+  "aurora-night": {
+    name: "Aurora Night",
+    colors: [
+      "05080D", "0C121B", "151E2B", "22304A",
+      "EEF5F3", "D4E0DC", "B9CBC5", "A6BDB6",
+      "22BF92", "2FB5A8", "27B8E0", "3F8FE8", "6E6BF0", "9A5CF2",
+      "C65BE8", "E65BB8", "46B86A", "76B832", "C9A43A", "4FA9F5",
+    ],
+  },
+  "ember-forge": {
+    name: "Ember Forge",
+    colors: [
+      "0B0806", "161009", "231911", "352819",
+      "F6EFE6", "E3D7C8", "D3C5B4", "C4B4A2",
+      "E8572A", "F07A2B", "EC9530", "D4A53E", "C9472E", "A8302A",
+      "D4794A", "B5793A", "9C5A32", "E86E4D", "6A8FA6", "8A9A5B",
+    ],
+  },
+  "neon-tokyo": {
+    name: "Neon Tokyo",
+    colors: [
+      "070612", "100D20", "1A162F", "282245",
+      "F3F1FA", "DEDBEF", "CBC7E3", "B9B4D8",
+      "FF2D78", "FF4FA3", "D63CFF", "8B3DFF", "4F6BFF", "2BB4FF",
+      "19B6BE", "22C47A", "8DB322", "E09E1C", "FF6A2B", "7A5CFF",
+    ],
+  },
+  "desert-dusk": {
+    name: "Desert Dusk",
+    colors: [
+      "0E0709", "1B1114", "2A1C1F", "3C2A2E",
+      "F5EEE6", "E4D8CB", "D5C6B6", "C7B5A4",
+      "C8643C", "E08A5A", "D98E8E", "B47A8E", "8FA37B", "9A9A4E",
+      "A48BC2", "7FA3BF", "D9A066", "B5553F", "6E8F8A", "C47E5A",
+    ],
+  },
+  "coral-reef": {
+    name: "Coral Reef",
+    colors: [
+      "03101C", "091C2F", "122B42", "1D3D58",
+      "ECF6FA", "D3E6EE", "B9D2DE", "9FBDCB",
+      "FF6F61", "FF8C42", "24B5A6", "3AB0E0", "72B53D", "8E6CE8",
+      "E65BA3", "CFA246", "2E86DE", "F25F8C", "26A69A", "E89A35",
+    ],
+  },
+  "moss-lantern": {
+    name: "Moss Lantern",
+    colors: [
+      "070B07", "101710", "1A241A", "283628",
+      "F2F0E7", "DFDBCC", "CCC8B6", "BAB6A2",
+      "7FA64A", "8FB236", "4F9A5E", "DA9C36", "C77A2F", "C9A64B",
+      "3C9D8A", "B35B2E", "6C8C3E", "E0714A", "8A9EC2", "B08A5E",
+    ],
+  },
+  "royal-velvet": {
+    name: "Royal Velvet",
+    colors: [
+      "0A0610", "160E20", "231732", "332448",
+      "F4F0F8", "E1D9EA", "D0C5DC", "BFB1CF",
+      "C9A52F", "9B59D0", "C94FB5", "C8324B", "2E9E6B", "3C6FD6",
+      "B388E0", "E07A9A", "D59E3F", "41B3C4", "8E6AB8", "D86B3A",
+    ],
+  },
+  "glacier-mint": {
+    name: "Glacier Mint",
+    colors: [
+      "080C10", "11181E", "1C262E", "2A3842",
+      "F0F6F8", "D8E3E9", "C1D1D9", "A9BCC7",
+      "3DBFA0", "52B5A8", "2FB4D8", "5AA9EE", "7D8FE6", "A98BDC",
+      "8DB54D", "6FA8A8", "4C8FD6", "CC9C50", "3C9B8C", "C77DA0",
+    ],
+  },
+  "candy-arcade": {
+    name: "Candy Arcade",
+    colors: [
+      "050A1A", "0D162C", "172240", "233256",
+      "F3F4FA", "DCE0ED", "C7CDE0", "AFB7D1",
+      "FF5CA8", "D9A020", "6CBE1E", "3FB6FF", "FF7A2E", "9D5CFF",
+      "FF3B5C", "1FB8A5", "4D7CFF", "F75FE0", "3BBF5E", "F59427",
+    ],
+  },
+  "clay-kiln": {
+    name: "Clay Kiln",
+    colors: [
+      "0D0906", "1B130C", "2A1F15", "3C2D1F",
+      "F4EFE8", "E3D9CE", "D4C7B9", "C4B4A3",
+      "B5452B", "C97B3A", "D4A038", "8F8A3C", "3F8F86", "A0522D",
+      "6E8CA8", "7A9A4E", "D98C5A", "B07050", "C9A66B", "8A6A9A",
+    ],
+  },
 };
 
 /**
@@ -134,6 +241,32 @@ export interface SchemeRoles {
   /** The second accent: decoration only (glows, gradients), never text. `primary` when
    * the palette has no fourth colour. */
   highlight: string;
+  /** Tonal palettes only (twenty colours, T-371). The third ground: menus, badges and
+   * secondary buttons (`--popover`, `--secondary`, `--muted`, `--accent`). */
+  raised?: string;
+  /** Tonal only: the second ink, a card's words (`--card-foreground`). */
+  cardForeground?: string;
+  /** Tonal only: the third ink, the words on the raised plane (`--popover-foreground`,
+   * `--secondary-foreground`, `--accent-foreground`). */
+  raisedForeground?: string;
+  /** Tonal only: the twelve lights in hue order from the accent, each lifted until it reads
+   * on a card — `--accent-1` … `--accent-12`, one per card and step (`stage.css`). */
+  accents?: readonly string[];
+}
+
+/** A palette of this many colours is tonal (T-371): four grounds, four inks, the rest lights. */
+export const TONAL_MIN_COLOURS = 20;
+/** The grounds of a tonal palette, darkest first: page, card, raised plane, border. */
+const TONAL_GROUNDS = 4;
+/** The inks of a tonal palette, lightest first: words, a card's words, the raised plane's words, muted. */
+const TONAL_INKS = 4;
+
+export type PaletteKind = "pair" | "accented" | "tonal";
+
+/** Which rule a palette falls under — decided by its count alone. */
+export function paletteKind(colors: readonly string[]): PaletteKind {
+  if (colors.length >= TONAL_MIN_COLOURS) return "tonal";
+  return colors.length === 2 ? "pair" : "accented";
 }
 
 /** WCAG AA for normal text. Text below this does not ship. */
@@ -165,6 +298,19 @@ export function contrastRatio(a: string, b: string): number {
   const lb = relativeLuminance(b);
   const [hi, lo] = la > lb ? [la, lb] : [lb, la];
   return (hi + 0.05) / (lo + 0.05);
+}
+
+/** Hue on the colour circle, 0..360 (red 0, yellow 60, green 120, cyan 180, blue 240,
+ * magenta 300); a grey has none and reads 0. Hex without `#`. */
+export function hue(hex: string): number {
+  const [r, g, b] = toRgb(hex).map((v) => v / 255) as [number, number, number];
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const delta = max - min;
+  if (delta === 0) return 0;
+  const sector =
+    max === r ? ((g - b) / delta + 6) % 6 : max === g ? (b - r) / delta + 2 : (r - g) / delta + 4;
+  return Math.round(sector * 60 * 1000) / 1000;
 }
 
 /** `weight` of the way from `from` to `to`, per channel, rounded. Hex without `#`, upper case. */
@@ -211,6 +357,7 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
   const sorted = [...colors].sort(
     (x, y) => relativeLuminance(x) - relativeLuminance(y) || x.localeCompare(y)
   );
+  if (sorted.length >= TONAL_MIN_COLOURS) return deriveTonalRoles(sorted);
   const dark = sorted[0]!;
   const light = sorted[sorted.length - 1]!;
   const middles = sorted.slice(1, -1);
@@ -261,6 +408,53 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
   };
 }
 
+/**
+ * The tonal rule (T-371, 2026-11-08). Twenty colours are a whole system, so nothing is
+ * mixed: sorted by luminance, the four darkest are the grounds — page, card, raised plane
+ * (menus, badges, secondary buttons), border — the four lightest the inks — words, a
+ * card's words, the raised plane's words, muted — and the twelve between are the lights.
+ * The light most readable on a card is the accent and the next the second accent, exactly
+ * as in a palette of seven; and all twelve, in hue order starting from the accent, are the
+ * series the page hands its cards and steps (`--accent-1` …, stage.css). Every ink is
+ * lifted toward white until it reads on its plane and every light until it reads on a
+ * card; the second accent ships as supplied, as before. Pure and order-blind like the rest.
+ */
+function deriveTonalRoles(sorted: readonly string[]): SchemeRoles {
+  const [background, surface, raised, border] = sorted as unknown as [string, string, string, string];
+  const inks = sorted.slice(-TONAL_INKS).reverse();
+  const lights = sorted.slice(TONAL_GROUNDS, -TONAL_INKS);
+  const byReadability = [...lights].sort(
+    (x, y) => contrastRatio(y, surface) - contrastRatio(x, surface) || x.localeCompare(y)
+  );
+  const accent = byReadability[0]!;
+  const byHue = [...lights].sort((x, y) => hue(x) - hue(y) || x.localeCompare(y));
+  const from = byHue.indexOf(accent);
+  const series = [...byHue.slice(from), ...byHue.slice(0, from)];
+  return {
+    background: `#${background}`,
+    surface: `#${surface}`,
+    border: `#${border}`,
+    primary: `#${lift(accent, surface)}`,
+    muted: `#${lift(inks[3]!, raised)}`,
+    foreground: `#${lift(inks[0]!, surface)}`,
+    highlight: `#${byReadability[1]!}`,
+    raised: `#${raised}`,
+    cardForeground: `#${lift(inks[1]!, surface)}`,
+    raisedForeground: `#${lift(inks[2]!, raised)}`,
+    accents: series.map((light) => `#${lift(light, surface)}`),
+  };
+}
+
+/** `colour` pulled toward white one percent at a time until it reads on `plane` (WCAG AA) —
+ * the hue survives, only the contrast moves. */
+function lift(colour: string, plane: string): string {
+  let lifted = colour;
+  for (let percent = 1; percent <= 100 && contrastRatio(lifted, plane) < WCAG_AA_TEXT; percent++) {
+    lifted = mix(colour, "FFFFFF", percent / 100);
+  }
+  return lifted;
+}
+
 /** The pair rule, kept by name for the template forks whose tests import it. */
 export function derivePairRoles(pair: readonly [string, string]): SchemeRoles {
   return derivePaletteRoles(pair);
@@ -278,6 +472,14 @@ export function assertReadable(id: string, roles: SchemeRoles): void {
     // `--primary-foreground` is the background (variablesFrom): a button's own text.
     ["button text on primary", roles.background, roles.primary],
   ];
+  if (roles.raised) {
+    // A tonal palette paints two more planes and twelve lights; each pair that can be read
+    // is checked, so no ink or light ships dimmer than the words.
+    checks.push(["card words on card", roles.cardForeground ?? roles.foreground, roles.surface]);
+    checks.push(["raised words on raised plane", roles.raisedForeground ?? roles.foreground, roles.raised]);
+    checks.push(["muted on raised plane", roles.muted, roles.raised]);
+    roles.accents?.forEach((light, i) => checks.push([`light ${i + 1} on card`, light, roles.surface]));
+  }
   for (const [what, text, plane] of checks) {
     const ratio = contrastRatio(text, plane);
     if (ratio < WCAG_AA_TEXT) {
@@ -322,24 +524,32 @@ export function cssBlocksForAll(): string {
 }
 
 function variablesFrom(r: SchemeRoles): Record<string, string> {
-  return {
+  // A pair or an accented palette has one surface and one ink for every plane; a tonal
+  // palette has its raised plane and its three further inks, and its series of lights.
+  const raised = r.raised ?? r.surface;
+  const raisedForeground = r.raisedForeground ?? r.foreground;
+  const variables: Record<string, string> = {
     "--background": r.background,
     "--foreground": r.foreground,
     "--card": r.surface,
-    "--card-foreground": r.foreground,
-    "--popover": r.surface,
-    "--popover-foreground": r.foreground,
+    "--card-foreground": r.cardForeground ?? r.foreground,
+    "--popover": raised,
+    "--popover-foreground": raisedForeground,
     "--primary": r.primary,
     "--primary-foreground": r.background,
-    "--secondary": r.surface,
-    "--secondary-foreground": r.foreground,
-    "--muted": r.surface,
+    "--secondary": raised,
+    "--secondary-foreground": raisedForeground,
+    "--muted": raised,
     "--muted-foreground": r.muted,
-    "--accent": r.surface,
-    "--accent-foreground": r.foreground,
+    "--accent": raised,
+    "--accent-foreground": raisedForeground,
     "--border": r.border,
     "--input": r.border,
     "--ring": r.primary,
     "--highlight": r.highlight,
   };
+  r.accents?.forEach((light, i) => {
+    variables[`--accent-${i + 1}`] = light;
+  });
+  return variables;
 }
