@@ -31,7 +31,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
-| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, orb, phone files | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py` — see "The editorial presentation", third and fourth rounds |
+| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
@@ -738,8 +738,9 @@ copy contract, same `data-section` markers — the suites that read the page kee
   old paper for contrast; full bleed by `box-shadow` + `clip-path`, never by width; the token
   stash lives on the page root because a custom property may not read itself), the **device in
   the first card** (`stage-slab`, `data-card-light`; under the words on a phone, on the far side
-  from 640px), the **orb rising** behind the close (`stage-orb`, `editorial-orb-rise` on a view
-  timeline). Tests: `tests/editorial-stage.spec.ts`.
+  from 640px). The close keeps T-340's **light ribbons** across the whole band (`closing-light`,
+  `.editorial-light-band` in `editorial.css`; T-374, the founder's pick over the stage's orb).
+  Tests: `tests/editorial-stage.spec.ts`.
 - **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
