@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 import { LoopVideo } from "./loop-video";
+import { HERO_LOOP_SOURCE } from "@/lib/hero-loop";
 
 /**
  * The editorial hero (default since 2026-10-26), after the reference landings the founder
@@ -84,9 +85,6 @@ function HeroBackground({ src }: { src: string }) {
   );
 }
 
-/** The hero image as a scene (T-384): over the AI image it was rendered from, a depth-parallax loop of the same
- * photo fades in once it plays; another image shows as a still until a new loop is made. */
-const HERO_LOOP_SOURCE = "qbQ8mOECeqllqqsg6jqi.jpg";
 
 /** The AI object: a figure beside the words, in a pool of the accent — never under the text. */
 function HeroObject({ src }: { src: string }) {
