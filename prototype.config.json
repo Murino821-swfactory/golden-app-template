@@ -137,8 +137,8 @@
         "features": [
           {
             "icon": "star",
-            "title": "Fifteen colour palettes",
-            "description": "Fifteen two-colour pairs; WCAG AA contrast is enforced at build time."
+            "title": "Thirty colour palettes",
+            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
           },
           {
             "icon": "list-checks",
