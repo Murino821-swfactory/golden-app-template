@@ -999,7 +999,7 @@ details[open] .editorial-plus::before {
   box-shadow: 0 0 14px var(--editorial-glow);
   transform-origin: left;
   transform: scaleX(var(--rail, 0));
-  transition: transform 900ms cubic-bezier(0.33, 1, 0.68, 1);
+  transition: transform 900ms var(--editorial-ease-out);
 }
 .editorial-station {
   position: relative;
@@ -1026,7 +1026,7 @@ details[open] .editorial-plus::before {
   font-size: 0.72rem;
   font-style: normal;
   font-weight: 600;
-  transition: background-color 500ms ease, color 500ms ease, box-shadow 500ms ease, border-color 500ms ease;
+  transition: background-color 500ms var(--editorial-ease), color 500ms var(--editorial-ease), box-shadow 500ms var(--editorial-ease), border-color 500ms var(--editorial-ease);
 }
 .editorial-station span {
   font-size: 0.72rem;
@@ -1066,7 +1066,7 @@ details[open] .editorial-plus::before {
   gap: 0.6rem;
   font-size: 0.9rem;
   color: var(--muted-foreground);
-  transition: color 400ms ease;
+  transition: color 400ms var(--editorial-ease);
 }
 .editorial-checklist li::before {
   content: "";
@@ -1075,7 +1075,7 @@ details[open] .editorial-plus::before {
   height: 16px;
   border-radius: 5px;
   border: 1.5px solid color-mix(in oklab, var(--foreground) 22%, transparent);
-  transition: background-color 400ms ease, border-color 400ms ease;
+  transition: background-color 400ms var(--editorial-ease), border-color 400ms var(--editorial-ease);
 }
 .editorial-checklist li[data-done] {
   color: var(--foreground);
@@ -1096,5 +1096,5 @@ details[open] .editorial-plus::before {
 
 /* The catalogue photo is a bright, sunlit desk: the hero scene sits darker so the words read over it. */
 .editorial-hero-scene {
-  filter: brightness(0.5) saturate(0.85);
+  filter: brightness(0.36) saturate(0.8);
 }

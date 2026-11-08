@@ -18,6 +18,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 import { LoopVideo } from "./loop-video";
 
@@ -43,10 +44,11 @@ import { LoopVideo } from "./loop-video";
  * scroll-driven reveals in `editorial.css` would measure against it instead of the page.
  *
  * T-340/T-368 (after vercel.com's backlit prism, apple.com's local dimming and framer.com's
- * prompt box): with no AI image the headline stands in front of a Blender loop — in this
- * prototype its own scene, the map on the desk (`HeroScene`, T-384), in place of the template's
- * mini-LED backlight — and a light runs along the frame's edge. An AI image owns the hero, so it
- * gets no scene.
+ * prompt box): with no AI image the headline stands in front of the backlight — a Blender loop
+ * of a board of mini-LEDs, whole zones switching on (`LightLoop`, tinted by the palette; placed
+ * by `stage.css`), here screened over this prototype's own scene, the map on the desk
+ * (`HeroScene`, T-384) — and a light runs along the frame's edge. An AI image owns the hero, so
+ * it gets neither.
  */
 
 const listings = config.patterns.listings;
@@ -174,9 +176,10 @@ export function HeroSection() {
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
-      {/* The stage's backlight gives way to this prototype's own scene (T-384): the map on the desk, rendered in
-          Blender; an AI image or object owns the hero, so neither gets it. */}
+      {/* This prototype's own scene (T-384): the map on the desk, rendered in Blender, under the template's
+          backlight (T-368 stage, `stage.css`); an AI image or object owns the hero, so neither gets them. */}
       {!background && !object && <HeroScene />}
+      {!background && !object && <LightLoop name="stage-field" marker="data-hero-light" className="editorial-light-hero" />}
 
       <div
         className={cn(
