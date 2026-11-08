@@ -19,6 +19,7 @@ import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
+import { LoopVideo } from "./loop-video";
 
 /**
  * The editorial hero (default since 2026-10-26), after the reference landings the founder
@@ -62,6 +63,17 @@ function HeroBackground({ src }: { src: string }) {
         onLoad={() => setLoaded(true)}
         className={cn("h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none", loaded ? "opacity-100" : "opacity-0")}
       />
+      <div className="absolute inset-0" style={{ background: heroOverlayBackground() }} />
+    </div>
+  );
+}
+
+/** Without an AI background the hero stands over the map on the desk (T-384): the catalogue photo as a
+ * depth-parallax loop, faded into the page like the AI background. */
+function HeroScene() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+      <LoopVideo data-hero-video large="/motion/hero-scene.mp4" small="/motion/hero-scene-sm.mp4" poster="/motion/hero-scene.webp" className="editorial-hero-scene h-full w-full object-cover" />
       <div className="absolute inset-0" style={{ background: heroOverlayBackground() }} />
     </div>
   );
@@ -155,7 +167,7 @@ export function HeroSection() {
 
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
-      {background ? <HeroBackground key={background} src={background} /> : null}
+      {background ? <HeroBackground key={background} src={background} /> : object ? null : <HeroScene />}
 
       <div
         className={cn(
@@ -168,7 +180,7 @@ export function HeroSection() {
             tiles come last, so the delays of the four pieces of copy stay where they are. */}
         <div
           className={cn("editorial-hero-copy relative flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
-          style={background ? { textShadow: HERO_TEXT_SHADOW } : undefined}
+          style={background || !object ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
             {eyebrow ?? config.appName}
