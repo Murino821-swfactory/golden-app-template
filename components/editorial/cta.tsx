@@ -16,8 +16,8 @@ import { DISPLAY_H2 } from "./ui";
  * The closing band, then the brand block "Built by TOKENWISE" (`brand-mark.tsx`) whole
  * above the footer — the reference landings end on their own letters the same way. Label
  * and destination of the band's action come from the `cta` pattern, as in the shared section.
- * Behind the band's words an orb rises as the band arrives (T-368 stage: a Blender loop tinted
- * by the palette, placed and driven by `stage.css`).
+ * Behind the band's words light ribbons sweep in a wave across the whole band (T-340's
+ * `closing-light`, a Blender loop tinted by the palette; the founder's pick over the T-368 orb, T-374).
  */
 export function CtaSection() {
   const t = useTranslations("cta");
@@ -30,7 +30,7 @@ export function CtaSection() {
   return (
     <section id="cta" data-section="cta" data-stagger className="editorial-closing scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 pb-6 pt-20 sm:pt-28">
       <div data-reveal className="editorial-band relative overflow-clip rounded-3xl px-6 py-14 text-center sm:px-12 sm:py-20">
-        <LightLoop name="stage-orb" marker="data-closing-light" className="editorial-light-band" />
+        <LightLoop name="closing-light" marker="data-closing-light" className="editorial-light-band" />
         <h2 className={`${DISPLAY_H2} mx-auto`}>{copy?.title ?? t("title")}</h2>
         <p className="mx-auto mt-3 max-w-2xl text-balance text-muted-foreground sm:text-lg">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (

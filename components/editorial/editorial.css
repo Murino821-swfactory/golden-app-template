@@ -357,7 +357,7 @@
     --light-centre: 17.5rem;
   }
 }
-/* The closing light: the whole band, dimmed where its words sit (the stage lifts the orb in `stage.css`). */
+/* The closing light: the ribbons across the whole band, dimmed where its words sit. */
 .editorial-light-band {
   inset: 0;
   mask-image: radial-gradient(46% 40% at 50% 46%, color-mix(in oklab, black 12%, transparent), black 100%);
