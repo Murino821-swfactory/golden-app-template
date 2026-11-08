@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
 import { bentoSpan } from "@/lib/editorial";
@@ -8,6 +8,7 @@ import { ICONS } from "@/lib/icons";
 import type { Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { CheckinDemo } from "@/components/features/checkin-demo";
+import { LightLoop } from "./light-loop";
 import { ShowcaseStrip } from "./strip";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
@@ -16,7 +17,12 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  * numeral and Lucide icon in the palette's colour — then the showcase strip (tokenwise's
  * live products in two rows sliding past each other, `strip.tsx` — a fixed element on every
  * prototype, founder 2026-10-27) and, when the customer's copy has one, the manifesto: one paragraph in large type that lights up word by word as it
- * scrolls into the middle of the screen (`editorial.css`, `[data-word]`).
+ * scrolls into the middle of the screen (`editorial.css`, `[data-word]`). Since T-340 the cards
+ * arrive as one staggered group (`data-stagger`) and the manifesto is pinned while it lights up.
+ *
+ * T-368/T-369 (the stage): the first card carries the rendered device (`data-card-light`,
+ * `stage-slab`), the manifesto's pin is a bright panel and the cards switch on like dimming
+ * zones (`stage.css`).
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -36,17 +42,6 @@ export function FeaturesSection() {
   const features = landing?.features ?? TRANSLATION_FALLBACK;
   const manifesto = landing?.manifesto;
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
-  // The light follows the reading (T-384): the card in the middle band of the screen is lit.
-  const bento = useRef<HTMLUListElement>(null);
-  useEffect(() => {
-    const cards = bento.current ? [...bento.current.children] : [];
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.target.toggleAttribute("data-lit", e.isIntersecting)),
-      { rootMargin: "-38% 0px -38% 0px" },
-    );
-    cards.forEach((c) => observer.observe(c));
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
@@ -54,7 +49,7 @@ export function FeaturesSection() {
         <h2 className={DISPLAY_H2}>{landing?.featuresHeading ?? t("title")}</h2>
       </SectionHead>
 
-      <ul ref={bento} data-bento className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul data-bento data-stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, i) => {
           const Icon = feature.icon ? ICONS[feature.icon] : null;
           const span = bentoSpan(i, features.length);
@@ -66,6 +61,9 @@ export function FeaturesSection() {
               style={{ "--i": i % 3 } as CSSProperties}
               className={cn("editorial-card relative overflow-clip rounded-3xl p-6 sm:p-8", span.className)}
             >
+              {/* T-368 stage: the first card holds the product as an object — a device rendered
+                  in Blender, turning under a light (`stage.css` keeps it on the card's far side). */}
+              {i === 0 && <LightLoop name="stage-slab" marker="data-card-light" className="editorial-light-card" />}
               <Numeral index={i} className="absolute right-5 top-4" />
               {Icon && <Icon className="size-6 text-primary" aria-hidden />}
               <h3 className={cn("mt-8 text-xl font-medium tracking-tight", span.wide && "lg:text-3xl lg:font-light")}>{feature.title}</h3>
@@ -79,14 +77,22 @@ export function FeaturesSection() {
 
       <ShowcaseStrip />
 
+      {/* Apple's Display (T-340): the paragraph holds still in a taller pin while its words
+          light up one after another — `editorial.css`, `--words` spreads them over the pin. */}
       {manifesto && (
-        <div data-manifesto className="editorial-manifesto mx-auto mt-24 flex max-w-4xl flex-col items-center gap-6 text-center sm:mt-32">
-          <p className="text-balance text-2xl font-light leading-snug tracking-[-0.02em] sm:text-4xl">
-            <strong className="font-medium text-primary">
-              <Words text={manifesto.lead} from={0} />
-            </strong>{" "}
-            <Words text={manifesto.body} from={leadWords} />
-          </p>
+        <div
+          data-manifesto-pin
+          className="editorial-manifesto-pin editorial-bright mt-24 sm:mt-32"
+          style={{ "--words": leadWords + manifesto.body.split(" ").length } as CSSProperties}
+        >
+          <div data-manifesto className="editorial-manifesto mx-auto flex max-w-4xl flex-col items-center justify-center gap-6 text-center">
+            <p className="text-balance text-2xl font-light leading-snug tracking-[-0.02em] sm:text-4xl">
+              <strong className="font-medium text-primary">
+                <Words text={manifesto.lead} from={0} />
+              </strong>{" "}
+              <Words text={manifesto.body} from={leadWords} />
+            </p>
+          </div>
         </div>
       )}
     </section>

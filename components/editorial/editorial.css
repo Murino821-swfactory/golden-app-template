@@ -17,6 +17,17 @@
  * renders editorial sections.
  */
 
+/* ── Motion tokens: Apple's two curves (T-340) ─────────────────────────────────────
+   Read from apple.com's own styles (2026-11-05): its navigation eases every state change on
+   (0.4, 0, 0.6, 1) and its galleries bring captions in on the ease-out-cubic (0.33, 1, 0.68,
+   1). Every timed motion on this page uses one of the two — UI state on the first, things
+   arriving on the second (`tests/editorial-motion.spec.ts` counts them). On `:root`, because
+   the footer's index sits outside the page root. */
+:root {
+  --editorial-ease: cubic-bezier(0.4, 0, 0.6, 1);
+  --editorial-ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
 /* ── Tokens derived from the palette ─────────────────────────────────────────────── */
 [data-presentation="editorial"] {
   --editorial-glow: color-mix(in oklab, var(--highlight, var(--primary)) 22%, transparent);
@@ -81,7 +92,7 @@
 /* ── The one action: a pill that leans in on hover ───────────────────────────────── */
 .editorial-pill {
   box-shadow: 0 14px 40px -14px color-mix(in oklab, var(--primary) 60%, transparent);
-  transition: transform 500ms cubic-bezier(0.625, 0.05, 0, 1), box-shadow 500ms ease;
+  transition: transform 320ms var(--editorial-ease), box-shadow 320ms var(--editorial-ease);
 }
 @media (prefers-reduced-motion: no-preference) {
   .editorial-pill:hover {
@@ -96,7 +107,7 @@
   background:
     radial-gradient(120% 80% at 100% 0%, var(--editorial-glow-soft), transparent 60%),
     color-mix(in oklab, var(--card) 85%, var(--background));
-  transition: border-color 300ms ease, transform 300ms ease;
+  transition: border-color 300ms var(--editorial-ease), transform 300ms var(--editorial-ease);
 }
 .editorial-card:hover {
   border-color: var(--editorial-hairline);
@@ -201,10 +212,10 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .editorial-frame {
-    transition: max-width 500ms cubic-bezier(0.2, 0.7, 0.2, 1), border-radius 500ms ease, padding 500ms ease;
+    transition: max-width 500ms var(--editorial-ease), border-radius 500ms var(--editorial-ease), padding 500ms var(--editorial-ease);
   }
   .editorial-fold {
-    transition: height 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: height 500ms var(--editorial-ease);
   }
 }
 .editorial-device-tabs {
@@ -222,7 +233,7 @@
   font-weight: 500;
   color: var(--muted-foreground);
   cursor: pointer;
-  transition: background-color 300ms ease, color 300ms ease;
+  transition: background-color 300ms var(--editorial-ease), color 300ms var(--editorial-ease);
 }
 .editorial-device-tab:hover {
   color: var(--foreground);
@@ -266,7 +277,7 @@
 .editorial-tile:nth-child(4) { bottom: 8%; right: 10%; --delay: -6s; }
 @media (prefers-reduced-motion: no-preference) {
   .editorial-tile {
-    animation: editorial-float 7s ease-in-out infinite;
+    animation: editorial-float 7s var(--editorial-ease) infinite;
     animation-delay: var(--delay, 0s);
   }
 }
@@ -299,6 +310,132 @@
   border-radius: 1.5rem;
   border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
   box-shadow: 0 40px 120px -40px black, 0 0 60px -10px var(--editorial-glow);
+}
+
+/* ── Light loops (T-340): Blender renders, relit by the palette ──────────────────────
+   After vercel.com's backlit prism, apple.com's rising orb and framer.com's glowing prompt
+   box. Each loop is neutral light on black (`scripts/motion/<name>.py`): `screen` lets the
+   black vanish into whatever the page is painted with, and the tint layer above the video
+   hands the light the palette's second accent through `color` — hue and saturation from the
+   palette, brightness from the render — so the hottest light stays white and "Change colour"
+   relights the loop like every other glow. `z-index: -1` inside an isolated parent: above
+   the parent's background, under its words. */
+.editorial-light {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.editorial-light video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.editorial-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--highlight, var(--primary));
+  mix-blend-mode: color;
+}
+/* The hero light's box: centred on the headline, its edge dissolved, so no viewport ever
+   sees where the video ends (the stage sets its own size and mask in `stage.css`). */
+.editorial-light-hero {
+  --light-size: min(124vw, 62rem);
+  --light-centre: 13rem;
+  top: calc(var(--light-centre) - var(--light-size) / 2);
+  left: 50%;
+  width: var(--light-size);
+  height: var(--light-size);
+  margin-left: calc(var(--light-size) / -2);
+  mask-image: radial-gradient(closest-side, black 64%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, black 64%, transparent 100%);
+}
+@media (min-width: 640px) {
+  .editorial-light-hero {
+    --light-centre: 17.5rem;
+  }
+}
+/* The closing light: the ribbons across the whole band, dimmed where its words sit. */
+.editorial-light-band {
+  inset: 0;
+  mask-image: radial-gradient(46% 40% at 50% 46%, color-mix(in oklab, black 12%, transparent), black 100%);
+  -webkit-mask-image: radial-gradient(46% 40% at 50% 46%, color-mix(in oklab, black 12%, transparent), black 100%);
+}
+/* Where the corona crosses the headline both are the accent; a halo of the page's own
+   background keeps every letter readable on the light. */
+.editorial-hero:has([data-hero-light]) .editorial-display {
+  text-shadow:
+    0 0 0.35em color-mix(in oklab, var(--background) 70%, transparent),
+    0 0 0.08em color-mix(in oklab, var(--background) 80%, transparent);
+}
+.editorial-band {
+  isolation: isolate;
+}
+
+/* The running edge (after framer.com's prompt box): a short arc of light travels round the
+   frame's border, the ring cut from a conic gradient by two masks, the glow a drop shadow
+   of the ring. Only where motion is wanted; otherwise the frame keeps its still lit top. */
+@property --editorial-run {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.editorial-run {
+  display: none;
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px var(--highlight, var(--primary)));
+}
+.editorial-run::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--editorial-run),
+    transparent 0turn 0.7turn,
+    color-mix(in oklab, var(--highlight, var(--primary)) 55%, transparent) 0.9turn,
+    var(--highlight, var(--primary)) 0.985turn,
+    transparent 1turn
+  );
+  /* The prefixed pair first: in Chromium `-webkit-mask` is an alias that resets the
+     composite, and `xor` is not a standard value — written last, it left "add" and the
+     whole frame filled with a wedge of light. Standard last, so it wins where understood. */
+  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  mask-composite: exclude;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editorial-run {
+    display: block;
+  }
+  .editorial-run::before {
+    animation: editorial-run 7s linear infinite;
+  }
+  /* The eclipse fades in after the words, then sinks and grows as the first scroll
+     carries the headline away. */
+  .editorial-light-hero {
+    animation: editorial-light-in 1800ms var(--editorial-ease-out) 250ms both;
+  }
+}
+@keyframes editorial-run {
+  to {
+    --editorial-run: 1turn;
+  }
+}
+@keyframes editorial-light-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ── How it works: the glowing line and the ticks ────────────────────────────────── */
@@ -368,7 +505,7 @@
   height: 1px;
   background: var(--primary);
   transform: translate(-50%, -50%);
-  transition: transform 300ms ease;
+  transition: transform 300ms var(--editorial-ease);
 }
 .editorial-plus::after {
   transform: translate(-50%, -50%) rotate(90deg);
@@ -419,7 +556,7 @@ details[open] .editorial-plus::before {
   line-height: 1;
   color: var(--foreground);
   user-select: none;
-  transition: color 300ms ease;
+  transition: color 300ms var(--editorial-ease);
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
@@ -474,7 +611,7 @@ details[open] .editorial-plus::before {
   background: var(--card);
   border: 1px solid color-mix(in oklab, var(--border) 80%, var(--primary));
   box-shadow: 0 30px 80px -40px black, 0 0 40px -20px var(--editorial-glow);
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: transform 300ms var(--editorial-ease), border-color 300ms var(--editorial-ease);
 }
 .editorial-strip-link img {
   display: block;
@@ -557,26 +694,29 @@ details[open] .editorial-plus::before {
 }
 
 /* ── Motion ─────────────────────────────────────────────────────────────────────────
-   Two kinds. On load, the hero enters in turn (time-based). Everything else is driven by
-   the scroll position itself (`animation-timeline`), so the page answers the hand and
-   never plays on its own. Both only where motion is wanted; the scroll kind also only
+   Three kinds. On load, the hero enters in turn (time-based). Groups arrive in turn when
+   they come into view — time-based too, but started by the scroll (below). Everything else
+   is driven by the scroll position itself (`animation-timeline`), so the page answers the
+   hand and never plays on its own. Both only where motion is wanted; the scroll kind also only
    where `animation-range` is understood — a browser that knows the timeline but not the
    range would map the whole pass to the animation and fade sections out as they leave. */
 @media (prefers-reduced-motion: no-preference) {
   /* The copy sharpens into place without moving: the hero-image test compares the
      headline's box mid-load with its settled box, so a translate here would read as
      layout shift. The frame below, which nothing measures, does rise. */
+  /* Apple's stagger (T-340): 0.32 s each, 0.08 / 0.16 / 0.2 s apart, on the ease-out. */
   .editorial-enter {
-    animation: editorial-enter-soft 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation: editorial-enter-soft 320ms var(--editorial-ease-out) both;
     animation-delay: var(--d, 0s);
   }
-  .editorial-hero-copy > :nth-child(1) { --d: 60ms; }
-  .editorial-hero-copy > :nth-child(2) { --d: 180ms; }
-  .editorial-hero-copy > :nth-child(3) { --d: 300ms; }
-  .editorial-hero-copy > :nth-child(4) { --d: 400ms; }
-  .editorial-object.editorial-enter { --d: 320ms; }
+  .editorial-hero-copy > :nth-child(1) { --d: 80ms; }
+  .editorial-hero-copy > :nth-child(2) { --d: 160ms; }
+  .editorial-hero-copy > :nth-child(3) { --d: 200ms; }
+  .editorial-hero-copy > :nth-child(4) { --d: 240ms; }
+  .editorial-object.editorial-enter { --d: 200ms; }
   .editorial-fold.editorial-enter {
-    --d: 520ms;
+    --d: 280ms;
+    animation-duration: 640ms;
     animation-name: editorial-enter;
   }
 }
@@ -603,11 +743,112 @@ details[open] .editorial-plus::before {
 
 @supports (animation-timeline: view()) and (animation-range: entry 0% entry 40%) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Sections and cards rise as they enter; siblings follow one another (`--i`). */
-    [data-reveal] {
-      animation: editorial-reveal linear both;
+    /* Apple's StaggeredFadeIn and link-in, without Apple's JavaScript (T-340). A group's
+       `view()` timeline flips `--editorial-seen` from 0 to 1 as it enters; a container style
+       query turns the flip into a timed transition of its items — opacity 0.28 s and position
+       0.32 s on the ease-out, the first item after 0.08 s, the second after 0.16 s, every
+       other after 0.2 s (`--i`). The hidden state lives only inside the style query, so a
+       browser without style queries shows everything at once. `translate`, not `transform`:
+       a card's hover lift keeps its own transition. */
+    [data-stagger],
+    [data-index] {
+      animation: editorial-seen linear both;
       animation-timeline: view();
-      animation-range: entry calc(0% + var(--i, 0) * 6%) entry calc(40% + var(--i, 0) * 6%);
+      animation-range: entry 10% entry 11%;
+    }
+    [data-stagger] > [data-reveal] {
+      --editorial-delay: calc(0.08s + min(var(--i, 0), 1) * 0.08s + clamp(0, var(--i, 0) - 1, 1) * 0.04s);
+      transition:
+        opacity 280ms var(--editorial-ease-out) var(--editorial-delay),
+        translate 320ms var(--editorial-ease-out) var(--editorial-delay),
+        border-color 300ms var(--editorial-ease),
+        transform 300ms var(--editorial-ease);
+    }
+    @container style(--editorial-seen: 0) {
+      [data-stagger] > [data-reveal] {
+        opacity: 0;
+        translate: 0 16px;
+      }
+    }
+    /* link-in, as apple.com writes it: 4 px from above, 0.32 s, after 0.2 s + 0.08 s, the
+       links 20 ms apart. */
+    [data-index] > a {
+      transition:
+        opacity 320ms ease calc(0.28s + var(--i, 0) * 0.02s),
+        translate 320ms ease calc(0.28s + var(--i, 0) * 0.02s),
+        color 300ms var(--editorial-ease);
+    }
+    @container style(--editorial-seen: 0) {
+      [data-index] > a {
+        opacity: 0;
+        translate: 0 -4px;
+      }
+    }
+
+    /* Apple's Display: the manifesto holds still in a pin twice the window's height while
+       its words light up across it, each with a passing glow (`--words` spreads them). */
+    .editorial-manifesto-pin {
+      height: 200vh;
+      height: 200svh;
+      view-timeline-name: --manifesto;
+    }
+    .editorial-manifesto {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      height: 100svh;
+    }
+
+    /* Apple's Performance: on a desktop tall enough to hold the whole section, How it works
+       pins and the scroll walks through the steps. The pin's own timeline flips
+       `--editorial-step`; a style query lights that step and dims the rest, crossfading on
+       the ease-out; the line draws up to the step that is lit. */
+    @media (min-width: 1024px) and (min-height: 720px) {
+      .editorial-steps-pin {
+        height: calc(100vh + var(--editorial-steps, 3) * 50vh);
+        view-timeline-name: --editorial-pin;
+      }
+      .editorial-steps-pin:has([data-steps="4"]) {
+        --editorial-steps: 4;
+      }
+      .editorial-steps-stage {
+        position: sticky;
+        top: 0;
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        justify-content: center;
+      }
+      /* The list is still a staggered group: both flips run on it, side by side. */
+      .editorial-steps-pin .editorial-steps {
+        animation: editorial-seen linear both, editorial-steps-3 linear both;
+        animation-timeline: view(), --editorial-pin;
+        animation-range: entry 10% entry 11%, contain 0% contain 100%;
+      }
+      .editorial-steps-pin .editorial-steps[data-steps="4"] {
+        animation-name: editorial-seen, editorial-steps-4;
+      }
+      .editorial-steps-pin .editorial-steps > li {
+        transition:
+          opacity 300ms var(--editorial-ease-out),
+          translate 320ms var(--editorial-ease-out);
+      }
+      .editorial-steps-pin .editorial-glow-line path {
+        animation-timeline: --editorial-pin;
+        animation-range: contain 0% contain 92%;
+      }
+      @container style(--editorial-step: 0) {
+        .editorial-steps > li:not(:nth-child(1)) { opacity: 0.3; }
+      }
+      @container style(--editorial-step: 1) {
+        .editorial-steps > li:not(:nth-child(2)) { opacity: 0.3; }
+      }
+      @container style(--editorial-step: 2) {
+        .editorial-steps > li:not(:nth-child(3)) { opacity: 0.3; }
+      }
+      @container style(--editorial-step: 3) {
+        .editorial-steps > li:not(:nth-child(4)) { opacity: 0.3; }
+      }
     }
     /* The hero answers the first scroll: copy drifts up and fades, the frame tilts flat
        as it comes up to meet the eye. */
@@ -622,6 +863,11 @@ details[open] .editorial-plus::before {
       animation-timeline: scroll(root);
       animation-range: 0px 520px;
     }
+    .editorial-light-hero {
+      animation: editorial-light-in 1800ms ease-out 250ms both, editorial-light-away linear both;
+      animation-timeline: auto, scroll(root);
+      animation-range: normal, 0px 700px;
+    }
     /* The line draws itself through the steps. */
     .editorial-glow-line path {
       stroke-dashoffset: 1;
@@ -629,14 +875,11 @@ details[open] .editorial-plus::before {
       animation-timeline: view();
       animation-range: entry 10% cover 55%;
     }
-    /* The manifesto lights up word by word as it reaches the middle of the screen. */
-    .editorial-manifesto {
-      view-timeline-name: --manifesto;
-    }
+    /* The manifesto lights up word by word while it is pinned (the pin is its timeline). */
     [data-word] {
       animation: editorial-word linear both;
       animation-timeline: --manifesto;
-      animation-range: cover calc(6% + var(--i, 0) * 0.9%) cover calc(20% + var(--i, 0) * 0.9%);
+      animation-range: contain calc(var(--i, 0) / var(--words, 40) * 80%) contain calc(var(--i, 0) / var(--words, 40) * 80% + 14%);
     }
     /* The brand's letters rise into place one after another. */
     [data-brand-letter] {
@@ -646,20 +889,46 @@ details[open] .editorial-plus::before {
     }
   }
 }
-@keyframes editorial-reveal {
+@property --editorial-seen {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --editorial-step {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+@keyframes editorial-seen {
   from {
-    opacity: 0;
-    transform: translateY(24px);
+    --editorial-seen: 0;
   }
   to {
-    opacity: 1;
-    transform: none;
+    --editorial-seen: 1;
   }
+}
+/* A step holds its number for its share of the pin, then hands over (integer custom
+   properties round, so the hand-over is a jump, not a fade — the fade is the transition). */
+@keyframes editorial-steps-3 {
+  0%, 33% { --editorial-step: 0; }
+  34%, 66% { --editorial-step: 1; }
+  67%, 100% { --editorial-step: 2; }
+}
+@keyframes editorial-steps-4 {
+  0%, 25% { --editorial-step: 0; }
+  26%, 50% { --editorial-step: 1; }
+  51%, 75% { --editorial-step: 2; }
+  76%, 100% { --editorial-step: 3; }
 }
 @keyframes editorial-drift {
   to {
     opacity: 0.2;
     transform: translateY(-70px);
+  }
+}
+@keyframes editorial-light-away {
+  to {
+    transform: translateY(12%) scale(1.14);
   }
 }
 @keyframes editorial-tilt {
@@ -675,12 +944,18 @@ details[open] .editorial-plus::before {
     stroke-dashoffset: 0;
   }
 }
+/* A word lights up with a passing glow of the accent, like the name on Apple's Display. */
 @keyframes editorial-word {
   from {
     opacity: 0.18;
   }
+  55% {
+    opacity: 1;
+    text-shadow: 0 0 0.6em color-mix(in oklab, var(--highlight, var(--primary)) 60%, transparent);
+  }
   to {
     opacity: 1;
+    text-shadow: 0 0 0 transparent;
   }
 }
 @keyframes editorial-rise {
@@ -698,55 +973,6 @@ details[open] .editorial-plus::before {
    succession. Anchors jump, as everywhere else in the template. */
 
 /* ── Stage scene (T-384, from the T-344 v3 redesign) — palette tokens only ─────────────────── */
-/* The light follows the reading: the card in the middle band of the screen is lit. */
-.editorial-card {
-  transition: border-color 600ms ease, box-shadow 600ms ease, transform 300ms ease;
-}
-.editorial-card[data-lit] {
-  border-color: var(--editorial-hairline);
-  box-shadow: 0 30px 80px -40px var(--editorial-glow);
-}
-.editorial-card [data-numeral] {
-  transition: color 600ms ease;
-}
-.editorial-card[data-lit] [data-numeral] {
-  color: var(--primary);
-}
-
-/* The closing band's light: grey ribbons screened onto the band, tinted by the palette. */
-.editorial-band {
-  isolation: isolate;
-}
-.editorial-band > :not(.editorial-band-light) {
-  position: relative;
-  z-index: 1;
-}
-.editorial-band-light {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  mix-blend-mode: screen;
-  opacity: 0.7;
-  mask-image: radial-gradient(75% 75% at 50% 60%, black 30%, transparent 85%);
-}
-.editorial-band-light > div {
-  position: absolute;
-  inset: 0;
-  isolation: isolate;
-}
-.editorial-band-light video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.editorial-band-light i {
-  position: absolute;
-  inset: 0;
-  background: var(--primary);
-  mix-blend-mode: color;
-}
-
 /* The hero loop over its AI image fades in once it plays, so the picture never jumps. */
 .editorial-hero-loop {
   opacity: 0;
