@@ -18,6 +18,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 import { LoopVideo } from "./loop-video";
 
@@ -41,6 +42,13 @@ import { LoopVideo } from "./loop-video";
  *
  * `overflow-clip`, not `-hidden`: a hidden overflow is a scroll container, and the
  * scroll-driven reveals in `editorial.css` would measure against it instead of the page.
+ *
+ * T-340/T-368 (after vercel.com's backlit prism, apple.com's local dimming and framer.com's
+ * prompt box): with no AI image the headline stands in front of the backlight — a Blender loop
+ * of a board of mini-LEDs, whole zones switching on (`LightLoop`, tinted by the palette; placed
+ * by `stage.css`), here screened over this prototype's own scene, the map on the desk
+ * (`HeroScene`, T-384) — and a light runs along the frame's edge. An AI image owns the hero, so
+ * it gets neither.
  */
 
 const listings = config.patterns.listings;
@@ -167,7 +175,11 @@ export function HeroSection() {
 
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
-      {background ? <HeroBackground key={background} src={background} /> : object ? null : <HeroScene />}
+      {background ? <HeroBackground key={background} src={background} /> : null}
+      {/* This prototype's own scene (T-384): the map on the desk, rendered in Blender, under the template's
+          backlight (T-368 stage, `stage.css`); an AI image or object owns the hero, so neither gets them. */}
+      {!background && !object && <HeroScene />}
+      {!background && !object && <LightLoop name="stage-field" marker="data-hero-light" className="editorial-light-hero" />}
 
       <div
         className={cn(
@@ -219,6 +231,7 @@ export function HeroSection() {
               device switcher narrows it to a tablet or a phone (data-device). */}
           <div data-device={device} className="editorial-fold editorial-enter relative mt-14 overflow-clip sm:mt-16">
             <div data-hero-frame data-device={device} className="editorial-frame mx-auto w-full rounded-t-3xl">
+              <span aria-hidden="true" data-frame-run className="editorial-run" />
               <div className="editorial-frame-bar flex items-center gap-1.5 px-4 py-2">
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
