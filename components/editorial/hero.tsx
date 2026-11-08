@@ -19,6 +19,7 @@ import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
+import { LoopVideo } from "./loop-video";
 
 /**
  * The editorial hero (default since 2026-10-26), after the reference landings the founder
@@ -62,10 +63,23 @@ function HeroBackground({ src }: { src: string }) {
         onLoad={() => setLoaded(true)}
         className={cn("h-full w-full object-cover transition-opacity duration-700 motion-reduce:transition-none", loaded ? "opacity-100" : "opacity-0")}
       />
+      {src.includes(HERO_LOOP_SOURCE) ? (
+        <LoopVideo
+          data-hero-video
+          large="/motion/hero-scene.mp4"
+          small="/motion/hero-scene-sm.mp4"
+          onPlaying={(e) => (e.currentTarget.dataset.playing = "")}
+          className="editorial-hero-loop absolute inset-0 h-full w-full object-cover"
+        />
+      ) : null}
       <div className="absolute inset-0" style={{ background: heroOverlayBackground() }} />
     </div>
   );
 }
+
+/** The hero image as a scene (T-384): over the AI image it was rendered from, a depth-parallax loop of the same
+ * photo fades in; another image shows as a still until a new loop is made. */
+const HERO_LOOP_SOURCE = "PYDA2Aq4i95enR11d1oG.jpg";
 
 /** The AI object: a figure beside the words, in a pool of the accent — never under the text. */
 function HeroObject({ src }: { src: string }) {
