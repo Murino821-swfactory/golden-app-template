@@ -34,6 +34,7 @@
   --editorial-ink: var(--foreground);
   --editorial-paper: var(--background);
   --editorial-accent: var(--primary);
+  --editorial-highlight: var(--highlight, var(--primary));
 }
 .editorial-bright {
   --background: var(--editorial-ink);
@@ -48,6 +49,33 @@
   box-shadow: 0 0 0 100vmax var(--background);
   clip-path: inset(calc(var(--bright-bleed) * -1) -100vmax);
 }
+
+/* ── A tonal palette: every zone its own light (T-371, 2026-11-08) ──────────────────────
+   A palette of twenty colours carries `--accent-1` … `--accent-12`: its twelve lights, the hue
+   circle walked from the accent in strides of five so neighbours differ (color-schemes.ts). Each card of the bento and each step takes the next
+   one as its own accent and second accent — the icon, the numeral, the hairline, the flare and
+   the tick follow — so the page shows the whole palette rather than two colours of it. Under a
+   palette of two or seven colours the variables do not exist: `--editorial-light` is then
+   invalid, the fallbacks resolve to the page's own accents (stashed on the root above, because a
+   custom property may not read itself) and every card paints exactly as before. */
+[data-presentation="editorial"] [data-bento] > li,
+[data-presentation="editorial"] [data-steps] > li {
+  --primary: var(--editorial-light, var(--editorial-accent));
+  --highlight: var(--editorial-light, var(--editorial-highlight));
+  --editorial-glow: color-mix(in oklab, var(--highlight) 22%, transparent);
+  --editorial-glow-soft: color-mix(in oklab, var(--primary) 9%, transparent);
+  --editorial-hairline: color-mix(in oklab, var(--primary) 35%, transparent);
+}
+[data-presentation="editorial"] [data-bento] > li:nth-child(1) { --editorial-light: var(--accent-1); }
+[data-presentation="editorial"] [data-bento] > li:nth-child(2) { --editorial-light: var(--accent-2); }
+[data-presentation="editorial"] [data-bento] > li:nth-child(3) { --editorial-light: var(--accent-3); }
+[data-presentation="editorial"] [data-bento] > li:nth-child(4) { --editorial-light: var(--accent-4); }
+[data-presentation="editorial"] [data-bento] > li:nth-child(5) { --editorial-light: var(--accent-5); }
+[data-presentation="editorial"] [data-bento] > li:nth-child(6) { --editorial-light: var(--accent-6); }
+[data-presentation="editorial"] [data-steps] > li:nth-child(1) { --editorial-light: var(--accent-7); }
+[data-presentation="editorial"] [data-steps] > li:nth-child(2) { --editorial-light: var(--accent-8); }
+[data-presentation="editorial"] [data-steps] > li:nth-child(3) { --editorial-light: var(--accent-9); }
+[data-presentation="editorial"] [data-steps] > li:nth-child(4) { --editorial-light: var(--accent-10); }
 
 /* ── The backlight behind the headline: a 2:1 band, its edge dissolved ─────────────────── */
 [data-presentation="editorial"] .editorial-light-hero {
