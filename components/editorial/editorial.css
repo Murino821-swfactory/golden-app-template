@@ -696,3 +696,179 @@ details[open] .editorial-plus::before {
 /* No `scroll-behavior: smooth`: a hash set while a smooth scroll is still running is
    dropped by Chromium, and the anchors test (OTH-144) walks the sections by hash in quick
    succession. Anchors jump, as everywhere else in the template. */
+
+/* ── Stage scene (T-384, from the T-344 v3 redesign) — palette tokens only ─────────────────── */
+/* The light follows the reading: the card in the middle band of the screen is lit. */
+.editorial-card {
+  transition: border-color 600ms ease, box-shadow 600ms ease, transform 300ms ease;
+}
+.editorial-card[data-lit] {
+  border-color: var(--editorial-hairline);
+  box-shadow: 0 30px 80px -40px var(--editorial-glow);
+}
+.editorial-card [data-numeral] {
+  transition: color 600ms ease;
+}
+.editorial-card[data-lit] [data-numeral] {
+  color: var(--primary);
+}
+
+/* The closing band's light: grey ribbons screened onto the band, tinted by the palette. */
+.editorial-band {
+  isolation: isolate;
+}
+.editorial-band > :not(.editorial-band-light) {
+  position: relative;
+  z-index: 1;
+}
+.editorial-band-light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  mask-image: radial-gradient(75% 75% at 50% 60%, black 30%, transparent 85%);
+}
+.editorial-band-light > div {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+.editorial-band-light video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.editorial-band-light i {
+  position: absolute;
+  inset: 0;
+  background: var(--primary);
+  mix-blend-mode: color;
+}
+
+/* The deal rail demo: a light runs along the stations, each station's checklist ticks. */
+.editorial-rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.editorial-rail::before,
+.editorial-rail::after {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: calc(100% / 12);
+  right: calc(100% / 12);
+  height: 2px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--foreground) 14%, transparent);
+}
+.editorial-rail::after {
+  background: var(--primary);
+  box-shadow: 0 0 14px var(--editorial-glow);
+  transform-origin: left;
+  transform: scaleX(var(--rail, 0));
+  transition: transform 900ms cubic-bezier(0.33, 1, 0.68, 1);
+}
+.editorial-station {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+.editorial-station i {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--foreground) 18%, transparent);
+  background: var(--background);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 600;
+  transition: background-color 500ms ease, color 500ms ease, box-shadow 500ms ease, border-color 500ms ease;
+}
+.editorial-station span {
+  font-size: 0.72rem;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.editorial-station[data-state="done"] i {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+}
+.editorial-station[data-state="current"] i {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 6px var(--editorial-glow-soft), 0 0 24px var(--editorial-glow);
+}
+.editorial-station:is([data-state="done"], [data-state="current"]) span {
+  color: var(--foreground);
+}
+.editorial-checklist {
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+  background: color-mix(in oklab, var(--background) 55%, transparent);
+  min-height: 9rem;
+}
+.editorial-checklist ul {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.editorial-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--muted-foreground);
+  transition: color 400ms ease;
+}
+.editorial-checklist li::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  border: 1.5px solid color-mix(in oklab, var(--foreground) 22%, transparent);
+  transition: background-color 400ms ease, border-color 400ms ease;
+}
+.editorial-checklist li[data-done] {
+  color: var(--foreground);
+}
+.editorial-checklist li[data-done]::before {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.editorial-rail-done {
+  min-height: 1.4em;
+  color: var(--primary);
+}
+@media (max-width: 640px) {
+  .editorial-station span { font-size: 0.6rem; }
+  .editorial-station i { width: 30px; height: 30px; }
+  .editorial-rail::before, .editorial-rail::after { top: 14px; }
+}
+
+/* The catalogue photo is a bright, sunlit desk: the hero scene sits darker so the words read over it. */
+.editorial-hero-scene {
+  filter: brightness(0.5) saturate(0.85);
+}

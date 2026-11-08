@@ -10,6 +10,7 @@ import { localePath } from "@/lib/locale-routing";
 import { config } from "@/lib/prototype-config";
 import { BrandMark } from "./brand-mark";
 import { DISPLAY_H2 } from "./ui";
+import { LoopVideo } from "./loop-video";
 
 /**
  * The closing band, then the brand block "Built by TOKENWISE" (`brand-mark.tsx`) whole
@@ -27,6 +28,13 @@ export function CtaSection() {
   return (
     <section id="cta" data-section="cta" className="editorial-closing scroll-mt-24 relative mx-auto w-full max-w-6xl overflow-clip px-4 pb-6 pt-20 sm:pt-28">
       <div data-reveal className="editorial-band relative overflow-clip rounded-3xl px-6 py-14 text-center sm:px-12 sm:py-20">
+        {/* the golden template's closing light (T-374): grey ribbons screened onto the band, tinted by the palette (T-384) */}
+        <div aria-hidden data-closing-light className="editorial-band-light">
+          <div>
+            <LoopVideo large="/motion/closing-light.mp4" small="/motion/closing-light-sm.mp4" poster="/motion/closing-light.webp" />
+            <i />
+          </div>
+        </div>
         <h2 className={`${DISPLAY_H2} mx-auto`}>{copy?.title ?? t("title")}</h2>
         <p className="mx-auto mt-3 max-w-2xl text-balance text-muted-foreground sm:text-lg">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (
