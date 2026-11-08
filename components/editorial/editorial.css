@@ -973,10 +973,69 @@ details[open] .editorial-plus::before {
    succession. Anchors jump, as everywhere else in the template. */
 
 /* ── Stage scene (T-384, from the T-344 v3 redesign) — palette tokens only ─────────────────── */
+/* The channels demo: one story, the card takes each network's size; the caption is the studio's. */
+.editorial-nets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.editorial-net {
+  min-height: 40px;
+  border: 1px solid var(--editorial-hairline);
+  border-radius: 999px;
+  background: none;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.78rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: background-color 300ms var(--editorial-ease), color 300ms var(--editorial-ease);
+}
+.editorial-net[aria-pressed="true"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+}
+.editorial-caption {
+  max-height: 11rem;
+  overflow: auto;
+  margin: 0;
+  white-space: pre-wrap;
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  border-radius: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  background: color-mix(in oklab, var(--background) 55%, transparent);
+  font: 0.78rem/1.5 var(--font-mono, ui-monospace, monospace);
+  color: var(--muted-foreground);
+}
+.editorial-post-stage {
+  display: grid;
+  place-items: center;
+  min-height: 18rem;
+}
+.editorial-post {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: var(--pw, 100%);
+  aspect-ratio: var(--ar, 1200 / 630);
+  max-height: 26rem;
+  overflow: hidden;
+  border: 1px solid var(--editorial-hairline);
+  border-radius: 1rem;
+  padding: 1rem;
+  background:
+    radial-gradient(70% 60% at 85% 10%, var(--editorial-glow), transparent 70%),
+    color-mix(in oklab, var(--editorial-void) 80%, var(--card));
+  box-shadow: 0 30px 80px -40px var(--editorial-glow);
+  transition: width 600ms var(--editorial-ease-out), aspect-ratio 600ms var(--editorial-ease-out);
+}
+
 /* The hero loop over its AI image fades in once it plays, so the picture never jumps. */
 .editorial-hero-loop {
   opacity: 0;
-  transition: opacity 900ms ease;
+  transition: opacity 900ms var(--editorial-ease);
 }
 .editorial-hero-loop[data-playing] {
   opacity: 1;
