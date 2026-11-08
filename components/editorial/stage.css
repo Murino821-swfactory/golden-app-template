@@ -8,9 +8,10 @@
  *   A board of mini-LEDs behind the headline, whole zones switching on (`stage-field`); the
  *   frame's screen turns on after the frame rises; each card lights up like a dimming zone as
  *   it arrives, its numeral flaring; the manifesto on a bright panel (Apple's big words on
- *   white); a device rendered in the first card (`stage-slab`); an orb rising behind the close
- *   (`stage-orb`). Every rule sits under the editorial root (`[data-presentation="editorial"]`)
- *   and loads after `editorial.css`, whose light rules it refines.
+ *   white); a device rendered in the first card (`stage-slab`). The close keeps T-340's light
+ *   ribbons as `editorial.css` draws them (T-374: the founder's pick over the stage's orb). Every
+ *   rule sits under the editorial root (`[data-presentation="editorial"]`) and loads after
+ *   `editorial.css`, whose light rules it refines.
  *
  * Rules of the house kept: every colour a palette token through color-mix (the no-hex test greps
  * this folder); the two curves only (`--editorial-ease`, `--editorial-ease-out`); scroll-driven
@@ -133,18 +134,6 @@
   margin-top: 6rem;
 }
 
-/* The orb rises behind the close: the loop sits low in the band and comes up as the band
-   arrives (scroll-driven, below). */
-[data-presentation="editorial"] .editorial-light-band {
-  inset: auto -10% -45%;
-  height: 170%;
-  mask-image: radial-gradient(50% 55% at 50% 60%, black 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(50% 55% at 50% 60%, black 40%, transparent 100%);
-}
-[data-presentation="editorial"] .editorial-light-band video {
-  object-position: 50% 100%;
-}
-
 /* ══════════════════════════════════════════════════════════════════════════════════════
    Motion — same gates as editorial.css: scroll timelines understood, motion wanted
    ══════════════════════════════════════════════════════════════════════════════════════ */
@@ -159,12 +148,6 @@
       [data-presentation="editorial"] [data-bento] > li .editorial-numeral {
         animation: editorial-numeral-on 1500ms var(--editorial-ease-out) calc(var(--editorial-delay, 0s) + 180ms) both;
       }
-    }
-    /* The orb comes up as the band arrives. */
-    [data-presentation="editorial"] .editorial-light-band {
-      animation: editorial-orb-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 55%;
     }
   }
 }
@@ -190,15 +173,5 @@
   100% {
     color: color-mix(in oklab, var(--highlight, var(--primary)) 28%, transparent);
     text-shadow: 0 0 0 transparent;
-  }
-}
-@keyframes editorial-orb-rise {
-  from {
-    transform: translateY(38%);
-    opacity: 0.4;
-  }
-  to {
-    transform: none;
-    opacity: 1;
   }
 }

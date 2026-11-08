@@ -9,8 +9,9 @@ import { MOTION_BUDGET_BYTES, MOTION_LOOPS, MOTION_SMALL_QUERY, motionLoop } fro
  * and apple.com's MacBook Pro display page): light loops rendered in Blender behind the hero's
  * headline and the closing band — neutral light on black, tinted by the palette in CSS — and a
  * light that runs along the hero frame's edge (Framer's prompt box). Since T-369 the loops are
- * the stage scene's (`stage-field`, `stage-orb`; `tests/editorial-stage.spec.ts` covers what the
- * stage adds). `editorial.spec.ts` and `editorial-v2.spec.ts` keep guarding the earlier rounds.
+ * the stage scene's (`stage-field`, `stage-slab`; `tests/editorial-stage.spec.ts` covers what the
+ * stage adds); since T-374 the close carries the T-340 ribbons (`closing-light`) again.
+ * `editorial.spec.ts` and `editorial-v2.spec.ts` keep guarding the earlier rounds.
  */
 
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
@@ -111,7 +112,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
     expect(await run.evaluate((el) => getComputedStyle(el).display)).toBe("none");
   });
 
-  test("closing: the orb behind the band, under its words", async ({ page }) => {
+  test("closing: the light ribbons behind the band, under its words", async ({ page }) => {
     test.skip(!sections.includes("cta"), "no closing section");
     await page.goto("./");
     const band = page.locator('[data-section="cta"] .editorial-band');
@@ -119,7 +120,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
     await expect(light).toHaveCount(1);
     await expect(light).toHaveAttribute("aria-hidden", "true");
     const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
-    await expect(light.locator("video source").first()).toHaveAttribute("src", shown(small, motionLoop(BASE, "stage-orb").sources[0]!));
+    await expect(light.locator("video source").first()).toHaveAttribute("src", shown(small, motionLoop(BASE, "closing-light").sources[0]!));
     expect(await light.evaluate((el) => getComputedStyle(el).zIndex)).toBe("-1");
     expect(await band.evaluate((el) => getComputedStyle(el).isolation)).toBe("isolate");
     await band.scrollIntoViewIfNeeded();
@@ -265,7 +266,7 @@ test.describe("editorial motion (pure)", () => {
         { src: "/newapp/x/motion/stage-field.mp4", type: "video/mp4", small: "/newapp/x/motion/stage-field-sm.mp4" },
       ],
     });
-    expect(motionLoop("", "stage-orb").poster).toBe("/motion/stage-orb.webp");
+    expect(motionLoop("", "closing-light").poster).toBe("/motion/closing-light.webp");
   });
 
   test("every loop ships its three files inside the budget, and a phone file weighs at most 60 % of its full one", () => {

@@ -125,10 +125,11 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
  * black, so the page screens them onto any palette and tints them with the palette's second
  * accent (`editorial.css`, `.editorial-light`). Since T-369 (the founder's pick of the `stage`
  * scene among the three of T-368, `stage.css`) the loops are the stage's: `stage-field`, a
- * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card;
- * `stage-orb`, the orb rising behind the close.
+ * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card.
+ * The close keeps T-340's `closing-light`, ribbons of light across the band (T-374: the founder
+ * picked them over the stage's orb).
  */
-export const MOTION_LOOPS = ["stage-field", "stage-slab", "stage-orb"] as const;
+export const MOTION_LOOPS = ["stage-field", "stage-slab", "closing-light"] as const;
 export type MotionLoopName = (typeof MOTION_LOOPS)[number];
 
 export interface MotionLoop {
