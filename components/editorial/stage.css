@@ -50,8 +50,8 @@
 }
 
 /* ── A tonal palette: every zone its own light (T-371, 2026-11-08) ──────────────────────
-   A palette of twenty colours carries `--accent-1` … `--accent-12`: its twelve lights in hue
-   order from the accent (color-schemes.ts). Each card of the bento and each step takes the next
+   A palette of twenty colours carries `--accent-1` … `--accent-12`: its twelve lights, the hue
+   circle walked from the accent in strides of five so neighbours differ (color-schemes.ts). Each card of the bento and each step takes the next
    one as its own accent and second accent — the icon, the numeral, the hairline, the flare and
    the tick follow — so the page shows the whole palette rather than two colours of it. Under a
    palette of two or seven colours the variables do not exist: `--editorial-light` is then

@@ -10,7 +10,7 @@
  * first five such palettes have seven colours each. Since 2026-11-08 a palette of twenty
  * colours is TONAL (T-371, `deriveTonalRoles`): nothing is mixed any more — its four darkest
  * colours are the grounds, its four lightest the inks and the twelve between the lights, a
- * series every card of the page takes one of. Deriving
+ * series every card of the page takes one of, neighbours far apart in hue. Deriving
  * roles instead of hand-writing them means a new palette is one line and needs no CSS work.
  *
  * The pair rule (sw-factory spec 2026-09-24-prototype-palettes-15-pairs-design.md §4): the
@@ -249,8 +249,9 @@ export interface SchemeRoles {
   /** Tonal only: the third ink, the words on the raised plane (`--popover-foreground`,
    * `--secondary-foreground`, `--accent-foreground`). */
   raisedForeground?: string;
-  /** Tonal only: the twelve lights in hue order from the accent, each lifted until it reads
-   * on a card — `--accent-1` … `--accent-12`, one per card and step (`stage.css`). */
+  /** Tonal only: the twelve lights, walking the hue circle from the accent in strides of five
+   * so neighbouring cards differ as much as the palette allows, each lifted until it reads on
+   * a card — `--accent-1` … `--accent-12`, one per card and step (`stage.css`). */
   accents?: readonly string[];
 }
 
@@ -414,8 +415,10 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
  * (menus, badges, secondary buttons), border — the four lightest the inks — words, a
  * card's words, the raised plane's words, muted — and the twelve between are the lights.
  * The light most readable on a card is the accent and the next the second accent, exactly
- * as in a palette of seven; and all twelve, in hue order starting from the accent, are the
- * series the page hands its cards and steps (`--accent-1` …, stage.css). Every ink is
+ * as in a palette of seven; and all twelve are the series the page hands its cards and steps
+ * (`--accent-1` …, stage.css): the hue circle walked from the accent in strides of five, so
+ * neighbouring cards sit far apart in hue and three cards already show the palette's range
+ * (five and twelve are coprime, so every light has its turn). Every ink is
  * lifted toward white until it reads on its plane and every light until it reads on a
  * card; the second accent ships as supplied, as before. Pure and order-blind like the rest.
  */
@@ -429,7 +432,8 @@ function deriveTonalRoles(sorted: readonly string[]): SchemeRoles {
   const accent = byReadability[0]!;
   const byHue = [...lights].sort((x, y) => hue(x) - hue(y) || x.localeCompare(y));
   const from = byHue.indexOf(accent);
-  const series = [...byHue.slice(from), ...byHue.slice(0, from)];
+  const step = stride(byHue.length);
+  const series = byHue.map((_, k) => byHue[(from + k * step) % byHue.length]!);
   return {
     background: `#${background}`,
     surface: `#${surface}`,
@@ -443,6 +447,19 @@ function deriveTonalRoles(sorted: readonly string[]): SchemeRoles {
     raisedForeground: `#${lift(inks[2]!, raised)}`,
     accents: series.map((light) => `#${lift(light, surface)}`),
   };
+}
+
+/** The largest stride under half the circle that still visits every light — five of twelve —
+ * so the series puts neighbouring cards as far apart in hue as the palette allows. */
+function stride(count: number): number {
+  for (let step = Math.floor(count / 2); step > 1; step--) {
+    if (gcd(step, count) === 1) return step;
+  }
+  return 1;
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b);
 }
 
 /** `colour` pulled toward white one percent at a time until it reads on `plane` (WCAG AA) —

@@ -83,19 +83,19 @@ const ACCENTS: Record<string, { primary: string; highlight: string }> = {
   "black-gold": { primary: "#CDAD69", highlight: "#AC8B56" },
 };
 
-/** The tonal palettes' accents and their series of twelve lights (hue order from the accent),
- * pinned like the corrections — generated once from the rule, then frozen. */
+/** The tonal palettes' accents and their series of twelve lights (the hue circle in strides of
+ * five from the accent), pinned like the corrections — generated once from the rule, then frozen. */
 const TONAL: Record<string, { primary: string; highlight: string; accents: string[] }> = {
-  "aurora-night": { primary: "#27B8E0", highlight: "#22BF92", accents: ["#27B8E0", "#4FA9F5", "#3F8FE8", "#6F6CF0", "#9A5CF2", "#C65BE8", "#E65BB8", "#C9A43A", "#76B832", "#46B86A", "#22BF92", "#2FB5A8"] },
-  "ember-forge": { primary: "#D4A53E", highlight: "#EC9530", accents: ["#D4A53E", "#8A9A5B", "#6A8FA6", "#BD625D", "#CE5841", "#E86E4D", "#E8572A", "#D4794A", "#A96F4D", "#F07A2B", "#B5793A", "#EC9530"] },
-  "neon-tokyo": { primary: "#22C47A", highlight: "#E09E1C", accents: ["#22C47A", "#19B6BE", "#2BB4FF", "#536EFF", "#7D5FFF", "#9852FF", "#D63CFF", "#FF4FA3", "#FF2D78", "#FF6A2B", "#E09E1C", "#8DB322"] },
-  "desert-dusk": { primary: "#D9A066", highlight: "#D98E8E", accents: ["#D9A066", "#9A9A4E", "#8FA37B", "#6E8F8A", "#7FA3BF", "#A48BC2", "#B47A8E", "#D98E8E", "#BC6652", "#C8643C", "#C47E5A", "#E08A5A"] },
-  "coral-reef": { primary: "#E89A35", highlight: "#FF8C42", accents: ["#E89A35", "#CFA246", "#72B53D", "#24B5A6", "#26A69A", "#3AB0E0", "#2E86DE", "#8F6DE8", "#E65BA3", "#F25F8C", "#FF6F61", "#FF8C42"] },
-  "moss-lantern": { primary: "#C9A64B", highlight: "#DA9C36", accents: ["#C9A64B", "#8FB236", "#6C8C3E", "#7FA64A", "#4F9A5E", "#3C9D8A", "#8A9EC2", "#E0714A", "#BA6A41", "#C77A2F", "#B08A5E", "#DA9C36"] },
-  "royal-velvet": { primary: "#C9A52F", highlight: "#D59E3F", accents: ["#C9A52F", "#2E9E6B", "#41B3C4", "#4C7BD9", "#906DB9", "#B388E0", "#9F60D2", "#C94FB5", "#E07A9A", "#D05166", "#D86B3A", "#D59E3F"] },
-  "glacier-mint": { primary: "#3DBFA0", highlight: "#8DB54D", accents: ["#3DBFA0", "#3C9B8C", "#52B5A8", "#6FA8A8", "#2FB4D8", "#5AA9EE", "#4C8FD6", "#7D8FE6", "#A98BDC", "#C77DA0", "#CC9C50", "#8DB54D"] },
-  "candy-arcade": { primary: "#3FB6FF", highlight: "#F59427", accents: ["#3FB6FF", "#4D7CFF", "#9D5CFF", "#F75FE0", "#FF5CA8", "#FF3B5C", "#FF7A2E", "#F59427", "#D9A020", "#6CBE1E", "#3BBF5E", "#1FB8A5"] },
-  "clay-kiln": { primary: "#C9A66B", highlight: "#D4A038", accents: ["#C9A66B", "#D4A038", "#8F8A3C", "#7A9A4E", "#3F8F86", "#6E8CA8", "#9173A0", "#C1634D", "#AF6E4F", "#B07050", "#D98C5A", "#C97B3A"] },
+  "aurora-night": { primary: "#27B8E0", highlight: "#22BF92", accents: ["#27B8E0", "#C65BE8", "#22BF92", "#6F6CF0", "#76B832", "#4FA9F5", "#E65BB8", "#2FB5A8", "#9A5CF2", "#46B86A", "#3F8FE8", "#C9A43A"] },
+  "ember-forge": { primary: "#D4A53E", highlight: "#EC9530", accents: ["#D4A53E", "#E86E4D", "#B5793A", "#BD625D", "#A96F4D", "#8A9A5B", "#E8572A", "#EC9530", "#CE5841", "#F07A2B", "#6A8FA6", "#D4794A"] },
+  "neon-tokyo": { primary: "#22C47A", highlight: "#E09E1C", accents: ["#22C47A", "#9852FF", "#E09E1C", "#536EFF", "#FF2D78", "#19B6BE", "#D63CFF", "#8DB322", "#7D5FFF", "#FF6A2B", "#2BB4FF", "#FF4FA3"] },
+  "desert-dusk": { primary: "#D9A066", highlight: "#D98E8E", accents: ["#D9A066", "#A48BC2", "#C47E5A", "#6E8F8A", "#BC6652", "#9A9A4E", "#B47A8E", "#E08A5A", "#7FA3BF", "#C8643C", "#8FA37B", "#D98E8E"] },
+  "coral-reef": { primary: "#E89A35", highlight: "#FF8C42", accents: ["#E89A35", "#3AB0E0", "#FF6F61", "#24B5A6", "#E65BA3", "#CFA246", "#2E86DE", "#FF8C42", "#26A69A", "#F25F8C", "#72B53D", "#8F6DE8"] },
+  "moss-lantern": { primary: "#C9A64B", highlight: "#DA9C36", accents: ["#C9A64B", "#3C9D8A", "#B08A5E", "#7FA64A", "#BA6A41", "#8FB236", "#8A9EC2", "#DA9C36", "#4F9A5E", "#C77A2F", "#6C8C3E", "#E0714A"] },
+  "royal-velvet": { primary: "#C9A52F", highlight: "#D59E3F", accents: ["#C9A52F", "#B388E0", "#D86B3A", "#4C7BD9", "#E07A9A", "#2E9E6B", "#9F60D2", "#D59E3F", "#906DB9", "#D05166", "#41B3C4", "#C94FB5"] },
+  "glacier-mint": { primary: "#3DBFA0", highlight: "#8DB54D", accents: ["#3DBFA0", "#5AA9EE", "#CC9C50", "#6FA8A8", "#A98BDC", "#3C9B8C", "#4C8FD6", "#8DB54D", "#2FB4D8", "#C77DA0", "#52B5A8", "#7D8FE6"] },
+  "candy-arcade": { primary: "#3FB6FF", highlight: "#F59427", accents: ["#3FB6FF", "#FF3B5C", "#3BBF5E", "#F75FE0", "#D9A020", "#4D7CFF", "#FF7A2E", "#1FB8A5", "#FF5CA8", "#6CBE1E", "#9D5CFF", "#F59427"] },
+  "clay-kiln": { primary: "#C9A66B", highlight: "#D4A038", accents: ["#C9A66B", "#6E8CA8", "#D98C5A", "#7A9A4E", "#AF6E4F", "#D4A038", "#9173A0", "#C97B3A", "#3F8F86", "#B07050", "#8F8A3C", "#C1634D"] },
 };
 
 /** The darkest and the lightest colour of a palette — background and text before correction. */
@@ -370,20 +370,22 @@ test.describe("palettes of twenty colours — tonal", () => {
     expect([r.foreground, r.cardForeground, r.raisedForeground, r.muted]).toEqual(["#FFFFFF", "#EEEEEE", "#DDDDDD", "#CCCCCC"]);
   });
 
-  test("the twelve between are the lights: the accent reads best on a card, the series walks the hue circle from it", () => {
+  test("the twelve between are the lights: the accent reads best on a card, the series walks the hue circle from it in strides of five", () => {
     const r = derivePaletteRoles(TWENTY);
     expect(r.accents).toHaveLength(12);
     expect(r.accents![0]).toBe(r.primary);
-    // Each light keeps its hue (lifting toward white does, to within a degree of channel
-    // rounding), and from the accent on the hues only grow until the circle wraps once.
-    const hues = r.accents!.map((c) => hue(c.slice(1)));
-    let wraps = 0;
-    for (let i = 1; i < hues.length; i++) if (hues[i]! < hues[i - 1]! - 1) wraps++;
-    expect(wraps).toBeLessThanOrEqual(1);
     // The most readable light on the card is the accent, the next the second accent.
     const byReadability = [...LIGHTS].sort((x, y) => contrastRatio(y, r.surface) - contrastRatio(x, r.surface));
     expect(Math.abs(hue(r.primary.slice(1)) - hue(byReadability[0]!))).toBeLessThan(1);
     expect(r.highlight).toBe(`#${byReadability[1]}`);
+    // From the accent, every fifth light around the hue circle (five and twelve are coprime,
+    // so all twelve have their turn) — neighbouring cards far apart in hue. Each light keeps
+    // its hue when lifted toward white, to within a degree of channel rounding.
+    const byHue = [...LIGHTS].sort((x, y) => hue(x) - hue(y) || x.localeCompare(y));
+    const from = byHue.indexOf(byReadability[0]!);
+    const expected = byHue.map((_, k) => byHue[(from + k * 5) % 12]!);
+    r.accents!.forEach((light, k) => expect(Math.abs(hue(light.slice(1)) - hue(expected[k]!)), `light ${k + 1}`).toBeLessThan(1));
+    expect(new Set(r.accents).size).toBe(12);
   });
 
   test("a light too dark to read on a card is lifted toward white, keeping its hue", () => {

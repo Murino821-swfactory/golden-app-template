@@ -550,8 +550,9 @@ A palette of **twenty** colours is tonal (`deriveTonalRoles`): nothing is mixed.
 darkest colours are the grounds — page, card, the raised plane (`--popover`, `--secondary`,
 `--muted`, `--accent`) and the border — its four lightest the inks — words, `--card-foreground`,
 the raised plane's words, `--muted-foreground` — and the twelve between are the lights: the most
-readable on a card is `--primary`, the next `--highlight`, and all twelve in hue order from the
-accent are `--accent-1` … `--accent-12`, each lifted until it reads on a card. `stage.css` hands
+readable on a card is `--primary`, the next `--highlight`, and all twelve are `--accent-1` …
+`--accent-12` — the hue circle walked from the accent in strides of five, so neighbouring cards
+differ as much as the palette allows — each lifted until it reads on a card. `stage.css` hands
 them to the bento cards (1–6) and the steps (7–10) as their own accent, with fallbacks to the
 page's accents, so a pair's or a seven-colour palette's page paints exactly as before. Ten such
 palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/color-schemes.spec.ts`.
