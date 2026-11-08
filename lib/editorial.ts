@@ -118,3 +118,41 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
   return [tiles.slice(0, half), tiles.slice(half)];
 }
 
+
+/**
+ * The light loops (T-340, after framer.com, vercel.com, linear.app and apple.com): short
+ * seamless videos rendered in Blender from `scripts/motion/<name>.py` — neutral light on
+ * black, so the page screens them onto any palette and tints them with the palette's second
+ * accent (`editorial.css`, `.editorial-light`). Since T-369 (the founder's pick of the `stage`
+ * scene among the three of T-368, `stage.css`) the loops are the stage's: `stage-field`, a
+ * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card.
+ * The close keeps T-340's `closing-light`, ribbons of light across the band (T-374: the founder
+ * picked them over the stage's orb).
+ */
+export const MOTION_LOOPS = ["stage-field", "stage-slab", "closing-light"] as const;
+export type MotionLoopName = (typeof MOTION_LOOPS)[number];
+
+export interface MotionLoop {
+  poster: string;
+  /** VP9 WebM first, H.264 MP4 for Safari; `small` is the same file at half the width
+   * (`<name>-sm`), what a phone loads (`MOTION_SMALL_QUERY`, `LightLoop`). */
+  sources: { src: string; type: string; small: string }[];
+}
+
+/** A phone, by the page's own `sm` breakpoint (`@media (min-width: 640px)` everywhere in the editorial styles). */
+export const MOTION_SMALL_QUERY = "(max-width: 639px)";
+
+/** One loop's files under this build's base path. */
+export function motionLoop(basePath: string, name: MotionLoopName): MotionLoop {
+  const base = `${basePath}/motion/${name}`;
+  return {
+    poster: `${base}.webp`,
+    sources: [
+      { src: `${base}.webm`, type: "video/webm", small: `${base}-sm.webm` },
+      { src: `${base}.mp4`, type: "video/mp4", small: `${base}-sm.mp4` },
+    ],
+  };
+}
+
+/** What one loop's three files may weigh together — every prototype ships every loop. */
+export const MOTION_BUDGET_BYTES = 1_200_000;

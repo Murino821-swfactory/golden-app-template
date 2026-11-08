@@ -23,7 +23,7 @@ export function FaqSection() {
         <div className="flex flex-col items-start gap-4 lg:sticky lg:top-28 lg:self-start">
           <h2 className={DISPLAY_H2}>{faq.heading ?? t("title")}</h2>
         </div>
-        <div className="space-y-3">
+        <div data-stagger className="space-y-3">
           {faq.items.map((item, i) => (
             <details key={i} data-reveal style={{ "--i": i } as CSSProperties} className="editorial-card group rounded-2xl px-5 sm:px-6">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium [&::-webkit-details-marker]:hidden">
