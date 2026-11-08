@@ -121,8 +121,10 @@ test.describe("font", () => {
     expect(family).toContain(fontById(DEFAULT_FONT).name);
   });
 
+  // On the sign-in page, like the palette walk in header.spec.ts: the cycle is the header's, and
+  // re-setting the landing in every face is the slow part, not the thing under test (T-384).
   test("one click steps to the next face, the whole cycle wraps", async ({ page }) => {
-    await page.goto("./");
+    await page.goto("login");
     let expected: (typeof FONT_IDS)[number] = DEFAULT_FONT;
     for (let i = 0; i < FONT_IDS.length; i++) {
       await fontButton(page).click();
