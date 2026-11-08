@@ -1,12 +1,13 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
 import { bentoSpan } from "@/lib/editorial";
 import { ICONS } from "@/lib/icons";
 import type { Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { ChannelsDemo } from "@/components/studio/channels-demo";
 import { ShowcaseStrip } from "./strip";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
@@ -35,6 +36,17 @@ export function FeaturesSection() {
   const features = landing?.features ?? TRANSLATION_FALLBACK;
   const manifesto = landing?.manifesto;
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
+  // The light follows the reading (T-384): the card in the middle band of the screen is lit.
+  const bento = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    const cards = bento.current ? [...bento.current.children] : [];
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.toggleAttribute("data-lit", e.isIntersecting)),
+      { rootMargin: "-38% 0px -38% 0px" },
+    );
+    cards.forEach((c) => observer.observe(c));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
@@ -42,7 +54,7 @@ export function FeaturesSection() {
         <h2 className={DISPLAY_H2}>{landing?.featuresHeading ?? t("title")}</h2>
       </SectionHead>
 
-      <ul data-bento className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul ref={bento} data-bento className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {features.map((feature, i) => {
           const Icon = feature.icon ? ICONS[feature.icon] : null;
           const span = bentoSpan(i, features.length);
@@ -62,6 +74,8 @@ export function FeaturesSection() {
           );
         })}
       </ul>
+
+      <ChannelsDemo />
 
       <ShowcaseStrip />
 
