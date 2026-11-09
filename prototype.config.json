@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "RentTrack",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,17 +13,37 @@
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
+        "useCases",
+        "faq",
         "contact",
         "cta"
       ],
-      "font": "space-grotesk"
+      "font": "lexend",
+      "tone": "light"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "activeLeases",
+          "field": "status",
+          "agg": "share",
+          "value": "active"
+        },
+        {
+          "id": "totalRent",
+          "field": "monthlyRent",
+          "agg": "sum"
+        },
+        {
+          "id": "vacantUnits",
+          "field": "status",
+          "agg": "share",
+          "value": "vacant"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
@@ -30,49 +51,56 @@
     "contactForm": {
       "phone": "optional"
     },
+    "useCases": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "lease",
         "fields": [
           {
-            "key": "name",
+            "key": "tenantName",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "property",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "monthlyRent",
+            "type": "number",
+            "required": true
+          },
+          {
+            "key": "startDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "endDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "active",
+              "ending-soon",
+              "expired",
+              "vacant"
+            ],
+            "required": true
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
         "apartment",
         "house",
-        "office"
+        "studio",
+        "commercial"
       ],
       "attributes": [
         {
@@ -81,6 +109,9 @@
         },
         {
           "key": "rooms"
+        },
+        {
+          "key": "floor"
         }
       ],
       "currency": "EUR",
@@ -88,224 +119,539 @@
         {
           "id": "offer-1",
           "category": "apartment",
-          "price": 189000,
+          "price": 650,
+          "pricePeriod": "month",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "area": 65,
+            "rooms": 2,
+            "floor": 3
           },
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 48.151,
+            "lng": 17.112
           }
         },
         {
           "id": "offer-2",
           "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "price": 1100,
+          "pricePeriod": "month",
           "attributes": {
-            "area": 142,
-            "rooms": 5
+            "area": 120,
+            "rooms": 4
           },
           "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "lat": 48.144,
+            "lng": 17.092
           }
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "category": "studio",
+          "price": 450,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
+            "area": 35,
+            "rooms": 1,
+            "floor": 1
           },
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 48.156,
+            "lng": 17.12
+          }
+        },
+        {
+          "id": "offer-4",
+          "category": "apartment",
+          "price": 850,
+          "pricePeriod": "month",
+          "attributes": {
+            "area": 85,
+            "rooms": 3,
+            "floor": 5
+          },
+          "location": {
+            "lat": 48.148,
+            "lng": 17.106
+          }
+        },
+        {
+          "id": "offer-5",
+          "category": "commercial",
+          "price": 1200,
+          "pricePeriod": "month",
+          "attributes": {
+            "area": 100,
+            "floor": 0
+          },
+          "location": {
+            "lat": 48.15,
+            "lng": 17.114
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.1486,
+        "lng": 17.1077
+      },
+      "zoom": 13
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "RentTrack helps landlords manage leases, track rent payments and monitor every rental property from one dashboard.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every rental property, under control",
+        "subheadline": "Landlords use RentTrack to manage leases, log payments and see every unit's status at a glance.",
+        "eyebrow": "Rental management for landlords",
+        "featuresHeading": "Everything a landlord needs in one place",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "file-text",
+            "title": "Lease Registry",
+            "description": "Add and update lease records for each unit with start dates, end dates and monthly rent."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "wallet",
+            "title": "Rent Tracking",
+            "description": "Log payments unit by unit so you always know which tenants are current and which are overdue."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "map-pin",
+            "title": "Property Map",
+            "description": "See all your rental units pinned on a map so you can navigate between them without searching."
+          },
+          {
+            "icon": "bell",
+            "title": "Expiry Visibility",
+            "description": "Spot leases ending soon from the dashboard before you need to find a new tenant."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Income Overview",
+            "description": "Check total monthly rent across all units from a single figure on your home screen."
+          },
+          {
+            "icon": "message-square",
+            "title": "Tenant Inquiries",
+            "description": "Receive messages from prospective tenants directly through the listing page."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in four steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Sign in with your Google account to access your private landlord dashboard."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add your properties",
+              "description": "Enter each unit with its address, size, number of rooms and asking rent."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Record your leases",
+              "description": "Log tenant names, lease start and end dates, and monthly rent for each unit."
+            },
+            {
+              "title": "Track from your dashboard",
+              "description": "Review occupancy, total income and upcoming renewals whenever you need to."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions landlords ask first",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Can I manage more than one property?",
+              "answer": "Yes. You can add as many units as you manage, each with its own lease records and status."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "How do I know when a lease is ending?",
+              "answer": "The dashboard highlights leases with upcoming end dates so you can plan ahead before a unit goes vacant."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Can prospective tenants contact me through the app?",
+              "answer": "Yes. Each listing has an inquiry form that delivers the message directly to you."
+            },
+            {
+              "question": "Is my tenant data private?",
+              "answer": "All records are tied to your Google account. No other user can view your data."
+            },
+            {
+              "question": "What happens when I have a vacant unit?",
+              "answer": "Mark a unit as vacant in the lease registry and it will appear in the occupancy indicator on your dashboard."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Properties",
+        "intro": "Your rentals at a glance — check occupancy, total income and upcoming lease renewals.",
+        "kpiLabels": {
+          "activeLeases": "Active Leases",
+          "totalRent": "Monthly Rent (€)",
+          "vacantUnits": "Vacant Units"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "label": "Sign in to get started",
+        "title": "Take control of your rentals today",
+        "subtitle": "Sign in with Google and start tracking your properties and leases in minutes."
       },
       "contactForm": {
         "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "submitLabel": "Send message",
+        "intro": "Have a question about a listing or need more information? Send a message and we will get back to you."
+      },
+      "useCases": {
+        "heading": "Built for every kind of landlord",
+        "items": [
+          {
+            "title": "Private landlord with a few flats",
+            "situation": "You own two or three apartments and track rent payments in a notebook or spreadsheet.",
+            "action": "Add each flat, record your leases and check the dashboard each month to see which payments are due."
+          },
+          {
+            "title": "Property manager, multiple buildings",
+            "situation": "You manage units across several addresses and need to know which are occupied, vacant or coming up for renewal.",
+            "action": "Filter the lease registry by status to see all ending-soon leases across your portfolio in one view."
+          },
+          {
+            "title": "Landlord advertising a vacant unit",
+            "situation": "A tenant has moved out and you want prospective tenants to find and inquire about the empty unit.",
+            "action": "Publish the unit as an available listing so visitors can browse it and send you an inquiry directly."
+          }
+        ]
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Leases",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "tenantName": "Tenant Name",
+          "property": "Property",
+          "monthlyRent": "Monthly Rent (€)",
+          "startDate": "Lease Start",
+          "endDate": "Lease End",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "tenantName": "Jana Nováková",
+            "property": "Apt 3B – Hlavná Street",
+            "monthlyRent": 650,
+            "startDate": "2026-10-01",
+            "endDate": "2027-09-30",
+            "status": "active"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "tenantName": "Peter Kováč",
+            "property": "Studio 1A – Sadová Street",
+            "monthlyRent": 450,
+            "startDate": "2026-09-15",
+            "endDate": "2027-02-14",
+            "status": "ending-soon"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "tenantName": "Martin Horváth",
+            "property": "House – Záhradná Street",
+            "monthlyRent": 1100,
+            "startDate": "2026-10-15",
+            "endDate": "2027-10-14",
+            "status": "active"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Available Rentals",
+        "intro": "Browse rental units across Bratislava. Filter by type and get in touch about any property that interests you.",
+        "notice": "These listings are illustrative examples; the owner will replace them with real available properties.",
         "categoryLabels": {
           "apartment": "Apartment",
           "house": "House",
-          "office": "Office"
+          "studio": "Studio",
+          "commercial": "Commercial"
         },
         "attributeLabels": {
           "area": "Area",
-          "rooms": "Rooms"
+          "rooms": "Rooms",
+          "floor": "Floor"
         },
+        "inquireLabel": "Inquire about this property",
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Bright 2-room apartment, city centre",
+            "summary": "A well-maintained apartment on the third floor with a spacious living area and updated kitchen. Close to public transport and local shops.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Updated kitchen",
+              "Public transport nearby",
+              "Third floor"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Family house with private garden",
+            "summary": "A four-bedroom house with a private garden, two bathrooms and a garage. Quiet residential street with parking in front of the property.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Private garden",
+              "Garage included",
+              "Quiet street"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Cosy studio near the park",
+            "summary": "A compact studio ideal for a single professional or student. Ground floor with its own entrance and direct access to a courtyard.",
+            "highlights": [
+              "Own entrance",
+              "Courtyard access",
+              "Walking distance to park"
+            ]
+          },
+          "offer-4": {
+            "title": "Spacious 3-room apartment, 5th floor",
+            "summary": "A large apartment with three separate bedrooms, two balconies and panoramic city views. Recently painted and ready to move in.",
+            "highlights": [
+              "Two balconies",
+              "City views",
+              "Three bedrooms"
+            ]
+          },
+          "offer-5": {
+            "title": "Commercial space for office or retail",
+            "summary": "A flexible ground-floor space suitable for a small office, retail or service business. Shop-front windows and street-level access.",
+            "highlights": [
+              "Shop-front windows",
+              "Street-level access",
+              "Flexible layout"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "RentTrack pomáha prenajímateľom spravovať nájomné zmluvy, sledovať platby a mať prehľad nad každou nehnuteľnosťou.",
+      "landing": {
+        "headline": "Všetky nehnuteľnosti pod kontrolou",
+        "subheadline": "Prenajímatelia používajú RentTrack na správu nájmov, evidenciu platieb a prehľad každej jednotky na jednom mieste.",
+        "eyebrow": "Správa prenájmov pre majiteľov",
+        "featuresHeading": "Všetko, čo prenajímateľ potrebuje, na jednom mieste",
+        "features": [
+          {
+            "icon": "file-text",
+            "title": "Register nájmov",
+            "description": "Zadajte a aktualizujte záznamy o zmluvách vrátane dátumov a výšky mesačného nájmu."
+          },
+          {
+            "icon": "wallet",
+            "title": "Evidencia platieb",
+            "description": "Zaznamenajte platby podľa jednotlivých bytov a vždy vedzte, kto zaplatil a kto nie."
+          },
+          {
+            "icon": "map-pin",
+            "title": "Mapa nehnuteľností",
+            "description": "Zobrazte všetky vaše prenajímané jednotky na mape a rýchlo sa v nich zorientujte."
+          },
+          {
+            "icon": "bell",
+            "title": "Prehľad vypršaní",
+            "description": "Z prehľadu zistíte, ktoré zmluvy čoskoro skončia, skôr než budete hľadať nového nájomníka."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Prehľad príjmov",
+            "description": "Skontrolujte celkové mesačné nájomné za všetky jednotky priamo na domovskej obrazovke."
+          },
+          {
+            "icon": "message-square",
+            "title": "Dopyty záujemcov",
+            "description": "Prijímajte správy od záujemcov o prenájom priamo cez stránku inzerátu."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Pripravení za štyri kroky",
+          "steps": [
+            {
+              "title": "Prihláste sa",
+              "description": "Prihláste sa pomocou Google účtu a získajte prístup k svojmu súkromnému prehľadu prenajímateľa."
+            },
+            {
+              "title": "Pridajte nehnuteľnosti",
+              "description": "Zadajte každú jednotku s adresou, rozlohou, počtom izieb a požadovaným nájomným."
+            },
+            {
+              "title": "Zapíšte nájomné zmluvy",
+              "description": "Evidujte mená nájomníkov, dátumy začiatku a konca zmluvy a mesačné nájomné pre každú jednotku."
+            },
+            {
+              "title": "Sledujte z prehľadu",
+              "description": "Kontrolujte obsadenosť, celkové príjmy a blížiace sa obnovenia zmlúv kedykoľvek potrebujete."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Otázky, ktoré prenajímatelia kladú ako prvé",
+          "items": [
+            {
+              "question": "Môžem spravovať viac nehnuteľností?",
+              "answer": "Áno. Môžete pridať toľko jednotiek, koľko spravujete – každú s vlastnými zmluvnými záznamami a stavom."
+            },
+            {
+              "question": "Ako zistím, že nájomná zmluva čoskoro skončí?",
+              "answer": "Prehľad označí zmluvy s blížiacim sa dátumom ukončenia, aby ste sa mohli vopred pripraviť na hľadanie nového nájomníka."
+            },
+            {
+              "question": "Môžu ma záujemcovia o prenájom kontaktovať cez aplikáciu?",
+              "answer": "Áno. Každý inzerát má formulár na dopyt, ktorý vám správu doručí priamo."
+            },
+            {
+              "question": "Sú údaje o nájomníkoch súkromné?",
+              "answer": "Všetky záznamy sú viazané na váš Google účet. Iný používateľ vaše dáta nevidí."
+            },
+            {
+              "question": "Čo ak mám voľnú jednotku?",
+              "answer": "Označte jednotku ako voľnú v registri nájmov a bude sa zobrazovať v ukazovateli obsadenosti na vašom prehľade."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Moje nehnuteľnosti",
+        "intro": "Váš prehľad prenájmov – skontrolujte obsadenosť, celkové príjmy a blížiace sa obnovenia nájomných zmlúv.",
+        "kpiLabels": {
+          "activeLeases": "Aktívne nájmy",
+          "totalRent": "Mesačné nájomné (€)",
+          "vacantUnits": "Voľné jednotky"
+        }
+      },
+      "cta": {
+        "label": "Prihláste sa a začnite",
+        "title": "Prevezmite kontrolu nad svojimi prenájmami",
+        "subtitle": "Prihláste sa cez Google a začnite evidovať svoje nehnuteľnosti a zmluvy za pár minút."
+      },
+      "contactForm": {
+        "heading": "Kontaktujte nás",
+        "submitLabel": "Odoslať správu",
+        "intro": "Máte otázku k inzerátu alebo potrebujete viac informácií? Napíšte nám a ozveme sa vám."
+      },
+      "useCases": {
+        "heading": "Navrhnuté pre každého prenajímateľa",
+        "items": [
+          {
+            "title": "Súkromný prenajímateľ s niekoľkými bytmi",
+            "situation": "Vlastníte dva alebo tri byty a platby sledujete v zošite alebo tabuľke.",
+            "action": "Pridajte každý byt, zaznamenajte zmluvy a každý mesiac skontrolujte prehľad splatných platieb."
+          },
+          {
+            "title": "Správca viacerých budov",
+            "situation": "Spravujete jednotky na niekoľkých adresách a potrebujete vedieť, ktoré sú obsadené, voľné alebo čoskoro skončia.",
+            "action": "Filtrujte register zmlúv podľa stavu a zobrazte všetky čoskoro končiace nájmy v jednom prehľade."
+          },
+          {
+            "title": "Prenajímateľ inzerujúci voľný byt",
+            "situation": "Nájomník sa vysťahoval a chcete, aby záujemcovia voľný byt našli a ozvali sa vám.",
+            "action": "Zverejnite jednotku ako dostupný inzerát, aby ju záujemcovia mohli prehliadať a kontaktovať vás priamo."
+          }
+        ]
+      },
+      "dataGrid": {
+        "entityLabel": "Nájomné zmluvy",
+        "fieldLabels": {
+          "tenantName": "Nájomník",
+          "property": "Nehnuteľnosť",
+          "monthlyRent": "Mesačný nájom (€)",
+          "startDate": "Začiatok nájmu",
+          "endDate": "Koniec nájmu",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "tenantName": "Jana Nováková",
+            "property": "Byt 3B – Hlavná ulica",
+            "monthlyRent": 650,
+            "startDate": "2026-10-01",
+            "endDate": "2027-09-30",
+            "status": "active"
+          },
+          {
+            "tenantName": "Peter Kováč",
+            "property": "Garsónka 1A – Sadová ulica",
+            "monthlyRent": 450,
+            "startDate": "2026-09-15",
+            "endDate": "2027-02-14",
+            "status": "ending-soon"
+          },
+          {
+            "tenantName": "Martin Horváth",
+            "property": "Dom – Záhradná ulica",
+            "monthlyRent": 1100,
+            "startDate": "2026-10-15",
+            "endDate": "2027-10-14",
+            "status": "active"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Dostupné prenájmy",
+        "intro": "Prehliadajte prenájmy v Bratislave. Filtrujte podľa typu a napíšte nám o nehnuteľnosti, ktorá vás zaujíma.",
+        "notice": "Tieto inzeráty sú ilustratívne príklady; majiteľ ich nahradí skutočnými dostupnými nehnuteľnosťami.",
+        "categoryLabels": {
+          "apartment": "Byt",
+          "house": "Dom",
+          "studio": "Garsónka",
+          "commercial": "Komerčný priestor"
+        },
+        "attributeLabels": {
+          "area": "Plocha",
+          "rooms": "Izby",
+          "floor": "Poschodie"
+        },
+        "inquireLabel": "Mám záujem o túto nehnuteľnosť",
+        "items": {
+          "offer-1": {
+            "title": "Svetlý 2-izbový byt v centre mesta",
+            "summary": "Dobre udržiavaný byt na treťom poschodí s priestrannou obývacou izbou a zrekonštruovanou kuchyňou. Blízko MHD a obchodov.",
+            "highlights": [
+              "Zrekonštruovaná kuchyňa",
+              "MHD v blízkosti",
+              "Tretie poschodie"
+            ]
+          },
+          "offer-2": {
+            "title": "Rodinný dom so záhradou",
+            "summary": "Štvorspálňový dom s vlastnou záhradou, dvoma kúpeľňami a garážou. Pokojná rezidenčná ulica s parkovaním pred domom.",
+            "highlights": [
+              "Vlastná záhrada",
+              "Garáž v cene",
+              "Pokojná ulica"
+            ]
+          },
+          "offer-3": {
+            "title": "Útulná garsónka pri parku",
+            "summary": "Kompaktná garsónka vhodná pre jednotlivca alebo študenta. Prízemie s vlastným vchodom a prístupom na dvor.",
+            "highlights": [
+              "Vlastný vchod",
+              "Prístup na dvor",
+              "Blízko parku"
+            ]
+          },
+          "offer-4": {
+            "title": "Priestranný 3-izbový byt na 5. poschodí",
+            "summary": "Veľký byt s tromi samostatnými spálňami, dvoma balkónmi a výhľadom na mesto. Čerstvo vymaľovaný a pripravený na nasťahovanie.",
+            "highlights": [
+              "Dva balkóny",
+              "Výhľad na mesto",
+              "Tri spálne"
+            ]
+          },
+          "offer-5": {
+            "title": "Komerčný priestor pre kanceláriu alebo predajňu",
+            "summary": "Flexibilný prízemný priestor vhodný pre malú kanceláriu, maloobchod alebo služby. Výkladné okno a prístup z ulice.",
+            "highlights": [
+              "Výkladné okno",
+              "Prístup z ulice",
+              "Flexibilný layout"
+            ]
+          }
+        }
       }
     }
   }
