@@ -50,9 +50,11 @@ lib/growth/
   report.ts    buildReport, reportMarkdown, reportContent
   leads.ts     sequences, due steps, emailFor, mailtoUrl
   store.ts     localStorage values (checklist, metrics, goals, leads, coupon)
+  campaigns.ts CAMPAIGN_REPORT_URL — the private claude.ai campaign report (re-read in place)
 components/growth/
   growth.tsx (tabs + bar)  plan-panel.tsx  profile-panel.tsx  report-panel.tsx  leads-panel.tsx
   growth-link.tsx (dashboard door)
+  campaign-link.tsx (dashboard door to the founder's campaign report, owner/founder only — T-403)
 components/studio/use-publish-receipt.ts   the receipt (log + queue), shared with the studio
 app/[locale]/growth/ + app/(default)/growth/   routes, per-language metadata
 tests/growth-logic.spec.ts (rules)  tests/growth.spec.ts (the page, desktop + mobile)
@@ -60,7 +62,7 @@ tests/growth-logic.spec.ts (rules)  tests/growth.spec.ts (the page, desktop + mo
 
 Template files touched: `prototype.config.json` (sections `howItWorks` + `faq` with copy,
 one feature tile, dashboard intro, CTA subtitle) and `app/[locale]/dashboard/page.tsx` (one
-`<GrowthLink />`). On a template refresh with conflicts, keep this branch's side of those two.
+`<GrowthLink />`, one `<CampaignLink />`). On a template refresh with conflicts, keep this branch's side of those two.
 
 ## Demo script (3 minutes)
 

@@ -283,6 +283,7 @@ const EN = {
     } as Record<StepKind, EmailCopy>,
   },
   dashboard: { link: "Open the growth plan", hint: "Content plan, Instagram kit, weekly report and leads — the improvement plan as a tool." },
+  campaigns: { link: "Campaign overview 2026", hint: "Followers, reels reach and the tokenwise.sk funnel from Metricool and Firestore, with what to change. Opens in Claude." },
 };
 
 export type GrowthCopy = typeof EN;
@@ -538,6 +539,7 @@ const CS: GrowthCopy = {
     },
   },
   dashboard: { link: "Otevřít plán růstu", hint: "Plán obsahu, instagramová sada, týdenní report a leady — plán zlepšení jako nástroj." },
+  campaigns: { link: "Přehled kampaní 2026", hint: "Sledující, dosah reels a funnel tokenwise.sk z Metricoolu a Firestore, s tím, co změnit. Otevře se v Claude." },
 };
 
 export const GROWTH_COPY: Record<StudioLocale, GrowthCopy> = { en: EN, cs: CS };

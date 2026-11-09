@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { GROWTH_COPY } from "../lib/growth/copy";
+import { CAMPAIGN_REPORT_URL } from "../lib/growth/campaigns";
 import { SEQUENCES, addDays, daysBetween, dueSteps, emailFor, isEmail, leadsSummary, mailtoUrl, markSent, newLead, nextStep, parseLeads, type Lead } from "../lib/growth/leads";
 import { IDEAS, IDEA_IDS, WEEK_SLOTS, ideaContent, mondayOf, planProgress, poolFor, shiftWeek, slotDone, weekIndexOf, weekPlan } from "../lib/growth/plan";
 import { BIO_MAX, CHECKLIST_IDS, HIGHLIGHT_IDS, checklistProgress, highlightContent, profileCopyIssues, toggleDone } from "../lib/growth/profile";
@@ -260,5 +261,16 @@ test.describe("leads and offers", () => {
     expect(parseLeads('[{"id":"x"},{"id":"y","email":"e","source":"bogus","sent":[]}]')).toEqual([]);
     expect(parseLeads("{")).toEqual([]);
     expect(parseLeads(null)).toEqual([]);
+  });
+});
+
+test.describe("campaign report link (T-403)", () => {
+  test("points at the founder's claude.ai report over https and is worded in both languages", () => {
+    expect(CAMPAIGN_REPORT_URL).toBe("https://claude.ai/artifact/J197Ly88U5TxmAc5qhYYK1");
+    for (const copy of [EN, CS]) {
+      expect(copy.campaigns.link.length).toBeGreaterThan(0);
+      expect(copy.campaigns.hint.length).toBeGreaterThan(0);
+    }
+    expect(CS.campaigns.link).not.toBe(EN.campaigns.link);
   });
 });
