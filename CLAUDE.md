@@ -560,6 +560,19 @@ palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/col
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
 
+**Light variant — a paid add-on (T-400, founder 2026-11-09).** Dark is the DEFAULT and the
+baseline of every project; a customer whose brand is light opts in with `theme.appearance:
+"light"` (default `"dark"`) — one build-time project choice for the whole site, NOT a visitor
+dark/light toggle. The same deterministic rule derives a light counterpart of every palette by
+MIRRORING it (`derivePaletteRoles(colors, "light")`, `rolesFor(id, "light")`,
+`cssBlocksForAll("light")`): the lightest colour is the page, the darkest the words, grounds
+and inks swap ends, every pull reverses, still WCAG AA on every surface. No component hard-codes
+a colour — flipping the token layer flips the whole site. `app/shell.tsx` reads
+`config.theme.appearance` through `lib/theme-appearance.ts`: dark keeps `.dark` and ships
+byte-for-byte as before; light drops `.dark` and sets `data-appearance="light"`, under which the
+Blender light loops (made for a dark ground) stand down (`editorial.css`). Tests:
+`tests/color-schemes.spec.ts` (contrast over all palettes in light), `tests/appearance.spec.ts`.
+
 Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
 never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
 
