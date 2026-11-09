@@ -1,86 +1,110 @@
 {
-  "appName": "Golden App Template",
+  "appName": "LandlordOS",
   "locales": [
-    "en"
+    "en",
+    "de"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "black-green-ruby-red"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
+        "howItWorks",
         "useCases",
         "comparison",
-        "howItWorks",
-        "faq",
         "listings",
-        "contact",
+        "faq",
         "cta"
       ],
-      "font": "space-grotesk"
+      "font": "lexend",
+      "tone": "light"
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "paidShare",
+          "field": "status",
+          "agg": "share",
+          "value": "Paid"
+        },
+        {
+          "id": "overdueShare",
+          "field": "status",
+          "agg": "share",
+          "value": "Overdue"
+        },
+        {
+          "id": "totalRent",
+          "field": "amount",
+          "agg": "sum"
+        }
+      ]
+    },
     "cta": {
       "href": "/login"
     },
-    "contactForm": {
-      "phone": "optional"
-    },
+    "useCases": {},
+    "comparison": {},
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "payment",
         "fields": [
           {
-            "key": "name",
+            "key": "tenant",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "unit",
+            "type": "text",
+            "required": true
+          },
+          {
+            "key": "amount",
+            "type": "number",
+            "required": true
+          },
+          {
+            "key": "dueDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Paid",
+              "Pending",
+              "Overdue"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+            "key": "notes",
+            "type": "text"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
         "apartment",
         "house",
-        "office"
+        "studio"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "rooms"
         },
         {
-          "key": "rooms"
+          "key": "area",
+          "unit": "m²"
         }
       ],
       "currency": "EUR",
@@ -88,41 +112,34 @@
         {
           "id": "offer-1",
           "category": "apartment",
-          "price": 189000,
+          "price": 950,
+          "pricePeriod": "month",
+          "status": "available",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "rooms": 2,
+            "area": 65
           }
         },
         {
           "id": "offer-2",
           "category": "house",
-          "price": 315000,
+          "price": 1800,
+          "pricePeriod": "month",
           "status": "reserved",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "rooms": 4,
+            "area": 120
           }
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "category": "studio",
+          "price": 650,
           "pricePeriod": "month",
+          "status": "available",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "rooms": 1,
+            "area": 35
           }
         }
       ]
@@ -130,182 +147,447 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "LandlordOS helps small landlords track rent payments, manage units, and keep their rental portfolio in order — without spreadsheets.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every rent payment, always accounted for",
+        "subheadline": "Small landlords use LandlordOS to log payments, manage tenants, and keep up to five rental units organised in one place.",
+        "eyebrow": "Rental management for landlords",
+        "featuresHeading": "Everything you need to manage your rentals",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "wallet",
+            "title": "Track Rent Payments",
+            "description": "Log each payment against the right tenant and unit so you always know who has paid and who is overdue."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "house",
+            "title": "Manage Your Units",
+            "description": "Keep all your rental units in one place with their tenant, monthly rent, and due dates at a glance."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "Portfolio Overview",
+            "description": "See at a glance how much rent you have collected this month and which payments are still outstanding."
+          },
+          {
+            "icon": "bell",
+            "title": "Spot Overdue Rent",
+            "description": "Late payments surface automatically on the status board so nothing slips through before you notice."
+          },
+          {
+            "icon": "file-text",
+            "title": "Full Payment History",
+            "description": "Filter your complete payment log by tenant, unit, or status to answer any question in seconds."
           }
         ],
+        "manifesto": {
+          "lead": "Your rental income should never be a mystery.",
+          "body": "Landlords with a handful of units lose hours each month chasing records across notebooks, texts, and bank statements. LandlordOS puts every payment in one place so you can close the month in minutes, not hours."
+        },
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in minutes",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Create your account with Google in one click — no forms, no password to remember."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add your units",
+              "description": "Enter each rental unit and assign the tenant currently living there."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Log payments",
+              "description": "Record rent as it arrives and mark it Paid, Pending, or Overdue with a single tap."
+            },
+            {
+              "title": "Check your dashboard",
+              "description": "Open your dashboard any time to see collected rent, outstanding balances, and overdue payments at a glance."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions landlords ask",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "How many units can I manage?",
+              "answer": "LandlordOS is designed for small landlords with one to five units. You can add as many units and payment records as you need."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Is my data private?",
+              "answer": "Your rental data is tied to your Google account and visible only to you. No other user can see your tenants or payments."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Do I need to install anything?",
+              "answer": "LandlordOS runs entirely in the browser. Sign in from any device and your data is always up to date."
+            },
+            {
+              "question": "Can I track partial payments?",
+              "answer": "Yes. Each payment record has a notes field where you can record partial amounts or any other detail about a payment."
+            },
+            {
+              "question": "What does it cost?",
+              "answer": "Sign in and explore LandlordOS free. Pricing details will be published before the full launch."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Rental Overview",
+        "intro": "Here is the current state of your portfolio — payments collected, any that are overdue, and your total rent roll.",
+        "kpiLabels": {
+          "paidShare": "Payments Paid",
+          "overdueShare": "Payments Overdue",
+          "totalRent": "Total Rent Logged"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
-      },
-      "dataGrid": {
-        "entityLabel": "Location",
-        "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
-        },
-        "sampleRecords": [
-          {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
+        "label": "Sign in to get started",
+        "title": "Put your rent records in order today",
+        "subtitle": "Sign in with Google and have your first payment logged in under two minutes."
       },
       "useCases": {
-        "heading": "What can you try here?",
+        "heading": "Built for situations landlords actually face",
         "items": [
           {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
+            "title": "End-of-month check",
+            "situation": "It is the last day of the month and you need to know which tenants have paid and which have not.",
+            "action": "Open the dashboard, check the status board, and see every payment's status sorted by unit — no digging through bank statements."
           },
           {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
+            "title": "Late rent follow-up",
+            "situation": "A tenant says they paid but you cannot find the transfer in your records.",
+            "action": "Search the payment log by tenant name to pull up every entry for that person and confirm whether a record exists."
+          },
+          {
+            "title": "Year-end summary",
+            "situation": "You need to summarise rent received across all units for the past twelve months.",
+            "action": "Filter payment history by date range and status to see the total collected from each unit for that period."
           }
         ]
       },
       "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
+        "heading": "LandlordOS vs. tracking rent by hand",
+        "beforeLabel": "Manual tracking",
+        "afterLabel": "LandlordOS",
         "rows": [
           {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
+            "topic": "Recording payments",
+            "before": "Write in a notebook or update a spreadsheet row by row each time rent arrives.",
+            "after": "Log a payment in seconds and the status updates across your dashboard immediately."
           },
           {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
+            "topic": "Finding overdue rent",
+            "before": "Cross-reference bank statements with your list to spot who has not paid this month.",
+            "after": "Overdue payments surface automatically on the status board — nothing is missed."
           },
           {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "topic": "Month-end review",
+            "before": "Total up rows in a spreadsheet or add figures on paper before you know where you stand.",
+            "after": "Open the dashboard and see collected rent and outstanding balances at a glance."
+          }
+        ]
+      },
+      "dataGrid": {
+        "entityLabel": "Payments",
+        "fieldLabels": {
+          "tenant": "Tenant",
+          "unit": "Unit",
+          "amount": "Rent (€)",
+          "dueDate": "Due Date",
+          "status": "Status",
+          "notes": "Notes"
+        },
+        "sampleRecords": [
+          {
+            "tenant": "M. Hoffmann",
+            "unit": "Apt 2B",
+            "amount": 950,
+            "dueDate": "2026-11-01",
+            "status": "Paid",
+            "notes": "Received by bank transfer"
+          },
+          {
+            "tenant": "L. Brennan",
+            "unit": "Studio 4",
+            "amount": 650,
+            "dueDate": "2026-11-01",
+            "status": "Overdue",
+            "notes": "Follow-up sent on 5 Nov"
+          },
+          {
+            "tenant": "K. Varga",
+            "unit": "House 7",
+            "amount": 1800,
+            "dueDate": "2026-11-01",
+            "status": "Pending",
+            "notes": "Payment expected this week"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Example rental units",
+        "intro": "Browse a sample of the kinds of units you can manage with LandlordOS — apartments, houses, and studios all in one place.",
+        "notice": "These are illustrative examples only and do not represent real available rentals.",
         "categoryLabels": {
           "apartment": "Apartment",
           "house": "House",
-          "office": "Office"
+          "studio": "Studio"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "rooms": "Rooms",
+          "area": "Area"
         },
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Two-bedroom apartment, Block A",
+            "summary": "A well-proportioned two-bedroom apartment on the second floor. Suitable for a couple or small family looking for a comfortable long-term rental.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Second floor",
+              "Open-plan kitchen",
+              "Parking included"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Four-bedroom semi-detached house",
+            "summary": "Spacious semi-detached house with a garden, ideal for a family. Currently reserved for an incoming tenant.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Private garden",
+              "Garage",
+              "Quiet residential street"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Studio flat, city-centre block",
+            "summary": "Compact studio in a well-maintained block close to public transport. Ideal for a single professional seeking a central location.",
+            "highlights": [
+              "City-centre location",
+              "All-inclusive rent option",
+              "Bike storage"
+            ]
           }
+        }
+      }
+    },
+    "de": {
+      "description": "LandlordOS hilft kleinen Vermietern, Mietzahlungen zu verfolgen, Einheiten zu verwalten und ihr Mietportfolio ohne Tabellen im Griff zu behalten.",
+      "landing": {
+        "headline": "Jede Mietzahlung, immer im Blick",
+        "subheadline": "Kleine Vermieter nutzen LandlordOS, um Zahlungen zu erfassen, Mieter zu verwalten und bis zu fünf Mieteinheiten an einem Ort zu organisieren.",
+        "eyebrow": "Mietverwaltung für Vermieter",
+        "featuresHeading": "Alles, was Sie für Ihre Mietverwaltung brauchen",
+        "features": [
+          {
+            "icon": "wallet",
+            "title": "Mietzahlungen erfassen",
+            "description": "Jede Zahlung wird dem richtigen Mieter und der richtigen Einheit zugeordnet — so sehen Sie auf einen Blick, wer gezahlt hat."
+          },
+          {
+            "icon": "house",
+            "title": "Einheiten verwalten",
+            "description": "Behalten Sie alle Mieteinheiten mit Mieter, Monatsmiete und Fälligkeitsterminen an einem zentralen Ort im Überblick."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Portfolioübersicht",
+            "description": "Sehen Sie auf Anhieb, wie viel Miete Sie diesen Monat eingenommen haben und welche Zahlungen noch ausstehen."
+          },
+          {
+            "icon": "bell",
+            "title": "Überfällige Mieten erkennen",
+            "description": "Verspätete Zahlungen erscheinen automatisch auf dem Statusboard, bevor sie zum Problem werden."
+          },
+          {
+            "icon": "file-text",
+            "title": "Vollständige Historie",
+            "description": "Filtern Sie Ihr gesamtes Zahlungsprotokoll nach Mieter, Einheit oder Status — jede Frage in Sekunden beantwortet."
+          }
+        ],
+        "manifesto": {
+          "lead": "Ihre Mieteinnahmen sollten kein Rätsel sein.",
+          "body": "Vermieter mit wenigen Einheiten verlieren jeden Monat Stunden damit, Aufzeichnungen in Notizbüchern, Nachrichten und Kontoauszügen zusammenzusuchen. LandlordOS bündelt alle Zahlungen an einem Ort, damit Sie den Monatsabschluss in Minuten erledigen."
         },
-        "inquireLabel": "Ask about this offer"
+        "howItWorks": {
+          "heading": "In wenigen Minuten startklar",
+          "steps": [
+            {
+              "title": "Anmelden",
+              "description": "Erstellen Sie Ihr Konto mit einem Klick über Google — kein Formular, kein Passwort."
+            },
+            {
+              "title": "Einheiten anlegen",
+              "description": "Tragen Sie jede Mieteinheit ein und weisen Sie den aktuellen Mieter zu."
+            },
+            {
+              "title": "Zahlungen erfassen",
+              "description": "Buchen Sie eingehende Mieten und markieren Sie sie als Bezahlt, Ausstehend oder Überfällig."
+            },
+            {
+              "title": "Dashboard prüfen",
+              "description": "Öffnen Sie jederzeit Ihr Dashboard und sehen Sie eingegangene Mieten, offene Beträge und überfällige Zahlungen auf einen Blick."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Häufige Fragen von Vermietern",
+          "items": [
+            {
+              "question": "Wie viele Einheiten kann ich verwalten?",
+              "answer": "LandlordOS ist für kleine Vermieter mit einer bis fünf Einheiten konzipiert. Sie können beliebig viele Einheiten und Zahlungseinträge anlegen."
+            },
+            {
+              "question": "Sind meine Daten sicher?",
+              "answer": "Ihre Mietdaten sind an Ihr Google-Konto gebunden und nur für Sie sichtbar. Kein anderer Nutzer kann Ihre Mieter oder Zahlungen einsehen."
+            },
+            {
+              "question": "Muss ich etwas installieren?",
+              "answer": "LandlordOS läuft vollständig im Browser. Melden Sie sich von jedem Gerät aus an — Ihre Daten sind stets aktuell."
+            },
+            {
+              "question": "Kann ich Teilzahlungen erfassen?",
+              "answer": "Ja. Jeder Zahlungseintrag enthält ein Notizfeld, in dem Sie Teilbeträge oder sonstige Details zur Zahlung festhalten können."
+            },
+            {
+              "question": "Was kostet LandlordOS?",
+              "answer": "Melden Sie sich an und testen Sie LandlordOS kostenlos. Preisinformationen werden vor dem vollständigen Launch veröffentlicht."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Mietportfolio-Übersicht",
+        "intro": "Hier sehen Sie den aktuellen Stand Ihres Portfolios — eingegangene Zahlungen, überfällige Posten und Ihre Gesamtmietrolle.",
+        "kpiLabels": {
+          "paidShare": "Zahlungen erhalten",
+          "overdueShare": "Zahlungen überfällig",
+          "totalRent": "Gesamtmiete erfasst"
+        }
+      },
+      "cta": {
+        "label": "Jetzt anmelden und starten",
+        "title": "Bringen Sie Ihre Mietunterlagen heute in Ordnung",
+        "subtitle": "Mit Google anmelden und Ihre erste Zahlung in unter zwei Minuten erfasst haben."
+      },
+      "useCases": {
+        "heading": "Für die Situationen, die Vermieter wirklich kennen",
+        "items": [
+          {
+            "title": "Monatsabschluss",
+            "situation": "Es ist der letzte Tag des Monats und Sie müssen wissen, welche Mieter gezahlt haben und welche nicht.",
+            "action": "Dashboard öffnen, Statusboard prüfen und den Zahlungsstatus aller Einheiten auf einen Blick sehen — ohne Kontoauszüge zu wälzen."
+          },
+          {
+            "title": "Mahnungsnachverfolgung",
+            "situation": "Ein Mieter behauptet, die Miete überwiesen zu haben, aber Sie finden keine entsprechende Buchung.",
+            "action": "Suchen Sie im Zahlungsprotokoll nach dem Mieternamen, um alle Einträge zu dieser Person aufzurufen und zu prüfen, ob ein Datensatz existiert."
+          },
+          {
+            "title": "Jahresübersicht",
+            "situation": "Sie möchten die eingegangenen Mieteinnahmen aller Einheiten der vergangenen zwölf Monate zusammenfassen.",
+            "action": "Filtern Sie die Zahlungshistorie nach Zeitraum und Status, um die Gesamteinnahmen pro Einheit für den betreffenden Zeitraum zu erhalten."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "LandlordOS vs. manuelle Mietverfolgung",
+        "beforeLabel": "Manuelle Erfassung",
+        "afterLabel": "LandlordOS",
+        "rows": [
+          {
+            "topic": "Zahlungen erfassen",
+            "before": "Eintrag in Notizbuch oder Tabelle, Zeile für Zeile, jedes Mal wenn die Miete eingeht.",
+            "after": "Zahlung in Sekunden eingetragen — der Status aktualisiert sich sofort im gesamten Dashboard."
+          },
+          {
+            "topic": "Überfällige Mieten finden",
+            "before": "Kontoauszüge mit der eigenen Liste abgleichen, um herauszufinden, wer diesen Monat nicht gezahlt hat.",
+            "after": "Überfällige Zahlungen erscheinen automatisch auf dem Statusboard — nichts wird übersehen."
+          },
+          {
+            "topic": "Monatsabschluss",
+            "before": "Summen in einer Tabelle oder auf Papier addieren, bevor Sie wissen, wo Sie stehen.",
+            "after": "Dashboard öffnen und eingegangene Mieten sowie offene Beträge sofort im Überblick haben."
+          }
+        ]
+      },
+      "dataGrid": {
+        "entityLabel": "Zahlungen",
+        "fieldLabels": {
+          "tenant": "Mieter",
+          "unit": "Einheit",
+          "amount": "Miete (€)",
+          "dueDate": "Fälligkeitsdatum",
+          "status": "Status",
+          "notes": "Notizen"
+        },
+        "sampleRecords": [
+          {
+            "tenant": "M. Hoffmann",
+            "unit": "Whg 2B",
+            "amount": 950,
+            "dueDate": "2026-11-01",
+            "status": "Paid",
+            "notes": "Zahlung per Überweisung eingegangen"
+          },
+          {
+            "tenant": "L. Brennan",
+            "unit": "Studio 4",
+            "amount": 650,
+            "dueDate": "2026-11-01",
+            "status": "Overdue",
+            "notes": "Erinnerung am 5. Nov. versendet"
+          },
+          {
+            "tenant": "K. Varga",
+            "unit": "Haus 7",
+            "amount": 1800,
+            "dueDate": "2026-11-01",
+            "status": "Pending",
+            "notes": "Zahlung wird diese Woche erwartet"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Beispielhafte Mieteinheiten",
+        "intro": "Sehen Sie sich Beispiele der Einheiten an, die Sie mit LandlordOS verwalten können — Wohnungen, Häuser und Studios an einem Ort.",
+        "notice": "Diese Einheiten sind rein illustrative Beispiele und stellen keine tatsächlich verfügbaren Mietobjekte dar.",
+        "categoryLabels": {
+          "apartment": "Wohnung",
+          "house": "Haus",
+          "studio": "Studio"
+        },
+        "attributeLabels": {
+          "rooms": "Zimmer",
+          "area": "Fläche"
+        },
+        "items": {
+          "offer-1": {
+            "title": "Zweizimmerwohnung, Haus A",
+            "summary": "Gut geschnittene Zweizimmerwohnung im zweiten Obergeschoss. Geeignet für ein Paar oder eine kleine Familie, die eine langfristige Mietwohnung sucht.",
+            "highlights": [
+              "2. Obergeschoss",
+              "Offene Küche",
+              "Stellplatz inklusive"
+            ]
+          },
+          "offer-2": {
+            "title": "Vierzimmiges Doppelhaus",
+            "summary": "Geräumiges Doppelhaus mit Garten, ideal für eine Familie. Derzeit für einen neuen Mieter reserviert.",
+            "highlights": [
+              "Eigener Garten",
+              "Garage",
+              "Ruhige Wohnstraße"
+            ]
+          },
+          "offer-3": {
+            "title": "Studio in der Stadtmitte",
+            "summary": "Kompaktes Studio in einem gepflegten Gebäude nahe öffentlichem Nahverkehr. Ideal für Singles oder Berufspendler mit Wunsch nach zentraler Lage.",
+            "highlights": [
+              "Innenstadtlage",
+              "Option Inklusivmiete",
+              "Fahrradabstellraum"
+            ]
+          }
+        }
       }
     }
   }
