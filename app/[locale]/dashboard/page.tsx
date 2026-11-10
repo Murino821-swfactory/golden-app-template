@@ -6,6 +6,7 @@ import { OwnerLinks } from "@/components/owner/owner-links";
 import { StudioLink } from "@/components/studio/studio-link";
 import { CreateLink } from "@/components/gitpulse/create-link";
 import { GrowthLink } from "@/components/growth/growth-link";
+import { CampaignLink } from "@/components/growth/campaign-link";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
 import { useContent } from "@/hooks/use-content";
@@ -42,6 +43,7 @@ function DashboardContent() {
       <StudioLink />
       <CreateLink />
       <GrowthLink />
+      <CampaignLink />
 
       {hasGrid && <DashboardStats />}
       {hasMap && <MapBase points={points} />}
