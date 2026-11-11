@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
-import { MOTION_SMALL_QUERY, motionLoop } from "../lib/editorial";
+import { MOTION_SMALL_QUERY, heroLoop, motionLoop } from "../lib/editorial";
 
 /**
  * The stage — the backlight (T-368, 2026-11-07, after apple.com's ProLED XDR page; the founder's
@@ -17,6 +17,8 @@ const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 const landing = contentFor(config).landing;
 const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+/** The hero backlight this config wears: the T-350 library loop it names, or the stage board. */
+const HERO_LOOP = heroLoop(config.patterns.landing?.motion);
 /** The file a loop's first `<source>` names on this screen: the half-width one on a phone. */
 const shown = (small: boolean, name: Parameters<typeof motionLoop>[1]) => (small ? motionLoop(BASE, name).sources[0]!.small : motionLoop(BASE, name).sources[0]!.src);
 
@@ -28,7 +30,7 @@ test.describe("editorial stage — the page", () => {
     await page.goto("./");
     const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
     const hero = page.locator('[data-section="hero"] [data-hero-light]');
-    await expect(hero.locator("video source").first()).toHaveAttribute("src", shown(small, "stage-field"));
+    await expect(hero.locator("video source").first()).toHaveAttribute("src", shown(small, HERO_LOOP));
     const close = page.locator('[data-section="cta"] [data-closing-light]');
     await expect(close.locator("video source").first()).toHaveAttribute("src", shown(small, "closing-light"));
     const card = page.locator("[data-bento] > li:first-child [data-card-light]");
@@ -48,7 +50,7 @@ test.describe("editorial stage — the page", () => {
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);
     const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
     expect(small).toBe(info.project.name === "mobile");
-    const loop = motionLoop(BASE, "stage-field");
+    const loop = motionLoop(BASE, HERO_LOOP);
     expect(await video.evaluate((v: HTMLVideoElement) => new URL(v.currentSrc).pathname)).toBe(small ? loop.sources[0]!.small : loop.sources[0]!.src);
   });
 

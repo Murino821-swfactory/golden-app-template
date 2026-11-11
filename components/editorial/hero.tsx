@@ -10,7 +10,7 @@ import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
 import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
-import { heroNamePlacement, heroObjectKind } from "@/lib/editorial";
+import { heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
 import { landingActionHref } from "@/lib/landing-action";
@@ -163,9 +163,12 @@ export function HeroSection() {
   return (
     <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
-      {/* The backlight (T-368 stage, `stage.css`): a board of mini-LEDs behind the headline,
-          whole zones switching on; an AI image owns the hero, so it gets no light. */}
-      {!background && !object && <LightLoop name="stage-field" marker="data-hero-light" className="editorial-light-hero" />}
+      {/* The backlight (T-368 stage, `stage.css`): a light loop behind the headline — the stage
+          board by default, or whichever of the T-350 library `patterns.landing.motion` names; an
+          AI image owns the hero, so it gets no light. */}
+      {!background && !object && (
+        <LightLoop name={heroLoop(config.patterns.landing?.motion)} marker="data-hero-light" className="editorial-light-hero" />
+      )}
 
       <div
         className={cn(

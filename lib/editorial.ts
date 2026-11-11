@@ -128,9 +128,38 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
  * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card.
  * The close keeps T-340's `closing-light`, ribbons of light across the band (T-374: the founder
  * picked them over the stage's orb).
+ *
+ * T-350 (2026-11-11, the founder's pick in the T-349 lesson: a loop library) adds four more
+ * backlight motifs in the same language — `pulse-ring`, `orbit-tiles`, `horizon-sweep`,
+ * `data-lines` — so each project can wear a different hero backlight for €0 (one render serves
+ * every project and palette). A project chooses with the one `patterns.landing.motion` token
+ * (`HERO_LOOPS` below); every loop ships rendered, so this list is what the asset tests cover.
  */
-export const MOTION_LOOPS = ["stage-field", "stage-slab", "closing-light"] as const;
+export const MOTION_LOOPS = [
+  "stage-field",
+  "stage-slab",
+  "closing-light",
+  "pulse-ring",
+  "orbit-tiles",
+  "horizon-sweep",
+  "data-lines",
+] as const;
 export type MotionLoopName = (typeof MOTION_LOOPS)[number];
+
+/**
+ * The backlight loops a project may choose between for its hero — the T-350 library. The stage
+ * board (`stage-field`) is the default and leads; the four T-350 motifs join it. `stage-slab`
+ * and `closing-light` keep their fixed roles (the first feature card, the closing band) and are
+ * not hero choices, so they are not offered here.
+ */
+export const HERO_LOOPS = ["stage-field", "pulse-ring", "orbit-tiles", "horizon-sweep", "data-lines"] as const;
+export type HeroLoopName = (typeof HERO_LOOPS)[number];
+export const DEFAULT_HERO_LOOP: HeroLoopName = "stage-field";
+
+/** The hero backlight a config names, or the stage board when it names none (or something stale). Pure. */
+export function heroLoop(motion: string | undefined): HeroLoopName {
+  return (HERO_LOOPS as readonly string[]).includes(motion ?? "") ? (motion as HeroLoopName) : DEFAULT_HERO_LOOP;
+}
 
 export interface MotionLoop {
   poster: string;

@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
-import { MOTION_BUDGET_BYTES, MOTION_LOOPS, MOTION_SMALL_QUERY, motionLoop } from "../lib/editorial";
+import { DEFAULT_HERO_LOOP, HERO_LOOPS, MOTION_BUDGET_BYTES, MOTION_LOOPS, MOTION_SMALL_QUERY, heroLoop, motionLoop } from "../lib/editorial";
 
 /**
  * Editorial motion, third round (T-340, 2026-11-05: after framer.com, vercel.com, linear.app
@@ -18,6 +18,8 @@ const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 const landing = contentFor(config).landing;
 const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+/** The hero backlight this config wears — the T-350 library loop it names, or the stage board. */
+const HERO_LOOP = heroLoop(config.patterns.landing?.motion);
 /** The file a loop's `<source>` names on this screen: the half-width one on a phone (T-369). */
 const shown = (small: boolean, source: { src: string; small: string }) => (small ? source.small : source.src);
 const SRC = "/newapp/test/hero-image/AAAAAAAAAAAAAAAAAAAA.jpg";
@@ -36,7 +38,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
     const light = hero.locator("[data-hero-light]");
     await expect(light).toHaveCount(1);
     await expect(light).toHaveAttribute("aria-hidden", "true");
-    const loop = motionLoop(BASE, "stage-field");
+    const loop = motionLoop(BASE, HERO_LOOP);
     const video = light.locator("video");
     await expect(video).toHaveAttribute("poster", loop.poster);
     // The sources arrive once the screen is known (no `<source>` in the static HTML).
@@ -296,5 +298,18 @@ test.describe("editorial motion (pure)", () => {
     for (const name of MOTION_LOOPS) {
       expect(existsSync(resolve(__dirname, `../scripts/motion/${name}.py`)), name).toBe(true);
     }
+  });
+
+  test("the hero library (T-350): every choice is a real loop, the stage board leads, and the token picks one", () => {
+    // The 6–8 loop library: every hero choice ships its files (MOTION_LOOPS is what the budget
+    // test above covers), and the stage board is the default a config that names none wears.
+    expect(HERO_LOOPS.length).toBeGreaterThanOrEqual(5);
+    for (const name of HERO_LOOPS) expect(MOTION_LOOPS).toContain(name);
+    expect(DEFAULT_HERO_LOOP).toBe("stage-field");
+    expect(heroLoop(undefined)).toBe("stage-field");
+    expect(heroLoop("not-a-loop")).toBe("stage-field");
+    expect(heroLoop("pulse-ring")).toBe("pulse-ring");
+    // The config's token resolves to one of the library's loops.
+    expect(HERO_LOOPS).toContain(heroLoop(config.patterns.landing?.motion));
   });
 });

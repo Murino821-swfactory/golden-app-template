@@ -29,6 +29,7 @@
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
 import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
+import { HERO_LOOPS } from "./editorial";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */
@@ -317,6 +318,10 @@ export const PATTERN_SCHEMAS = {
       .enum(TONES)
       .optional()
       .describe("The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud."),
+    motion: z
+      .enum(HERO_LOOPS)
+      .optional()
+      .describe("The light loop that plays behind the hero headline — a seamless Blender render tinted by the palette (T-350 library, €0 per project). Omit for stage-field (a board of mini-LEDs). pulse-ring: rings breathing out of a core; orbit-tiles: glass panels turning on a ring; horizon-sweep: a grid floor running to a swept horizon; data-lines: packets running along stacked rails. Reduced motion and no JavaScript show the poster still."),
   }),
   dashboard: z.object({
     kpis: z
