@@ -180,9 +180,11 @@ test.describe("configs written before the split still build", () => {
     expect(parsed.patterns.cta).toEqual({ href: "/login" });
   });
 
-  test("the retired style knob is dropped, not rejected", () => {
+  test("the retired style knob is dropped, not rejected; appearance defaults to dark", () => {
     const parsed = parsePrototypeConfig(legacy);
-    expect(parsed.theme).toEqual({ colorScheme: "chartreuse-pastel-deep-teal-green" });
+    // `appearance` is the light add-on's switch (T-400); omitted, it defaults to dark — the
+    // baseline of every project — so a legacy config keeps its dark look.
+    expect(parsed.theme).toEqual({ colorScheme: "chartreuse-pastel-deep-teal-green", appearance: "dark" });
   });
 });
 

@@ -31,6 +31,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -559,6 +560,19 @@ palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/col
 
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
+
+**Light variant — a paid add-on (T-400, founder 2026-11-09).** Dark is the DEFAULT and the
+baseline of every project; a customer whose brand is light opts in with `theme.appearance:
+"light"` (default `"dark"`) — one build-time project choice for the whole site, NOT a visitor
+dark/light toggle. The same deterministic rule derives a light counterpart of every palette by
+MIRRORING it (`derivePaletteRoles(colors, "light")`, `rolesFor(id, "light")`,
+`cssBlocksForAll("light")`): the lightest colour is the page, the darkest the words, grounds
+and inks swap ends, every pull reverses, still WCAG AA on every surface. No component hard-codes
+a colour — flipping the token layer flips the whole site. `app/shell.tsx` reads
+`config.theme.appearance` through `lib/theme-appearance.ts`: dark keeps `.dark` and ships
+byte-for-byte as before; light drops `.dark` and sets `data-appearance="light"`, under which the
+Blender light loops (made for a dark ground) stand down (`editorial.css`). Tests:
+`tests/color-schemes.spec.ts` (contrast over all palettes in light), `tests/appearance.spec.ts`.
 
 Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
 never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.

@@ -6,6 +6,7 @@ import {
   derivePairRoles,
   derivePaletteRoles,
   cssVariablesFor,
+  cssBlocksForAll,
   rolesFor,
   nextSchemeId,
   assertReadable,
@@ -449,6 +450,88 @@ test.describe("a tonal palette reaches the CSS", () => {
       expect(v["--accent-1"]).toBeUndefined();
       expect(v["--popover"]).toBe(v["--card"]);
       expect(v["--card-foreground"]).toBe(v["--foreground"]);
+    }
+  });
+});
+
+/**
+ * The light variant — a paid add-on (T-400, founder decision 2026-11-09).
+ *
+ * Dark stays the default and the baseline of every project (golden rule). A project whose
+ * brand is light opts in, and the SAME token layer derives a light counterpart of every
+ * palette: the rule is mirrored — the LIGHTEST colour is the page and the DARKEST the words,
+ * grounds and inks swapped end for end, and contrast moved by lifting toward black rather than
+ * white. No colour is hard-coded and no palette is hand-written twice: `appearance` is one
+ * argument through the same deterministic rule. Every text/ground pair still meets WCAG AA.
+ */
+test.describe("the light variant (T-400)", () => {
+  test("dark is the default — the appearance argument omitted derives exactly the dark roles", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(rolesFor(id, "dark")).toEqual(rolesFor(id));
+      expect(cssVariablesFor(id, "dark")).toEqual(cssVariablesFor(id));
+      expect(derivePaletteRoles(PALETTES[id].colors, "dark")).toEqual(derivePaletteRoles(PALETTES[id].colors));
+    }
+  });
+
+  for (const id of COLOR_SCHEME_IDS) {
+    test(`${id}: the light variant paints every text it has on WCAG AA`, () => {
+      const r = rolesFor(id, "light");
+      // The full contrast suite the dark rule meets, mirrored: words on the page, words and
+      // muted on a card, the accent as text, and a button's own text on the accent.
+      expect(contrastRatio(r.foreground, r.background)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.foreground, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.muted, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.primary, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.background, r.primary)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      // A tonal palette carries two more planes and twelve lights; each must read too.
+      if (r.raised) {
+        expect(contrastRatio(r.cardForeground!, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.raisedForeground!, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.muted, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        for (const light of r.accents!) expect(contrastRatio(light, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      }
+      // assertReadable is the build-time gate — it must pass for the light roles too.
+      expect(() => assertReadable(id, r)).not.toThrow();
+    });
+
+    test(`${id}: the light page is the lightest colour, its words the darkest — the dark rule mirrored`, () => {
+      const [darker, lighter] = darkerAndLighter(id);
+      const r = rolesFor(id, "light");
+      // The page is at least as light as the palette's lightest colour (it may be deepened
+      // toward white); the words at least as dark as the darkest (they may be pulled to black).
+      expect(relativeLuminance(r.background)).toBeGreaterThanOrEqual(relativeLuminance(lighter));
+      expect(relativeLuminance(r.foreground)).toBeLessThanOrEqual(relativeLuminance(darker));
+      // And the light page is lighter than its own words — the whole point of a light theme.
+      expect(relativeLuminance(r.background)).toBeGreaterThan(relativeLuminance(r.foreground));
+    });
+  }
+
+  test("a tonal light palette steps its grounds DOWN from the page — card, raised, border each darker", () => {
+    const tonal = COLOR_SCHEME_IDS.find((id) => paletteKind(PALETTES[id].colors) === "tonal")!;
+    const r = rolesFor(tonal, "light");
+    const Y = (hex: string) => relativeLuminance(hex.slice(1));
+    // The mirror of the dark step: each plane sits below the page so cards read against it.
+    expect(Y(r.surface)).toBeLessThan(Y(r.background));
+    expect(Y(r.raised!)).toBeLessThan(Y(r.surface));
+    expect(Y(r.border!)).toBeLessThan(Y(r.raised!));
+  });
+
+  test("the light derivation is deterministic and ignores the order of the colours", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      const colours = PALETTES[id].colors;
+      expect(derivePaletteRoles([...colours].reverse(), "light")).toEqual(derivePaletteRoles(colours, "light"));
+    }
+  });
+
+  test("every palette's light CSS block differs from its dark one, keyed by the same data-scheme", () => {
+    const dark = cssBlocksForAll("dark");
+    const light = cssBlocksForAll("light");
+    expect(cssBlocksForAll()).toBe(dark);
+    expect(light).not.toBe(dark);
+    // Same selectors — the build ships ONE variant; the scheme id a visitor cycles is unchanged.
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(light).toContain(`html[data-scheme="${id}"]{`);
+      expect(cssVariablesFor(id, "light")["--background"]).toBe(rolesFor(id, "light").background);
     }
   });
 });
