@@ -20,7 +20,8 @@
         "contact",
         "cta"
       ],
-      "font": "space-grotesk"
+      "font": "space-grotesk",
+      "motion": "pulse-ring"
     },
     "dashboard": {},
     "authGoogle": {},

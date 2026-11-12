@@ -22,8 +22,19 @@
  *
  * Canonical documentation: sw-factory `docs/COLOR_SCHEMES.md`.
  *
- * Golden rule 1 (dark-only): the darkest colour of a palette is always the background.
+ * Golden rule 1: dark is the DEFAULT and the baseline of every project — the darkest colour
+ * of a palette is the background. Since 2026-11-09 (T-400) a project may opt into a LIGHT
+ * variant as a paid add-on (founder decision, D6 of T-360): the same deterministic rule run
+ * with `appearance: "light"` MIRRORS it — the lightest colour becomes the page, the darkest
+ * the words, grounds and inks swap ends, and contrast is moved by lifting toward black rather
+ * than white. One argument, no palette hand-written twice, every pair still WCAG AA. The
+ * choice is a build-time project setting (`theme.appearance` in prototype.config.json), not a
+ * visitor toggle, so a build ships exactly one variant.
  */
+
+/** A project's chosen variant. Dark is the default and the baseline of every project; light
+ * (T-400) is a paid add-on for a brand whose identity is light. */
+export type Appearance = "dark" | "light";
 
 /** Cycle order — the header's button walks this list and wraps after the last. */
 export const COLOR_SCHEME_IDS = [
@@ -347,10 +358,19 @@ const MAX_MUTED_PERCENT = 35;
  * supplied. Further middles are kept in the palette as supplied and not painted.
  *
  * Contrast is checked against the SURFACE, not the background: the surface is the lighter
- * of the two planes text sits on, so text readable on a card is readable everywhere. An
- * accent under WCAG AA there is lifted toward white one percent at a time, like the text.
+ * of the two planes text sits on (the darker on a light build), so text readable on a card
+ * is readable everywhere. An accent under WCAG AA there is pulled toward the ink's extreme —
+ * white on a dark build, black on a light one — one percent at a time, like the text.
+ *
+ * `appearance` picks the ends. Dark (the default and the baseline of every project): the
+ * darkest colour is the page, the lightest the words. Light (T-400, a paid add-on): the
+ * mirror — the lightest is the page, the darkest the words — and every pull reverses with it.
+ * The dark path is byte-for-byte what it has always been, so no existing palette moves.
  */
-export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
+export function derivePaletteRoles(
+  colors: readonly string[],
+  appearance: Appearance = "dark"
+): SchemeRoles {
   if (colors.length < 2) {
     throw new Error(`A palette has at least 2 colours, got ${colors.length}`);
   }
@@ -358,13 +378,22 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
   const sorted = [...colors].sort(
     (x, y) => relativeLuminance(x) - relativeLuminance(y) || x.localeCompare(y)
   );
-  if (sorted.length >= TONAL_MIN_COLOURS) return deriveTonalRoles(sorted);
-  const dark = sorted[0]!;
-  const light = sorted[sorted.length - 1]!;
+  if (sorted.length >= TONAL_MIN_COLOURS) return deriveTonalRoles(sorted, appearance);
+  const darkest = sorted[0]!;
+  const lightest = sorted[sorted.length - 1]!;
   const middles = sorted.slice(1, -1);
 
-  let background = dark;
-  let foreground = light;
+  // Dark: the ground is the darkest colour deepened toward black, the ink the lightest lifted
+  // toward white. Light: the mirror — the ground is the lightest deepened toward white, the
+  // ink the darkest pulled toward black. `inkPull` is also the direction an accent moves to
+  // become readable.
+  const groundSeed = appearance === "dark" ? darkest : lightest;
+  const inkSeed = appearance === "dark" ? lightest : darkest;
+  const groundPull = appearance === "dark" ? "000000" : "FFFFFF";
+  const inkPull = appearance === "dark" ? "FFFFFF" : "000000";
+
+  let background = groundSeed;
+  let foreground = inkSeed;
   const surfaceOf = () => mix(background, foreground, SURFACE_MIX);
 
   for (
@@ -372,14 +401,14 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
     percent <= MAX_DEEPEN_PERCENT && contrastRatio(foreground, surfaceOf()) < WCAG_AA_TEXT;
     percent++
   ) {
-    background = mix(dark, "000000", percent / 100);
+    background = mix(groundSeed, groundPull, percent / 100);
   }
   for (
     let percent = 1;
     percent <= 100 && contrastRatio(foreground, surfaceOf()) < WCAG_AA_TEXT;
     percent++
   ) {
-    foreground = mix(light, "FFFFFF", percent / 100);
+    foreground = mix(inkSeed, inkPull, percent / 100);
   }
 
   const surface = surfaceOf();
@@ -388,7 +417,7 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
   );
   let primary = accent ?? foreground;
   for (let percent = 1; percent <= 100 && contrastRatio(primary, surface) < WCAG_AA_TEXT; percent++) {
-    primary = mix(accent!, "FFFFFF", percent / 100);
+    primary = mix(accent!, inkPull, percent / 100);
   }
 
   let muted = foreground;
@@ -421,10 +450,23 @@ export function derivePaletteRoles(colors: readonly string[]): SchemeRoles {
  * (five and twelve are coprime, so every light has its turn). Every ink is
  * lifted toward white until it reads on its plane and every light until it reads on a
  * card; the second accent ships as supplied, as before. Pure and order-blind like the rest.
+ *
+ * Light (T-400) mirrors it: the four LIGHTEST are the grounds (the lightest the page) and the
+ * four DARKEST the inks (the darkest the words), and every ink and light is pulled toward
+ * black instead of white until it reads on its plane. The twelve lights between are the same,
+ * and the dark path is byte-for-byte unchanged.
  */
-function deriveTonalRoles(sorted: readonly string[]): SchemeRoles {
-  const [background, surface, raised, border] = sorted as unknown as [string, string, string, string];
-  const inks = sorted.slice(-TONAL_INKS).reverse();
+function deriveTonalRoles(sorted: readonly string[], appearance: Appearance = "dark"): SchemeRoles {
+  // Dark: grounds are the four darkest (page first), inks the four lightest (words first).
+  // Light: grounds are the four lightest (page first), inks the four darkest (words first) —
+  // each list read from the extreme inward, so `[page, card, raised, border]` and
+  // `[words, card words, raised words, muted]` keep their meaning.
+  const inkPull = appearance === "dark" ? "FFFFFF" : "000000";
+  const grounds =
+    appearance === "dark" ? sorted.slice(0, TONAL_GROUNDS) : sorted.slice(-TONAL_GROUNDS).reverse();
+  const inks =
+    appearance === "dark" ? sorted.slice(-TONAL_INKS).reverse() : sorted.slice(0, TONAL_INKS);
+  const [background, surface, raised, border] = grounds as unknown as [string, string, string, string];
   const lights = sorted.slice(TONAL_GROUNDS, -TONAL_INKS);
   const byReadability = [...lights].sort(
     (x, y) => contrastRatio(y, surface) - contrastRatio(x, surface) || x.localeCompare(y)
@@ -438,14 +480,14 @@ function deriveTonalRoles(sorted: readonly string[]): SchemeRoles {
     background: `#${background}`,
     surface: `#${surface}`,
     border: `#${border}`,
-    primary: `#${lift(accent, surface)}`,
-    muted: `#${lift(inks[3]!, raised)}`,
-    foreground: `#${lift(inks[0]!, surface)}`,
+    primary: `#${lift(accent, surface, inkPull)}`,
+    muted: `#${lift(inks[3]!, raised, inkPull)}`,
+    foreground: `#${lift(inks[0]!, surface, inkPull)}`,
     highlight: `#${byReadability[1]!}`,
     raised: `#${raised}`,
-    cardForeground: `#${lift(inks[1]!, surface)}`,
-    raisedForeground: `#${lift(inks[2]!, raised)}`,
-    accents: series.map((light) => `#${lift(light, surface)}`),
+    cardForeground: `#${lift(inks[1]!, surface, inkPull)}`,
+    raisedForeground: `#${lift(inks[2]!, raised, inkPull)}`,
+    accents: series.map((light) => `#${lift(light, surface, inkPull)}`),
   };
 }
 
@@ -462,12 +504,12 @@ function gcd(a: number, b: number): number {
   return b === 0 ? a : gcd(b, a % b);
 }
 
-/** `colour` pulled toward white one percent at a time until it reads on `plane` (WCAG AA) —
- * the hue survives, only the contrast moves. */
-function lift(colour: string, plane: string): string {
+/** `colour` pulled toward `toward` (white on a dark build, black on a light one) one percent
+ * at a time until it reads on `plane` (WCAG AA) — the hue survives, only the contrast moves. */
+function lift(colour: string, plane: string, toward = "FFFFFF"): string {
   let lifted = colour;
   for (let percent = 1; percent <= 100 && contrastRatio(lifted, plane) < WCAG_AA_TEXT; percent++) {
-    lifted = mix(colour, "FFFFFF", percent / 100);
+    lifted = mix(colour, toward, percent / 100);
   }
   return lifted;
 }
@@ -508,8 +550,8 @@ export function assertReadable(id: string, roles: SchemeRoles): void {
   }
 }
 
-export function rolesFor(id: ColorSchemeId): SchemeRoles {
-  const roles = derivePaletteRoles(PALETTES[id].colors);
+export function rolesFor(id: ColorSchemeId, appearance: Appearance = "dark"): SchemeRoles {
+  const roles = derivePaletteRoles(PALETTES[id].colors, appearance);
   assertReadable(id, roles);
   return roles;
 }
@@ -517,10 +559,13 @@ export function rolesFor(id: ColorSchemeId): SchemeRoles {
 /**
  * Roles mapped onto the shadcn token set the components already use. The harness never
  * has to rewrite `globals.css`: a palette is data here, and `cssBlocksForAll` turns all of
- * them into CSS at build time.
+ * them into CSS at build time, in the project's chosen appearance (dark by default).
  */
-export function cssVariablesFor(id: ColorSchemeId): Record<string, string> {
-  return variablesFrom(rolesFor(id));
+export function cssVariablesFor(
+  id: ColorSchemeId,
+  appearance: Appearance = "dark"
+): Record<string, string> {
+  return variablesFrom(rolesFor(id, appearance));
 }
 
 /**
@@ -531,9 +576,9 @@ export function cssVariablesFor(id: ColorSchemeId): Record<string, string> {
  * Calling `cssVariablesFor` for every palette also runs `assertReadable` on each at build,
  * so no palette the header can reach ships unchecked.
  */
-export function cssBlocksForAll(): string {
+export function cssBlocksForAll(appearance: Appearance = "dark"): string {
   return COLOR_SCHEME_IDS.map((id) => {
-    const body = Object.entries(cssVariablesFor(id))
+    const body = Object.entries(cssVariablesFor(id, appearance))
       .map(([name, value]) => `${name}:${value}`)
       .join(";");
     return `html[data-scheme="${id}"]{${body}}`;
