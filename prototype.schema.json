@@ -1128,6 +1128,14 @@
               "candy-arcade",
               "clay-kiln"
             ]
+          },
+          "appearance": {
+            "default": "dark",
+            "type": "string",
+            "enum": [
+              "dark",
+              "light"
+            ]
           }
         },
         "required": [
