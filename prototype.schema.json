@@ -184,6 +184,17 @@
             "light",
             "bold"
           ]
+        },
+        "motion": {
+          "description": "The light loop that plays behind the hero headline — a seamless Blender render tinted by the palette (T-350 library, €0 per project). Omit for stage-field (a board of mini-LEDs). pulse-ring: rings breathing out of a core; orbit-tiles: glass panels turning on a ring; horizon-sweep: a grid floor running to a swept horizon; data-lines: packets running along stacked rails. Reduced motion and no JavaScript show the poster still.",
+          "type": "string",
+          "enum": [
+            "stage-field",
+            "pulse-ring",
+            "orbit-tiles",
+            "horizon-sweep",
+            "data-lines"
+          ]
         }
       },
       "required": [
@@ -1180,6 +1191,17 @@
                 "enum": [
                   "light",
                   "bold"
+                ]
+              },
+              "motion": {
+                "description": "The light loop that plays behind the hero headline — a seamless Blender render tinted by the palette (T-350 library, €0 per project). Omit for stage-field (a board of mini-LEDs). pulse-ring: rings breathing out of a core; orbit-tiles: glass panels turning on a ring; horizon-sweep: a grid floor running to a swept horizon; data-lines: packets running along stacked rails. Reduced motion and no JavaScript show the poster still.",
+                "type": "string",
+                "enum": [
+                  "stage-field",
+                  "pulse-ring",
+                  "orbit-tiles",
+                  "horizon-sweep",
+                  "data-lines"
                 ]
               }
             },
