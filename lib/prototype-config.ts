@@ -29,7 +29,7 @@
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
 import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
-import { HERO_LOOPS } from "./editorial";
+import { HERO_ARCHETYPES, HERO_LOOPS } from "./editorial";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */
@@ -661,6 +661,16 @@ export const prototypeConfigSchema = z
     locales: z.array(z.enum(LOCALES)).min(1),
     defaultLocale: z.enum(LOCALES),
     theme: themeSchema,
+    // The hero archetype the brief picked (factory-web T-370 project chat; orchestrator
+    // resolveHero, T-373): brand (the project's logo in black lacquer), product (the built app on
+    // a 3D phone), light (the palette-agnostic light loop the stage paints). Top-level, not inside
+    // theme, so it stays out of the theme gate — T-373 kept resolveHero separate from resolveTheme
+    // for exactly this reason. Optional: a config that names none reads as light (heroArchetype,
+    // lib/editorial.ts). brand and product fall back to light until their render assets exist (T-419).
+    hero: z
+      .enum(HERO_ARCHETYPES)
+      .optional()
+      .describe("How the landing opens: brand (the project's logo in black lacquer), product (the built app on a 3D phone), or light (a palette-agnostic light loop). Omit for light. brand and product need a render a prototype has not got at build time, so both currently open with the light loop; the pick is still honoured and recorded."),
     patterns: z.object({
       landing: PATTERN_SCHEMAS.landing.optional(),
       dashboard: PATTERN_SCHEMAS.dashboard.optional(),

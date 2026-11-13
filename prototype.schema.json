@@ -1142,6 +1142,15 @@
           "colorScheme"
         ]
       },
+      "hero": {
+        "description": "How the landing opens: brand (the project's logo in black lacquer), product (the built app on a 3D phone), or light (a palette-agnostic light loop). Omit for light. brand and product need a render a prototype has not got at build time, so both currently open with the light loop; the pick is still honoured and recorded.",
+        "type": "string",
+        "enum": [
+          "brand",
+          "product",
+          "light"
+        ]
+      },
       "patterns": {
         "type": "object",
         "properties": {
