@@ -1,312 +1,362 @@
 {
-  "appName": "Golden App Template",
+  "appName": "parking",
   "locales": [
     "en"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "black-gold"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
+        "faq",
         "contact",
         "cta"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring"
+      "font": "lexend",
+      "motion": "data-lines"
     },
-    "dashboard": {},
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
-    "contactForm": {
-      "phone": "optional"
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalSpots",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "availableSpots",
+          "field": "status",
+          "agg": "share",
+          "value": "available"
+        },
+        {
+          "id": "reservedSpots",
+          "field": "status",
+          "agg": "share",
+          "value": "reserved"
+        }
+      ]
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "spot",
         "fields": [
           {
-            "key": "name",
+            "key": "address",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "type",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "covered",
+              "outdoor",
+              "garage"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
-            "type": "date"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "available",
+              "occupied",
+              "reserved"
+            ],
+            "required": true
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "owner",
+            "type": "text"
+          },
+          {
+            "key": "notes",
+            "type": "longtext"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "covered",
+        "outdoor",
+        "garage"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
+          "key": "spaces"
         }
       ],
-      "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "spot-01",
+          "category": "covered",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "spaces": 1
           },
+          "status": "available",
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 48.1492,
+            "lng": 17.1082
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
+          "id": "spot-02",
+          "category": "outdoor",
+          "attributes": {
+            "spaces": 2
+          },
+          "status": "available",
+          "location": {
+            "lat": 48.1479,
+            "lng": 17.1095
+          }
+        },
+        {
+          "id": "spot-03",
+          "category": "garage",
+          "attributes": {
+            "spaces": 3
+          },
           "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
           "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "lat": 48.1502,
+            "lng": 17.1068
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "spot-04",
+          "category": "outdoor",
           "attributes": {
-            "area": 95
+            "spaces": 1
           },
+          "status": "available",
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 48.1468,
+            "lng": 17.1103
+          }
+        },
+        {
+          "id": "spot-05",
+          "category": "covered",
+          "attributes": {
+            "spaces": 2
+          },
+          "status": "unavailable",
+          "location": {
+            "lat": 48.1497,
+            "lng": 17.1062
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.1486,
+        "lng": 17.1077
+      },
+      "zoom": 14
+    },
+    "contactForm": {
+      "phone": "optional"
+    },
+    "cta": {
+      "href": "/login"
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "parking lets neighbourhood residents register and track parking spots on a shared community map so everyone knows what is available.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Neighbourhood parking register",
+        "headline": "Every parking spot, known to the whole neighbourhood",
+        "subheadline": "Residents register, share and find parking spots on one live community map.",
+        "featuresHeading": "Everything your community needs to manage parking",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Spots on the map",
+            "description": "Register any parking spot and pin it on a shared map so every resident knows exactly where it is."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Track availability",
+            "description": "Mark a spot as available, occupied or reserved so neighbours always see the current state at a glance."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "users",
+            "title": "Community access",
+            "description": "Sign in with Google to add your spots and manage the ones you registered — no extra account needed."
+          },
+          {
+            "icon": "tag",
+            "title": "Spot categories",
+            "description": "Distinguish covered, outdoor and garage spots so residents can filter for exactly what they are looking for."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in three steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Use your Google account to join the community parking register — no separate password required."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add a spot",
+              "description": "Enter the location, type and status of a parking spot and pin it on the neighbourhood map."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Keep it current",
+              "description": "Update the spot's status whenever it changes so your neighbours always see accurate, up-to-date information."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions from the community",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who can register a parking spot?",
+              "answer": "Any resident who signs in with a Google account can add spots to the register. Each person manages the spots they created."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Can I see all spots on a map?",
+              "answer": "Yes. The map shows every registered spot as a pin, colour-coded by status, so you know at a glance which are free."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "What types of parking can be registered?",
+              "answer": "You can register covered spots, open outdoor spaces and enclosed garage bays. The type appears on every spot card and map pin."
+            },
+            {
+              "question": "How do I mark a spot as taken?",
+              "answer": "Open the spot from your dashboard and change its status to 'occupied' or 'reserved'. The map and list update straight away."
+            },
+            {
+              "question": "Is my personal information visible to other residents?",
+              "answer": "Only the spot details you enter — location, type and status — are visible to the community. Your account details remain private."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "title": "My parking spots",
+        "intro": "Manage the spots you registered and see the current state of the whole neighbourhood at a glance.",
+        "kpiLabels": {
+          "totalSpots": "Registered spots",
+          "availableSpots": "Available",
+          "reservedSpots": "Reserved"
+        }
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Parking spot",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "address": "Address / Location",
+          "type": "Type",
+          "status": "Status",
+          "owner": "Registered by",
+          "notes": "Notes"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "address": "Maple Court 4, Block B",
+            "type": "covered",
+            "status": "available",
+            "owner": "M. Novák",
+            "notes": "Near the main entrance, easy to reverse into"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "address": "Oak Lane 12, Courtyard",
+            "type": "outdoor",
+            "status": "occupied",
+            "owner": "P. Horváth",
+            "notes": "Left bay is slightly wider"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "address": "Pine Street 7, Garage Block",
+            "type": "garage",
+            "status": "reserved",
+            "owner": "J. Kováč",
+            "notes": "Reserved Monday to Friday 8:00–18:00"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Registered parking spots",
+        "intro": "Browse spots registered by residents. Filter by type to find what suits you, and view each one on the neighbourhood map.",
+        "notice": "These are illustrative sample spots. The live register will show real spots added by your neighbours.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "covered": "Covered",
+          "outdoor": "Outdoor",
+          "garage": "Garage"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "spaces": "Spaces"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "spot-01": {
+            "title": "Covered spot, Maple Court",
+            "summary": "A single covered parking space beneath the building canopy, sheltered from rain and direct sun.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Covered canopy",
+              "Ground floor",
+              "Residents only"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "spot-02": {
+            "title": "Outdoor double spot, Oak Lane",
+            "summary": "Two outdoor spaces side by side in the shared residential courtyard, easy to reach from the main gate.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Double width",
+              "Open air",
+              "Courtyard access"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "spot-03": {
+            "title": "Garage block, Pine Street",
+            "summary": "Three spaces inside a closed garage block with a barrier gate and electric lighting throughout.",
+            "highlights": [
+              "Enclosed garage",
+              "Barrier gate",
+              "Electric lighting"
+            ]
+          },
+          "spot-04": {
+            "title": "Outdoor spot, Birch Road",
+            "summary": "Single marked outdoor bay along the north side of the building, straightforward to access from the street.",
+            "highlights": [
+              "Marked bay",
+              "Ground level",
+              "North side"
+            ]
+          },
+          "spot-05": {
+            "title": "Covered double spot, Cedar Close",
+            "summary": "Two covered spaces under the building's extended roof, close to the lift and stairwell entrance.",
+            "highlights": [
+              "Double covered",
+              "Near lift",
+              "Residents only"
+            ]
           }
         },
-        "inquireLabel": "Ask about this offer"
+        "inquireLabel": "Ask about this spot"
+      },
+      "contactForm": {
+        "heading": "Ask about a spot",
+        "submitLabel": "Send message",
+        "intro": "Have a question about a specific parking spot or the community register? Leave a message and we will get back to you."
+      },
+      "cta": {
+        "label": "Sign in to register a spot",
+        "title": "Put your spot on the community map today",
+        "subtitle": "Help your neighbours find parking faster by keeping the shared register accurate and up to date."
       }
     }
   }
