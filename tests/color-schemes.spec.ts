@@ -17,6 +17,7 @@ import {
   paletteKind,
   TONAL_MIN_COLOURS,
   WCAG_AA_TEXT,
+  type ColorSchemeId,
 } from "@tokenwise/shared-ui/theming";
 import { config, landingPresentation } from "../lib/prototype-config";
 
@@ -557,7 +558,7 @@ test.describe("colour scheme reaches the page", () => {
     expect(highlight.toLowerCase()).toBe(rolesFor(config.theme.colorScheme).highlight.toLowerCase());
   });
 
-  test("under a tonal palette every card and step takes its own light; under the configured palette they paint the page's accent", async ({ page }) => {
+  test("under a tonal palette every card and step takes its own light; under any other palette they paint the page's accent", async ({ page }) => {
     // The series paints the editorial bento and steps; a config without them has nothing to show.
     const sections: readonly string[] = config.patterns.landing?.sections ?? [];
     test.skip(landingPresentation(config) !== "editorial" || !sections.includes("features"), "no editorial bento in this config");
@@ -570,24 +571,39 @@ test.describe("colour scheme reaches the page", () => {
         getComputedStyle(el).getPropertyValue("--primary").trim().toLowerCase(),
         getComputedStyle(el).getPropertyValue("--highlight").trim().toLowerCase(),
       ]);
+    const isTonal = (id: ColorSchemeId) => paletteKind(PALETTES[id].colors) === "tonal";
 
-    const page_ = rolesFor(config.theme.colorScheme);
-    expect(await accentOf(cards.nth(1))).toEqual([page_.primary.toLowerCase(), page_.highlight.toLowerCase()]);
+    // What the series paints under one palette: a tonal one hands each card and step the next
+    // of its lights, any other leaves every card on the page's own accent and second accent.
+    const expectSeries = async (id: ColorSchemeId) => {
+      const r = rolesFor(id);
+      const cardCount = Math.min(await cards.count(), 6);
+      const stepCount = Math.min(await steps.count(), 4);
+      if (!isTonal(id)) {
+        const accent = [r.primary.toLowerCase(), r.highlight.toLowerCase()];
+        for (let i = 0; i < cardCount; i++) expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual(accent);
+        return;
+      }
+      for (let i = 0; i < cardCount; i++) {
+        const light = r.accents![i]!.toLowerCase();
+        expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual([light, light]);
+      }
+      for (let i = 0; i < stepCount; i++) {
+        const light = r.accents![6 + i]!.toLowerCase();
+        expect(await accentOf(steps.nth(i)), `${id} step ${i + 1}`).toEqual([light, light]);
+      }
+    };
 
-    const tonal = COLOR_SCHEME_IDS.find((id) => paletteKind(PALETTES[id].colors) === "tonal")!;
+    // The palette the customer chose first — it may itself be tonal (traweller, royal-velvet,
+    // 2026-11-15: the old expectation of the page's accent failed every tonal prototype).
+    const configured = config.theme.colorScheme;
+    await expectSeries(configured);
+
+    // Then the other kind, so both rules are proved whichever the config chose.
+    const other = COLOR_SCHEME_IDS.find((id) => isTonal(id) !== isTonal(configured))!;
     await page.evaluate((id) => {
       document.documentElement.dataset.scheme = id;
-    }, tonal);
-    const r = rolesFor(tonal);
-    const cardCount = Math.min(await cards.count(), 6);
-    for (let i = 0; i < cardCount; i++) {
-      const light = r.accents![i]!.toLowerCase();
-      expect(await accentOf(cards.nth(i)), `card ${i + 1}`).toEqual([light, light]);
-    }
-    const stepCount = Math.min(await steps.count(), 4);
-    for (let i = 0; i < stepCount; i++) {
-      const light = r.accents![6 + i]!.toLowerCase();
-      expect(await accentOf(steps.nth(i)), `step ${i + 1}`).toEqual([light, light]);
-    }
+    }, other);
+    await expectSeries(other);
   });
 });
