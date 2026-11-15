@@ -273,4 +273,18 @@ test.describe("editorial (pure)", () => {
     // The soft glow sits under the eyebrow's words, so it stays on the readable accent.
     expect(css).toMatch(/--editorial-glow-soft:\s*color-mix\(in oklab, var\(--primary\) 9%/);
   });
+
+  test("a tonal palette lights the cards and the steps one by one; every other palette falls back to the page's accents (T-371)", () => {
+    const css = readFileSync(resolve(__dirname, "../components/editorial/stage.css"), "utf-8");
+    for (let i = 1; i <= 6; i++) {
+      expect(css).toMatch(new RegExp(`\\[data-bento\\] > li:nth-child\\(${i}\\) \\{ --editorial-light: var\\(--accent-${i}\\); \\}`));
+    }
+    for (let i = 1; i <= 4; i++) {
+      expect(css).toMatch(new RegExp(`\\[data-steps\\] > li:nth-child\\(${i}\\) \\{ --editorial-light: var\\(--accent-${6 + i}\\); \\}`));
+    }
+    // The fallbacks are the stashes of the page's own accents, never the property itself.
+    expect(css).toMatch(/--primary: var\(--editorial-light, var\(--editorial-accent\)\)/);
+    expect(css).toMatch(/--highlight: var\(--editorial-light, var\(--editorial-highlight\)\)/);
+    expect(css).toMatch(/--editorial-highlight: var\(--highlight, var\(--primary\)\)/);
+  });
 });

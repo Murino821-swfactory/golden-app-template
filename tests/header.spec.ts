@@ -119,8 +119,11 @@ test.describe("Change colour", () => {
     );
   });
 
+  // The walk runs on the sign-in page: the header is the same on every page, and the landing's
+  // repaint after a click has its own test above — thirty repaints of the landing (its loops,
+  // blends and glows) cost a slow two-core runner more than the test's 30 s (T-384).
   test("one click per palette walks the whole list and lands back at the start", async ({ page }) => {
-    await page.goto("./");
+    await page.goto("login");
     let expected = START;
     for (let i = 0; i < COLOR_SCHEME_IDS.length; i++) {
       await changeColour(page).click();
