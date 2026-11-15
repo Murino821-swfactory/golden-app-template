@@ -31,10 +31,12 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
+| Google sign-in (popup in the tap, in-app escape, redirect fallback) | `contexts/auth-context.tsx`, `app/[locale]/login/page.tsx`, `lib/sign-in-policy.ts`, `lib/auth-browser.ts` — see "Google sign-in"; MUST pattern in sw-factory `docs/factory/GOOGLE_SIGN_IN.md` |
 
 ## Critical Rules for Fast Implementation
 
@@ -139,11 +141,13 @@ components/
   auth/auth-guard.tsx    # Protects routes, redirects to /login
   layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
-  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
+  use-auth.ts            # useAuth() → { user, loading, prepareSignIn, signInWithGoogle → SignInOutcome, signOut, getIdToken }
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   editorial.ts           # pure rules of the editorial page: bentoSpan, splitDisplay, heroObjectKind, heroNamePlacement
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  sign-in-policy.ts      # pure: popupFailureAction, isSameSiteAuthDomain, SignInOutcome
+  auth-browser.ts        # in-app browser detection (TikTok, Android WebView) and the escape to Safari/Chrome
   records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
   records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
   owner-contact.ts       # owner card: parse, links, /api/prototype-owner-contact client
@@ -517,6 +521,39 @@ owner's inbox on the prototype as a message of `kind: "idea"` (`/messages` shows
   answers CORS for any origin, the product's CSP `connect-src` must allow tokenwise.sk).
 - The strip never shows the app's own tile (`showcaseFor(slug)`).
 
+## Google sign-in (T-438, 2026-11-15)
+
+The MUST pattern lives in sw-factory `docs/factory/GOOGLE_SIGN_IN.md`; this template is its
+reference implementation and every prototype inherits it. Audit T-435 found it failing
+"sometimes" for real reasons, so these rules are tested, not advice:
+
+- **The popup opens inside the tap.** A browser blocks `window.open` that comes too long
+  after the tap, and on phones and in Safari the Firebase SDK prepares the popup's iframe
+  when Auth starts. So `/login` calls `prepareSignIn()` on mount (loads Firebase, `getAuth`,
+  persistence) and `signInWithGoogle()` awaits nothing before `signInWithPopup` once that is
+  done. The landing page still never downloads Firebase Auth for an anonymous visitor.
+- **Redirect only where it can complete.** `signInWithRedirect` returns the visitor signed
+  OUT unless `authDomain` is the host that serves the page (Chrome 115+, Firefox 109+,
+  Safari 16.1+ partition the SDK's cross-site storage). `popupFailureAction` redirects a
+  blocked popup only when `isSameSiteAuthDomain(auth.config.authDomain, location.hostname)`;
+  otherwise the page says "tap again" — Firebase is loaded by then, so the second tap works.
+  Closing the Google window is a cancel: no error, no redirect.
+- **In-app browsers escape first.** Google refuses OAuth inside Facebook / Instagram /
+  TikTok / any Android WebView, so `signInWithGoogle()` asks the phone to reopen the page in
+  Safari/Chrome before touching Firebase and returns `"escaping"`; the login page shows the
+  "open in your browser" note with "Copy link" up front and never treats the request as a
+  finished sign-in (it used to bounce the visitor through `/dashboard`).
+- `signInWithGoogle()` returns `SignInOutcome` (`signed-in` · `redirecting` · `escaping` ·
+  `cancelled` · `popup-blocked`) and throws only real errors. `/login` sends a signed-in
+  visitor (back from a redirect, or already signed in) to the dashboard.
+- **`authDomain` for prototypes** is `apps.tokenwise.sk` once that host's
+  `/__/auth/handler` is a registered OAuth redirect URI — the harness sets it
+  (`loadDemoEnv`) and a publish gate checks it. Local dev keeps `<project>.firebaseapp.com`
+  (popup only).
+- Texts: `auth.inApp*` and `auth.popupBlocked` in all 8 bundles. Tests:
+  `tests/sign-in-policy.spec.ts` (policy, UA matrix, escape URLs),
+  `tests/sign-in.spec.ts` (Firebase before the tap, landing stays light, in-app flow).
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -559,6 +596,19 @@ palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/col
 
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
+
+**Light variant — a paid add-on (T-400, founder 2026-11-09).** Dark is the DEFAULT and the
+baseline of every project; a customer whose brand is light opts in with `theme.appearance:
+"light"` (default `"dark"`) — one build-time project choice for the whole site, NOT a visitor
+dark/light toggle. The same deterministic rule derives a light counterpart of every palette by
+MIRRORING it (`derivePaletteRoles(colors, "light")`, `rolesFor(id, "light")`,
+`cssBlocksForAll("light")`): the lightest colour is the page, the darkest the words, grounds
+and inks swap ends, every pull reverses, still WCAG AA on every surface. No component hard-codes
+a colour — flipping the token layer flips the whole site. `app/shell.tsx` reads
+`config.theme.appearance` through `lib/theme-appearance.ts`: dark keeps `.dark` and ships
+byte-for-byte as before; light drops `.dark` and sets `data-appearance="light"`, under which the
+Blender light loops (made for a dark ground) stand down (`editorial.css`). Tests:
+`tests/color-schemes.spec.ts` (contrast over all palettes in light), `tests/appearance.spec.ts`.
 
 Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
 never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
