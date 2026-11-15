@@ -77,6 +77,17 @@ test.describe("structure and content are separate", () => {
     expect(() => parsePrototypeConfig(broken)).toThrow(/defaultLocale/);
   });
 
+  test("the brief's hero archetype is read top-level and is optional (T-419)", () => {
+    // The hero pick (brand|product|light) is what the prototype IS, not what it says, and it is
+    // kept out of `theme` on purpose: the orchestrator resolves it separately from the theme so a
+    // stricter theme gate never rejects a prototype over it (T-373). Written once, top-level.
+    expect(parsePrototypeConfig({ ...baseConfig(), hero: "product" }).hero).toBe("product");
+    // Optional: a config that names none leaves it unset, which the stage reads as light.
+    expect(parsePrototypeConfig(baseConfig()).hero).toBeUndefined();
+    // Closed enum: an archetype with no scene is rejected before a build, not silently dropped.
+    expect(() => parsePrototypeConfig({ ...baseConfig(), hero: "hologram" })).toThrow();
+  });
+
   test("an enabled pattern whose copy is missing in one language is rejected", () => {
     const broken = baseConfig() as { content: Record<string, Record<string, unknown>> };
     delete broken.content.en.cta;
@@ -180,9 +191,11 @@ test.describe("configs written before the split still build", () => {
     expect(parsed.patterns.cta).toEqual({ href: "/login" });
   });
 
-  test("the retired style knob is dropped, not rejected", () => {
+  test("the retired style knob is dropped, not rejected; appearance defaults to dark", () => {
     const parsed = parsePrototypeConfig(legacy);
-    expect(parsed.theme).toEqual({ colorScheme: "chartreuse-pastel-deep-teal-green" });
+    // `appearance` is the light add-on's switch (T-400); omitted, it defaults to dark — the
+    // baseline of every project — so a legacy config keeps its dark look.
+    expect(parsed.theme).toEqual({ colorScheme: "chartreuse-pastel-deep-teal-green", appearance: "dark" });
   });
 });
 

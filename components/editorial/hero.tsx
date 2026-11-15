@@ -10,7 +10,7 @@ import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
 import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
-import { heroNamePlacement, heroObjectKind } from "@/lib/editorial";
+import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
 import { landingActionHref } from "@/lib/landing-action";
@@ -166,6 +166,11 @@ export function HeroSection() {
   const hasFrame = kind !== "none";
   const name = heroNamePlacement({ hasFrame, customEyebrow: Boolean(eyebrow) });
 
+  // The hero the brief opened on (T-419, honouring the orchestrator's resolveHero pick, T-373):
+  // brand, product or light. brand and product fall back to the light backlight below until their
+  // renders exist, so the pick changes nothing it draws yet — but the stage carries it, so the
+  // choice is honoured and a brand/product scene can key off it the day it lands.
+  const archetype = heroArchetype(config.hero);
   const background = hero.src && hero.placement === "background" ? hero.src : null;
   const object = hero.src && hero.placement === "object" ? hero.src : null;
   const icons = Array.from(new Set((landing?.features ?? []).flatMap((f) => (f.icon ? [f.icon] : []))));
@@ -174,12 +179,15 @@ export function HeroSection() {
   const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
 
   return (
-    <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
+    <section id="hero" data-section="hero" data-hero-archetype={archetype} className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
       {/* This prototype's own scene (T-384): the map on the desk, rendered in Blender, under the template's
-          backlight (T-368 stage, `stage.css`); an AI image or object owns the hero, so neither gets them. */}
+          backlight (T-368 stage, `stage.css`) — the stage board by default, or whichever of the T-350
+          library `patterns.landing.motion` names; an AI image or object owns the hero, so neither gets them. */}
       {!background && !object && <HeroScene />}
-      {!background && !object && <LightLoop name="stage-field" marker="data-hero-light" className="editorial-light-hero" />}
+      {!background && !object && (
+        <LightLoop name={heroLoop(config.patterns.landing?.motion)} marker="data-hero-light" className="editorial-light-hero" />
+      )}
 
       <div
         className={cn(
