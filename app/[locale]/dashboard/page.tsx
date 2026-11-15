@@ -9,6 +9,8 @@ import { useContent } from "@/hooks/use-content";
 import { DashboardStats } from "@/components/dashboard/stats";
 import { config } from "@/lib/prototype-config";
 import { listingCards, listingPoints } from "@/lib/listings";
+import { ParkingMap, ParkingProvider, Reservations, Vehicles } from "@/components/parking";
+import { PARKING_ENABLED } from "@/lib/parking-config";
 
 /**
  * The signed-in page. Which blocks appear is decided by `prototype.config.json` alone —
@@ -38,8 +40,21 @@ function DashboardContent() {
       <OwnerLinks />
 
       {hasGrid && <DashboardStats />}
-      {hasMap && <MapBase points={points} />}
-      {hasGrid && <DataGrid />}
+      {PARKING_ENABLED ? (
+        // T-430: the register on the map, reservations and the plate register share one read
+        // of the visitor's sandbox; the grid between them stays the generic spot list.
+        <ParkingProvider>
+          <ParkingMap />
+          <Reservations />
+          <DataGrid />
+          <Vehicles />
+        </ParkingProvider>
+      ) : (
+        <>
+          {hasMap && <MapBase points={points} />}
+          {hasGrid && <DataGrid />}
+        </>
+      )}
     </div>
   );
 }

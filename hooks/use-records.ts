@@ -19,6 +19,8 @@ import {
   type ValueError,
 } from "@/lib/records";
 import { config, type EntityField } from "@/lib/prototype-config";
+import { dependentsOfSpot, isGridRecord, preserveHidden } from "@/lib/parking";
+import { PARKING_ENABLED, seedSamples } from "@/lib/parking-config";
 import { useAuth } from "./use-auth";
 import { useContent, useEntityFields } from "./use-content";
 
@@ -36,6 +38,11 @@ export { emptyValues, missingRequired, sortByCreatedAtDesc, type EntityRecord } 
  * Two module-level pieces keep them honest: one seeding promise per sandbox, so both wait
  * for the same seed instead of racing it, and a change signal, so a write in the grid
  * refreshes the KPI cards too.
+ *
+ * Parking (T-430): the same sandbox also holds reservations and vehicles (`values.kind`,
+ * lib/parking.ts). `records` stays what the grid owns — the spots; `extras` is the rest;
+ * `count` is the whole sandbox, because that is what the rules' limit counts. Loads asked
+ * for in the same turn by several consumers share ONE read.
  */
 
 export class RecordValidationError extends Error {
@@ -46,6 +53,8 @@ export class RecordValidationError extends Error {
 
 export interface UseRecordsReturn {
   records: EntityRecord[];
+  /** Records of another kind in the same sandbox (reservations, vehicles). */
+  extras: EntityRecord[];
   fields: EntityField[];
   entityLabel: string;
   loading: boolean;
@@ -55,13 +64,34 @@ export interface UseRecordsReturn {
   addRecord: (values: Record<string, unknown>) => Promise<void>;
   updateRecord: (id: string, values: Record<string, unknown>) => Promise<void>;
   removeRecord: (id: string) => Promise<void>;
+  /** A record written as given — the caller built and validated the values. */
+  addRaw: (values: Record<string, unknown>) => Promise<void>;
+  setRaw: (id: string, values: Record<string, unknown>) => Promise<void>;
   refresh: () => Promise<void>;
 }
+
+type Loaded = { records: EntityRecord[]; count: number };
 
 const gridConfig = config.patterns.dataGrid;
 const seeding = new Map<string, Promise<void>>();
 const listeners = new Set<() => void>();
-const announceChange = () => listeners.forEach((fn) => fn());
+// A write starts a new generation, so a read begun before it is never handed to a consumer
+// that asked after it.
+let generation = 0;
+const reads = new Map<string, Promise<Loaded>>();
+const announceChange = () => {
+  generation += 1;
+  listeners.forEach((fn) => fn());
+};
+
+function sharedRead(key: string, run: () => Promise<Loaded>): Promise<Loaded> {
+  let pending = reads.get(key);
+  if (!pending) {
+    pending = run().finally(() => reads.delete(key));
+    reads.set(key, pending);
+  }
+  return pending;
+}
 
 async function seedOnce(root: string, run: () => Promise<void>): Promise<void> {
   let pending = seeding.get(root);
@@ -74,7 +104,7 @@ async function seedOnce(root: string, run: () => Promise<void>): Promise<void> {
 
 export function useRecords(): UseRecordsReturn {
   const { user } = useAuth();
-  const [records, setRecords] = useState<EntityRecord[]>([]);
+  const [all, setRecords] = useState<EntityRecord[]>([]);
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -87,17 +117,18 @@ export function useRecords(): UseRecordsReturn {
   const samplesKey = JSON.stringify(content.dataGrid?.sampleRecords ?? null);
   const slug = getDemoSlug();
 
-  const load = useCallback(async (): Promise<{ records: EntityRecord[]; count: number }> => {
+  const load = useCallback(async (): Promise<Loaded> => {
     if (!user || !gridConfig) return { records: [], count: 0 };
-    const db = getFirestoreInstance();
     const root = sandboxRoot(slug, user.uid);
+    return sharedRead(`${root}#${generation}`, async () => {
+    const db = getFirestoreInstance();
     const samples = JSON.parse(samplesKey) as Record<string, unknown>[] | null;
 
     const counter = await getDoc(doc(db, root));
     if (shouldSeed(counter.exists(), samples ?? undefined)) {
       await seedOnce(root, async () => {
         const newId = () => doc(collection(db, recordsPath(slug, user.uid))).id;
-        const [first, ...rest] = samples!;
+        const [first, ...rest] = seedSamples(samples!);
         const firstId = newId();
         const seeded = await seedFirstSample(db, root, buildCreateOps(slug, user.uid, firstId, first!));
         if (!seeded) return;
@@ -116,7 +147,11 @@ export function useRecords(): UseRecordsReturn {
       };
     });
     return { records: sortByCreatedAtDesc(mapped), count: snap.size };
+    });
   }, [user, slug, samplesKey]);
+
+  const records = useMemo(() => (PARKING_ENABLED ? all.filter((r) => isGridRecord(r.values)) : all), [all]);
+  const extras = useMemo(() => (PARKING_ENABLED ? all.filter((r) => !isGridRecord(r.values)) : []), [all]);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -173,16 +208,50 @@ export function useRecords(): UseRecordsReturn {
       if (!user || !gridConfig) return;
       const { values, errors } = coerceValues(fields, raw);
       if (errors.length > 0) throw new RecordValidationError(errors);
-      await applyOps(getFirestoreInstance(), buildUpdateOps(slug, user.uid, id, values));
+      // An update replaces `values` whole: keep what the form does not show (a spot's pin).
+      const previous = all.find((r) => r.id === id)?.values ?? {};
+      const next = PARKING_ENABLED ? preserveHidden(fields.map((f) => f.key), previous, values) : values;
+      await applyOps(getFirestoreInstance(), buildUpdateOps(slug, user.uid, id, next));
       announceChange();
     },
-    [user, fields, slug]
+    [user, fields, slug, all]
   );
 
   const removeRecord = useCallback(
     async (id: string) => {
       if (!user || !gridConfig) return;
-      await applyOps(getFirestoreInstance(), buildDeleteOps(slug, user.uid, id));
+      const db = getFirestoreInstance();
+      try {
+        await applyOps(db, buildDeleteOps(slug, user.uid, id));
+        const target = all.find((r) => r.id === id);
+        if (PARKING_ENABLED && target && isGridRecord(target.values)) {
+          // A spot takes its reservations with it; its vehicles keep the car, not the spot.
+          const { deleteIds, unassign } = dependentsOfSpot(id, all);
+          for (const dependent of deleteIds) await applyOps(db, buildDeleteOps(slug, user.uid, dependent));
+          for (const vehicle of unassign) await applyOps(db, buildUpdateOps(slug, user.uid, vehicle.id, vehicle.values));
+        }
+      } finally {
+        announceChange();
+      }
+    },
+    [user, slug, all]
+  );
+
+  const addRaw = useCallback(
+    async (values: Record<string, unknown>) => {
+      if (!user || !gridConfig) return;
+      const db = getFirestoreInstance();
+      const id = doc(collection(db, recordsPath(slug, user.uid))).id;
+      await applyOps(db, buildCreateOps(slug, user.uid, id, values));
+      announceChange();
+    },
+    [user, slug]
+  );
+
+  const setRaw = useCallback(
+    async (id: string, values: Record<string, unknown>) => {
+      if (!user || !gridConfig) return;
+      await applyOps(getFirestoreInstance(), buildUpdateOps(slug, user.uid, id, values));
       announceChange();
     },
     [user, slug]
@@ -190,6 +259,7 @@ export function useRecords(): UseRecordsReturn {
 
   return {
     records,
+    extras,
     fields,
     entityLabel,
     loading,
@@ -199,6 +269,8 @@ export function useRecords(): UseRecordsReturn {
     addRecord,
     updateRecord,
     removeRecord,
+    addRaw,
+    setRaw,
     refresh,
   };
 }
