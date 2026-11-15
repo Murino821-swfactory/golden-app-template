@@ -13,7 +13,7 @@ import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
-import { landingActionHref } from "@/lib/landing-action";
+import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
 import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
@@ -213,7 +213,7 @@ export function HeroSection() {
               fold-cut frame below is the invitation to scroll. */}
           {href && (
             <Button asChild size="lg" className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm">
-              <Link href={href}>
+              <Link href={href} prefetch={landingActionPrefetch(action)}>
                 {content.cta?.label ?? t("cta")}
                 <ArrowUpRight aria-hidden className="size-4" />
               </Link>

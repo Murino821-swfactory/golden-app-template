@@ -48,7 +48,7 @@ keeps the device copy. Research and decisions: sw-factory
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
-| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
+| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
@@ -557,7 +557,9 @@ reference implementation and every prototype inherits it. Audit T-435 found it f
   after the tap, and on phones and in Safari the Firebase SDK prepares the popup's iframe
   when Auth starts. So `/login` calls `prepareSignIn()` on mount (loads Firebase, `getAuth`,
   persistence) and `signInWithGoogle()` awaits nothing before `signInWithPopup` once that is
-  done. The landing page still never downloads Firebase Auth for an anonymous visitor.
+  done. The landing page never downloads Firebase Auth for an anonymous visitor — neither
+  by itself nor through Next.js prefetching its action: only `/login` is fetched ahead of the
+  tap (`landingActionPrefetch`, `lib/landing-action.ts`).
 - **Redirect only where it can complete.** `signInWithRedirect` returns the visitor signed
   OUT unless `authDomain` is the host that serves the page (Chrome 115+, Firefox 109+,
   Safari 16.1+ partition the SDK's cross-site storage). `popupFailureAction` redirects a
