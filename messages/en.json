@@ -22,7 +22,13 @@
     "signInTitle": "Sign in",
     "signInDescription": "Continue with your Google account to get started.",
     "signInButton": "Sign in with Google",
-    "signInError": "Sign-in failed. Please try again."
+    "signInError": "Sign-in failed. Please try again.",
+    "inAppTitle": "Open this page in your browser",
+    "inAppText": "Google doesn't allow signing in inside an app's built-in browser. Open the page in Safari or Chrome to continue.",
+    "inAppCopy": "Copy link",
+    "inAppCopied": "Link copied",
+    "inAppEscaping": "Opening your browser… If nothing happens, copy the link and paste it into Safari or Chrome.",
+    "popupBlocked": "Your browser blocked the sign-in window. Tap the button again."
   },
   "landing": {
     "title": "Your App",

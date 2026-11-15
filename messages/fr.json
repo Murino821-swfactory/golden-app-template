@@ -22,7 +22,13 @@
     "signInTitle": "Connexion",
     "signInDescription": "Continuez avec votre compte Google.",
     "signInButton": "Se connecter avec Google",
-    "signInError": "La connexion a échoué. Veuillez réessayer."
+    "signInError": "La connexion a échoué. Veuillez réessayer.",
+    "inAppTitle": "Ouvrez cette page dans votre navigateur",
+    "inAppText": "Google n'autorise pas la connexion dans le navigateur intégré d'une application. Ouvrez la page dans Safari ou Chrome.",
+    "inAppCopy": "Copier le lien",
+    "inAppCopied": "Lien copié",
+    "inAppEscaping": "Ouverture de votre navigateur… Si rien ne se passe, copiez le lien et collez-le dans Safari ou Chrome.",
+    "popupBlocked": "Votre navigateur a bloqué la fenêtre de connexion. Touchez à nouveau le bouton."
   },
   "landing": {
     "title": "Votre application",

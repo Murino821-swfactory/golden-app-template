@@ -22,7 +22,13 @@
     "signInTitle": "Bejelentkezés",
     "signInDescription": "Folytassa a Google-fiókjával.",
     "signInButton": "Bejelentkezés Google-fiókkal",
-    "signInError": "A bejelentkezés nem sikerült. Kérjük, próbálja újra."
+    "signInError": "A bejelentkezés nem sikerült. Kérjük, próbálja újra.",
+    "inAppTitle": "Nyissa meg ezt az oldalt a böngészőben",
+    "inAppText": "A Google nem engedélyezi a bejelentkezést egy alkalmazás beépített böngészőjében. Nyissa meg az oldalt a Safariban vagy a Chrome-ban.",
+    "inAppCopy": "Link másolása",
+    "inAppCopied": "Link kimásolva",
+    "inAppEscaping": "Megnyitjuk a böngészőjét… Ha semmi sem történik, másolja ki a linket, és illessze be a Safariba vagy a Chrome-ba.",
+    "popupBlocked": "A böngésző letiltotta a bejelentkezési ablakot. Koppintson újra a gombra."
   },
   "landing": {
     "title": "Az Ön alkalmazása",

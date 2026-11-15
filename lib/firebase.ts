@@ -3,6 +3,7 @@ import {
   getAuth,
   setPersistence,
   browserLocalPersistence,
+  browserSessionPersistence,
   GoogleAuthProvider,
   type Auth,
 } from "firebase/auth";
@@ -40,19 +41,35 @@ export function getFirestoreInstance(): Firestore {
 }
 
 /**
- * MUST pattern: call before any auth operation to prevent silent failures
- * in in-app browsers that block indexedDB.
+ * MUST pattern (sw-factory docs/factory/GOOGLE_SIGN_IN.md): settle persistence before any
+ * auth operation, so a browser that blocks indexedDB/localStorage (some in-app browsers,
+ * private modes) keeps the session for this tab instead of failing silently. Runs once;
+ * the login page settles it before the tap (`prepareSignIn`), so the tap need not wait.
  */
-let persistenceSet = false;
-export async function ensureAuthPersistence(): Promise<void> {
-  if (persistenceSet) return;
-  try {
-    await setPersistence(getAuthInstance(), browserLocalPersistence);
-    persistenceSet = true;
-  } catch (err) {
-    console.warn("[auth] setPersistence failed (expected in some browsers):", err);
-    persistenceSet = true;
+let persistencePromise: Promise<void> | null = null;
+let persistenceReady = false;
+export function ensureAuthPersistence(): Promise<void> {
+  if (!persistencePromise) {
+    persistencePromise = (async () => {
+      const auth = getAuthInstance();
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+      } catch {
+        try {
+          await setPersistence(auth, browserSessionPersistence);
+        } catch (err) {
+          console.warn("[auth] no persistent storage; the session lasts this page only:", err);
+        }
+      }
+      persistenceReady = true;
+    })();
   }
+  return persistencePromise;
+}
+
+/** True once `ensureAuthPersistence()` has settled — the sign-in tap then awaits nothing. */
+export function isAuthPersistenceReady(): boolean {
+  return persistenceReady;
 }
 
 import { getDemoSlug } from "./demo-slug";

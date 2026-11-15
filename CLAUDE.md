@@ -36,6 +36,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
+| Google sign-in (popup in the tap, in-app escape, redirect fallback) | `contexts/auth-context.tsx`, `app/[locale]/login/page.tsx`, `lib/sign-in-policy.ts`, `lib/auth-browser.ts` — see "Google sign-in"; MUST pattern in sw-factory `docs/factory/GOOGLE_SIGN_IN.md` |
 
 ## Critical Rules for Fast Implementation
 
@@ -140,11 +141,13 @@ components/
   auth/auth-guard.tsx    # Protects routes, redirects to /login
   layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
-  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
+  use-auth.ts            # useAuth() → { user, loading, prepareSignIn, signInWithGoogle → SignInOutcome, signOut, getIdToken }
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   editorial.ts           # pure rules of the editorial page: bentoSpan, splitDisplay, heroObjectKind, heroNamePlacement
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  sign-in-policy.ts      # pure: popupFailureAction, isSameSiteAuthDomain, SignInOutcome
+  auth-browser.ts        # in-app browser detection (TikTok, Android WebView) and the escape to Safari/Chrome
   records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
   records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
   owner-contact.ts       # owner card: parse, links, /api/prototype-owner-contact client
@@ -517,6 +520,39 @@ owner's inbox on the prototype as a message of `kind: "idea"` (`/messages` shows
   `NEXT_PUBLIC_IDEA_API=https://tokenwise.sk/api/prototype-idea` (`ideaApiUrl`; the function
   answers CORS for any origin, the product's CSP `connect-src` must allow tokenwise.sk).
 - The strip never shows the app's own tile (`showcaseFor(slug)`).
+
+## Google sign-in (T-438, 2026-11-15)
+
+The MUST pattern lives in sw-factory `docs/factory/GOOGLE_SIGN_IN.md`; this template is its
+reference implementation and every prototype inherits it. Audit T-435 found it failing
+"sometimes" for real reasons, so these rules are tested, not advice:
+
+- **The popup opens inside the tap.** A browser blocks `window.open` that comes too long
+  after the tap, and on phones and in Safari the Firebase SDK prepares the popup's iframe
+  when Auth starts. So `/login` calls `prepareSignIn()` on mount (loads Firebase, `getAuth`,
+  persistence) and `signInWithGoogle()` awaits nothing before `signInWithPopup` once that is
+  done. The landing page still never downloads Firebase Auth for an anonymous visitor.
+- **Redirect only where it can complete.** `signInWithRedirect` returns the visitor signed
+  OUT unless `authDomain` is the host that serves the page (Chrome 115+, Firefox 109+,
+  Safari 16.1+ partition the SDK's cross-site storage). `popupFailureAction` redirects a
+  blocked popup only when `isSameSiteAuthDomain(auth.config.authDomain, location.hostname)`;
+  otherwise the page says "tap again" — Firebase is loaded by then, so the second tap works.
+  Closing the Google window is a cancel: no error, no redirect.
+- **In-app browsers escape first.** Google refuses OAuth inside Facebook / Instagram /
+  TikTok / any Android WebView, so `signInWithGoogle()` asks the phone to reopen the page in
+  Safari/Chrome before touching Firebase and returns `"escaping"`; the login page shows the
+  "open in your browser" note with "Copy link" up front and never treats the request as a
+  finished sign-in (it used to bounce the visitor through `/dashboard`).
+- `signInWithGoogle()` returns `SignInOutcome` (`signed-in` · `redirecting` · `escaping` ·
+  `cancelled` · `popup-blocked`) and throws only real errors. `/login` sends a signed-in
+  visitor (back from a redirect, or already signed in) to the dashboard.
+- **`authDomain` for prototypes** is `apps.tokenwise.sk` once that host's
+  `/__/auth/handler` is a registered OAuth redirect URI — the harness sets it
+  (`loadDemoEnv`) and a publish gate checks it. Local dev keeps `<project>.firebaseapp.com`
+  (popup only).
+- Texts: `auth.inApp*` and `auth.popupBlocked` in all 8 bundles. Tests:
+  `tests/sign-in-policy.spec.ts` (policy, UA matrix, escape URLs),
+  `tests/sign-in.spec.ts` (Firebase before the tap, landing stays light, in-app flow).
 
 ## Firestore rules — owned by factory-web, not here
 

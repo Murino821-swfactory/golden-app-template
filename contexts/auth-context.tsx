@@ -11,24 +11,24 @@ import {
 } from "react";
 import type { User as FirebaseUser, AuthError } from "firebase/auth";
 import { isInAppBrowser, escapeInAppBrowser } from "@/lib/auth-browser";
+import { isSameSiteAuthDomain, popupFailureAction, type SignInOutcome } from "@/lib/sign-in-policy";
 import type { User } from "@/types";
 
-/**
- * Error codes that trigger redirect fallback instead of failing.
- * These happen when popup is blocked, closed, or not supported.
- */
-const REDIRECT_FALLBACK_CODES = new Set([
-  "auth/popup-blocked",
-  "auth/popup-closed-by-user",
-  "auth/cancelled-popup-request",
-  "auth/operation-not-supported-in-this-environment",
-]);
+export type { SignInOutcome } from "@/lib/sign-in-policy";
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   authAvailable: boolean;
-  signInWithGoogle: () => Promise<void>;
+  /**
+   * Load Firebase Auth now, ahead of the tap. A browser opens the Google window only inside
+   * the tap that asked for it, and on phones and in Safari the SDK prepares its sign-in
+   * iframe when Auth starts — so a page that offers sign-in calls this when it mounts.
+   * Resolves false when Firebase is unavailable (not configured). Idempotent.
+   */
+  prepareSignIn: () => Promise<boolean>;
+  /** Never throws for a cancel or a blocked window — those are outcomes the page explains. */
+  signInWithGoogle: () => Promise<SignInOutcome>;
   signOut: () => Promise<void>;
   /**
    * The signed-in user's Firebase ID token, for a server that checks who is asking
@@ -98,26 +98,32 @@ function isPendingRedirect(): boolean {
   return false;
 }
 
-// Lazy-loaded Firebase modules (cached after first load).
+// Lazy-loaded Firebase modules (cached after first load). `loaded` holds them once resolved,
+// so the sign-in tap can reach `signInWithPopup` without awaiting anything.
 type FirebaseModule = typeof import("@/lib/firebase");
 type FirebaseAuthModule = typeof import("firebase/auth");
-
-let firebaseModulePromise: Promise<FirebaseModule> | null = null;
-let firebaseAuthPromise: Promise<FirebaseAuthModule> | null = null;
-
-function loadFirebase(): Promise<FirebaseModule> {
-  if (!firebaseModulePromise) {
-    firebaseModulePromise = import("@/lib/firebase");
-  }
-  return firebaseModulePromise;
+interface LoadedModules {
+  firebase: FirebaseModule;
+  sdk: FirebaseAuthModule;
 }
 
-function loadFirebaseAuth(): Promise<FirebaseAuthModule> {
-  if (!firebaseAuthPromise) {
-    firebaseAuthPromise = import("firebase/auth");
+let modulesPromise: Promise<LoadedModules> | null = null;
+let loaded: LoadedModules | null = null;
+
+function loadModules(): Promise<LoadedModules> {
+  if (!modulesPromise) {
+    modulesPromise = Promise.all([import("@/lib/firebase"), import("firebase/auth")]).then(
+      ([firebase, sdk]) => (loaded = { firebase, sdk })
+    );
+    // A failed chunk download must not poison every later attempt.
+    modulesPromise.catch(() => {
+      modulesPromise = null;
+    });
   }
-  return firebaseAuthPromise;
+  return modulesPromise;
 }
+
+const loadFirebase = () => loadModules().then((m) => m.firebase);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -125,6 +131,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authAvailable, setAuthAvailable] = useState(true);
   const isSigningIn = useRef(false);
   const initStarted = useRef(false);
+  const preparePromise = useRef<Promise<boolean> | null>(null);
 
   useEffect(() => {
     // Prevent double initialization in React StrictMode
@@ -144,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // 1. an existing session in localStorage, or
       // 2. a return trip from the OAuth provider.
       // Neither: skip Firebase Auth entirely, ~250 KB of JS the visitor never downloads.
+      // (The login page is the exception: it loads Auth ahead of the tap, `prepareSignIn`.)
       const isRedirectReturn = isPendingRedirect();
       if (!hasExistingFirebaseSession() && !isRedirectReturn) {
         if (!cancelled) setLoading(false);
@@ -151,23 +159,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const [firebaseMod, authSdk] = await Promise.all([
-          loadFirebase(),
-          loadFirebaseAuth(),
-        ]);
+        const { firebase, sdk } = await loadModules();
 
         if (cancelled) return;
 
-        const { getAuthInstance, ensureAuthPersistence } = firebaseMod;
-        const { onAuthStateChanged, getRedirectResult } = authSdk;
-
-        const auth = getAuthInstance();
-        await ensureAuthPersistence();
+        const auth = firebase.getAuthInstance();
+        await firebase.ensureAuthPersistence();
 
         // Complete redirect-based sign-in flow if returning from OAuth
         if (isRedirectReturn) {
           try {
-            const result = await getRedirectResult(auth);
+            const result = await sdk.getRedirectResult(auth);
             if (result?.user) {
               setUser(mapFirebaseUser(result.user));
             }
@@ -186,7 +188,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
 
         // Subscribe to auth state changes
-        unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        unsubscribe = sdk.onAuthStateChanged(auth, (firebaseUser) => {
           setUser(firebaseUser ? mapFirebaseUser(firebaseUser) : null);
           setLoading(false);
         });
@@ -199,12 +201,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    // Safety net: if Firebase init never resolves, stop loading after 5s
+    // Safety net: if Firebase init never resolves, stop loading after 5s. The updater reads
+    // the CURRENT value — the closure's `loading` is the first render's, always true.
     const loadingTimeout = setTimeout(() => {
-      if (!cancelled && loading) {
-        console.warn("Firebase Auth init timeout — forcing loading=false");
-        setLoading(false);
-      }
+      if (cancelled) return;
+      setLoading((stillLoading) => {
+        if (stillLoading) console.warn("Firebase Auth init timeout — forcing loading=false");
+        return false;
+      });
     }, 5000);
 
     init();
@@ -214,71 +218,68 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTimeout(loadingTimeout);
       if (unsubscribe) unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const signInWithGoogle = async () => {
+  const prepareSignIn = useCallback((): Promise<boolean> => {
+    if (!preparePromise.current) {
+      preparePromise.current = (async () => {
+        try {
+          const { firebase } = await loadModules();
+          // getAuth() is what starts the SDK; on phones and in Safari it also prepares the
+          // popup's iframe right away, instead of inside the tap.
+          firebase.getAuthInstance();
+          await firebase.ensureAuthPersistence();
+          return true;
+        } catch (err) {
+          console.error("[auth] Firebase unavailable:", err);
+          setAuthAvailable(false);
+          preparePromise.current = null;
+          return false;
+        }
+      })();
+    }
+    return preparePromise.current;
+  }, []);
+
+  const signInWithGoogle = async (): Promise<SignInOutcome> => {
+    if (isSigningIn.current) return "cancelled";
+
+    // Google refuses to sign anyone in inside a social app's built-in browser; the way on is
+    // the phone's real browser. Decided first: it needs no SDK and works unconfigured.
+    if (isInAppBrowser() && escapeInAppBrowser()) return "escaping";
+
     if (!authAvailable) {
       throw new Error("Sign-in is unavailable: Firebase is not configured.");
     }
-    if (isSigningIn.current) return;
     isSigningIn.current = true;
 
     try {
-      const [firebaseMod, authSdk] = await Promise.all([
-        loadFirebase(),
-        loadFirebaseAuth(),
-      ]);
-      const { getAuthInstance, ensureAuthPersistence, googleProvider } =
-        firebaseMod;
-      const { signInWithPopup, signInWithRedirect } = authSdk;
+      // Fast path: the page loaded Firebase before this tap (prepareSignIn), so nothing is
+      // awaited before the popup opens. Awaiting a ~700 kB download here is what got the
+      // popup blocked on slow phones.
+      const { firebase, sdk } = loaded ?? (await loadModules());
+      const auth = firebase.getAuthInstance();
+      if (!firebase.isAuthPersistenceReady()) await firebase.ensureAuthPersistence();
+      const redirectWorks = isSameSiteAuthDomain(auth.config.authDomain, window.location.hostname);
 
-      const auth = getAuthInstance();
-      await ensureAuthPersistence();
-
-      // Check for in-app browser — these don't support popup auth
-      if (isInAppBrowser()) {
-        const escaped = escapeInAppBrowser();
-        if (escaped) {
-          isSigningIn.current = false;
-          return;
-        }
-        // If escape failed, try redirect flow
-        await signInWithRedirect(auth, googleProvider);
-        return;
-      }
-
-      // Try popup first, fall back to redirect on specific errors
       try {
-        const result = await signInWithPopup(auth, googleProvider);
-        if (result.user) {
-          setUser(mapFirebaseUser(result.user));
-        }
+        const result = await sdk.signInWithPopup(auth, firebase.googleProvider);
+        setUser(mapFirebaseUser(result.user));
+        return "signed-in";
       } catch (error) {
         const authError = error as AuthError;
-
-        // User closed popup — not an error, just cancelled
-        if (authError?.code === "auth/popup-closed-by-user") {
-          return;
+        switch (popupFailureAction(authError?.code, redirectWorks)) {
+          case "ignore":
+            return "cancelled";
+          case "retry":
+            return "popup-blocked";
+          case "redirect":
+            await sdk.signInWithRedirect(auth, firebase.googleProvider);
+            return "redirecting";
+          default:
+            console.error("signInWithPopup error:", authError?.code, authError?.message);
+            throw error;
         }
-
-        // Fallback to redirect for popup-related errors
-        if (authError?.code && REDIRECT_FALLBACK_CODES.has(authError.code)) {
-          try {
-            await signInWithRedirect(auth, googleProvider);
-            return;
-          } catch (redirectError) {
-            console.error("signInWithRedirect failed:", redirectError);
-            throw redirectError;
-          }
-        }
-
-        console.error(
-          "signInWithPopup error:",
-          authError?.code,
-          authError?.message
-        );
-        throw error;
       }
     } finally {
       isSigningIn.current = false;
@@ -286,13 +287,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    const [firebaseMod, authSdk] = await Promise.all([
-      loadFirebase(),
-      loadFirebaseAuth(),
-    ]);
-    const { getAuthInstance } = firebaseMod;
-    const { signOut: firebaseSignOut } = authSdk;
-    await firebaseSignOut(getAuthInstance());
+    const { firebase, sdk } = await loadModules();
+    await sdk.signOut(firebase.getAuthInstance());
     setUser(null);
   };
 
@@ -305,7 +301,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, authAvailable, signInWithGoogle, signOut, getIdToken }}
+      value={{ user, loading, authAvailable, prepareSignIn, signInWithGoogle, signOut, getIdToken }}
     >
       {children}
     </AuthContext.Provider>

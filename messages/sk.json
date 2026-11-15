@@ -22,7 +22,13 @@
     "signInTitle": "Prihlásenie",
     "signInDescription": "Pokračujte so svojím účtom Google.",
     "signInButton": "Prihlásiť sa cez Google",
-    "signInError": "Prihlásenie zlyhalo. Skúste to znova."
+    "signInError": "Prihlásenie zlyhalo. Skúste to znova.",
+    "inAppTitle": "Otvorte stránku v prehliadači",
+    "inAppText": "Google nedovoľuje prihlásenie vo vstavanom prehliadači aplikácie. Otvorte stránku v Safari alebo Chrome.",
+    "inAppCopy": "Kopírovať odkaz",
+    "inAppCopied": "Odkaz skopírovaný",
+    "inAppEscaping": "Otváram váš prehliadač… Ak sa nič nestane, skopírujte odkaz a vložte ho do Safari alebo Chrome.",
+    "popupBlocked": "Prehliadač zablokoval prihlasovacie okno. Ťuknite na tlačidlo ešte raz."
   },
   "landing": {
     "title": "Vaša aplikácia",
