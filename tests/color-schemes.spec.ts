@@ -6,15 +6,20 @@ import {
   derivePairRoles,
   derivePaletteRoles,
   cssVariablesFor,
+  cssBlocksForAll,
   rolesFor,
   nextSchemeId,
   assertReadable,
   contrastRatio,
   relativeLuminance,
   mix,
+  hue,
+  paletteKind,
+  TONAL_MIN_COLOURS,
   WCAG_AA_TEXT,
+  type ColorSchemeId,
 } from "@tokenwise/shared-ui/theming";
-import { config } from "../lib/prototype-config";
+import { config, landingPresentation } from "../lib/prototype-config";
 
 /**
  * The contrast floor under the deterministic pair rule.
@@ -48,6 +53,18 @@ const EXPECTED_ORDER = [
   "peacock-amber",
   "mulled-spice",
   "black-gold",
+  // Ten tonal palettes of twenty colours — four grounds, four inks, twelve lights — designed
+  // in-house for the founder's third tier (T-371, 2026-11-08), in that order.
+  "aurora-night",
+  "ember-forge",
+  "neon-tokyo",
+  "desert-dusk",
+  "coral-reef",
+  "moss-lantern",
+  "royal-velvet",
+  "glacier-mint",
+  "candy-arcade",
+  "clay-kiln",
 ];
 
 /** The five pairs the rule corrects, and what it corrects them to (spec §3). */
@@ -66,6 +83,21 @@ const ACCENTS: Record<string, { primary: string; highlight: string }> = {
   "peacock-amber": { primary: "#179CA8", highlight: "#764BA5" },
   "mulled-spice": { primary: "#EFA717", highlight: "#82AB9C" },
   "black-gold": { primary: "#CDAD69", highlight: "#AC8B56" },
+};
+
+/** The tonal palettes' accents and their series of twelve lights (the hue circle in strides of
+ * five from the accent), pinned like the corrections — generated once from the rule, then frozen. */
+const TONAL: Record<string, { primary: string; highlight: string; accents: string[] }> = {
+  "aurora-night": { primary: "#27B8E0", highlight: "#22BF92", accents: ["#27B8E0", "#C65BE8", "#22BF92", "#6F6CF0", "#76B832", "#4FA9F5", "#E65BB8", "#2FB5A8", "#9A5CF2", "#46B86A", "#3F8FE8", "#C9A43A"] },
+  "ember-forge": { primary: "#D4A53E", highlight: "#EC9530", accents: ["#D4A53E", "#E86E4D", "#B5793A", "#BD625D", "#A96F4D", "#8A9A5B", "#E8572A", "#EC9530", "#CE5841", "#F07A2B", "#6A8FA6", "#D4794A"] },
+  "neon-tokyo": { primary: "#22C47A", highlight: "#E09E1C", accents: ["#22C47A", "#9852FF", "#E09E1C", "#536EFF", "#FF2D78", "#19B6BE", "#D63CFF", "#8DB322", "#7D5FFF", "#FF6A2B", "#2BB4FF", "#FF4FA3"] },
+  "desert-dusk": { primary: "#D9A066", highlight: "#D98E8E", accents: ["#D9A066", "#A48BC2", "#C47E5A", "#6E8F8A", "#BC6652", "#9A9A4E", "#B47A8E", "#E08A5A", "#7FA3BF", "#C8643C", "#8FA37B", "#D98E8E"] },
+  "coral-reef": { primary: "#E89A35", highlight: "#FF8C42", accents: ["#E89A35", "#3AB0E0", "#FF6F61", "#24B5A6", "#E65BA3", "#CFA246", "#2E86DE", "#FF8C42", "#26A69A", "#F25F8C", "#72B53D", "#8F6DE8"] },
+  "moss-lantern": { primary: "#C9A64B", highlight: "#DA9C36", accents: ["#C9A64B", "#3C9D8A", "#B08A5E", "#7FA64A", "#BA6A41", "#8FB236", "#8A9EC2", "#DA9C36", "#4F9A5E", "#C77A2F", "#6C8C3E", "#E0714A"] },
+  "royal-velvet": { primary: "#C9A52F", highlight: "#D59E3F", accents: ["#C9A52F", "#B388E0", "#D86B3A", "#4C7BD9", "#E07A9A", "#2E9E6B", "#9F60D2", "#D59E3F", "#906DB9", "#D05166", "#41B3C4", "#C94FB5"] },
+  "glacier-mint": { primary: "#3DBFA0", highlight: "#8DB54D", accents: ["#3DBFA0", "#5AA9EE", "#CC9C50", "#6FA8A8", "#A98BDC", "#3C9B8C", "#4C8FD6", "#8DB54D", "#2FB4D8", "#C77DA0", "#52B5A8", "#7D8FE6"] },
+  "candy-arcade": { primary: "#3FB6FF", highlight: "#F59427", accents: ["#3FB6FF", "#FF3B5C", "#3BBF5E", "#F75FE0", "#D9A020", "#4D7CFF", "#FF7A2E", "#1FB8A5", "#FF5CA8", "#6CBE1E", "#9D5CFF", "#F59427"] },
+  "clay-kiln": { primary: "#C9A66B", highlight: "#D4A038", accents: ["#C9A66B", "#6E8CA8", "#D98C5A", "#7A9A4E", "#AF6E4F", "#D4A038", "#9173A0", "#C97B3A", "#3F8F86", "#B07050", "#8F8A3C", "#C1634D"] },
 };
 
 /** The darkest and the lightest colour of a palette — background and text before correction. */
@@ -107,10 +139,37 @@ test.describe("the palettes", () => {
         expect(r.primary).toBe(r.foreground);
         expect(r.highlight).toBe(r.primary);
       });
+    } else if (paletteKind(PALETTES[id].colors) === "tonal") {
+      test(`${id}: twenty colours — the accents and the series of lights are the pinned values`, () => {
+        const r = rolesFor(id);
+        expect(PALETTES[id].colors).toHaveLength(TONAL_MIN_COLOURS);
+        expect({ primary: r.primary, highlight: r.highlight, accents: r.accents }).toEqual(TONAL[id]);
+      });
+
+      test(`${id}: every ink reads on its plane and every light on a card`, () => {
+        const r = rolesFor(id);
+        expect(contrastRatio(r.cardForeground!, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.raisedForeground!, r.raised!)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.muted, r.raised!)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        for (const light of r.accents!) {
+          expect(contrastRatio(light, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        }
+      });
+
+      test(`${id}: the grounds step up from the page — card, raised plane, border — each visibly`, () => {
+        // WCAG contrast cannot tell two near-blacks apart (both sit under its 0.05 floor), so
+        // the step is in luminance: each ground at least half again as bright as the one below.
+        const r = rolesFor(id);
+        const Y = (hex: string) => relativeLuminance(hex.slice(1));
+        expect(Y(r.surface)).toBeGreaterThanOrEqual(1.5 * Y(r.background));
+        expect(Y(r.raised!)).toBeGreaterThanOrEqual(1.5 * Y(r.surface));
+        expect(Y(r.border)).toBeGreaterThanOrEqual(1.5 * Y(r.raised!));
+      });
     } else {
       test(`${id}: the accents are the pinned middle colours`, () => {
         const r = rolesFor(id);
         expect({ primary: r.primary, highlight: r.highlight }).toEqual(ACCENTS[id]);
+        expect(r.accents).toBeUndefined();
       });
     }
 
@@ -279,6 +338,205 @@ test.describe("palettes of three and four colours", () => {
   });
 });
 
+/**
+ * Palettes of twenty colours (T-371, 2026-11-08) are tonal: the pair rule and the accent rule
+ * stay as pinned above, and a twentieth colour changes the kind. Sorted by luminance, the
+ * four darkest are the grounds (page, card, raised plane, border), the four lightest the
+ * inks (words, a card's words, the raised plane's words, muted) and the twelve between are
+ * the lights: the most readable on a card is the accent, the next the second accent, and
+ * all twelve — in hue order from the accent — are the series the page gives its cards.
+ */
+test.describe("palettes of twenty colours — tonal", () => {
+  const GROUNDS = ["000000", "0A0A0A", "141414", "222222"];
+  const INKS = ["FFFFFF", "EEEEEE", "DDDDDD", "CCCCCC"];
+  const LIGHTS = ["C00000", "C06000", "A0A000", "00A000", "00A0A0", "0060C0", "6000C0", "C000C0", "C04060", "40A080", "8060A0", "A08040"];
+  /** Supplied in no particular order, as an image would be read. */
+  const TWENTY = [...LIGHTS.slice(5), ...INKS.slice(2), ...GROUNDS.slice(1), ...LIGHTS.slice(0, 5), ...INKS.slice(0, 2), ...GROUNDS.slice(0, 1)];
+
+  test("twenty colours make a palette tonal; nineteen keep it an accented palette", () => {
+    expect(TONAL_MIN_COLOURS).toBe(20);
+    expect(TWENTY).toHaveLength(20);
+    expect(paletteKind(TWENTY)).toBe("tonal");
+    expect(paletteKind(TWENTY.slice(1))).toBe("accented");
+    expect(paletteKind(["000000", "FFFFFF"])).toBe("pair");
+    expect(derivePaletteRoles(TWENTY.slice(1)).accents).toBeUndefined();
+  });
+
+  test("the four darkest are the grounds: page, card, raised plane, border — as supplied", () => {
+    const r = derivePaletteRoles(TWENTY);
+    expect([r.background, r.surface, r.raised, r.border]).toEqual(["#000000", "#0A0A0A", "#141414", "#222222"]);
+  });
+
+  test("the four lightest are the inks: words, a card's words, the raised plane's words, muted", () => {
+    const r = derivePaletteRoles(TWENTY);
+    expect([r.foreground, r.cardForeground, r.raisedForeground, r.muted]).toEqual(["#FFFFFF", "#EEEEEE", "#DDDDDD", "#CCCCCC"]);
+  });
+
+  test("the twelve between are the lights: the accent reads best on a card, the series walks the hue circle from it in strides of five", () => {
+    const r = derivePaletteRoles(TWENTY);
+    expect(r.accents).toHaveLength(12);
+    expect(r.accents![0]).toBe(r.primary);
+    // The most readable light on the card is the accent, the next the second accent.
+    const byReadability = [...LIGHTS].sort((x, y) => contrastRatio(y, r.surface) - contrastRatio(x, r.surface));
+    expect(Math.abs(hue(r.primary.slice(1)) - hue(byReadability[0]!))).toBeLessThan(1);
+    expect(r.highlight).toBe(`#${byReadability[1]}`);
+    // From the accent, every fifth light around the hue circle (five and twelve are coprime,
+    // so all twelve have their turn) — neighbouring cards far apart in hue. Each light keeps
+    // its hue when lifted toward white, to within a degree of channel rounding.
+    const byHue = [...LIGHTS].sort((x, y) => hue(x) - hue(y) || x.localeCompare(y));
+    const from = byHue.indexOf(byReadability[0]!);
+    const expected = byHue.map((_, k) => byHue[(from + k * 5) % 12]!);
+    r.accents!.forEach((light, k) => expect(Math.abs(hue(light.slice(1)) - hue(expected[k]!)), `light ${k + 1}`).toBeLessThan(1));
+    expect(new Set(r.accents).size).toBe(12);
+  });
+
+  test("a light too dark to read on a card is lifted toward white, keeping its hue", () => {
+    const r = derivePaletteRoles(TWENTY);
+    const blue = r.accents!.find((c) => Math.abs(hue(c.slice(1)) - hue("0060C0")) < 1)!;
+    expect(blue).not.toBe("#0060C0");
+    expect(contrastRatio(blue, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+  });
+
+  test("the order the twenty colours are supplied in does not matter", () => {
+    const expected = derivePaletteRoles(TWENTY);
+    expect(derivePaletteRoles([...TWENTY].reverse())).toEqual(expected);
+    expect(derivePaletteRoles([...GROUNDS, ...INKS, ...LIGHTS])).toEqual(expected);
+  });
+
+  test("hue walks the circle: red 0, yellow 60, green 120, cyan 180, blue 240, magenta 300; grey has none", () => {
+    expect(hue("FF0000")).toBe(0);
+    expect(hue("FFFF00")).toBe(60);
+    expect(hue("00FF00")).toBe(120);
+    expect(hue("00FFFF")).toBe(180);
+    expect(hue("0000FF")).toBe(240);
+    expect(hue("FF00FF")).toBe(300);
+    expect(hue("808080")).toBe(0);
+  });
+
+  test("assertReadable checks the tonal roles too, and names what failed", () => {
+    const r = derivePaletteRoles(TWENTY);
+    expect(() => assertReadable("tonal", r)).not.toThrow();
+    expect(() => assertReadable("dim-ink", { ...r, cardForeground: "#222222" })).toThrow(/"dim-ink".*card words on card/);
+    expect(() => assertReadable("dim-raised", { ...r, raisedForeground: "#222222" })).toThrow(/raised words on raised plane/);
+    expect(() => assertReadable("dim-light", { ...r, accents: [...r.accents!.slice(1), "#222222"] })).toThrow(/light 12 on card/);
+  });
+});
+
+test.describe("a tonal palette reaches the CSS", () => {
+  const tonal = COLOR_SCHEME_IDS.filter((id) => paletteKind(PALETTES[id].colors) === "tonal");
+  const others = COLOR_SCHEME_IDS.filter((id) => paletteKind(PALETTES[id].colors) !== "tonal");
+
+  test("ten palettes of twenty colours ship, after the twenty of before", () => {
+    expect(tonal).toHaveLength(10);
+    expect(COLOR_SCHEME_IDS.slice(20)).toEqual(tonal);
+  });
+
+  test("the series is --accent-1 … --accent-12, the raised plane carries the menus and secondary surfaces, the inks their planes' words", () => {
+    for (const id of tonal) {
+      const r = rolesFor(id);
+      const v = cssVariablesFor(id);
+      r.accents!.forEach((light, i) => expect(v[`--accent-${i + 1}`]).toBe(light));
+      expect(v["--accent-13"]).toBeUndefined();
+      expect(v["--card"]).toBe(r.surface);
+      for (const token of ["--popover", "--secondary", "--muted", "--accent"]) expect(v[token]).toBe(r.raised);
+      expect(v["--card-foreground"]).toBe(r.cardForeground);
+      for (const token of ["--popover-foreground", "--secondary-foreground", "--accent-foreground"]) expect(v[token]).toBe(r.raisedForeground);
+      expect(v["--muted-foreground"]).toBe(r.muted);
+    }
+  });
+
+  test("a pair or an accented palette emits no series — its cards paint the page's accent, as before", () => {
+    for (const id of others) {
+      const v = cssVariablesFor(id);
+      expect(v["--accent-1"]).toBeUndefined();
+      expect(v["--popover"]).toBe(v["--card"]);
+      expect(v["--card-foreground"]).toBe(v["--foreground"]);
+    }
+  });
+});
+
+/**
+ * The light variant — a paid add-on (T-400, founder decision 2026-11-09).
+ *
+ * Dark stays the default and the baseline of every project (golden rule). A project whose
+ * brand is light opts in, and the SAME token layer derives a light counterpart of every
+ * palette: the rule is mirrored — the LIGHTEST colour is the page and the DARKEST the words,
+ * grounds and inks swapped end for end, and contrast moved by lifting toward black rather than
+ * white. No colour is hard-coded and no palette is hand-written twice: `appearance` is one
+ * argument through the same deterministic rule. Every text/ground pair still meets WCAG AA.
+ */
+test.describe("the light variant (T-400)", () => {
+  test("dark is the default — the appearance argument omitted derives exactly the dark roles", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(rolesFor(id, "dark")).toEqual(rolesFor(id));
+      expect(cssVariablesFor(id, "dark")).toEqual(cssVariablesFor(id));
+      expect(derivePaletteRoles(PALETTES[id].colors, "dark")).toEqual(derivePaletteRoles(PALETTES[id].colors));
+    }
+  });
+
+  for (const id of COLOR_SCHEME_IDS) {
+    test(`${id}: the light variant paints every text it has on WCAG AA`, () => {
+      const r = rolesFor(id, "light");
+      // The full contrast suite the dark rule meets, mirrored: words on the page, words and
+      // muted on a card, the accent as text, and a button's own text on the accent.
+      expect(contrastRatio(r.foreground, r.background)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.foreground, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.muted, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.primary, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.background, r.primary)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      // A tonal palette carries two more planes and twelve lights; each must read too.
+      if (r.raised) {
+        expect(contrastRatio(r.cardForeground!, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.raisedForeground!, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.muted, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        for (const light of r.accents!) expect(contrastRatio(light, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      }
+      // assertReadable is the build-time gate — it must pass for the light roles too.
+      expect(() => assertReadable(id, r)).not.toThrow();
+    });
+
+    test(`${id}: the light page is the lightest colour, its words the darkest — the dark rule mirrored`, () => {
+      const [darker, lighter] = darkerAndLighter(id);
+      const r = rolesFor(id, "light");
+      // The page is at least as light as the palette's lightest colour (it may be deepened
+      // toward white); the words at least as dark as the darkest (they may be pulled to black).
+      expect(relativeLuminance(r.background)).toBeGreaterThanOrEqual(relativeLuminance(lighter));
+      expect(relativeLuminance(r.foreground)).toBeLessThanOrEqual(relativeLuminance(darker));
+      // And the light page is lighter than its own words — the whole point of a light theme.
+      expect(relativeLuminance(r.background)).toBeGreaterThan(relativeLuminance(r.foreground));
+    });
+  }
+
+  test("a tonal light palette steps its grounds DOWN from the page — card, raised, border each darker", () => {
+    const tonal = COLOR_SCHEME_IDS.find((id) => paletteKind(PALETTES[id].colors) === "tonal")!;
+    const r = rolesFor(tonal, "light");
+    const Y = (hex: string) => relativeLuminance(hex.slice(1));
+    // The mirror of the dark step: each plane sits below the page so cards read against it.
+    expect(Y(r.surface)).toBeLessThan(Y(r.background));
+    expect(Y(r.raised!)).toBeLessThan(Y(r.surface));
+    expect(Y(r.border!)).toBeLessThan(Y(r.raised!));
+  });
+
+  test("the light derivation is deterministic and ignores the order of the colours", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      const colours = PALETTES[id].colors;
+      expect(derivePaletteRoles([...colours].reverse(), "light")).toEqual(derivePaletteRoles(colours, "light"));
+    }
+  });
+
+  test("every palette's light CSS block differs from its dark one, keyed by the same data-scheme", () => {
+    const dark = cssBlocksForAll("dark");
+    const light = cssBlocksForAll("light");
+    expect(cssBlocksForAll()).toBe(dark);
+    expect(light).not.toBe(dark);
+    // Same selectors — the build ships ONE variant; the scheme id a visitor cycles is unchanged.
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(light).toContain(`html[data-scheme="${id}"]{`);
+      expect(cssVariablesFor(id, "light")["--background"]).toBe(rolesFor(id, "light").background);
+    }
+  });
+});
+
 test.describe("colour scheme reaches the page", () => {
   test("html carries the configured scheme and its background", async ({ page }) => {
     await page.goto("./");
@@ -298,5 +556,54 @@ test.describe("colour scheme reaches the page", () => {
       getComputedStyle(document.documentElement).getPropertyValue("--highlight").trim()
     );
     expect(highlight.toLowerCase()).toBe(rolesFor(config.theme.colorScheme).highlight.toLowerCase());
+  });
+
+  test("under a tonal palette every card and step takes its own light; under any other palette they paint the page's accent", async ({ page }) => {
+    // The series paints the editorial bento and steps; a config without them has nothing to show.
+    const sections: readonly string[] = config.patterns.landing?.sections ?? [];
+    test.skip(landingPresentation(config) !== "editorial" || !sections.includes("features"), "no editorial bento in this config");
+    await page.goto("./");
+    const cards = page.locator("[data-bento] > li");
+    const steps = page.locator("[data-steps] > li");
+    await expect(cards.nth(1)).toBeVisible();
+    const accentOf = (locator: ReturnType<typeof page.locator>) =>
+      locator.evaluate((el) => [
+        getComputedStyle(el).getPropertyValue("--primary").trim().toLowerCase(),
+        getComputedStyle(el).getPropertyValue("--highlight").trim().toLowerCase(),
+      ]);
+    const isTonal = (id: ColorSchemeId) => paletteKind(PALETTES[id].colors) === "tonal";
+
+    // What the series paints under one palette: a tonal one hands each card and step the next
+    // of its lights, any other leaves every card on the page's own accent and second accent.
+    const expectSeries = async (id: ColorSchemeId) => {
+      const r = rolesFor(id);
+      const cardCount = Math.min(await cards.count(), 6);
+      const stepCount = Math.min(await steps.count(), 4);
+      if (!isTonal(id)) {
+        const accent = [r.primary.toLowerCase(), r.highlight.toLowerCase()];
+        for (let i = 0; i < cardCount; i++) expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual(accent);
+        return;
+      }
+      for (let i = 0; i < cardCount; i++) {
+        const light = r.accents![i]!.toLowerCase();
+        expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual([light, light]);
+      }
+      for (let i = 0; i < stepCount; i++) {
+        const light = r.accents![6 + i]!.toLowerCase();
+        expect(await accentOf(steps.nth(i)), `${id} step ${i + 1}`).toEqual([light, light]);
+      }
+    };
+
+    // The palette the customer chose first — it may itself be tonal (traweller, royal-velvet,
+    // 2026-11-15: the old expectation of the page's accent failed every tonal prototype).
+    const configured = config.theme.colorScheme;
+    await expectSeries(configured);
+
+    // Then the other kind, so both rules are proved whichever the config chose.
+    const other = COLOR_SCHEME_IDS.find((id) => isTonal(id) !== isTonal(configured))!;
+    await page.evaluate((id) => {
+      document.documentElement.dataset.scheme = id;
+    }, other);
+    await expectSeries(other);
   });
 });

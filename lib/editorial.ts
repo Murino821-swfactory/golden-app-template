@@ -118,3 +118,94 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
   return [tiles.slice(0, half), tiles.slice(half)];
 }
 
+
+/**
+ * The light loops (T-340, after framer.com, vercel.com, linear.app and apple.com): short
+ * seamless videos rendered in Blender from `scripts/motion/<name>.py` — neutral light on
+ * black, so the page screens them onto any palette and tints them with the palette's second
+ * accent (`editorial.css`, `.editorial-light`). Since T-369 (the founder's pick of the `stage`
+ * scene among the three of T-368, `stage.css`) the loops are the stage's: `stage-field`, a
+ * board of mini-LEDs behind the headline; `stage-slab`, the device in the first feature card.
+ * The close keeps T-340's `closing-light`, ribbons of light across the band (T-374: the founder
+ * picked them over the stage's orb).
+ *
+ * T-350 (2026-11-11, the founder's pick in the T-349 lesson: a loop library) adds four more
+ * backlight motifs in the same language — `pulse-ring`, `orbit-tiles`, `horizon-sweep`,
+ * `data-lines` — so each project can wear a different hero backlight for €0 (one render serves
+ * every project and palette). A project chooses with the one `patterns.landing.motion` token
+ * (`HERO_LOOPS` below); every loop ships rendered, so this list is what the asset tests cover.
+ */
+export const MOTION_LOOPS = [
+  "stage-field",
+  "stage-slab",
+  "closing-light",
+  "pulse-ring",
+  "orbit-tiles",
+  "horizon-sweep",
+  "data-lines",
+] as const;
+export type MotionLoopName = (typeof MOTION_LOOPS)[number];
+
+/**
+ * The backlight loops a project may choose between for its hero — the T-350 library. The stage
+ * board (`stage-field`) is the default and leads; the four T-350 motifs join it. `stage-slab`
+ * and `closing-light` keep their fixed roles (the first feature card, the closing band) and are
+ * not hero choices, so they are not offered here.
+ */
+export const HERO_LOOPS = ["stage-field", "pulse-ring", "orbit-tiles", "horizon-sweep", "data-lines"] as const;
+export type HeroLoopName = (typeof HERO_LOOPS)[number];
+export const DEFAULT_HERO_LOOP: HeroLoopName = "stage-field";
+
+/** The hero backlight a config names, or the stage board when it names none (or something stale). Pure. */
+export function heroLoop(motion: string | undefined): HeroLoopName {
+  return (HERO_LOOPS as readonly string[]).includes(motion ?? "") ? (motion as HeroLoopName) : DEFAULT_HERO_LOOP;
+}
+
+/**
+ * The hero archetype a prototype brief picks (factory-web T-370, the project chat's "which hero
+ * does the landing open with?"): `brand` is the project's logo in black lacquer
+ * (blender/logo_hero.py), `product` is the built app on a 3D phone (blender/phone_mockup.py),
+ * `light` is the palette-agnostic light loop the stage paints today (the `HERO_LOOPS` above).
+ * The orchestrator resolves the brief's pick and records it on `prototypes/{id}.hero` (T-373);
+ * the template reads it with `heroArchetype` below and the stage honours it (T-419).
+ *
+ * `brand` and `product` each need a render a prototype has not got at build time — brand a logo
+ * (coordinates with T-353/T-350), product a screenshot of the first publish (T-351) — so until
+ * those assets land both fall back to the `light` loop, and a build never ships a blank hero. The
+ * archetype is still carried to the DOM (`data-hero-archetype`, `hero.tsx`), so the pick is
+ * honoured and observable, and a brand/product scene can key off it the moment it exists.
+ */
+export const HERO_ARCHETYPES = ["brand", "product", "light"] as const;
+export type HeroArchetype = (typeof HERO_ARCHETYPES)[number];
+export const DEFAULT_HERO_ARCHETYPE: HeroArchetype = "light";
+
+/** The hero archetype a config names, or `light` when it names none or something stale — mirrors
+ *  the orchestrator's resolveHero (T-373): a build is never failed over the pick. Pure. */
+export function heroArchetype(hero: string | null | undefined): HeroArchetype {
+  return (HERO_ARCHETYPES as readonly string[]).includes(hero ?? "") ? (hero as HeroArchetype) : DEFAULT_HERO_ARCHETYPE;
+}
+
+export interface MotionLoop {
+  poster: string;
+  /** VP9 WebM first, H.264 MP4 for Safari; `small` is the same file at half the width
+   * (`<name>-sm`), what a phone loads (`MOTION_SMALL_QUERY`, `LightLoop`). */
+  sources: { src: string; type: string; small: string }[];
+}
+
+/** A phone, by the page's own `sm` breakpoint (`@media (min-width: 640px)` everywhere in the editorial styles). */
+export const MOTION_SMALL_QUERY = "(max-width: 639px)";
+
+/** One loop's files under this build's base path. */
+export function motionLoop(basePath: string, name: MotionLoopName): MotionLoop {
+  const base = `${basePath}/motion/${name}`;
+  return {
+    poster: `${base}.webp`,
+    sources: [
+      { src: `${base}.webm`, type: "video/webm", small: `${base}-sm.webm` },
+      { src: `${base}.mp4`, type: "video/mp4", small: `${base}-sm.mp4` },
+    ],
+  };
+}
+
+/** What one loop's three files may weigh together — every prototype ships every loop. */
+export const MOTION_BUDGET_BYTES = 1_200_000;

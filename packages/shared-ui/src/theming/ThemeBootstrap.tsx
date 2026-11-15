@@ -1,4 +1,4 @@
-import { COLOR_SCHEME_IDS, cssBlocksForAll } from "./color-schemes";
+import { COLOR_SCHEME_IDS, cssBlocksForAll, type Appearance } from "./color-schemes";
 import { FONT_IDS } from "./font-families";
 
 /**
@@ -22,13 +22,21 @@ export function themeBootstrapScript(palettes: boolean): string {
   return `try{var d=document.documentElement;${scheme}var f=localStorage.getItem('font');if(${JSON.stringify(FONT_IDS)}.indexOf(f)>-1){d.dataset.font=f}}catch(e){}`;
 }
 
-export function ThemeBootstrap({ palettes = false }: { palettes?: boolean }) {
+export function ThemeBootstrap({
+  palettes = false,
+  appearance = "dark",
+}: {
+  palettes?: boolean;
+  /** The project's variant (T-400). Dark by default — the add-on ships ONE variant, so the
+   * blocks are emitted in the chosen appearance; there is no visitor dark/light toggle. */
+  appearance?: Appearance;
+}) {
   return (
     <>
       <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript(palettes) }} />
       {/* Every palette as a `data-scheme` rule, so switching is an attribute write. Only
           when the host turned palettes on — tokenwise.sk does not in wave 1. */}
-      {palettes && <style dangerouslySetInnerHTML={{ __html: cssBlocksForAll() }} />}
+      {palettes && <style dangerouslySetInnerHTML={{ __html: cssBlocksForAll(appearance) }} />}
     </>
   );
 }
