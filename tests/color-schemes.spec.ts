@@ -6,6 +6,7 @@ import {
   derivePairRoles,
   derivePaletteRoles,
   cssVariablesFor,
+  cssBlocksForAll,
   rolesFor,
   nextSchemeId,
   assertReadable,
@@ -16,6 +17,7 @@ import {
   paletteKind,
   TONAL_MIN_COLOURS,
   WCAG_AA_TEXT,
+  type ColorSchemeId,
 } from "@tokenwise/shared-ui/theming";
 import { config, landingPresentation } from "../lib/prototype-config";
 
@@ -453,6 +455,88 @@ test.describe("a tonal palette reaches the CSS", () => {
   });
 });
 
+/**
+ * The light variant — a paid add-on (T-400, founder decision 2026-11-09).
+ *
+ * Dark stays the default and the baseline of every project (golden rule). A project whose
+ * brand is light opts in, and the SAME token layer derives a light counterpart of every
+ * palette: the rule is mirrored — the LIGHTEST colour is the page and the DARKEST the words,
+ * grounds and inks swapped end for end, and contrast moved by lifting toward black rather than
+ * white. No colour is hard-coded and no palette is hand-written twice: `appearance` is one
+ * argument through the same deterministic rule. Every text/ground pair still meets WCAG AA.
+ */
+test.describe("the light variant (T-400)", () => {
+  test("dark is the default — the appearance argument omitted derives exactly the dark roles", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(rolesFor(id, "dark")).toEqual(rolesFor(id));
+      expect(cssVariablesFor(id, "dark")).toEqual(cssVariablesFor(id));
+      expect(derivePaletteRoles(PALETTES[id].colors, "dark")).toEqual(derivePaletteRoles(PALETTES[id].colors));
+    }
+  });
+
+  for (const id of COLOR_SCHEME_IDS) {
+    test(`${id}: the light variant paints every text it has on WCAG AA`, () => {
+      const r = rolesFor(id, "light");
+      // The full contrast suite the dark rule meets, mirrored: words on the page, words and
+      // muted on a card, the accent as text, and a button's own text on the accent.
+      expect(contrastRatio(r.foreground, r.background)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.foreground, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.muted, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.primary, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      expect(contrastRatio(r.background, r.primary)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      // A tonal palette carries two more planes and twelve lights; each must read too.
+      if (r.raised) {
+        expect(contrastRatio(r.cardForeground!, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.raisedForeground!, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        expect(contrastRatio(r.muted, r.raised)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+        for (const light of r.accents!) expect(contrastRatio(light, r.surface)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
+      }
+      // assertReadable is the build-time gate — it must pass for the light roles too.
+      expect(() => assertReadable(id, r)).not.toThrow();
+    });
+
+    test(`${id}: the light page is the lightest colour, its words the darkest — the dark rule mirrored`, () => {
+      const [darker, lighter] = darkerAndLighter(id);
+      const r = rolesFor(id, "light");
+      // The page is at least as light as the palette's lightest colour (it may be deepened
+      // toward white); the words at least as dark as the darkest (they may be pulled to black).
+      expect(relativeLuminance(r.background)).toBeGreaterThanOrEqual(relativeLuminance(lighter));
+      expect(relativeLuminance(r.foreground)).toBeLessThanOrEqual(relativeLuminance(darker));
+      // And the light page is lighter than its own words — the whole point of a light theme.
+      expect(relativeLuminance(r.background)).toBeGreaterThan(relativeLuminance(r.foreground));
+    });
+  }
+
+  test("a tonal light palette steps its grounds DOWN from the page — card, raised, border each darker", () => {
+    const tonal = COLOR_SCHEME_IDS.find((id) => paletteKind(PALETTES[id].colors) === "tonal")!;
+    const r = rolesFor(tonal, "light");
+    const Y = (hex: string) => relativeLuminance(hex.slice(1));
+    // The mirror of the dark step: each plane sits below the page so cards read against it.
+    expect(Y(r.surface)).toBeLessThan(Y(r.background));
+    expect(Y(r.raised!)).toBeLessThan(Y(r.surface));
+    expect(Y(r.border!)).toBeLessThan(Y(r.raised!));
+  });
+
+  test("the light derivation is deterministic and ignores the order of the colours", () => {
+    for (const id of COLOR_SCHEME_IDS) {
+      const colours = PALETTES[id].colors;
+      expect(derivePaletteRoles([...colours].reverse(), "light")).toEqual(derivePaletteRoles(colours, "light"));
+    }
+  });
+
+  test("every palette's light CSS block differs from its dark one, keyed by the same data-scheme", () => {
+    const dark = cssBlocksForAll("dark");
+    const light = cssBlocksForAll("light");
+    expect(cssBlocksForAll()).toBe(dark);
+    expect(light).not.toBe(dark);
+    // Same selectors — the build ships ONE variant; the scheme id a visitor cycles is unchanged.
+    for (const id of COLOR_SCHEME_IDS) {
+      expect(light).toContain(`html[data-scheme="${id}"]{`);
+      expect(cssVariablesFor(id, "light")["--background"]).toBe(rolesFor(id, "light").background);
+    }
+  });
+});
+
 test.describe("colour scheme reaches the page", () => {
   test("html carries the configured scheme and its background", async ({ page }) => {
     await page.goto("./");
@@ -474,7 +558,7 @@ test.describe("colour scheme reaches the page", () => {
     expect(highlight.toLowerCase()).toBe(rolesFor(config.theme.colorScheme).highlight.toLowerCase());
   });
 
-  test("under a tonal palette every card and step takes its own light; under the configured palette they paint the page's accent", async ({ page }) => {
+  test("under a tonal palette every card and step takes its own light; under any other palette they paint the page's accent", async ({ page }) => {
     // The series paints the editorial bento and steps; a config without them has nothing to show.
     const sections: readonly string[] = config.patterns.landing?.sections ?? [];
     test.skip(landingPresentation(config) !== "editorial" || !sections.includes("features"), "no editorial bento in this config");
@@ -487,24 +571,39 @@ test.describe("colour scheme reaches the page", () => {
         getComputedStyle(el).getPropertyValue("--primary").trim().toLowerCase(),
         getComputedStyle(el).getPropertyValue("--highlight").trim().toLowerCase(),
       ]);
+    const isTonal = (id: ColorSchemeId) => paletteKind(PALETTES[id].colors) === "tonal";
 
-    const page_ = rolesFor(config.theme.colorScheme);
-    expect(await accentOf(cards.nth(1))).toEqual([page_.primary.toLowerCase(), page_.highlight.toLowerCase()]);
+    // What the series paints under one palette: a tonal one hands each card and step the next
+    // of its lights, any other leaves every card on the page's own accent and second accent.
+    const expectSeries = async (id: ColorSchemeId) => {
+      const r = rolesFor(id);
+      const cardCount = Math.min(await cards.count(), 6);
+      const stepCount = Math.min(await steps.count(), 4);
+      if (!isTonal(id)) {
+        const accent = [r.primary.toLowerCase(), r.highlight.toLowerCase()];
+        for (let i = 0; i < cardCount; i++) expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual(accent);
+        return;
+      }
+      for (let i = 0; i < cardCount; i++) {
+        const light = r.accents![i]!.toLowerCase();
+        expect(await accentOf(cards.nth(i)), `${id} card ${i + 1}`).toEqual([light, light]);
+      }
+      for (let i = 0; i < stepCount; i++) {
+        const light = r.accents![6 + i]!.toLowerCase();
+        expect(await accentOf(steps.nth(i)), `${id} step ${i + 1}`).toEqual([light, light]);
+      }
+    };
 
-    const tonal = COLOR_SCHEME_IDS.find((id) => paletteKind(PALETTES[id].colors) === "tonal")!;
+    // The palette the customer chose first — it may itself be tonal (traweller, royal-velvet,
+    // 2026-11-15: the old expectation of the page's accent failed every tonal prototype).
+    const configured = config.theme.colorScheme;
+    await expectSeries(configured);
+
+    // Then the other kind, so both rules are proved whichever the config chose.
+    const other = COLOR_SCHEME_IDS.find((id) => isTonal(id) !== isTonal(configured))!;
     await page.evaluate((id) => {
       document.documentElement.dataset.scheme = id;
-    }, tonal);
-    const r = rolesFor(tonal);
-    const cardCount = Math.min(await cards.count(), 6);
-    for (let i = 0; i < cardCount; i++) {
-      const light = r.accents![i]!.toLowerCase();
-      expect(await accentOf(cards.nth(i)), `card ${i + 1}`).toEqual([light, light]);
-    }
-    const stepCount = Math.min(await steps.count(), 4);
-    for (let i = 0; i < stepCount; i++) {
-      const light = r.accents![6 + i]!.toLowerCase();
-      expect(await accentOf(steps.nth(i)), `step ${i + 1}`).toEqual([light, light]);
-    }
+    }, other);
+    await expectSeries(other);
   });
 });
