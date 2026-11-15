@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { navFor } from "@tokenwise/shared-ui";
 import { BRAND_SITE } from "@/lib/editorial";
@@ -16,13 +17,16 @@ export function Footer() {
   const t = useTranslations("footer");
   return (
     <footer className="border-t border-border/60 px-4 py-6 text-center text-sm text-muted-foreground">
+      {/* The page's index: on an editorial page its links arrive with Apple's link-in
+          (T-340, `editorial.css` — `data-index`, `--i`). */}
       <nav
+        data-index
         aria-label="tokenwise.sk"
         className="mb-3 flex flex-wrap justify-center text-xs"
         style={{ fontFamily: "var(--shared-font-mono)" }}
       >
-        {SITE_NAV.map((item) => (
-          <a key={item.label} href={item.href} className={NAV_LINK}>
+        {SITE_NAV.map((item, i) => (
+          <a key={item.label} href={item.href} className={NAV_LINK} style={{ "--i": i } as CSSProperties}>
             {item.label}
           </a>
         ))}

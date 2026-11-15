@@ -10,7 +10,7 @@ import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
 import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
-import { heroNamePlacement, heroObjectKind } from "@/lib/editorial";
+import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
 import { landingActionHref } from "@/lib/landing-action";
@@ -18,6 +18,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
 /**
@@ -40,6 +41,12 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  *
  * `overflow-clip`, not `-hidden`: a hidden overflow is a scroll container, and the
  * scroll-driven reveals in `editorial.css` would measure against it instead of the page.
+ *
+ * T-340/T-368 (after vercel.com's backlit prism, apple.com's local dimming and framer.com's
+ * prompt box): with no AI image the headline stands in front of the backlight — a Blender loop
+ * of a board of mini-LEDs, whole zones switching on (`LightLoop`, tinted by the palette; placed
+ * by `stage.css`) — and a light runs along the frame's edge. An AI image owns the hero, so it
+ * gets no light.
  */
 
 const listings = config.patterns.listings;
@@ -146,6 +153,11 @@ export function HeroSection() {
   const hasFrame = kind !== "none";
   const name = heroNamePlacement({ hasFrame, customEyebrow: Boolean(eyebrow) });
 
+  // The hero the brief opened on (T-419, honouring the orchestrator's resolveHero pick, T-373):
+  // brand, product or light. brand and product fall back to the light backlight below until their
+  // renders exist, so the pick changes nothing it draws yet — but the stage carries it, so the
+  // choice is honoured and a brand/product scene can key off it the day it lands.
+  const archetype = heroArchetype(config.hero);
   const background = hero.src && hero.placement === "background" ? hero.src : null;
   const object = hero.src && hero.placement === "object" ? hero.src : null;
   const icons = Array.from(new Set((landing?.features ?? []).flatMap((f) => (f.icon ? [f.icon] : []))));
@@ -154,8 +166,14 @@ export function HeroSection() {
   const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
 
   return (
-    <section id="hero" data-section="hero" className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
+    <section id="hero" data-section="hero" data-hero-archetype={archetype} className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
       {background ? <HeroBackground key={background} src={background} /> : null}
+      {/* The backlight (T-368 stage, `stage.css`): a light loop behind the headline — the stage
+          board by default, or whichever of the T-350 library `patterns.landing.motion` names; an
+          AI image owns the hero, so it gets no light. */}
+      {!background && !object && (
+        <LightLoop name={heroLoop(config.patterns.landing?.motion)} marker="data-hero-light" className="editorial-light-hero" />
+      )}
 
       <div
         className={cn(
@@ -207,6 +225,7 @@ export function HeroSection() {
               device switcher narrows it to a tablet or a phone (data-device). */}
           <div data-device={device} className="editorial-fold editorial-enter relative mt-14 overflow-clip sm:mt-16">
             <div data-hero-frame data-device={device} className="editorial-frame mx-auto w-full rounded-t-3xl">
+              <span aria-hidden="true" data-frame-run className="editorial-run" />
               <div className="editorial-frame-bar flex items-center gap-1.5 px-4 py-2">
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
