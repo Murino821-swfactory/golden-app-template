@@ -8,7 +8,7 @@ export * from "firebase/firestore";
 
 export const config = parsePrototypeConfig({ ...full, locales: ["en", "sk", "de"], content: { ...full.content, de: full.content.en } });
 const user = { uid: "record-keyboard-user", email: "keyboard@example.test", displayName: "Synthetic visitor", photoURL: null, createdAt: null };
-const auth = { user, loading: false, authAvailable: true, signInWithGoogle: async () => {}, signOut: async () => {}, getIdToken: async () => null };
+const auth = { user, loading: false, authAvailable: true, prepareSignIn: async () => true, signInWithGoogle: async () => "signed-in" as const, signOut: async () => {}, getIdToken: async () => null };
 const AuthContext = createContext(auth);
 export function AuthProvider({ children }: { children: ReactNode }) { return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>; }
 export function useAuthContext() { return useContext(AuthContext); }

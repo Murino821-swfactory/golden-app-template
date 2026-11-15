@@ -22,7 +22,13 @@
     "signInTitle": "Přihlášení",
     "signInDescription": "Pokračujte se svým účtem Google.",
     "signInButton": "Přihlásit se přes Google",
-    "signInError": "Přihlášení se nezdařilo. Zkuste to prosím znovu."
+    "signInError": "Přihlášení se nezdařilo. Zkuste to prosím znovu.",
+    "inAppTitle": "Otevřete stránku v prohlížeči",
+    "inAppText": "Google nepovoluje přihlášení ve vestavěném prohlížeči aplikace. Otevřete stránku v Safari nebo Chrome.",
+    "inAppCopy": "Kopírovat odkaz",
+    "inAppCopied": "Odkaz zkopírován",
+    "inAppEscaping": "Otevírám váš prohlížeč… Pokud se nic nestane, zkopírujte odkaz a vložte ho do Safari nebo Chrome.",
+    "popupBlocked": "Prohlížeč zablokoval přihlašovací okno. Klepněte na tlačítko znovu."
   },
   "landing": {
     "title": "Vaše aplikace",
