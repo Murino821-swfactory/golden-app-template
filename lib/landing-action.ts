@@ -29,3 +29,16 @@ export function landingActionHref(patterns: PrototypeConfig["patterns"]): string
   }
   return null;
 }
+
+/**
+ * The `prefetch` of the landing action's <Link>. Next.js prefetches an on-screen link together
+ * with the code of the page it opens; behind the dashboard (and a branch's own app routes) that
+ * is Firebase Auth + Firestore, ~0.7 MB that every anonymous visitor of the landing downloaded
+ * for a page that sends them on to /login (measured on five live prototypes, 2026-11-15,
+ * sw-factory T-438). Only the sign-in page is light enough (~4 kB) to fetch ahead of the tap;
+ * every other route is fetched on the tap. Anchors and other sites are never prefetched.
+ */
+export function landingActionPrefetch(action: string | null): false | undefined {
+  if (!action?.startsWith("/") || action === "/login") return undefined;
+  return false;
+}
