@@ -12,7 +12,7 @@ import { HeroImageControls } from "./hero-image-controls";
 import { CopyRewriteControls } from "./copy-rewrite-panel";
 import { ProductPreview } from "./product-preview";
 import { config } from "@/lib/prototype-config";
-import { landingActionHref } from "@/lib/landing-action";
+import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
 
 /**
  * Hero section — the first thing a visitor sees.
@@ -86,7 +86,7 @@ export function HeroSection() {
           <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">{subheadline}</p>
           {href && (
             <Button asChild size="lg" className="h-11">
-              <Link href={href}>{content.cta?.label ?? t("cta")}</Link>
+              <Link href={href} prefetch={landingActionPrefetch(href)}>{content.cta?.label ?? t("cta")}</Link>
             </Button>
           )}
         </div>

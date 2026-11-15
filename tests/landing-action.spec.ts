@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { config, contentFor } from "../lib/prototype-config";
-import { landingActionHref } from "../lib/landing-action";
+import { landingActionHref, landingActionPrefetch } from "../lib/landing-action";
 
 test("landing next step follows the configured action, including customer routes", () => {
   expect(landingActionHref({ landing: { sections: ["hero"] }, cta: { href: "/analyze" } })).toBe("/analyze");
@@ -18,6 +18,21 @@ test("landing next step follows the configured action, including customer routes
   expect(landingActionHref({ landing: { sections: ["hero"] }, cta: { href: "https://example.com/join" } })).toBe("https://example.com/join");
   // An unused contact pattern does not mean that a contact section is rendered.
   expect(landingActionHref({ landing: { sections: ["hero"] }, contactForm: {} })).toBeNull();
+});
+
+test("a landing action fetches its page ahead of the tap only for the sign-in page", () => {
+  // Next.js prefetches an on-screen <Link> with the code of the page it opens. Behind the
+  // dashboard that is Firebase Auth + Firestore: ~0.7 MB every anonymous visitor of the landing
+  // downloaded for a page that sends them on to /login (bizlaunch-cee, continue, fundraising,
+  // gitpulse-studio, unbroken — measured 2026-11-15, sw-factory T-438).
+  expect(landingActionPrefetch("/login")).toBeUndefined();
+  for (const route of ["/dashboard", "/messages", "/studio", "/checkin", "/workspace"]) {
+    expect(landingActionPrefetch(route), route).toBe(false);
+  }
+  // Anchors and other sites are never prefetched by Next.js: nothing to decide.
+  expect(landingActionPrefetch("#contact")).toBeUndefined();
+  expect(landingActionPrefetch("https://example.com/join")).toBeUndefined();
+  expect(landingActionPrefetch(null)).toBeUndefined();
 });
 
 test("the hero offers the customer's configured next step", async ({ page }) => {
