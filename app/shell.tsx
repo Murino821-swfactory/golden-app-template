@@ -10,6 +10,7 @@ import { Footer } from "@/components/layout/footer";
 import { IdeaChat } from "@/components/idea-chat";
 import { config } from "@/lib/prototype-config";
 import { landingMetadata } from "@/lib/seo";
+import { htmlAppearance } from "@/lib/theme-appearance";
 import { ThemeBootstrap } from "@tokenwise/shared-ui";
 
 /**
@@ -58,6 +59,11 @@ export async function PrototypeShell({
   setRequestLocale(locale);
   const messages = await getMessages({ locale });
 
+  // The project's variant (T-400). Dark (the default) keeps the `.dark` class and marks
+  // nothing, so the document is byte-for-byte what it was; light drops `.dark` and marks the
+  // page so the light-only CSS refinements apply, under the palette's light tokens below.
+  const { darkClass, dataAppearance } = htmlAppearance(config.theme.appearance);
+
   return (
     // EVERY palette ships as a CSS rule keyed by `data-scheme`, computed at build time by
     // the deterministic rule in @tokenwise/shared-ui (theming/color-schemes.ts), so switching one is an attribute
@@ -69,15 +75,16 @@ export async function PrototypeShell({
     // visit, the visitor's pick after that.
     <html
       lang={locale}
-      className={cn("font-sans", "dark")}
+      className={cn("font-sans", darkClass && "dark")}
       data-scheme={config.theme.colorScheme}
+      data-appearance={dataAppearance}
       data-font={config.patterns.landing?.font ?? "inter"}
       // ThemeBootstrap rewrites data-scheme / data-font before React hydrates; the
       // mismatch is the point, not a bug.
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeBootstrap palettes />
+        <ThemeBootstrap palettes appearance={config.theme.appearance} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page

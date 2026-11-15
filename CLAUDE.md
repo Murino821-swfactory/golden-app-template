@@ -19,10 +19,10 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Which sections render | `prototype.config.json` → `patterns.landing.sections` |
 | How the landing reads (editorial / story / document), its typeface | `prototype.config.json` → `patterns.landing.presentation` (omit = `editorial`), `patterns.landing.font` (omit = `inter`) — see "The editorial presentation" below |
 | Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
-| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the twenty palettes and the rule) |
+| Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
-| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
+| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
@@ -30,9 +30,13 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
+| Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
+| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
+| Google sign-in (popup in the tap, in-app escape, redirect fallback) | `contexts/auth-context.tsx`, `app/[locale]/login/page.tsx`, `lib/sign-in-policy.ts`, `lib/auth-browser.ts` — see "Google sign-in"; MUST pattern in sw-factory `docs/factory/GOOGLE_SIGN_IN.md` |
 
 ## Critical Rules for Fast Implementation
 
@@ -137,11 +141,13 @@ components/
   auth/auth-guard.tsx    # Protects routes, redirects to /login
   layout/                # header.tsx (adapter → @tokenwise/shared-ui), footer.tsx
 hooks/
-  use-auth.ts            # useAuth() → { user, loading, signInWithGoogle, signOut, getIdToken }
+  use-auth.ts            # useAuth() → { user, loading, prepareSignIn, signInWithGoogle → SignInOutcome, signOut, getIdToken }
   use-hero-image.ts      # the hero background + the creator's/founder's controls state
 lib/
   editorial.ts           # pure rules of the editorial page: bentoSpan, splitDisplay, heroObjectKind, heroNamePlacement
   firebase.ts            # getCollectionPath(), getFirestoreInstance(), ensureAuthPersistence()
+  sign-in-policy.ts      # pure: popupFailureAction, isSameSiteAuthDomain, SignInOutcome
+  auth-browser.ts        # in-app browser detection (TikTok, Android WebView) and the escape to Safari/Chrome
   records.ts             # grid rules, pure: sandbox paths, batch ops, validation, filter, sort
   records-firestore.ts   # the only place record ops touch Firestore (batch, first-seed transaction)
   owner-contact.ts       # owner card: parse, links, /api/prototype-owner-contact client
@@ -515,6 +521,41 @@ owner's inbox on the prototype as a message of `kind: "idea"` (`/messages` shows
   answers CORS for any origin, the product's CSP `connect-src` must allow tokenwise.sk).
 - The strip never shows the app's own tile (`showcaseFor(slug)`).
 
+## Google sign-in (T-438, 2026-11-15)
+
+The MUST pattern lives in sw-factory `docs/factory/GOOGLE_SIGN_IN.md`; this template is its
+reference implementation and every prototype inherits it. Audit T-435 found it failing
+"sometimes" for real reasons, so these rules are tested, not advice:
+
+- **The popup opens inside the tap.** A browser blocks `window.open` that comes too long
+  after the tap, and on phones and in Safari the Firebase SDK prepares the popup's iframe
+  when Auth starts. So `/login` calls `prepareSignIn()` on mount (loads Firebase, `getAuth`,
+  persistence) and `signInWithGoogle()` awaits nothing before `signInWithPopup` once that is
+  done. The landing page never downloads Firebase Auth for an anonymous visitor — neither
+  by itself nor through Next.js prefetching its action: only `/login` is fetched ahead of the
+  tap (`landingActionPrefetch`, `lib/landing-action.ts`).
+- **Redirect only where it can complete.** `signInWithRedirect` returns the visitor signed
+  OUT unless `authDomain` is the host that serves the page (Chrome 115+, Firefox 109+,
+  Safari 16.1+ partition the SDK's cross-site storage). `popupFailureAction` redirects a
+  blocked popup only when `isSameSiteAuthDomain(auth.config.authDomain, location.hostname)`;
+  otherwise the page says "tap again" — Firebase is loaded by then, so the second tap works.
+  Closing the Google window is a cancel: no error, no redirect.
+- **In-app browsers escape first.** Google refuses OAuth inside Facebook / Instagram /
+  TikTok / any Android WebView, so `signInWithGoogle()` asks the phone to reopen the page in
+  Safari/Chrome before touching Firebase and returns `"escaping"`; the login page shows the
+  "open in your browser" note with "Copy link" up front and never treats the request as a
+  finished sign-in (it used to bounce the visitor through `/dashboard`).
+- `signInWithGoogle()` returns `SignInOutcome` (`signed-in` · `redirecting` · `escaping` ·
+  `cancelled` · `popup-blocked`) and throws only real errors. `/login` sends a signed-in
+  visitor (back from a redirect, or already signed in) to the dashboard.
+- **`authDomain` for prototypes** is `apps.tokenwise.sk` once that host's
+  `/__/auth/handler` is a registered OAuth redirect URI — the harness sets it
+  (`loadDemoEnv`) and a publish gate checks it. Local dev keeps `<project>.firebaseapp.com`
+  (popup only).
+- Texts: `auth.inApp*` and `auth.popupBlocked` in all 8 bundles. Tests:
+  `tests/sign-in-policy.spec.ts` (policy, UA matrix, escape URLs),
+  `tests/sign-in.spec.ts` (Firebase before the tap, landing stays light, in-app flow).
+
 ## Firestore rules — owned by factory-web, not here
 
 This repo ships no `firestore.rules` and `firebase.json` has no `"firestore"` key. Rules
@@ -536,7 +577,7 @@ off-brand, it is the one thing on the page that will not repaint when the visito
 The choice persists in `localStorage`; `prototype.config.json` still decides what a
 first-time visitor sees. A palette has two or more colours (`derivePaletteRoles`): the
 darkest is the background and the lightest the text — fifteen pairs, then five palettes of
-seven colours (2026-10-26). In a pair the text is also the accent
+seven colours (2026-10-26), then ten tonal palettes of twenty (2026-11-08, T-371). In a pair the text is also the accent
 (`primary` = `foreground`), so emphasis comes from weight, underline or a filled surface. A
 middle colour is the accent (`primary`, lifted toward white until it reads on a card); of
 several middles the most readable is the accent and the next the second accent `--highlight`,
@@ -544,8 +585,32 @@ which only decoration paints — the editorial glows, the frame's lit edge and t
 Further middles stay in the data, unpainted. Never set words in `--highlight`: it is not
 checked for contrast. In a palette of two or three colours `--highlight` = `--primary`.
 
+A palette of **twenty** colours is tonal (`deriveTonalRoles`): nothing is mixed. Its four
+darkest colours are the grounds — page, card, the raised plane (`--popover`, `--secondary`,
+`--muted`, `--accent`) and the border — its four lightest the inks — words, `--card-foreground`,
+the raised plane's words, `--muted-foreground` — and the twelve between are the lights: the most
+readable on a card is `--primary`, the next `--highlight`, and all twelve are `--accent-1` …
+`--accent-12` — the hue circle walked from the accent in strides of five, so neighbouring cards
+differ as much as the palette allows — each lifted until it reads on a card. `stage.css` hands
+them to the bento cards (1–6) and the steps (7–10) as their own accent, with fallbacks to the
+page's accents, so a pair's or a seven-colour palette's page paints exactly as before. Ten such
+palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/color-schemes.spec.ts`.
+
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
+
+**Light variant — a paid add-on (T-400, founder 2026-11-09).** Dark is the DEFAULT and the
+baseline of every project; a customer whose brand is light opts in with `theme.appearance:
+"light"` (default `"dark"`) — one build-time project choice for the whole site, NOT a visitor
+dark/light toggle. The same deterministic rule derives a light counterpart of every palette by
+MIRRORING it (`derivePaletteRoles(colors, "light")`, `rolesFor(id, "light")`,
+`cssBlocksForAll("light")`): the lightest colour is the page, the darkest the words, grounds
+and inks swap ends, every pull reverses, still WCAG AA on every surface. No component hard-codes
+a colour — flipping the token layer flips the whole site. `app/shell.tsx` reads
+`config.theme.appearance` through `lib/theme-appearance.ts`: dark keeps `.dark` and ships
+byte-for-byte as before; light drops `.dark` and sets `data-appearance="light"`, under which the
+Blender light loops (made for a dark ground) stand down (`editorial.css`). Tests:
+`tests/color-schemes.spec.ts` (contrast over all palettes in light), `tests/appearance.spec.ts`.
 
 Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
 never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
@@ -651,6 +716,22 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `prefers-reduced-motion`. Without support or with reduced motion everything is at its
   finished state. Decorative wrappers use `overflow: clip`, never `hidden` (a scroll
   container would become the timeline's root). No `scroll-behavior: smooth`.
+  **Apple round (T-340, 2026-11-06, values read from apple.com's own CSS):** two curves only,
+  `--editorial-ease` (0.4, 0, 0.6, 1) for UI state and `--editorial-ease-out` (0.33, 1, 0.68,
+  1) for arrivals (the test counts exactly two `cubic-bezier(` in `editorial.css`). Groups
+  (`data-stagger` on the bento, the steps, the FAQ list, the closing section) arrive in turn:
+  the group's `view()` timeline flips the registered `--editorial-seen` 0 → 1 and a container
+  style query turns it into a timed transition of its `[data-reveal]` children — opacity
+  0.28 s + `translate` 0.32 s, delays 0.08 / 0.16 / 0.2 s by `--i` (`translate`, so a card's
+  hover `transform` keeps its own transition). The footer's index (`data-index`) uses Apple's
+  `link-in`: 4 px from above, 0.32 s, 0.28 s + 20 ms per link. `animation-play-state` driven
+  by an animated custom property does NOT work (Chromium ignores it) — keep the style-query
+  form. **Display**: the manifesto sits sticky in `[data-manifesto-pin]` (200svh, the
+  `--manifesto` timeline) and its words light up across the pin with a passing glow
+  (`--words`). **Performance**: on ≥ 1024 × 720 How it works pins (`[data-steps-pin]` →
+  `[data-steps-stage]` sticky), `--editorial-step` steps through `editorial-steps-3|4` and a
+  style query lights one step, dims the rest (0.3) and the line draws up to it. The hero's
+  load sequence uses the same stagger (0.32 s; 80 / 160 / 200 / 240 ms).
 - **AI hero image**: `hero-image.json` may carry `placement: "object"`; the editorial hero
   then draws it as a figure beside the words (`[data-hero-object]`), with the words left
   aligned and no text over the image. Without it — every image before 2026-10-26 — it is the
@@ -673,7 +754,46 @@ copy contract, same `data-section` markers — the suites that read the page kee
   (default) | `bold` (uppercase heavy headline; `data-tone` on the page root; the content call
   picks it for loud ideas). The header adapter passes the configured font as the switcher's
   default (`components/layout/header.tsx`).
-- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone);
+- **Third round — light loops (T-340, 2026-11-05)**, after framer.com, vercel.com, linear.app and
+  apple.com's MacBook Pro display page: two seamless 8 s loops rendered in **Blender**
+  (`scripts/motion/<name>.py`, encoded by `scripts/motion/encode.sh` into
+  `public/motion/<name>.{webm,mp4,webp}`, `lib/editorial.ts` `MOTION_LOOPS`/`motionLoop`, budget
+  `MOTION_BUDGET_BYTES` per loop). The round's own loops (`hero-light`, an eclipse; `closing-light`,
+  ribbons) left with T-369 — the loops are the stage's (fourth round); the hero's renders only
+  when no AI image owns the hero. `LightLoop` (`components/editorial/light-loop.tsx`):
+  `preload="none"`, plays only on screen and only without reduced motion (the WebP still
+  otherwise), decoration only; a phone (`MOTION_SMALL_QUERY`, the `sm` breakpoint) gets the
+  half-width `<name>-sm` files, swapped in before the first byte loads — Chromium does not honour
+  `media` on a video's `<source>`, so the component does it. The renders are grey light on black:
+  `.editorial-light` screens them onto the page and a `color`-blended layer of
+  `var(--highlight, var(--primary))` gives them the palette's hue — "Change colour" relights them,
+  no colour is encoded. The hero frame gets a **running edge** (`[data-frame-run]`, after Framer's
+  prompt box): an arc of light travels round its border (conic gradient + `@property` angle),
+  hidden under reduced motion. To change a loop: edit the scene, render
+  (`blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`, Blender 5.2,
+  OptiX), encode twice (the full loop, then `STILL=0 scripts/motion/encode.sh <name>-sm <frames>
+  <half width> <half height>`), keep the budget test green (three files per loop inside the
+  budget, each phone file at most 60 % of its full one).
+- **Fourth round — the stage (T-368 → T-369, 2026-11-07/08)**, after the founder read the pattern
+  catalogue of framer / apple / lovable / vercel / linear and asked for Apple's quality: things
+  appearing in turn, light against dark, a lot of motion, video, scenes rendered in Blender. Three
+  proposals were built behind a build-time switch and previewed on the PC (`stage`, `beam`,
+  `glass`; history at c6a24a2); the founder chose **stage**, and T-369 made it the editorial page
+  itself — the switch, the other two scenes and their loops left the repository (no prototype
+  ships light it never shows). `components/editorial/stage.css` holds every rule, all under
+  `[data-presentation="editorial"]` and loaded after `editorial.css`, whose light rules it
+  refines: the **backlight** (`stage-field`, Apple's local dimming — whole zones switching on
+  behind the headline), the frame's **screen turning on** after it rises (`editorial-screen-on`),
+  cards **flaring like dimming zones** as they arrive (`--editorial-seen` starts
+  `editorial-zone-on` / `editorial-numeral-on`), the manifesto on a **bright panel**
+  (`.editorial-bright`: the palette turned over — ink becomes paper, the accent pulled toward the
+  old paper for contrast; full bleed by `box-shadow` + `clip-path`, never by width; the token
+  stash lives on the page root because a custom property may not read itself), the **device in
+  the first card** (`stage-slab`, `data-card-light`; under the words on a phone, on the far side
+  from 640px). The close keeps T-340's **light ribbons** across the whole band (`closing-light`,
+  `.editorial-light-band` in `editorial.css`; T-374, the founder's pick over the stage's orb).
+  Tests: `tests/editorial-stage.spec.ts`.
+- **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
   `tests/shared-header.spec.ts` reads the configured font as the first-visit face.
