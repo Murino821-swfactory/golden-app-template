@@ -22,7 +22,13 @@
     "signInTitle": "Iniciar sesión",
     "signInDescription": "Continúa con tu cuenta de Google.",
     "signInButton": "Iniciar sesión con Google",
-    "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo."
+    "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+    "inAppTitle": "Abre esta página en tu navegador",
+    "inAppText": "Google no permite iniciar sesión en el navegador integrado de una app. Abre la página en Safari o Chrome.",
+    "inAppCopy": "Copiar enlace",
+    "inAppCopied": "Enlace copiado",
+    "inAppEscaping": "Abriendo tu navegador… Si no pasa nada, copia el enlace y pégalo en Safari o Chrome.",
+    "popupBlocked": "Tu navegador bloqueó la ventana de inicio de sesión. Toca el botón de nuevo."
   },
   "landing": {
     "title": "Tu aplicación",

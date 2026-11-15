@@ -22,7 +22,13 @@
     "signInTitle": "Logowanie",
     "signInDescription": "Kontynuuj przy użyciu konta Google.",
     "signInButton": "Zaloguj się przez Google",
-    "signInError": "Logowanie nie powiodło się. Spróbuj ponownie."
+    "signInError": "Logowanie nie powiodło się. Spróbuj ponownie.",
+    "inAppTitle": "Otwórz tę stronę w przeglądarce",
+    "inAppText": "Google nie pozwala logować się we wbudowanej przeglądarce aplikacji. Otwórz stronę w Safari lub Chrome.",
+    "inAppCopy": "Kopiuj link",
+    "inAppCopied": "Link skopiowany",
+    "inAppEscaping": "Otwieram przeglądarkę… Jeśli nic się nie stanie, skopiuj link i wklej go w Safari lub Chrome.",
+    "popupBlocked": "Przeglądarka zablokowała okno logowania. Stuknij przycisk jeszcze raz."
   },
   "landing": {
     "title": "Twoja aplikacja",
