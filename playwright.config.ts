@@ -7,7 +7,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Two workers under CI: the factory VM that gates every prototype (export smoke, 10 min) and the
+  // GitHub runner both have two vCPUs. Measured on the Unbroken demo pinned to two cores (T-384,
+  // 2026-11-08): one worker 751 s with a palette walk timing out, two workers 241 s, nothing flaky.
+  workers: process.env.CI ? 2 : undefined,
   reporter: "html",
   use: {
     // A prototype is built with NEXT_PUBLIC_BASE_PATH and served under it, so the suite
