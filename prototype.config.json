@@ -184,7 +184,17 @@
           {
             "icon": "map-pin",
             "title": "Spots on the map",
-            "description": "Register any parking spot and pin it on a shared map so every resident knows exactly where it is."
+            "description": "Pin every spot on the neighbourhood map with one tap and see at a glance which are available, occupied or reserved."
+          },
+          {
+            "icon": "calendar",
+            "title": "Reservations",
+            "description": "Book a spot for a day and a time window. Two reservations of the same spot can never overlap."
+          },
+          {
+            "icon": "search",
+            "title": "Vehicles and plates",
+            "description": "Register the cars that park here and find the driver and the spot behind any licence plate in seconds."
           },
           {
             "icon": "list-checks",
@@ -203,7 +213,7 @@
           }
         ],
         "howItWorks": {
-          "heading": "Up and running in three steps",
+          "heading": "Up and running in four steps",
           "steps": [
             {
               "title": "Sign in",
@@ -212,6 +222,10 @@
             {
               "title": "Add a spot",
               "description": "Enter the location, type and status of a parking spot and pin it on the neighbourhood map."
+            },
+            {
+              "title": "Reserve a time",
+              "description": "Pick a spot, a day and a time window. A spot already booked for that time cannot be reserved twice."
             },
             {
               "title": "Keep it current",
@@ -228,11 +242,11 @@
             },
             {
               "question": "Can I see all spots on a map?",
-              "answer": "Yes. The map shows every registered spot as a pin, colour-coded by status, so you know at a glance which are free."
+              "answer": "Yes. Every registered spot is a pin on the map that shows whether it is available, occupied or reserved right now. Tap a pin to open the spot."
             },
             {
-              "question": "What types of parking can be registered?",
-              "answer": "You can register covered spots, open outdoor spaces and enclosed garage bays. The type appears on every spot card and map pin."
+              "question": "Can I reserve a spot in advance?",
+              "answer": "Yes. Choose a spot, a day and a time window. A reservation that overlaps another one for the same spot is refused, and a running reservation shows the spot as reserved on the map."
             },
             {
               "question": "How do I mark a spot as taken?",
@@ -241,13 +255,17 @@
             {
               "question": "Is my personal information visible to other residents?",
               "answer": "Only the spot details you enter — location, type and status — are visible to the community. Your account details remain private."
+            },
+            {
+              "question": "How do I find out whose car is in a spot?",
+              "answer": "Register vehicles with their licence plate, driver and assigned spot. Typing any part of a plate into the lookup shows the car, its driver and the spot it belongs to."
             }
           ]
         }
       },
       "dashboard": {
         "title": "My parking spots",
-        "intro": "Manage the spots you registered and see the current state of the whole neighbourhood at a glance.",
+        "intro": "Your spots on the map, reservations by day and time, and the register of vehicles by licence plate.",
         "kpiLabels": {
           "totalSpots": "Registered spots",
           "availableSpots": "Available",

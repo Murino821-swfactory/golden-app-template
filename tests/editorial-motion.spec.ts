@@ -2,7 +2,18 @@ import { test, expect } from "@playwright/test";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
-import { DEFAULT_HERO_LOOP, HERO_LOOPS, MOTION_BUDGET_BYTES, MOTION_LOOPS, MOTION_SMALL_QUERY, heroLoop, motionLoop } from "../lib/editorial";
+import {
+  DEFAULT_HERO_ARCHETYPE,
+  DEFAULT_HERO_LOOP,
+  HERO_ARCHETYPES,
+  HERO_LOOPS,
+  MOTION_BUDGET_BYTES,
+  MOTION_LOOPS,
+  MOTION_SMALL_QUERY,
+  heroArchetype,
+  heroLoop,
+  motionLoop,
+} from "../lib/editorial";
 
 /**
  * Editorial motion, third round (T-340, 2026-11-05: after framer.com, vercel.com, linear.app
@@ -59,6 +70,19 @@ test.describe("editorial motion — light loops and the running edge", () => {
     // page's own background so they stay readable on the light.
     expect(await hero.locator("h1").evaluate((el) => getComputedStyle(el).textShadow)).not.toBe("none");
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(await page.evaluate(() => window.innerWidth));
+  });
+
+  test("hero archetype (T-419): the stage carries the brief's hero pick, and still paints its light loop", async ({ page }) => {
+    test.skip(!sections.includes("hero"), "no hero");
+    await page.goto("./");
+    const hero = page.locator('[data-section="hero"]');
+    // The orchestrator records brand|product|light on prototypes/{id}.hero (T-373); the stage now
+    // honours it. The shipped config names none, so it reads as light (heroArchetype).
+    await expect(hero).toHaveAttribute("data-hero-archetype", heroArchetype(config.hero));
+    // brand (a 3D logo) and product (the app on a 3D phone) need a render a prototype has not got
+    // at build time, so both fall back to the light loop the stage paints today — the hero still
+    // wears its backlight whatever the archetype, and a build never ships a blank hero.
+    await expect(hero.locator("[data-hero-light]")).toHaveCount(1);
   });
 
   test("hero light: reduced motion shows the still and never downloads the loop", async ({ page }) => {
@@ -311,5 +335,22 @@ test.describe("editorial motion (pure)", () => {
     expect(heroLoop("pulse-ring")).toBe("pulse-ring");
     // The config's token resolves to one of the library's loops.
     expect(HERO_LOOPS).toContain(heroLoop(config.patterns.landing?.motion));
+  });
+
+  test("the hero archetype (T-419): the brief's pick resolves, unknown and null read as light", () => {
+    // factory-web T-370 asks which hero the landing opens with — brand (the logo in black
+    // lacquer), product (the built app on a 3D phone), light (the palette-agnostic light loop the
+    // stage paints today). The orchestrator records the pick (T-373); this is the template end
+    // that reads it. Like resolveHero, it never fails: unknown or null reads as light.
+    expect([...HERO_ARCHETYPES]).toEqual(["brand", "product", "light"]);
+    expect(DEFAULT_HERO_ARCHETYPE).toBe("light");
+    expect(heroArchetype("brand")).toBe("brand");
+    expect(heroArchetype("product")).toBe("product");
+    expect(heroArchetype("light")).toBe("light");
+    expect(heroArchetype(undefined)).toBe("light");
+    expect(heroArchetype(null)).toBe("light");
+    expect(heroArchetype("hologram")).toBe("light");
+    // The shipped config's pick (none today) resolves to one of the archetypes.
+    expect(HERO_ARCHETYPES).toContain(heroArchetype(config.hero));
   });
 });

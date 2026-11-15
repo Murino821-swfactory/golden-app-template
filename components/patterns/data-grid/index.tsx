@@ -101,7 +101,7 @@ export function DataGrid() {
     <section ref={gridRef} data-pattern="data-grid" className="space-y-4">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-lg font-medium">
-          {t("listHeading", { entity: entityLabel })} <span className="text-muted-foreground">({count})</span>
+          {t("listHeading", { entity: entityLabel })} <span className="text-muted-foreground">({records.length})</span>
         </h3>
         <Button ref={addRef} className="h-11" disabled={atLimit || loading} onClick={(event) => openDialog(event.currentTarget)}>
           <Plus className="size-4" aria-hidden />
