@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { config } from "@/lib/prototype-config";
 import { useContent } from "@/hooks/use-content";
-import { landingActionHref } from "@/lib/landing-action";
+import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
 
 // The interactive half of the CTA — what it says and where it goes — is the `cta` pattern's
 // declared schema, so it comes from prototype.config.json. It used to come from the
@@ -29,7 +29,7 @@ export function CtaSection() {
         <p className="mt-2 text-muted-foreground">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (
           <Button asChild size="lg" className="mt-6">
-            <Link href={href}>{label}</Link>
+            <Link href={href} prefetch={landingActionPrefetch(href)}>{label}</Link>
           </Button>
         )}
       </div>
