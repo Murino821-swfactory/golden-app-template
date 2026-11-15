@@ -34,9 +34,13 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    ```
    Without `@source` the header renders unstyled and nothing fails.
 3. Layout: `<html data-font="<default>" [data-scheme="<default>"]>`, and
-   `<ThemeBootstrap palettes? />` as the **first child of `<body>`** — it applies a returning
-   visitor's palette and font before the first paint. Put `suppressHydrationWarning` on
-   `<html>`: the script changes those attributes before React hydrates, on purpose.
+   `<ThemeBootstrap palettes? appearance? />` as the **first child of `<body>`** — it applies a
+   returning visitor's palette and font before the first paint. Put `suppressHydrationWarning`
+   on `<html>`: the script changes those attributes before React hydrates, on purpose.
+   `appearance` (`"dark"` default | `"light"`, T-400) is the project's build-time variant, a
+   paid add-on: the same deterministic rule derives a LIGHT counterpart of every palette
+   (`cssBlocksForAll("light")`, `rolesFor(id, "light")`). It is NOT a visitor toggle — a build
+   ships one variant — so the host also drops shadcn's `.dark` class on `<html>` for light.
 
 ```tsx
 <Header

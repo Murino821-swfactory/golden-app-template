@@ -22,7 +22,13 @@
     "signInTitle": "Anmelden",
     "signInDescription": "Weiter mit Ihrem Google-Konto.",
     "signInButton": "Mit Google anmelden",
-    "signInError": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+    "signInError": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "inAppTitle": "Öffnen Sie diese Seite im Browser",
+    "inAppText": "Google erlaubt keine Anmeldung im integrierten Browser einer App. Öffnen Sie die Seite in Safari oder Chrome.",
+    "inAppCopy": "Link kopieren",
+    "inAppCopied": "Link kopiert",
+    "inAppEscaping": "Ihr Browser wird geöffnet … Falls nichts passiert, kopieren Sie den Link und fügen Sie ihn in Safari oder Chrome ein.",
+    "popupBlocked": "Ihr Browser hat das Anmeldefenster blockiert. Tippen Sie erneut auf die Schaltfläche."
   },
   "landing": {
     "title": "Ihre App",
