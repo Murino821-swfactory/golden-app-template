@@ -1,30 +1,48 @@
 {
-  "appName": "Golden App Template",
+  "appName": "traweller",
   "locales": [
     "en"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "royal-velvet"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
+        "faq",
         "contact",
         "cta"
       ],
       "font": "space-grotesk",
-      "motion": "pulse-ring"
+      "motion": "horizon-sweep"
     },
-    "dashboard": {},
     "authGoogle": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalTrips",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "completedTrips",
+          "field": "status",
+          "agg": "share",
+          "value": "completed"
+        },
+        {
+          "id": "plannedTrips",
+          "field": "status",
+          "agg": "share",
+          "value": "planned"
+        }
+      ]
+    },
     "cta": {
       "href": "/login"
     },
@@ -33,97 +51,83 @@
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "trip",
         "fields": [
           {
-            "key": "name",
+            "key": "destination",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
-            "type": "select",
-            "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+            "key": "country",
+            "type": "text",
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "startDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "endDate",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "status",
+            "type": "select",
+            "options": [
+              "planned",
+              "ongoing",
+              "completed"
+            ],
+            "required": true
+          },
+          {
+            "key": "notes",
+            "type": "longtext"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "backpacking",
+        "groupTour",
+        "soloAdventure"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "duration",
+          "unit": "days"
         },
         {
-          "key": "rooms"
+          "key": "stops"
         }
       ],
-      "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "route-1",
+          "category": "backpacking",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "duration": 14,
+            "stops": 5
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "id": "route-2",
+          "category": "groupTour",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "duration": 7,
+            "stops": 3
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "route-3",
+          "category": "soloAdventure",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "duration": 21,
+            "stops": 8
           }
         }
       ]
@@ -131,182 +135,180 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Traweller helps a travel community log every journey, track trip status and discover where fellow members have been.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Community travel log",
+        "headline": "Every journey you take, remembered",
+        "subheadline": "Traweller is for travelers who keep a clear record of where they have been, what is planned next and what the community is exploring.",
+        "featuresHeading": "Everything you need to track your travels",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Log any trip",
+            "description": "Add a destination, travel dates, country and personal notes to build your complete travel record."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Track trip status",
+            "description": "Move each trip from planned to ongoing to completed so your log always reflects where things stand."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "users",
+            "title": "Community routes",
+            "description": "Browse featured routes that fellow trawellers have documented and add destinations to your own list."
+          },
+          {
+            "icon": "search",
+            "title": "Filter your history",
+            "description": "Search and filter your past trips by country, date range or status in seconds."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "Up and running in four steps",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
               "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "description": "Create your traweller account instantly using your existing Google credentials — no extra form to fill in."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Add your first trip",
+              "description": "Enter a destination, the travel dates and any notes you want to keep, then save the trip to your log."
+            },
+            {
+              "title": "Update the status",
+              "description": "Mark each trip as planned, ongoing or completed as your plans develop and journeys unfold."
+            },
+            {
+              "title": "Explore the community",
+              "description": "Browse routes other trawellers have shared and discover destinations you have not yet considered."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions about traweller",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Is traweller free to join?",
+              "answer": "Sign in with your Google account and start logging trips straight away at no cost."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Who can see my trip log?",
+              "answer": "Your personal trip log is private by default. Only the community routes you choose to contribute appear in the shared catalogue."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "How many trips can I record?",
+              "answer": "There is no limit — log every trip you have taken or plan to take, however far back or forward you want to go."
+            },
+            {
+              "question": "Can I edit a trip after saving it?",
+              "answer": "Yes. Every field — destination, country, dates, status and notes — can be updated or corrected at any time from your dashboard."
+            },
+            {
+              "question": "What is the board view on the dashboard?",
+              "answer": "The board groups your trips by status (planned, ongoing, completed) so you can see your entire travel pipeline at a glance."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My Trips",
+        "intro": "Track every journey — see what you have planned, what is underway and what you have already completed.",
+        "kpiLabels": {
+          "totalTrips": "Total Trips",
+          "completedTrips": "Completed",
+          "plannedTrips": "Planned"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "label": "Start logging trips",
+        "title": "Your travel story starts here",
+        "subtitle": "Sign in with Google and add your first trip in under a minute."
       },
       "contactForm": {
         "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "submitLabel": "Send message",
+        "intro": "Have a question about traweller or a feature idea? Drop us a message and we will get back to you."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Trip",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "destination": "Destination",
+          "country": "Country",
+          "startDate": "Start Date",
+          "endDate": "End Date",
+          "status": "Status",
+          "notes": "Notes"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "destination": "Lisbon",
+            "country": "Portugal",
+            "startDate": "2026-09-20",
+            "endDate": "2026-09-28",
+            "status": "completed",
+            "notes": "Tram rides, pastéis de nata and coastal day trips to Sintra"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "destination": "Bangkok",
+            "country": "Thailand",
+            "startDate": "2026-11-01",
+            "endDate": "2026-11-15",
+            "status": "ongoing",
+            "notes": "Street food trails, temple visits and canal boat tours"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "destination": "Cape Town",
+            "country": "South Africa",
+            "startDate": "2026-10-18",
+            "endDate": "2026-10-25",
+            "status": "planned",
+            "notes": "Table Mountain hike and Cape Peninsula coastal drive"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Featured Community Routes",
+        "intro": "Explore travel routes that traweller members have documented — from short group tours to long solo overlands.",
+        "notice": "These routes are illustrative examples; real community-documented routes will appear here as members contribute them.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "backpacking": "Backpacking",
+          "groupTour": "Group Tour",
+          "soloAdventure": "Solo Adventure"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "duration": "Days",
+          "stops": "Stops"
         },
+        "inquireLabel": "Ask about this route",
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "route-1": {
+            "title": "Balkan Backpacker Trail",
+            "summary": "A two-week overland journey across the western Balkans, linking mountain villages, Adriatic coastal towns and historic city centres.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Coastal ferry crossing",
+              "UNESCO old towns",
+              "Local mountain huts"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "route-2": {
+            "title": "Mekong River Week",
+            "summary": "Seven days following the Mekong from busy border towns to quiet floating markets, with shared stays and guided day excursions.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "River boat transfers",
+              "Morning floating market",
+              "Local cooking class"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "route-3": {
+            "title": "Andean High Route",
+            "summary": "Three weeks crossing high-altitude passes, colonial cities and vast salt flats through the central Andes by foot and local bus.",
+            "highlights": [
+              "Salt flat sunrise walk",
+              "Acclimatisation stops",
+              "Artisan textile markets"
+            ]
           }
-        },
-        "inquireLabel": "Ask about this offer"
+        }
       }
     }
   }
