@@ -374,6 +374,16 @@
   isolation: isolate;
 }
 
+/* The light variant's fallback for the loops (T-400). Each Blender render is neutral light on
+   black and `screen`s onto the page, which needs a dark ground to read; on a light build the
+   black cannot vanish and the loop washes out. Rather than re-render for light (out of scope),
+   the light build stands the loops down and keeps the page's own token-driven gradients and
+   hairlines, which already follow the palette — a clean neutral treatment, no colour of its own
+   (the no-hex test greps this file). */
+[data-appearance="light"] .editorial-light {
+  display: none;
+}
+
 /* The running edge (after framer.com's prompt box): a short arc of light travels round the
    frame's border, the ring cut from a conic gradient by two masks, the glow a drop shadow
    of the ring. Only where motion is wanted; otherwise the frame keeps its still lit top. */
