@@ -29,6 +29,7 @@
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
 import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
+import { HERO_ARCHETYPES, HERO_LOOPS } from "./editorial";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */
@@ -319,6 +320,10 @@ export const PATTERN_SCHEMAS = {
       .enum(TONES)
       .optional()
       .describe("The typographic voice. Omit for light: an airy display headline set light with one phrase in weight. bold: a heavy uppercase display headline and stronger numerals — for sport, games, events, nightlife, streetwear and anything loud."),
+    motion: z
+      .enum(HERO_LOOPS)
+      .optional()
+      .describe("The light loop that plays behind the hero headline — a seamless Blender render tinted by the palette (T-350 library, €0 per project). Omit for stage-field (a board of mini-LEDs). pulse-ring: rings breathing out of a core; orbit-tiles: glass panels turning on a ring; horizon-sweep: a grid floor running to a swept horizon; data-lines: packets running along stacked rails. Reduced motion and no JavaScript show the poster still."),
   }),
   dashboard: z.object({
     kpis: z
@@ -645,6 +650,11 @@ export const DEFAULT_PATTERNS: readonly PatternId[] = [
 
 const themeSchema = z.object({
   colorScheme: z.enum(COLOR_SCHEMES),
+  // The light variant is a paid add-on (T-400, founder 2026-11-09). Dark is the DEFAULT and
+  // the baseline of every project; a customer whose brand is light opts in with `"light"`.
+  // One build-time choice for the whole site — not a visitor dark/light toggle — so the build
+  // ships exactly one variant. Omitted ⇒ dark, which keeps every existing config unchanged.
+  appearance: z.enum(["dark", "light"]).default("dark"),
 });
 
 export const prototypeConfigSchema = z
@@ -653,6 +663,16 @@ export const prototypeConfigSchema = z
     locales: z.array(z.enum(LOCALES)).min(1),
     defaultLocale: z.enum(LOCALES),
     theme: themeSchema,
+    // The hero archetype the brief picked (factory-web T-370 project chat; orchestrator
+    // resolveHero, T-373): brand (the project's logo in black lacquer), product (the built app on
+    // a 3D phone), light (the palette-agnostic light loop the stage paints). Top-level, not inside
+    // theme, so it stays out of the theme gate — T-373 kept resolveHero separate from resolveTheme
+    // for exactly this reason. Optional: a config that names none reads as light (heroArchetype,
+    // lib/editorial.ts). brand and product fall back to light until their render assets exist (T-419).
+    hero: z
+      .enum(HERO_ARCHETYPES)
+      .optional()
+      .describe("How the landing opens: brand (the project's logo in black lacquer), product (the built app on a 3D phone), or light (a palette-agnostic light loop). Omit for light. brand and product need a render a prototype has not got at build time, so both currently open with the light loop; the pick is still honoured and recorded."),
     patterns: z.object({
       landing: PATTERN_SCHEMAS.landing.optional(),
       dashboard: PATTERN_SCHEMAS.dashboard.optional(),
@@ -956,7 +976,12 @@ function migrateLegacyConfig(input: Record<string, unknown>): Record<string, unk
     defaultLocale: "en",
     // `style` (minimal | bold | playful) is dropped rather than carried: it was validated
     // here and consumed by nothing, so a customer who picked "bold" always got "minimal".
-    theme: { colorScheme: theme.colorScheme },
+    // `appearance` (T-400) is carried when present so a legacy config that already named the
+    // light add-on keeps it; omitted, the schema defaults it to dark.
+    theme: {
+      colorScheme: theme.colorScheme,
+      ...(typeof theme.appearance === "string" ? { appearance: theme.appearance } : {}),
+    },
     patterns: structure,
     content: { en: copy },
   };
