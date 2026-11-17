@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Image as ImageIcon, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroImageControls } from "@/components/sections/hero-image-controls";
 import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
@@ -11,6 +11,7 @@ import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
+import { heroFilm, nextHeroFilm } from "@/lib/hero-film";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
 import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
@@ -18,6 +19,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
+import { HeroFilm } from "./hero-film";
 import { LightLoop } from "./light-loop";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
@@ -47,6 +49,15 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * of a board of mini-LEDs, whole zones switching on (`LightLoop`, tinted by the palette; placed
  * by `stage.css`) — and a light runs along the frame's edge. An AI image owns the hero, so it
  * gets no light.
+ *
+ * T-460 (after the cinematic landings of wismeo and PropCheck): a config may name a FILM
+ * (`patterns.landing.film`, `lib/hero-film.ts`) — real footage across the first screen instead
+ * of the light loop, with the copy above it and the frame rising from the fold. An AI image
+ * still owns the hero. With `patterns.landing.tryIt` every visitor gets two buttons under the
+ * action — "Change image" (the next film of the library) and "Change texts" (the headline and
+ * the subheadline become editable in place) — so the golden demo, where a visitor from a social
+ * network lands, lets them change the page with their own hands. Both stay in the browser: no
+ * request, nothing saved. Buttons, not links: the hero keeps its one action.
  */
 
 const listings = config.patterns.listings;
@@ -142,8 +153,24 @@ export function HeroSection() {
   // A route is served per language; an anchor is the same on every document.
   const href = action && action.startsWith("/") ? localePath(locale, action) : action;
   const hero = useHeroImage();
-  const headline = landing?.headline ?? t("title");
-  const subheadline = landing?.subheadline ?? t("subtitle");
+  // The film this config opens on; "Change image" walks the library from it (T-460).
+  const configuredFilm = heroFilm(config.patterns.landing?.film);
+  const [film, setFilm] = useState(configuredFilm);
+  const tryIt = config.patterns.landing?.tryIt === true;
+  // "Change texts": while `editing`, the headline and the subheadline are plain editable text;
+  // closing it keeps what the visitor wrote (`own`). `round` remounts both elements on every
+  // switch, so React never reconciles into nodes the visitor's typing replaced.
+  const [editing, setEditing] = useState(false);
+  const [own, setOwn] = useState<{ headline: string; subheadline: string } | null>(null);
+  const [round, setRound] = useState(0);
+  const [hint, setHint] = useState<"tryImageHint" | "tryTextsHint" | null>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subheadlineRef = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (editing) headlineRef.current?.focus();
+  }, [editing]);
+  const headline = own?.headline ?? landing?.headline ?? t("title");
+  const subheadline = own?.subheadline ?? landing?.subheadline ?? t("subtitle");
   const eyebrow = landing?.eyebrow;
   const [device, setDevice] = useState<Device>("desktop");
 
@@ -164,20 +191,48 @@ export function HeroSection() {
   // The title bar's date, like a dated concept: the month this document was built in.
   const built = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date());
   const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
+  const showFilm = film !== null && !background && !object;
+
+  function toggleTexts() {
+    if (editing) {
+      // Keep the visitor's words; an emptied line falls back to what was there.
+      setOwn({
+        headline: headlineRef.current?.textContent?.trim() || headline,
+        subheadline: subheadlineRef.current?.textContent?.trim() || subheadline,
+      });
+    }
+    setHint("tryTextsHint");
+    setEditing(!editing);
+    setRound((n) => n + 1);
+  }
+  /** One line each: Enter ends the line's editing instead of breaking it. */
+  function oneLine(event: KeyboardEvent<HTMLElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.currentTarget.blur();
+    }
+  }
 
   return (
-    <section id="hero" data-section="hero" data-hero-archetype={archetype} className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip">
+    <section
+      id="hero"
+      data-section="hero"
+      data-hero-archetype={archetype}
+      data-hero-layout={configuredFilm ? "film" : undefined}
+      className="editorial-hero scroll-mt-24 relative isolate w-full overflow-clip"
+    >
       {background ? <HeroBackground key={background} src={background} /> : null}
       {/* The backlight (T-368 stage, `stage.css`): a light loop behind the headline — the stage
           board by default, or whichever of the T-350 library `patterns.landing.motion` names; an
           AI image owns the hero, so it gets no light. */}
-      {!background && !object && (
+      {showFilm && <HeroFilm key={film} name={film} />}
+      {!background && !object && film === null && (
         <LightLoop name={heroLoop(config.patterns.landing?.motion)} marker="data-hero-light" className="editorial-light-hero" />
       )}
 
       <div
         className={cn(
-          "mx-auto w-full max-w-6xl px-4 pt-16 sm:pt-24",
+          "editorial-hero-stage mx-auto w-full max-w-6xl px-4 pt-16 sm:pt-24",
           object && "lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-12"
         )}
       >
@@ -186,33 +241,77 @@ export function HeroSection() {
             tiles come last, so the delays of the four pieces of copy stay where they are. */}
         <div
           className={cn("editorial-hero-copy relative flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
-          style={background ? { textShadow: HERO_TEXT_SHADOW } : undefined}
+          style={background || showFilm ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
             {eyebrow ?? config.appName}
           </Eyebrow>
-          <h1 className="editorial-enter editorial-display max-w-4xl text-balance">
-            <DisplayText text={headline} />
+          <h1
+            key={`headline-${round}`}
+            ref={headlineRef}
+            contentEditable={editing ? "plaintext-only" : undefined}
+            suppressContentEditableWarning
+            onKeyDown={editing ? oneLine : undefined}
+            className={cn("editorial-enter editorial-display max-w-4xl text-balance", editing && "editorial-editable")}
+          >
+            {editing ? headline : <DisplayText text={headline} />}
           </h1>
-          <p className="editorial-enter max-w-2xl text-balance text-muted-foreground sm:text-lg">
-            <TwoTone text={subheadline} />
+          <p
+            key={`subheadline-${round}`}
+            ref={subheadlineRef}
+            contentEditable={editing ? "plaintext-only" : undefined}
+            suppressContentEditableWarning
+            onKeyDown={editing ? oneLine : undefined}
+            className={cn("editorial-enter max-w-2xl text-balance text-muted-foreground sm:text-lg", editing && "editorial-editable")}
+          >
+            {editing ? subheadline : <TwoTone text={subheadline} />}
           </p>
           {/* One next step, as the contract requires (tests/landing-action.spec.ts); the
               fold-cut frame below is the invitation to scroll. */}
           {href && (
-            <Button asChild size="lg" className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm">
+            <Button asChild size="lg" className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm [text-shadow:none]">
               <Link href={href} prefetch={landingActionPrefetch(action)}>
                 {content.cta?.label ?? t("cta")}
                 <ArrowUpRight aria-hidden className="size-4" />
               </Link>
             </Button>
           )}
+          {/* The visitor's own hands (T-460): the picture and the words change in this browser
+              only. After the four pieces of copy, so their entrance delays stay where they are. */}
+          {tryIt && (
+            <div data-hero-try className="editorial-try editorial-enter" style={{ textShadow: "none", "--d": "280ms" } as CSSProperties}>
+              <div role="group" aria-label={t("tryLabel")} className="flex flex-wrap items-center justify-center gap-2">
+                {film !== null && !background && !object && (
+                  <button
+                    type="button"
+                    data-try="image"
+                    className="editorial-try-button"
+                    onClick={() => {
+                      setFilm(nextHeroFilm(film));
+                      setHint("tryImageHint");
+                    }}
+                  >
+                    <ImageIcon aria-hidden className="size-4" />
+                    {t("tryImage")}
+                  </button>
+                )}
+                <button type="button" data-try="texts" aria-pressed={editing} className="editorial-try-button" onClick={toggleTexts}>
+                  <PenLine aria-hidden className="size-4" />
+                  {editing ? t("tryTextsDone") : t("tryTexts")}
+                </button>
+              </div>
+              <p data-try-hint aria-live="polite" className="editorial-try-hint">
+                {hint ? t(hint) : ""}
+              </p>
+            </div>
+          )}
           {name === "hidden" && (
             <span data-app-name className="sr-only">
               {config.appName}
             </span>
           )}
-          {!object && <FloatingTiles icons={icons} />}
+          {/* A film is the hero's picture already: no tiles floating over it. */}
+          {!object && !showFilm && <FloatingTiles icons={icons} />}
         </div>
 
         {object && <HeroObject src={object} />}

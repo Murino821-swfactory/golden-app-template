@@ -32,6 +32,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
+| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (`tower-dusk`, `tower-night`; `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `hero.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`), `scripts/film/encode.sh`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -793,6 +794,36 @@ copy contract, same `data-section` markers — the suites that read the page kee
   from 640px). The close keeps T-340's **light ribbons** across the whole band (`closing-light`,
   `.editorial-light-band` in `editorial.css`; T-374, the founder's pick over the stage's orb).
   Tests: `tests/editorial-stage.spec.ts`.
+- **Fifth round — the film (T-460, 2026-11-17)**, after the cinematic landings of wismeo and
+  PropCheck, for the founder's goal of that day: tokenwise.sk/demo/golden is where a visitor from
+  a social network lands, so it must read as THEIR new page and let them change it with their own
+  hands. A config that names a film (`patterns.landing.film`, one of `HERO_FILMS` in
+  `lib/hero-film.ts`) opens on real footage instead of the backlight: `HeroFilm`
+  (`components/editorial/hero-film.tsx`) lays it across the first screen under the words — in its
+  own colours, like the AI hero image, with a veil of `var(--background)` that follows "Change
+  colour" — and `[data-hero-layout="film"]` gives the stage the first screen's height (whenever the
+  config names a film, also while an AI image owns the hero, so nothing moves). The first frame is a
+  `<picture>` in the static HTML (a phone gets its 9:16 cut before any script runs); the video lies
+  over it, shows once it is playing (`data-film-on`), plays ONCE and rests on its last frame; under
+  reduced motion or Save-Data the poster stays and the film is never downloaded. Precedence: AI
+  image, then film, then light loop; no floating tiles over a film. The library is the factory's
+  own footage (HeyGen generations of the tokenwise tower, also on tokenwise.sk/how-it-works):
+  `tower-dusk` (a van arrives at sunset) and `tower-night` (a helicopter lifts a crate off the
+  roof) — 1280 × 720 film, 540 × 960 phone cut and two posters each, H.264 only, inside
+  `FILM_BUDGET_BYTES` per film (`scripts/film/encode.sh <name> <desktop src> <crop> <phone src>
+  <crop>`). **Try-it** (`patterns.landing.tryIt: true`, the golden demo only — a customer's page
+  never carries it): two buttons under the hero's action, for every visitor. "Change image" shows
+  the next film (`nextHeroFilm`); "Change texts" makes the headline and the subheadline editable
+  in place (`contenteditable="plaintext-only"`; both elements remount on every switch — the
+  `round` key — so React never reconciles into nodes the typing replaced) and keeps what was typed.
+  Both stay in the visitor's browser: no request, no cost, nothing saved; the hint under them says
+  what the real functions do on the visitor's own page (the AI hero image, the copy rewrite).
+  Buttons, not links — the hero keeps its one action. Texts: `landing.try*` in all 8
+  `messages/*.json`. Tests: `tests/hero-film.spec.ts`; the backlight tests of
+  `editorial-motion.spec.ts` / `editorial-stage.spec.ts` skip under a film and keep running on the
+  fixtures, none of which names one. **Not yet built (filed as tasks):** the device switcher moving
+  from the frame into the header, a map on the landing centred on the visitor's place, and the
+  demo's action leading into tokenwise.sk's project chat with the visitor's campaign.
 - **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
