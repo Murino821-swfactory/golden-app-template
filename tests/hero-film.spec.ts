@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 import { existsSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, landingPresentation, prototypeConfigSchema } from "../lib/prototype-config";
-import { FILM_BUDGET_BYTES, FILM_SMALL_QUERY, HERO_FILMS, heroFilm, heroFilmFiles, nextHeroFilm, type HeroFilmName } from "../lib/hero-film";
+import { FILM_BUDGET_BYTES, FILM_SMALL_QUERY, HERO_FILMS, heroFilm, heroFilmFiles, heroFilmHold, nextHeroFilm, type HeroFilmName } from "../lib/hero-film";
+import { CARD_LOOPS, nextCardLoop } from "../lib/editorial";
 
 /**
  * The hero film (T-460, 2026-11-17, after the cinematic landings of wismeo and PropCheck): real
@@ -26,7 +27,7 @@ const PIXEL = Buffer.from(
 
 test.describe("hero film — pure rules", () => {
   test("a config names a film from the library, or none", () => {
-    expect(HERO_FILMS.length).toBeGreaterThanOrEqual(2);
+    expect(HERO_FILMS.length).toBeGreaterThanOrEqual(5);
     for (const name of HERO_FILMS) expect(heroFilm(name)).toBe(name);
     expect(heroFilm(undefined)).toBeNull();
     expect(heroFilm("stage-field")).toBeNull();
@@ -55,7 +56,28 @@ test.describe("hero film — pure rules", () => {
     expect(name).toBe(HERO_FILMS[0]);
   });
 
-  test("every film ships encoded and inside the budget — every prototype carries the library", () => {
+  test("every film is told in two parts: it names the second it rests at until the first scroll, for both cuts", () => {
+    for (const name of HERO_FILMS) {
+      for (const small of [false, true]) {
+        expect(heroFilmHold(name, small), `${name} ${small ? "phone" : "wide"}`).toBeGreaterThan(1.5);
+        expect(heroFilmHold(name, small), `${name} ${small ? "phone" : "wide"}`).toBeLessThan(4.6);
+      }
+    }
+  });
+
+  test("the first feature card's loops: the stage's device first, then the library, round and round", () => {
+    expect(CARD_LOOPS[0]).toBe("stage-slab");
+    let loop: (typeof CARD_LOOPS)[number] = CARD_LOOPS[0];
+    const seen = new Set<string>();
+    for (let i = 0; i < CARD_LOOPS.length; i++) {
+      seen.add(loop);
+      loop = nextCardLoop(loop);
+    }
+    expect(seen.size).toBe(CARD_LOOPS.length);
+    expect(loop).toBe("stage-slab");
+  });
+
+  test("every film ships encoded and inside the budget", () => {
     for (const name of HERO_FILMS) {
       const files = heroFilmFiles("", name);
       const size = (path: string) => {
@@ -137,6 +159,29 @@ test.describe("hero film — the page", () => {
     expect(box.y + box.height).toBeLessThanOrEqual(viewport.height + 1);
   });
 
+  test("the film is told in two parts: it rests where the story pauses, and the first scroll plays the rest", async ({ page }) => {
+    test.skip(FILM === null, "this config names no film");
+    await page.goto("./");
+    const film = page.locator('[data-section="hero"] [data-hero-film]');
+    const video = film.locator("video");
+    const small = await page.evaluate((query) => window.matchMedia(query).matches, FILM_SMALL_QUERY);
+    const hold = heroFilmHold(FILM!, small);
+    await expect(film).toHaveAttribute("data-film-part", "1");
+    // Part one: it plays, then stops on the frame where the story pauses — not at its end.
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused && v.currentTime > 0), { timeout: 15_000 }).toBe(true);
+    const rest = await video.evaluate((v: HTMLVideoElement) => v.currentTime);
+    expect(rest).toBeGreaterThanOrEqual(hold - 0.05);
+    expect(rest).toBeLessThan(hold + 0.4);
+    expect(await video.evaluate((v: HTMLVideoElement) => v.ended)).toBe(false);
+    await page.waitForTimeout(600);
+    expect(await video.evaluate((v: HTMLVideoElement) => v.currentTime)).toBe(rest);
+    // Part two: the visitor's first scroll plays the rest, to the last frame.
+    await page.evaluate(() => window.scrollTo(0, 60));
+    await expect(film).toHaveAttribute("data-film-part", "2");
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 15_000 }).toBeGreaterThan(rest + 0.4);
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.ended), { timeout: 15_000 }).toBe(true);
+  });
+
   test("reduced motion keeps the poster and never downloads the film", async ({ page }) => {
     test.skip(FILM === null, "this config names no film");
     const fetched: string[] = [];
@@ -169,6 +214,12 @@ test.describe("hero film — the page", () => {
   });
 });
 
+test("the export carries the film library only for a config that shows it", async ({ request }) => {
+  // `scripts/prune-film.mjs` (npm postbuild): a customer's prototype never ships footage it cannot show.
+  const res = await request.get(`film/${HERO_FILMS[0]}-sm.mp4`);
+  expect(res.status()).toBe(FILM !== null || TRY ? 200 : 404);
+});
+
 test.describe("hero film — the visitor changes the page with their own hands", () => {
   test.skip(!editorial || !sections.includes("hero"), "no editorial hero in this config");
 
@@ -176,6 +227,43 @@ test.describe("hero film — the visitor changes the page with their own hands",
     test.skip(TRY, "this config turns the try-it buttons on");
     await page.goto("./");
     await expect(page.locator("[data-hero-try]")).toHaveCount(0);
+    await expect(page.locator("[data-try-bar]")).toHaveCount(0);
+  });
+
+  test("features: the same two buttons — the first card's picture changes and every text can be retyped", async ({ page }) => {
+    test.skip(!TRY || !sections.includes("features"), "no try-it buttons over features in this config");
+    const api: string[] = [];
+    page.on("request", (req) => {
+      if (new URL(req.url()).pathname.includes("/api/")) api.push(req.url());
+    });
+    await page.goto("./");
+    const features = page.locator('[data-section="features"]');
+    const bar = features.locator("[data-try-bar]");
+    const card = features.locator("[data-bento] > li").first();
+    const light = card.locator("[data-card-light]");
+    await expect(light).toHaveAttribute("data-loop", CARD_LOOPS[0]);
+    // "Change image": the first card wears the next loop of the library.
+    await bar.locator("button[data-try='image']").click();
+    await expect(light).toHaveAttribute("data-loop", CARD_LOOPS[1]);
+    await expect(light).toHaveCount(1);
+    // "Change texts": the heading and every card's title and description become editable lines.
+    const texts = bar.locator("button[data-try='texts']");
+    expect((await texts.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    await texts.click();
+    await expect(features.locator("h2")).toHaveAttribute("contenteditable", "plaintext-only");
+    const title = card.locator("h3");
+    await expect(title).toHaveAttribute("contenteditable", "plaintext-only");
+    await expect(card.locator("p")).toHaveAttribute("contenteditable", "plaintext-only");
+    await title.click();
+    await page.keyboard.press("ControlOrMeta+A");
+    await page.keyboard.type("Open every day");
+    await texts.click();
+    await expect(title).not.toHaveAttribute("contenteditable", /.+/);
+    await expect(title).toHaveText("Open every day");
+    // The section's contract holds: one heading, and no svg beyond the configured icons.
+    await expect(features.locator("h2")).toHaveCount(1);
+    await expect(features.locator("[data-try-bar] svg")).toHaveCount(0);
+    expect(api).toEqual([]);
   });
 
   test("\"Change image\" swaps the film for the next one in the library — no request beyond the film itself", async ({ page }) => {

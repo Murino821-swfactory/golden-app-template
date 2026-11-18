@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { FILM_SMALL_QUERY, heroFilmFiles, type HeroFilmName } from "@/lib/hero-film";
+import { FILM_SMALL_QUERY, heroFilmFiles, heroFilmHold, type HeroFilmName } from "@/lib/hero-film";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -14,8 +14,13 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
  * The first frame is a `<picture>` in the static HTML — the phone's cut for a phone, chosen by
  * the browser before any script runs — so the first paint is the film's opening picture. The
  * video lies over it, invisible until it is actually playing (`data-film-on`), and starts from
- * that same frame. It plays ONCE and rests on its last frame: the films tell a small story (a
- * van arrives, a floor lights up), and a story that jumps back to its start reads as a glitch.
+ * that same frame.
+ *
+ * It is told in two parts (founder, 2026-11-18). Part one plays on arrival and rests where the
+ * story pauses (`heroFilmHold`: the van has stopped, the door stands open). The visitor's first
+ * scroll starts part two (the van drives away), and the film rests on its last frame — it never
+ * loops: a story that jumps back to its start reads as a glitch. `data-film-part` says which
+ * part the film is in. A page that opens already scrolled plays straight through.
  *
  * It plays only on screen and only for a visitor who asked for neither calm nor thrift: under
  * reduced motion or Save-Data the poster stays and the film is never downloaded
@@ -35,14 +40,45 @@ export function HeroFilm({ name }: { name: HeroFilmName }) {
     const video = ref.current;
     if (small === null || !video) return;
     video.muted = true;
+    const hold = heroFilmHold(name, small);
     const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
     const thrift = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
     let visible = false;
-    const sync = () => {
-      if (visible && !calm.matches && !thrift && !video.ended) video.play().catch(() => {});
-      else video.pause();
+    let released = window.scrollY > 0;
+    let frame = 0;
+    // Which part the film is in, for the page's tests and styles. Written to the element, not
+    // kept in state: nothing is drawn from it, and React leaves an attribute alone whose prop
+    // did not change.
+    const mark = () => {
+      if (video.parentElement) video.parentElement.dataset.filmPart = released ? "2" : "1";
     };
-    const shown = () => setOn(true);
+    mark();
+
+    /** Part one ends here: stop on the frame where the story pauses, until the first scroll. */
+    const rest = () => {
+      frame = 0;
+      if (released || video.paused) return;
+      if (video.currentTime >= hold) video.pause();
+      else frame = requestAnimationFrame(rest);
+    };
+    const sync = () => {
+      const resting = !released && video.currentTime >= hold;
+      if (visible && !calm.matches && !thrift && !video.ended && !resting) {
+        video.play().catch(() => {});
+        if (!released && !frame) frame = requestAnimationFrame(rest);
+      } else video.pause();
+    };
+    const shown = () => {
+      setOn(true);
+      if (!released && !frame) frame = requestAnimationFrame(rest);
+    };
+    const release = () => {
+      if (released || window.scrollY <= 0) return;
+      released = true;
+      mark();
+      window.removeEventListener("scroll", release);
+      sync();
+    };
     const watch = new IntersectionObserver(([entry]) => {
       visible = Boolean(entry?.isIntersecting);
       sync();
@@ -50,15 +86,18 @@ export function HeroFilm({ name }: { name: HeroFilmName }) {
     watch.observe(video);
     calm.addEventListener("change", sync);
     video.addEventListener("playing", shown);
+    if (!released) window.addEventListener("scroll", release, { passive: true });
     return () => {
       watch.disconnect();
+      cancelAnimationFrame(frame);
       calm.removeEventListener("change", sync);
       video.removeEventListener("playing", shown);
+      window.removeEventListener("scroll", release);
     };
-  }, [small]);
+  }, [small, name]);
 
   return (
-    <div aria-hidden="true" data-hero-film={name} data-film-on={on ? "" : undefined} className="editorial-film">
+    <div aria-hidden="true" data-hero-film={name} data-film-part="1" data-film-on={on ? "" : undefined} className="editorial-film">
       <picture>
         <source media={FILM_SMALL_QUERY} srcSet={files.posterSmall} />
         {/* next/image cannot optimise in a static export; this is a plain decorative img. */}

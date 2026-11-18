@@ -326,11 +326,11 @@ export const PATTERN_SCHEMAS = {
     film: z
       .enum(HERO_FILMS)
       .optional()
-      .describe("Leave out — the content call never sets this. Real footage behind the hero instead of the light loop, played once (the factory's own films of its tower; the golden demo wears one). tower-dusk: a van arrives at the tower at sunset; tower-night: a helicopter lifts a crate off the roof. Reduced motion and no JavaScript show the first frame."),
+      .describe("Leave out — the content call never sets this. Real footage behind the hero instead of the light loop, played once (the factory's own films of its tower; the golden demo wears one). Told in two parts: it rests where its story pauses and the visitor's first scroll plays the rest. tower-dusk: a van arrives at the tower at sunset and a door opens, then the van leaves; tower-night: a helicopter takes a crate off the roof; bakery-oven: a baker draws loaves from a wood oven; bakery-house: a bakery at night with every floor at work; rail-yard: a freight train leaves a rain-wet yard. Reduced motion and no JavaScript show the first frame."),
     tryIt: z
       .boolean()
       .optional()
-      .describe("Leave out — the content call never sets this. true shows every visitor two buttons under the hero's action, Change image and Change texts, that change the page in their own browser only (the golden demo, where a visitor tries the page with their own hands). A customer's page never carries them."),
+      .describe("Leave out — the content call never sets this. true shows every visitor two buttons under the hero's action and under the features heading, Change image and Change texts, that change the page in their own browser only (the golden demo, where a visitor tries the page with their own hands). A customer's page never carries them."),
   }),
   dashboard: z.object({
     kpis: z

@@ -257,7 +257,7 @@
     to bottom,
     color-mix(in oklab, var(--background) 74%, transparent) 0%,
     color-mix(in oklab, var(--background) 46%, transparent) 34%,
-    color-mix(in oklab, var(--background) 8%, transparent) 62%,
+    color-mix(in oklab, var(--background) 18%, transparent) 62%,
     color-mix(in oklab, var(--background) 28%, transparent) 84%,
     var(--background) 100%
   );
@@ -334,4 +334,14 @@
 }
 [data-presentation="editorial"] .editorial-editable:focus-visible {
   outline-style: solid;
+}
+/* Over a film the hint is the one line of the bar without a ground of its own: it wears the
+   copy's halo of the page's background, and the ink rather than the muted tone. */
+[data-presentation="editorial"] [data-hero-try] .editorial-try-hint {
+  color: var(--foreground);
+  text-shadow: 0 1px 2px var(--background), 0 0 12px var(--background), 0 0 24px var(--background);
+}
+/* Under a section's heading (features) the bar keeps a little air above it. */
+[data-presentation="editorial"] [data-section="features"] .editorial-try {
+  margin-top: 0.5rem;
 }
