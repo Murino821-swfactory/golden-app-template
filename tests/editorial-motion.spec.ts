@@ -14,6 +14,7 @@ import {
   heroLoop,
   motionLoop,
 } from "../lib/editorial";
+import { heroFilm } from "../lib/hero-film";
 
 /**
  * Editorial motion, third round (T-340, 2026-11-05: after framer.com, vercel.com, linear.app
@@ -31,6 +32,10 @@ const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 /** The hero backlight this config wears — the T-350 library loop it names, or the stage board. */
 const HERO_LOOP = heroLoop(config.patterns.landing?.motion);
+/** A config that names a film (T-460) opens on real footage instead of the backlight: its hero is
+ * covered by `tests/hero-film.spec.ts`, and the fixtures without one keep running these tests. */
+const FILM = heroFilm(config.patterns.landing?.film);
+const FILM_OWNS = "a film owns this config's hero (tests/hero-film.spec.ts)";
 /** The file a loop's `<source>` names on this screen: the half-width one on a phone (T-369). */
 const shown = (small: boolean, source: { src: string; small: string }) => (small ? source.small : source.src);
 const SRC = "/newapp/test/hero-image/AAAAAAAAAAAAAAAAAAAA.jpg";
@@ -44,6 +49,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
 
   test("hero light: the backlight loop behind the headline — decoration, tinted by the palette, playing", async ({ page }) => {
     test.skip(!sections.includes("hero"), "no hero");
+    test.skip(FILM !== null, FILM_OWNS);
     await page.goto("./");
     const hero = page.locator('[data-section="hero"]');
     const light = hero.locator("[data-hero-light]");
@@ -82,11 +88,13 @@ test.describe("editorial motion — light loops and the running edge", () => {
     // brand (a 3D logo) and product (the app on a 3D phone) need a render a prototype has not got
     // at build time, so both fall back to the light loop the stage paints today — the hero still
     // wears its backlight whatever the archetype, and a build never ships a blank hero.
-    await expect(hero.locator("[data-hero-light]")).toHaveCount(1);
+    await expect(hero.locator("[data-hero-light]")).toHaveCount(FILM === null ? 1 : 0);
+    await expect(hero.locator("[data-hero-film]")).toHaveCount(FILM === null ? 0 : 1);
   });
 
   test("hero light: reduced motion shows the still and never downloads the loop", async ({ page }) => {
     test.skip(!sections.includes("hero"), "no hero");
+    test.skip(FILM !== null, FILM_OWNS);
     const fetched: string[] = [];
     page.on("request", (req) => {
       if (/\/motion\/[^/]+\.(webm|mp4)$/.test(new URL(req.url()).pathname)) fetched.push(req.url());
@@ -115,6 +123,7 @@ test.describe("editorial motion — light loops and the running edge", () => {
 
   test("the loops rest when they leave the screen", async ({ page }) => {
     test.skip(!sections.includes("hero"), "no hero");
+    test.skip(FILM !== null, FILM_OWNS);
     await page.goto("./");
     const video = page.locator('[data-section="hero"] [data-hero-light] video');
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);
