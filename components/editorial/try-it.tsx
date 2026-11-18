@@ -2,7 +2,7 @@
 
 import { useCallback, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Image as ImageIcon, PenLine } from "lucide-react";
+import { Image as ImageIcon, Palette, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -49,6 +49,56 @@ export function TryBar({
         <button type="button" data-try="texts" aria-pressed={editing} className="editorial-try-button" onClick={onTexts}>
           {icons && <PenLine aria-hidden className="size-4" />}
           {editing ? t("tryTextsDone") : t("tryTexts")}
+        </button>
+      </div>
+      <p data-try-hint aria-live="polite" className="editorial-try-hint">
+        {hint ? t(hint) : ""}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The control pad (founder, 2026-11-18: "the page's control panel"): the same controls as large
+ * touch keys, set into the hero's product frame under its title bar — the picture, the words and
+ * the colour, beside the frame's own device switch, so everything a visitor can change is in one
+ * place. The colour key presses the shared header's palette button: the palette is stored and
+ * cycled in one place (`@tokenwise/shared-ui`), and a second copy of that state would drift.
+ */
+export function TryPad({
+  onImage,
+  editing,
+  onTexts,
+  hint,
+}: {
+  onImage?: () => void;
+  editing: boolean;
+  onTexts: () => void;
+  hint: TryHint | null;
+}) {
+  const t = useTranslations("landing");
+  const tc = useTranslations("common");
+  return (
+    <div data-try-bar data-try-pad className="editorial-pad">
+      <div role="group" aria-label={t("tryLabel")} className="editorial-pad-keys">
+        {onImage && (
+          <button type="button" data-try="image" className="editorial-pad-key" onClick={onImage}>
+            <ImageIcon aria-hidden className="size-5" />
+            <span>{t("tryImage")}</span>
+          </button>
+        )}
+        <button type="button" data-try="texts" aria-pressed={editing} className="editorial-pad-key" onClick={onTexts}>
+          <PenLine aria-hidden className="size-5" />
+          <span>{editing ? t("tryTextsDone") : t("tryTexts")}</span>
+        </button>
+        <button
+          type="button"
+          data-try="colour"
+          className="editorial-pad-key"
+          onClick={() => document.querySelector<HTMLButtonElement>('[data-shared-control="palette"]')?.click()}
+        >
+          <Palette aria-hidden className="size-5" />
+          <span>{tc("changeColour")}</span>
         </button>
       </div>
       <p data-try-hint aria-live="polite" className="editorial-try-hint">

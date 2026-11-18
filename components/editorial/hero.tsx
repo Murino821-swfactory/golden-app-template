@@ -21,7 +21,7 @@ import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { HeroFilm } from "./hero-film";
 import { LightLoop } from "./light-loop";
-import { EditableText, TryBar, type TryHint } from "./try-it";
+import { EditableText, TryBar, TryPad, type TryHint } from "./try-it";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
 /**
@@ -58,7 +58,9 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * action — "Change image" (the next film of the library) and "Change texts" (the headline and
  * the subheadline become editable in place) — so the golden demo, where a visitor from a social
  * network lands, lets them change the page with their own hands. Both stay in the browser: no
- * request, nothing saved. Buttons, not links: the hero keeps its one action.
+ * request, nothing saved. Buttons, not links: the hero keeps its one action. When the hero has
+ * its product frame, the buttons are the frame's control pad instead (`TryPad`: picture, words,
+ * colour — beside the device switch), the page's one control panel.
  */
 
 const listings = config.patterns.listings;
@@ -184,6 +186,16 @@ export function HeroSection() {
   const built = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date());
   const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
   const showFilm = film !== null && !background && !object;
+  const changeImage = showFilm
+    ? () => {
+        setFilm(nextHeroFilm(film));
+        setHint("tryImageHint");
+      }
+    : undefined;
+  const changeTexts = () => {
+    setEditing(!editing);
+    setHint("tryTextsHint");
+  };
 
   return (
     <section
@@ -245,24 +257,12 @@ export function HeroSection() {
           )}
           {/* The visitor's own hands (T-460): the picture and the words change in this browser
               only. After the four pieces of copy, so their entrance delays stay where they are. */}
-          {tryIt && (
+          {/* The visitor's own hands (T-460). With a product frame the controls are its control
+              pad (below); a hero without a frame keeps them here, under the action — after the
+              four pieces of copy, so their entrance delays stay where they are. */}
+          {tryIt && !hasFrame && (
             <div data-hero-try className="editorial-enter" style={{ textShadow: "none", "--d": "280ms" } as CSSProperties}>
-              <TryBar
-                onImage={
-                  showFilm
-                    ? () => {
-                        setFilm(nextHeroFilm(film));
-                        setHint("tryImageHint");
-                      }
-                    : undefined
-                }
-                editing={editing}
-                onTexts={() => {
-                  setEditing(!editing);
-                  setHint("tryTextsHint");
-                }}
-                hint={hint}
-              />
+              <TryBar onImage={changeImage} editing={editing} onTexts={changeTexts} hint={hint} />
             </div>
           )}
           {name === "hidden" && (
@@ -310,6 +310,14 @@ export function HeroSection() {
                   ))}
                 </div>
               </div>
+              {/* The page's control pad (founder, 2026-11-18): picture, words and colour as touch
+                  keys, in the same frame as the device switch — everything a visitor can change,
+                  in one place. Buttons only: the frame still carries no link. */}
+              {tryIt && (
+                <div data-hero-try>
+                  <TryPad onImage={changeImage} editing={editing} onTexts={changeTexts} hint={hint} />
+                </div>
+              )}
               <div className="editorial-frame-screen px-3 pb-3 sm:px-4 sm:pb-4">{kind === "preview" ? <ProductPreview /> : <HeroOffers cards={offers} />}</div>
             </div>
           </div>

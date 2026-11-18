@@ -266,6 +266,33 @@ test.describe("hero film — the visitor changes the page with their own hands",
     expect(api).toEqual([]);
   });
 
+  test("the control pad: picture, words and colour as touch keys in the product frame, beside the device switch", async ({ page }, info) => {
+    test.skip(!TRY, "no try-it buttons in this config");
+    await page.goto("./");
+    const hero = page.locator('[data-section="hero"]');
+    const frame = hero.locator("[data-hero-frame]");
+    test.skip((await frame.count()) === 0, "this hero has no product frame: the buttons stay under its action");
+    const pad = frame.locator("[data-hero-try] [data-try-pad]");
+    await expect(pad).toHaveCount(1);
+    // One control panel: nothing left under the hero's action, and the device switch in the same frame.
+    await expect(hero.locator(".editorial-hero-copy [data-try-bar]")).toHaveCount(0);
+    if (info.project.name !== "mobile") await expect(frame.locator("[data-device-tabs]")).toBeVisible();
+    const keys = pad.locator("button");
+    expect(await keys.evaluateAll((els) => els.map((el) => el.getAttribute("data-try")))).toEqual(
+      FILM === null ? ["texts", "colour"] : ["image", "texts", "colour"]
+    );
+    for (const box of await keys.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))) expect(box).toBeGreaterThanOrEqual(44);
+    // In reach before any scroll: the pad starts above the fold.
+    if (FILM !== null) expect((await pad.boundingBox())!.y).toBeLessThan(page.viewportSize()!.height - 24);
+    // The colour key steps the page's palette — the header's own "Change colour".
+    const before = await page.locator("html").getAttribute("data-scheme");
+    await pad.locator("button[data-try='colour']").click();
+    await expect(page.locator("html")).not.toHaveAttribute("data-scheme", before!);
+    // Keys, not links: the frame carries none and the hero keeps its one action.
+    await expect(frame.locator("a")).toHaveCount(0);
+    await expect(hero.locator("a")).toHaveCount(1);
+  });
+
   test("\"Change image\" swaps the film for the next one in the library — no request beyond the film itself", async ({ page }) => {
     test.skip(!TRY || FILM === null, "no try-it buttons over a film in this config");
     const api: string[] = [];

@@ -826,7 +826,13 @@ copy contract, same `data-section` markers — the suites that read the page kee
   hero's action and under the features heading: "Change image" (hero: the next film,
   `nextHeroFilm`; features: the first card's next loop, `CARD_LOOPS` / `nextCardLoop` in
   `lib/editorial.ts`) and "Change texts" (hero: headline and subheadline; features: the heading
-  and every card's title and description). A line a visitor may retype is an `EditableText`:
+  and every card's title and description). **In the hero the controls are the product frame's
+  control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): three touch keys under
+  the frame's title bar — picture, words and colour (the colour key presses the shared header's
+  palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
+  the frame's own device switch, everything a visitor can change in one place; a frame that carries
+  the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to
+  stand in the first screen. A hero without a frame keeps the two buttons under its action. A line a visitor may retype is an `EditableText`:
   `contenteditable="plaintext-only"` while editing, the section's own typography otherwise — two
   elements with different keys, so React never reconciles into nodes the typing replaced; the
   words are kept when the caret leaves the line. All of it stays in the visitor's browser: no
