@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, contentFor, landingPresentation } from "../lib/prototype-config";
 import { MOTION_SMALL_QUERY, heroLoop, motionLoop } from "../lib/editorial";
+import { heroFilm } from "../lib/hero-film";
 
 /**
  * The stage — the backlight (T-368, 2026-11-07, after apple.com's ProLED XDR page; the founder's
@@ -19,6 +20,7 @@ const editorial = landingPresentation(config) === "editorial";
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 /** The hero backlight this config wears: the T-350 library loop it names, or the stage board. */
 const HERO_LOOP = heroLoop(config.patterns.landing?.motion);
+const FILM = heroFilm(config.patterns.landing?.film);
 /** The file a loop's first `<source>` names on this screen: the half-width one on a phone. */
 const shown = (small: boolean, name: Parameters<typeof motionLoop>[1]) => (small ? motionLoop(BASE, name).sources[0]!.small : motionLoop(BASE, name).sources[0]!.src);
 
@@ -29,8 +31,11 @@ test.describe("editorial stage — the page", () => {
     test.skip(!sections.includes("hero") || !sections.includes("cta"), "no hero or no close");
     await page.goto("./");
     const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
+    // A config that names a film (T-460) opens on real footage instead of the backlight
+    // (`tests/hero-film.spec.ts`); the device and the ribbons are the stage's either way.
     const hero = page.locator('[data-section="hero"] [data-hero-light]');
-    await expect(hero.locator("video source").first()).toHaveAttribute("src", shown(small, HERO_LOOP));
+    if (FILM === null) await expect(hero.locator("video source").first()).toHaveAttribute("src", shown(small, HERO_LOOP));
+    else await expect(hero).toHaveCount(0);
     const close = page.locator('[data-section="cta"] [data-closing-light]');
     await expect(close.locator("video source").first()).toHaveAttribute("src", shown(small, "closing-light"));
     const card = page.locator("[data-bento] > li:first-child [data-card-light]");
@@ -45,6 +50,7 @@ test.describe("editorial stage — the page", () => {
 
   test("a phone plays the half-width files, a desktop the full ones", async ({ page }, info) => {
     test.skip(!sections.includes("hero"), "no hero");
+    test.skip(FILM !== null, "a film owns this config's hero (tests/hero-film.spec.ts)");
     await page.goto("./");
     const video = page.locator('[data-section="hero"] [data-hero-light] video');
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false);

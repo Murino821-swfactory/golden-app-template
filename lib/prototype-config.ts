@@ -30,6 +30,7 @@ import { z } from "zod";
 import rawConfig from "../prototype.config.json";
 import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
 import { HERO_ARCHETYPES, HERO_LOOPS } from "./editorial";
+import { HERO_FILMS } from "./hero-film";
 
 /** Re-exported, not restated: `color-schemes.ts` owns both the ids and their pairs, so a
  * sixteenth palette is one edit. A second literal here is how P5 happened. */
@@ -322,6 +323,14 @@ export const PATTERN_SCHEMAS = {
       .enum(HERO_LOOPS)
       .optional()
       .describe("The light loop that plays behind the hero headline — a seamless Blender render tinted by the palette (T-350 library, €0 per project). Omit for stage-field (a board of mini-LEDs). pulse-ring: rings breathing out of a core; orbit-tiles: glass panels turning on a ring; horizon-sweep: a grid floor running to a swept horizon; data-lines: packets running along stacked rails. Reduced motion and no JavaScript show the poster still."),
+    film: z
+      .enum(HERO_FILMS)
+      .optional()
+      .describe("Leave out — the content call never sets this. Real footage behind the hero instead of the light loop, played once (the factory's own films of its tower; the golden demo wears one). Told in two parts: it rests where its story pauses and the visitor's first scroll plays the rest. tower-dusk: a van arrives at the tower at sunset and a door opens, then the van leaves; tower-night: a helicopter takes a crate off the roof; bakery-oven: a baker draws loaves from a wood oven; bakery-house: a bakery at night with every floor at work; rail-yard: a freight train leaves a rain-wet yard. Reduced motion and no JavaScript show the first frame."),
+    tryIt: z
+      .boolean()
+      .optional()
+      .describe("Leave out — the content call never sets this. true shows every visitor two buttons under the hero's action and under the features heading, Change image and Change texts, that change the page in their own browser only (the golden demo, where a visitor tries the page with their own hands). A customer's page never carries them."),
   }),
   dashboard: z.object({
     kpis: z

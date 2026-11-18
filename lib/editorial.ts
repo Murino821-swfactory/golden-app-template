@@ -156,6 +156,19 @@ export const HERO_LOOPS = ["stage-field", "pulse-ring", "orbit-tiles", "horizon-
 export type HeroLoopName = (typeof HERO_LOOPS)[number];
 export const DEFAULT_HERO_LOOP: HeroLoopName = "stage-field";
 
+/**
+ * The loops the first feature card can wear (T-460): the stage's device first — what every page
+ * shows — then the library's other motifs, which the golden demo's "Change image" walks through
+ * (`components/editorial/features.tsx`). All are rendered already; nothing new ships.
+ */
+export const CARD_LOOPS = ["stage-slab", "orbit-tiles", "pulse-ring", "data-lines", "horizon-sweep"] as const satisfies readonly MotionLoopName[];
+export type CardLoopName = (typeof CARD_LOOPS)[number];
+
+/** The next loop for the first card, round and round. Pure. */
+export function nextCardLoop(current: CardLoopName): CardLoopName {
+  return CARD_LOOPS[(CARD_LOOPS.indexOf(current) + 1) % CARD_LOOPS.length]!;
+}
+
 /** The hero backlight a config names, or the stage board when it names none (or something stale). Pure. */
 export function heroLoop(motion: string | undefined): HeroLoopName {
   return (HERO_LOOPS as readonly string[]).includes(motion ?? "") ? (motion as HeroLoopName) : DEFAULT_HERO_LOOP;

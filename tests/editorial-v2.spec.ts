@@ -143,7 +143,8 @@ test.describe("editorial v2 — brand block, strip, devices, tiles, tone", () =>
     test.skip(!sections.includes("hero"), "no hero");
     await page.goto("./");
     const hero = page.locator('[data-section="hero"]');
-    const expected = (await hero.locator("[data-hero-object]").count()) ? 0 : Math.min(4, icons);
+    // An AI object or a film (T-460) is the hero's picture already: nothing floats over it.
+    const expected = (await hero.locator("[data-hero-object], [data-hero-film]").count()) ? 0 : Math.min(4, icons);
     const tilesOnPage = hero.locator("[data-floating-tile]");
     await expect(tilesOnPage).toHaveCount(expected);
     if (expected === 0) return;

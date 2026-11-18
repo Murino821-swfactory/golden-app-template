@@ -53,7 +53,7 @@ export function LightLoop({ name, className, marker }: { name: MotionLoopName; c
   }, [small]);
 
   return (
-    <div aria-hidden="true" {...{ [marker]: "" }} className={cn("editorial-light", className)}>
+    <div aria-hidden="true" {...{ [marker]: "" }} data-loop={name} className={cn("editorial-light", className)}>
       <video ref={ref} muted loop playsInline preload="none" poster={loop.poster} disablePictureInPicture tabIndex={-1}>
         {small !== null &&
           loop.sources.map((source) => <source key={source.type} src={small ? source.small : source.src} type={source.type} />)}

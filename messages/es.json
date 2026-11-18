@@ -38,7 +38,13 @@
     "deviceLabel": "Vista previa en",
     "deviceDesktop": "Ordenador",
     "deviceTablet": "Tableta",
-    "devicePhone": "Móvil"
+    "devicePhone": "Móvil",
+    "tryLabel": "Pruébelo usted mismo",
+    "tryImage": "Cambiar imagen",
+    "tryTexts": "Cambiar textos",
+    "tryTextsDone": "Listo",
+    "tryImageHint": "Son imágenes de nuestra fábrica. En su página, la IA pinta una imagen de su negocio.",
+    "tryTextsHint": "Escriba su propio titular. En su página, la IA reescribe todos los textos a partir de una sola instrucción."
   },
   "features": {
     "title": "Funciones",

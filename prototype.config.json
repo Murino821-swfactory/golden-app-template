@@ -21,7 +21,9 @@
         "cta"
       ],
       "font": "space-grotesk",
-      "motion": "pulse-ring"
+      "motion": "pulse-ring",
+      "film": "tower-dusk",
+      "tryIt": true
     },
     "dashboard": {},
     "authGoogle": {},

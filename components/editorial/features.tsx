@@ -1,14 +1,16 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
-import { bentoSpan } from "@/lib/editorial";
+import { CARD_LOOPS, bentoSpan, nextCardLoop, type CardLoopName } from "@/lib/editorial";
 import { ICONS } from "@/lib/icons";
+import { config } from "@/lib/prototype-config";
 import type { Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { LightLoop } from "./light-loop";
 import { ShowcaseStrip } from "./strip";
+import { EditableText, TryBar } from "./try-it";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
 /**
@@ -22,6 +24,12 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  * T-368/T-369 (the stage): the first card carries the rendered device (`data-card-light`,
  * `stage-slab`), the manifesto's pin is a bright panel and the cards switch on like dimming
  * zones (`stage.css`).
+ *
+ * T-460 (the visitor's own hands, `try-it.tsx`): with `patterns.landing.tryIt` the section offers
+ * the hero's two buttons under its heading — "Change image" gives the first card the next loop of
+ * the library (`CARD_LOOPS`), "Change texts" makes the heading and every card's title and
+ * description editable in place. Browser only; no icons on the buttons, because the section's
+ * `svg`s are counted.
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -41,11 +49,23 @@ export function FeaturesSection() {
   const features = landing?.features ?? TRANSLATION_FALLBACK;
   const manifesto = landing?.manifesto;
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
+  const tryIt = config.patterns.landing?.tryIt === true;
+  const [cardLoop, setCardLoop] = useState<CardLoopName>(CARD_LOOPS[0]);
+  const [editing, setEditing] = useState(false);
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
       <SectionHead>
-        <h2 className={DISPLAY_H2}>{landing?.featuresHeading ?? t("title")}</h2>
+        <EditableText as="h2" editing={editing} text={landing?.featuresHeading ?? t("title")} focus className={DISPLAY_H2} />
+        {tryIt && (
+          <TryBar
+            icons={false}
+            onImage={() => setCardLoop(nextCardLoop(cardLoop))}
+            editing={editing}
+            onTexts={() => setEditing(!editing)}
+            hint={editing ? "tryTextsHint" : null}
+          />
+        )}
       </SectionHead>
 
       <ul data-bento data-stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -62,11 +82,21 @@ export function FeaturesSection() {
             >
               {/* T-368 stage: the first card holds the product as an object — a device rendered
                   in Blender, turning under a light (`stage.css` keeps it on the card's far side). */}
-              {i === 0 && <LightLoop name="stage-slab" marker="data-card-light" className="editorial-light-card" />}
+              {i === 0 && <LightLoop key={cardLoop} name={cardLoop} marker="data-card-light" className="editorial-light-card" />}
               <Numeral index={i} className="absolute right-5 top-4" />
               {Icon && <Icon className="size-6 text-primary" aria-hidden />}
-              <h3 className={cn("mt-8 text-xl font-medium tracking-tight", span.wide && "lg:text-3xl lg:font-light")}>{feature.title}</h3>
-              <p className={cn("mt-2 max-w-prose text-sm text-muted-foreground sm:text-base", span.wide && "lg:max-w-xl")}>{feature.description}</p>
+              <EditableText
+                as="h3"
+                editing={editing}
+                text={feature.title}
+                className={cn("mt-8 text-xl font-medium tracking-tight", span.wide && "lg:text-3xl lg:font-light")}
+              />
+              <EditableText
+                as="p"
+                editing={editing}
+                text={feature.description}
+                className={cn("mt-2 max-w-prose text-sm text-muted-foreground sm:text-base", span.wide && "lg:max-w-xl")}
+              />
             </li>
           );
         })}

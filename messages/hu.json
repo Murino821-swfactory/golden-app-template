@@ -38,7 +38,13 @@
     "deviceLabel": "Előnézet",
     "deviceDesktop": "Számítógép",
     "deviceTablet": "Tablet",
-    "devicePhone": "Telefon"
+    "devicePhone": "Telefon",
+    "tryLabel": "Próbálja ki",
+    "tryImage": "Kép cseréje",
+    "tryTexts": "Szövegek cseréje",
+    "tryTextsDone": "Kész",
+    "tryImageHint": "Ezek a gyárunk felvételei. Az Ön oldalán az AI az Ön vállalkozásáról fest képet.",
+    "tryTextsHint": "Írja be saját címsorát. Az Ön oldalán az AI egyetlen utasítás alapján minden szöveget átír."
   },
   "features": {
     "title": "Funkciók",
