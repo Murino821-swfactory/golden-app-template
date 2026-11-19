@@ -38,7 +38,13 @@
     "deviceLabel": "Aperçu sur",
     "deviceDesktop": "Ordinateur",
     "deviceTablet": "Tablette",
-    "devicePhone": "Téléphone"
+    "devicePhone": "Téléphone",
+    "tryLabel": "Essayez vous-même",
+    "tryImage": "Changer l'image",
+    "tryTexts": "Changer les textes",
+    "tryTextsDone": "Terminé",
+    "tryImageHint": "Ce sont les images de notre usine. Sur votre page, l'IA peint une image de votre activité.",
+    "tryTextsHint": "Écrivez votre propre titre. Sur votre page, l'IA réécrit tous les textes à partir d'une seule consigne."
   },
   "features": {
     "title": "Fonctionnalités",

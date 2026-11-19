@@ -38,7 +38,13 @@
     "deviceLabel": "Preview on",
     "deviceDesktop": "Desktop",
     "deviceTablet": "Tablet",
-    "devicePhone": "Phone"
+    "devicePhone": "Phone",
+    "tryLabel": "Try it yourself",
+    "tryImage": "Change image",
+    "tryTexts": "Change texts",
+    "tryTextsDone": "Done",
+    "tryImageHint": "The factory's own footage. On your page the AI paints a picture of your business.",
+    "tryTextsHint": "Type your own headline. On your page the AI rewrites every text from one instruction."
   },
   "features": {
     "title": "Features",

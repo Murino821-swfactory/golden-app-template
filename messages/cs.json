@@ -38,7 +38,13 @@
     "deviceLabel": "Náhled na",
     "deviceDesktop": "Počítač",
     "deviceTablet": "Tablet",
-    "devicePhone": "Mobil"
+    "devicePhone": "Mobil",
+    "tryLabel": "Vyzkoušejte si to",
+    "tryImage": "Změnit obraz",
+    "tryTexts": "Změnit texty",
+    "tryTextsDone": "Hotovo",
+    "tryImageHint": "Toto jsou záběry naší továrny. Na vaší stránce AI namaluje obraz vašeho podnikání.",
+    "tryTextsHint": "Napište vlastní nadpis. Na vaší stránce AI přepíše všechny texty podle jednoho pokynu."
   },
   "features": {
     "title": "Funkce",

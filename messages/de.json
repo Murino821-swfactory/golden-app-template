@@ -38,7 +38,13 @@
     "deviceLabel": "Vorschau auf",
     "deviceDesktop": "Desktop",
     "deviceTablet": "Tablet",
-    "devicePhone": "Handy"
+    "devicePhone": "Handy",
+    "tryLabel": "Probieren Sie es selbst",
+    "tryImage": "Bild ändern",
+    "tryTexts": "Texte ändern",
+    "tryTextsDone": "Fertig",
+    "tryImageHint": "Das sind Aufnahmen unserer Fabrik. Auf Ihrer Seite malt die KI ein Bild Ihres Geschäfts.",
+    "tryTextsHint": "Schreiben Sie Ihre eigene Überschrift. Auf Ihrer Seite schreibt die KI alle Texte nach einer Anweisung um."
   },
   "features": {
     "title": "Funktionen",

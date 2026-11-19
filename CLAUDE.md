@@ -22,7 +22,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
 | Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
-| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
+| Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
 | Grid data (per visitor) | `lib/records.ts` (rules), `lib/records-firestore.ts` (writes), `hooks/use-records.ts` — see "Data: every visitor's own sandbox" |
 | Owner card + inbox | `lib/owner-contact.ts`, `hooks/use-owner-role.ts`, `app/[locale]/messages/page.tsx` — see "Owner card and inbox" |
@@ -32,6 +32,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
+| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`), `scripts/film/encode.sh`, `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -531,7 +532,9 @@ reference implementation and every prototype inherits it. Audit T-435 found it f
   after the tap, and on phones and in Safari the Firebase SDK prepares the popup's iframe
   when Auth starts. So `/login` calls `prepareSignIn()` on mount (loads Firebase, `getAuth`,
   persistence) and `signInWithGoogle()` awaits nothing before `signInWithPopup` once that is
-  done. The landing page still never downloads Firebase Auth for an anonymous visitor.
+  done. The landing page never downloads Firebase Auth for an anonymous visitor — neither
+  by itself nor through Next.js prefetching its action: only `/login` is fetched ahead of the
+  tap (`landingActionPrefetch`, `lib/landing-action.ts`).
 - **Redirect only where it can complete.** `signInWithRedirect` returns the visitor signed
   OUT unless `authDomain` is the host that serves the page (Chrome 115+, Firefox 109+,
   Safari 16.1+ partition the SDK's cross-site storage). `popupFailureAction` redirects a
@@ -791,6 +794,57 @@ copy contract, same `data-section` markers — the suites that read the page kee
   from 640px). The close keeps T-340's **light ribbons** across the whole band (`closing-light`,
   `.editorial-light-band` in `editorial.css`; T-374, the founder's pick over the stage's orb).
   Tests: `tests/editorial-stage.spec.ts`.
+- **Fifth round — the film and the visitor's own hands (T-460, 2026-11-17/18)**, after the
+  cinematic landings of wismeo and PropCheck, for the founder's goal: tokenwise.sk/demo/golden is
+  where a visitor from a social network lands, so it must read as THEIR new page and let them
+  change it with their own hands.
+  **The film.** A config that names one (`patterns.landing.film`, one of `HERO_FILMS` in
+  `lib/hero-film.ts`) opens on real footage instead of the backlight: `HeroFilm`
+  (`components/editorial/hero-film.tsx`) lays it across the first screen under the words — in its
+  own colours, like the AI hero image, under a veil of `var(--background)` that follows "Change
+  colour" — and `[data-hero-layout="film"]` gives the stage the first screen's height (whenever the
+  config names a film, also while an AI image owns the hero, so nothing moves). The first frame is
+  a `<picture>` in the static HTML (a phone gets its 9:16 cut before any script runs); the video
+  lies over it and shows once it is playing (`data-film-on`). **It is told in two parts**
+  (founder, 2026-11-18): it plays to `heroFilmHold(name, small)` and rests there (the van has
+  stopped, the door stands open), the visitor's first scroll plays the rest (the van drives away)
+  and it rests on its last frame — never a loop; `data-film-part` is `1` or `2`; a page opened
+  already scrolled plays straight through. Under reduced motion or Save-Data the poster stays and
+  the film is never downloaded. Precedence: AI image, then film, then light loop; no floating
+  tiles over a film. The library is the factory's own HeyGen footage — the clean generations
+  behind the videos in its assets folder, because the finished videos carry burnt-in captions:
+  `tower-dusk`, `tower-night`, `bakery-oven`, `bakery-house`, `rail-yard` (what each shows and its
+  HeyGen id: the header of `lib/hero-film.ts`; sources kept in `~/Video/golden-hero-films/` and
+  `~/Video/how-it-works-video/assets/films/` on the founder's PC). Each is a 1280 × 720 film, a
+  540 × 960 phone cut and two posters, H.264 only, inside `FILM_BUDGET_BYTES`
+  (`scripts/film/encode.sh <name> <wide src> <crop> <phone src> <crop>`; adding one = encode, a
+  line in `HERO_FILMS` and `HERO_FILM_HOLD`, `npm run schema`). `scripts/prune-film.mjs` (npm
+  `postbuild`) removes `out/film` from every export whose config shows no film, so a customer's
+  prototype ships none.
+  **Try-it** (`patterns.landing.tryIt: true`, the golden demo only — the content call never sets
+  it): `components/editorial/try-it.tsx`. `TryBar` is two buttons for every visitor, under the
+  hero's action and under the features heading: "Change image" (hero: the next film,
+  `nextHeroFilm`; features: the first card's next loop, `CARD_LOOPS` / `nextCardLoop` in
+  `lib/editorial.ts`) and "Change texts" (hero: headline and subheadline; features: the heading
+  and every card's title and description). **In the hero the controls are the product frame's
+  control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): three touch keys under
+  the frame's title bar — picture, words and colour (the colour key presses the shared header's
+  palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
+  the frame's own device switch, everything a visitor can change in one place; a frame that carries
+  the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to
+  stand in the first screen. A hero without a frame keeps the two buttons under its action. A line a visitor may retype is an `EditableText`:
+  `contenteditable="plaintext-only"` while editing, the section's own typography otherwise — two
+  elements with different keys, so React never reconciles into nodes the typing replaced; the
+  words are kept when the caret leaves the line. All of it stays in the visitor's browser: no
+  request, no cost, nothing saved; the hint under the buttons says what the real functions do on
+  the visitor's own page (the AI hero image, the copy rewrite). Buttons, not links, and no icons
+  in features (its `svg`s are counted). Texts: `landing.try*` in all 8 `messages/*.json`. To give
+  another section the same: wrap its lines in `EditableText` and render a `TryBar`.
+  Tests: `tests/hero-film.spec.ts`; the backlight tests of `editorial-motion.spec.ts` /
+  `editorial-stage.spec.ts` skip under a film and keep running on the fixtures, none of which
+  names one. **Not yet built (tasks T-461 … T-463):** the device switcher moving from the frame
+  into the header, a map on the landing centred on the visitor's place, and the demo's action
+  leading into tokenwise.sk's project chat with the visitor's campaign.
 - **Tests**: `tests/editorial.spec.ts` (page + pure rules + schema + no-hex grep), `tests/editorial-v2.spec.ts` (brand block, strip, devices, tiles, tone), `tests/editorial-motion.spec.ts` (light loops, running edge, budget);
   `fixtures/composed.config.json` names `story`, so `tests/landing-story.spec.ts` keeps
   exercising the stage in CI; `default`, `full`, `minimal` and `multilingual` build editorial.
