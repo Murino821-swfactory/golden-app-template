@@ -630,7 +630,7 @@ npm run dev              # Dev server
 npm run build            # Production build (must pass)
 npm run typecheck        # Type check
 npm run test:e2e         # Playwright tests (must pass)
-npm run test:packages    # shared-ui / hex-map package tests (must pass)
+npm run test:packages    # shared-ui package tests (must pass)
 ```
 
 ## Summary: Fastest Path
