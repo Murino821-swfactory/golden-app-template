@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 /**
- * A light loop rendered in Blender (T-340; scene in `scripts/motion/<name>.py`): neutral
+ * A light loop rendered in Blender (T-340; its scene is in git history): neutral
  * light on black that `editorial.css` screens onto the page and tints with the palette, so
  * "Change colour" relights it like every other glow. Decoration only — hidden from assistive
  * technology, no controls, never focusable.

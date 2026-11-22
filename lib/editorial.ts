@@ -121,7 +121,7 @@ export function stripRows<T>(tiles: readonly T[]): [T[], T[]] {
 
 /**
  * The light loops (T-340, after framer.com, vercel.com, linear.app and apple.com): short
- * seamless videos rendered in Blender from `scripts/motion/<name>.py` — neutral light on
+ * seamless videos rendered in Blender (finished files; the scenes are in git history) — neutral light on
  * black, so the page screens them onto any palette and tints them with the palette's second
  * accent (`editorial.css`, `.editorial-light`). Since T-369 (the founder's pick of the `stage`
  * scene among the three of T-368, `stage.css`) the loops are the stage's: `stage-field`, a

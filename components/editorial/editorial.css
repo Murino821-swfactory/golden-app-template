@@ -314,7 +314,7 @@
 
 /* ── Light loops (T-340): Blender renders, relit by the palette ──────────────────────
    After vercel.com's backlit prism, apple.com's rising orb and framer.com's glowing prompt
-   box. Each loop is neutral light on black (`scripts/motion/<name>.py`): `screen` lets the
+   box. Each loop is neutral light on black (a finished Blender render): `screen` lets the
    black vanish into whatever the page is painted with, and the tint layer above the video
    hands the light the palette's second accent through `color` — hue and saturation from the
    palette, brightness from the render — so the hottest light stays white and "Change colour"

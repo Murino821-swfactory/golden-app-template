@@ -19,7 +19,7 @@
  *   bakery-house  a bakery at night with its front open, every floor at work (96f969a8…)
  *   rail-yard     a freight train leaves a rain-wet yard at night (da77f618…, reel v5)
  * Each ships as a 1280 × 720 film, a 540 × 960 phone cut and the first frame of both as posters
- * (`scripts/film/encode.sh`), H.264 only; sources of the last three are 9:16 only, so their wide
+ * (encoded by `scripts/film/encode.sh`, removed 2026-11-22 — git history), H.264 only; sources of the last three are 9:16 only, so their wide
  * cut is a band of the same shot.
  *
  * A config names one with `patterns.landing.film`; a config that names none keeps its light loop

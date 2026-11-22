@@ -327,9 +327,9 @@ test.describe("editorial motion (pure)", () => {
     expect(css).toMatch(/\.editorial-light-band \{[^}]*mask-image: radial-gradient/);
   });
 
-  test("the Blender scenes that render the loops are kept beside the template", () => {
-    for (const name of MOTION_LOOPS) {
-      expect(existsSync(resolve(__dirname, `../scripts/motion/${name}.py`)), name).toBe(true);
+  test("the loops and films ship as finished files: their Blender scenes and encoders left the template (2026-11-22)", () => {
+    for (const dir of ["motion", "film"]) {
+      expect(existsSync(resolve(__dirname, `../scripts/${dir}`)), `scripts/${dir}`).toBe(false);
     }
   });
 
