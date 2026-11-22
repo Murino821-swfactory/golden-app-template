@@ -2,8 +2,8 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
 /**
- * Every prototype starts from this template and `prototypes:refresh` merges it into the
- * live `demo/*` branches, so a vulnerable framework here ships everywhere. The floors are
+ * Every new prototype starts from this template, so a vulnerable framework here ships in
+ * every prototype built after it (live `demo/*` branches are no longer refreshed, 2026-11-23). The floors are
  * the fixed releases of the Next.js advisories the template must stay above:
  * 16.4.1 — October 14, 2026 out-of-band update (GHSA-673q-mjm6-r5xr, CVE-2026-96889,
  * GHSA-p3m5-59mp-jv5r); sharp 0.35.5 — the CVE-2026-96889 workaround.

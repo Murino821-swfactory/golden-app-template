@@ -433,8 +433,8 @@ user. Spec and decision in the **sw-factory** repo
   `<html data-font="inter">` is the first-visit face; `ThemeBootstrap` in `app/shell.tsx`
   applies a returning visitor's palette and font before the first paint.
 - Any change under `packages/shared-ui/{src,styles.css,fonts}` must bump its version (CI
-  checks); merging to `main` publishes it to npm. Live prototypes change only through
-  `npm run prototypes:refresh` on the VM, never automatically.
+  checks); merging to `main` publishes it to npm. Live prototypes never change: the factory's
+  `prototypes:refresh` was removed on 2026-11-23, so only new prototypes get a template change.
 - New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
 
 ## The AI hero image (2026-09-25)

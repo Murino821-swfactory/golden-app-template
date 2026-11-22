@@ -201,7 +201,7 @@ test.describe("configs written before the split still build", () => {
 
 /**
  * The four ids retired on 2026-09-24. Every `demo/*` branch built before then carries one,
- * and `prototypes:refresh` never edits a customer's config, so the parser translates.
+ * and nothing edits a customer's config afterwards, so the parser translates.
  */
 test.describe("palette ids retired on 2026-09-24 still build", () => {
   for (const [retired, current] of Object.entries(LEGACY_SCHEME_IDS)) {
