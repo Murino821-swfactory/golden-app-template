@@ -30,10 +30,10 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Story chapters, use cases and comparison | `components/sections/landing-story.tsx`, `use-cases.tsx`, `comparison.tsx`; patterns and localized copy in `lib/prototype-config.ts` |
 | SEO / GEO | `lib/seo.ts`, `app/robots.ts`, `app/sitemap.ts`, `scripts/build-discovery.ts`; `NEXT_PUBLIC_SITE_ORIGIN` comes from the publisher |
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
-| Light loops (Blender renders behind the hero and the closing band), running frame edge | `scripts/motion/`, `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
-| Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); scenes in `scripts/motion/<name>.py`, assets in `public/motion/`. Re-render only on the PC GPU (sw-factory `docs/factory/BLENDER.md`) |
-| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`), `scripts/film/encode.sh`, `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
-| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `scripts/motion/stage-*.py`, `closing-light.py` — see "The editorial presentation", third and fourth rounds |
+| Light loops (Blender renders behind the hero and the closing band), running frame edge | `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
+| Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); finished assets in `public/motion/` — their Blender scenes left the template on 2026-11-22 (git history) |
+| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
+| The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `public/motion/stage-*`, `closing-light*` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
 | Offers catalogue (`listings`) | `components/sections/listings.tsx`, `lib/listings.ts`, `lib/listing-inquiry.ts` — see "Listings, required patterns, phone and profile" |
@@ -756,10 +756,10 @@ copy contract, same `data-section` markers — the suites that read the page kee
   picks it for loud ideas). The header adapter passes the configured font as the switcher's
   default (`components/layout/header.tsx`).
 - **Third round — light loops (T-340, 2026-11-05)**, after framer.com, vercel.com, linear.app and
-  apple.com's MacBook Pro display page: two seamless 8 s loops rendered in **Blender**
-  (`scripts/motion/<name>.py`, encoded by `scripts/motion/encode.sh` into
-  `public/motion/<name>.{webm,mp4,webp}`, `lib/editorial.ts` `MOTION_LOOPS`/`motionLoop`, budget
-  `MOTION_BUDGET_BYTES` per loop). The round's own loops (`hero-light`, an eclipse; `closing-light`,
+  apple.com's MacBook Pro display page: two seamless 8 s loops rendered in **Blender** into
+  `public/motion/<name>.{webm,mp4,webp}` (`lib/editorial.ts` `MOTION_LOOPS`/`motionLoop`, budget
+  `MOTION_BUDGET_BYTES` per loop; the scenes and the encoder left the template on 2026-11-22, the
+  files are finished assets). The round's own loops (`hero-light`, an eclipse; `closing-light`,
   ribbons) left with T-369 — the loops are the stage's (fourth round); the hero's renders only
   when no AI image owns the hero. `LightLoop` (`components/editorial/light-loop.tsx`):
   `preload="none"`, plays only on screen and only without reduced motion (the WebP still
@@ -770,11 +770,9 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `var(--highlight, var(--primary))` gives them the palette's hue — "Change colour" relights them,
   no colour is encoded. The hero frame gets a **running edge** (`[data-frame-run]`, after Framer's
   prompt box): an arc of light travels round its border (conic gradient + `@property` angle),
-  hidden under reduced motion. To change a loop: edit the scene, render
-  (`blender -b --factory-startup -P scripts/motion/<name>.py -- --out <dir> --anim …`, Blender 5.2,
-  OptiX), encode twice (the full loop, then `STILL=0 scripts/motion/encode.sh <name>-sm <frames>
-  <half width> <half height>`), keep the budget test green (three files per loop inside the
-  budget, each phone file at most 60 % of its full one).
+  hidden under reduced motion. A replaced loop must keep the budget test green (three files per
+  loop inside the budget, each phone file at most 60 % of its full one); the scenes and the
+  encoder to start from are in git history.
 - **Fourth round — the stage (T-368 → T-369, 2026-11-07/08)**, after the founder read the pattern
   catalogue of framer / apple / lovable / vercel / linear and asked for Apple's quality: things
   appearing in turn, light against dark, a lot of motion, video, scenes rendered in Blender. Three
@@ -817,7 +815,7 @@ copy contract, same `data-section` markers — the suites that read the page kee
   HeyGen id: the header of `lib/hero-film.ts`; sources kept in `~/Video/golden-hero-films/` and
   `~/Video/how-it-works-video/assets/films/` on the founder's PC). Each is a 1280 × 720 film, a
   540 × 960 phone cut and two posters, H.264 only, inside `FILM_BUDGET_BYTES`
-  (`scripts/film/encode.sh <name> <wide src> <crop> <phone src> <crop>`; adding one = encode, a
+  (adding one = encode it the same way — the encoder left on 2026-11-22 and is in git history —, a
   line in `HERO_FILMS` and `HERO_FILM_HOLD`, `npm run schema`). `scripts/prune-film.mjs` (npm
   `postbuild`) removes `out/film` from every export whose config shows no film, so a customer's
   prototype ships none.
