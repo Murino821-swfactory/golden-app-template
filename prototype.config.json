@@ -1,131 +1,116 @@
 {
-  "appName": "Golden App Template",
+  "appName": "aplikácia pre pracovné cesty",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "clay-kiln"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
+        "listings",
         "howItWorks",
         "faq",
-        "listings",
-        "contact",
         "cta"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring",
-      "film": "tower-dusk",
-      "tryIt": true
+      "font": "plus-jakarta-sans"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "approvedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "approved"
+        },
+        {
+          "id": "tripCount",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "totalCost",
+          "field": "cost",
+          "agg": "sum"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
     },
-    "contactForm": {
-      "phone": "optional"
-    },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "trip",
         "fields": [
           {
-            "key": "name",
+            "key": "destination",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "purpose",
+            "type": "text"
+          },
+          {
+            "key": "startDate",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "cost",
+            "type": "number"
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+              "submitted",
+              "approved",
+              "rejected"
+            ],
+            "required": true
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "domestic",
+        "abroad",
+        "conference"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
+          "key": "days"
         }
       ],
-      "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "trip-type-1",
+          "category": "domestic",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "days": 1
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "id": "trip-type-2",
+          "category": "abroad",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "days": 4
           }
         },
         {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
+          "id": "trip-type-3",
+          "category": "conference",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "days": 3
           }
         }
       ]
@@ -133,182 +118,321 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Record business trips and get them approved in one place, so your community always knows who travels where and what has been signed off.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every business trip recorded and approved",
+        "subheadline": "For communities and teams: sign in, add your first trip and follow its approval from request to decision.",
+        "eyebrow": "Business trip approvals",
+        "featuresHeading": "Everything a trip needs in one place",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "map-pin",
+            "title": "Record every trip",
+            "description": "Add destination, purpose, start date and cost for each business trip in seconds."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Follow approval status",
+            "description": "See whether a trip is submitted, approved or rejected, in a table or on a board."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "See totals at a glance",
+            "description": "Check the share of approved trips and the total cost on your own dashboard."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Your data stays yours",
+            "description": "Sign in with Google and see only the trips you are allowed to see."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "From request to decision",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
               "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "description": "Use your Google account to open your own trip workspace."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Add a trip",
+              "description": "Enter the destination, purpose, date and expected cost."
+            },
+            {
+              "title": "Track the approval",
+              "description": "Move the trip across the board as it is submitted, approved or rejected."
+            },
+            {
+              "title": "Review the dashboard",
+              "description": "Check how many trips are approved and what they cost in total."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions before you start",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who is this app for?",
+              "answer": "Communities and teams that need to keep a record of business trips and approve them."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Do I need an account?",
+              "answer": "Yes. You sign in with Google so that your trips are saved under your own account."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "What can I record about a trip?",
+              "answer": "Destination, purpose, start date, cost and approval status."
+            },
+            {
+              "question": "Are the sample trips real?",
+              "answer": "No. They are invented examples that show the workflow and you can edit or replace them."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "My business trips",
+        "intro": "Your trips, their approval status and the costs at a glance.",
+        "kpiLabels": {
+          "approvedShare": "Approved trips",
+          "tripCount": "Trips recorded",
+          "totalCost": "Total cost"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Sign in and add a trip",
+        "title": "Start recording your trips",
+        "subtitle": "Sign in with Google and add your first business trip."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Trips",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "destination": "Destination",
+          "purpose": "Purpose",
+          "startDate": "Start date",
+          "cost": "Cost (EUR)",
+          "status": "Status"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "destination": "Example city A",
+            "purpose": "Partner meeting",
+            "startDate": "2026-10-20",
+            "cost": 120,
+            "status": "approved"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "destination": "Example city B",
+            "purpose": "Community conference",
+            "startDate": "2026-11-03",
+            "cost": 480,
+            "status": "submitted"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "destination": "Example city C",
+            "purpose": "Training workshop",
+            "startDate": "2026-11-12",
+            "cost": 260,
+            "status": "rejected"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Kinds of trips you can record",
+        "intro": "The app covers the trips a community typically needs to approve.",
+        "notice": "These are illustrative examples, not a live offer.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "domestic": "Domestic",
+          "abroad": "Abroad",
+          "conference": "Conference"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "days": "Days"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "trip-type-1": {
+            "title": "One-day domestic trip",
+            "summary": "A short visit to a meeting or partner within the country, recorded and approved in advance.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Quick request",
+              "Simple cost entry"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "trip-type-2": {
+            "title": "Trip abroad",
+            "summary": "A multi-day journey abroad with its purpose and expected cost, waiting for a decision.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Purpose noted",
+              "Approval tracked"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "trip-type-3": {
+            "title": "Conference attendance",
+            "summary": "A few days at an event, with the cost entered and the approval status followed on the board.",
+            "highlights": [
+              "Cost tracked",
+              "Status on a board"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "Evidujte pracovné cesty a schvaľujte ich na jednom mieste, aby vaša komunita vždy vedela, kto kam cestuje a čo je schválené.",
+      "landing": {
+        "headline": "Každá pracovná cesta zaevidovaná a schválená",
+        "subheadline": "Pre komunity a tímy: prihláste sa, pridajte prvú cestu a sledujte jej schvaľovanie od žiadosti po rozhodnutie.",
+        "eyebrow": "Schvaľovanie pracovných ciest",
+        "featuresHeading": "Všetko k ceste na jednom mieste",
+        "features": [
+          {
+            "icon": "map-pin",
+            "title": "Evidencia každej cesty",
+            "description": "Pridajte cieľ, účel, dátum začiatku a náklady pracovnej cesty za pár sekúnd."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Stav schválenia",
+            "description": "Zistite, či je cesta odoslaná, schválená alebo zamietnutá, v tabuľke aj na nástenke."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Súčty na prvý pohľad",
+            "description": "Na vlastnom prehľade vidíte podiel schválených ciest a celkové náklady."
+          },
+          {
+            "icon": "shield-check",
+            "title": "Vaše dáta zostávajú vaše",
+            "description": "Prihlásite sa cez Google a vidíte len cesty, ktoré vidieť smiete."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Od žiadosti po rozhodnutie",
+          "steps": [
+            {
+              "title": "Prihláste sa cez Google",
+              "description": "Pomocou účtu Google otvoríte vlastný priestor pre svoje cesty."
+            },
+            {
+              "title": "Pridajte cestu",
+              "description": "Zadajte cieľ, účel, dátum a predpokladané náklady."
+            },
+            {
+              "title": "Sledujte schválenie",
+              "description": "Presúvajte cestu na nástenke podľa toho, či je odoslaná, schválená alebo zamietnutá."
+            },
+            {
+              "title": "Pozrite si prehľad",
+              "description": "Skontrolujte, koľko ciest je schválených a koľko stoja spolu."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Otázky pred začiatkom",
+          "items": [
+            {
+              "question": "Pre koho je aplikácia určená?",
+              "answer": "Pre komunity a tímy, ktoré potrebujú evidovať pracovné cesty a schvaľovať ich."
+            },
+            {
+              "question": "Potrebujem účet?",
+              "answer": "Áno. Prihlásite sa cez Google, aby sa vaše cesty ukladali pod vaším účtom."
+            },
+            {
+              "question": "Čo môžem o ceste zaznamenať?",
+              "answer": "Cieľ, účel, dátum začiatku, náklady a stav schválenia."
+            },
+            {
+              "question": "Sú ukážkové cesty skutočné?",
+              "answer": "Nie. Sú to vymyslené príklady, ktoré ukazujú postup, a môžete ich upraviť alebo nahradiť."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Moje pracovné cesty",
+        "intro": "Vaše cesty, ich stav schválenia a náklady na prvý pohľad.",
+        "kpiLabels": {
+          "approvedShare": "Schválené cesty",
+          "tripCount": "Zaevidované cesty",
+          "totalCost": "Celkové náklady"
+        }
+      },
+      "cta": {
+        "label": "Prihlásiť sa a pridať cestu",
+        "title": "Začnite evidovať svoje cesty",
+        "subtitle": "Prihláste sa cez Google a pridajte prvú pracovnú cestu."
+      },
+      "dataGrid": {
+        "entityLabel": "Cesty",
+        "fieldLabels": {
+          "destination": "Cieľ",
+          "purpose": "Účel",
+          "startDate": "Dátum začiatku",
+          "cost": "Náklady (EUR)",
+          "status": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "destination": "Ukážkové mesto A",
+            "purpose": "Stretnutie s partnerom",
+            "startDate": "2026-10-20",
+            "cost": 120,
+            "status": "approved"
+          },
+          {
+            "destination": "Ukážkové mesto B",
+            "purpose": "Komunitná konferencia",
+            "startDate": "2026-11-03",
+            "cost": 480,
+            "status": "submitted"
+          },
+          {
+            "destination": "Ukážkové mesto C",
+            "purpose": "Školiaci workshop",
+            "startDate": "2026-11-12",
+            "cost": 260,
+            "status": "rejected"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Druhy ciest, ktoré môžete evidovať",
+        "intro": "Aplikácia pokrýva cesty, ktoré komunita bežne potrebuje schvaľovať.",
+        "notice": "Ide o ilustračné príklady, nie o živú ponuku.",
+        "categoryLabels": {
+          "domestic": "Domáca",
+          "abroad": "Zahraničná",
+          "conference": "Konferencia"
+        },
+        "attributeLabels": {
+          "days": "Dni"
+        },
+        "items": {
+          "trip-type-1": {
+            "title": "Jednodňová cesta po Slovensku",
+            "summary": "Krátka návšteva stretnutia alebo partnera v rámci krajiny, zaevidovaná a schválená vopred.",
+            "highlights": [
+              "Rýchla žiadosť",
+              "Jednoduché zadanie nákladov"
+            ]
+          },
+          "trip-type-2": {
+            "title": "Cesta do zahraničia",
+            "summary": "Viacdňová cesta do zahraničia s uvedeným účelom a predpokladanými nákladmi, ktorá čaká na rozhodnutie.",
+            "highlights": [
+              "Uvedený účel",
+              "Sledované schválenie"
+            ]
+          },
+          "trip-type-3": {
+            "title": "Účasť na konferencii",
+            "summary": "Niekoľko dní na podujatí, so zadanými nákladmi a stavom schválenia sledovaným na nástenke.",
+            "highlights": [
+              "Sledované náklady",
+              "Stav na nástenke"
+            ]
+          }
+        }
       }
     }
   }
