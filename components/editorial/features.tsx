@@ -10,7 +10,7 @@ import type { Feature } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { LightLoop } from "./light-loop";
 import { ShowcaseStrip } from "./strip";
-import { EditableText, TryBar } from "./try-it";
+import { EditableText, TryBar, useTextEditing } from "./try-it";
 import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
 
 /**
@@ -27,9 +27,9 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  *
  * T-460 (the visitor's own hands, `try-it.tsx`): with `patterns.landing.tryIt` the section offers
  * the hero's two buttons under its heading — "Change image" gives the first card the next loop of
- * the library (`CARD_LOOPS`), "Change texts" makes the heading and every card's title and
- * description editable in place. Browser only; no icons on the buttons, because the section's
- * `svg`s are counted.
+ * the library (`CARD_LOOPS`), "Change texts" is the page's one editing (every text of the page
+ * editable in place, the caret in this heading). Browser only; no icons on the buttons, because
+ * the section's `svg`s are counted.
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -51,18 +51,18 @@ export function FeaturesSection() {
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
   const tryIt = config.patterns.landing?.tryIt === true;
   const [cardLoop, setCardLoop] = useState<CardLoopName>(CARD_LOOPS[0]);
-  const [editing, setEditing] = useState(false);
+  const { editing, here, toggle } = useTextEditing("features");
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
       <SectionHead>
-        <EditableText as="h2" editing={editing} text={landing?.featuresHeading ?? t("title")} focus className={DISPLAY_H2} />
+        <EditableText as="h2" editing={editing} text={landing?.featuresHeading ?? t("title")} focus={here} className={DISPLAY_H2} />
         {tryIt && (
           <TryBar
             icons={false}
             onImage={() => setCardLoop(nextCardLoop(cardLoop))}
             editing={editing}
-            onTexts={() => setEditing(!editing)}
+            onTexts={toggle}
             hint={editing ? "tryTextsHint" : null}
           />
         )}

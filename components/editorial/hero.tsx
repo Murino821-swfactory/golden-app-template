@@ -21,7 +21,7 @@ import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
 import { HeroFilm } from "./hero-film";
 import { LightLoop } from "./light-loop";
-import { EditableText, TryBar, TryPad, type TryHint } from "./try-it";
+import { EditableText, TryBar, TryPad, useTextEditing, type TryHint } from "./try-it";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
 
 /**
@@ -55,12 +55,13 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * (`patterns.landing.film`, `lib/hero-film.ts`) — real footage across the first screen instead
  * of the light loop, with the copy above it and the frame rising from the fold. An AI image
  * still owns the hero. With `patterns.landing.tryIt` every visitor gets two buttons under the
- * action — "Change image" (the next film of the library) and "Change texts" (the headline and
- * the subheadline become editable in place) — so the golden demo, where a visitor from a social
- * network lands, lets them change the page with their own hands. Both stay in the browser: no
- * request, nothing saved. Buttons, not links: the hero keeps its one action. When the hero has
- * its product frame, the buttons are the frame's control pad instead (`TryPad`: picture, words,
- * colour — beside the device switch), the page's one control panel.
+ * action — "Change image" (the next film of the library) and "Change texts" (every text of the
+ * page becomes editable in place, the caret in the headline; `lib/text-edit.ts`) — so the golden
+ * demo, where a visitor from a social network lands, lets them change the page with their own
+ * hands. Both stay in the browser: no request, nothing saved. Buttons, not links: the hero keeps
+ * its one action. When the hero has its product frame, the buttons are the frame's control pad
+ * instead (`TryPad`: picture, words, colour — beside the device switch), the page's one control
+ * panel.
  */
 
 const listings = config.patterns.listings;
@@ -160,8 +161,10 @@ export function HeroSection() {
   const configuredFilm = heroFilm(config.patterns.landing?.film);
   const [film, setFilm] = useState(configuredFilm);
   const tryIt = config.patterns.landing?.tryIt === true;
-  // "Change texts": the headline and the subheadline become editable lines (`EditableText`).
-  const [editing, setEditing] = useState(false);
+  // "Change texts": the page's one editing. The headline and the subheadline are `EditableText`,
+  // so their typography is drawn again from the visitor's words; every other line is found in
+  // the DOM (`lib/text-edit.ts`).
+  const { editing, here, toggle } = useTextEditing("hero");
   const [hint, setHint] = useState<TryHint | null>(null);
   const headline = landing?.headline ?? t("title");
   const subheadline = landing?.subheadline ?? t("subtitle");
@@ -193,7 +196,7 @@ export function HeroSection() {
       }
     : undefined;
   const changeTexts = () => {
-    setEditing(!editing);
+    toggle();
     setHint("tryTextsHint");
   };
 
@@ -234,7 +237,7 @@ export function HeroSection() {
             as="h1"
             editing={editing}
             text={headline}
-            focus
+            focus={here}
             className="editorial-enter editorial-display max-w-4xl text-balance"
             view={(text) => <DisplayText text={text} />}
           />

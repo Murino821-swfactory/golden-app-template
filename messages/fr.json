@@ -44,7 +44,8 @@
     "tryTexts": "Changer les textes",
     "tryTextsDone": "Terminé",
     "tryImageHint": "Ce sont les images de notre usine. Sur votre page, l'IA peint une image de votre activité.",
-    "tryTextsHint": "Écrivez votre propre titre. Sur votre page, l'IA réécrit tous les textes à partir d'une seule consigne."
+    "tryTextsHint": "Cliquez sur n'importe quel texte de la page et écrivez le vôtre. Sur votre page, l'IA réécrit tous les textes à partir d'une seule consigne.",
+    "tryTextsDock": "Cliquez sur n'importe quel texte et écrivez le vôtre"
   },
   "features": {
     "title": "Fonctionnalités",

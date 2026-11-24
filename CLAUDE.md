@@ -32,7 +32,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); finished assets in `public/motion/` — their Blender scenes left the template on 2026-11-22 (git history) |
-| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
+| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`, `.editorial-dock`), `lib/text-edit.ts` ("Change texts" on the whole page), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `public/motion/stage-*`, `closing-light*` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -823,22 +823,36 @@ copy contract, same `data-section` markers — the suites that read the page kee
   it): `components/editorial/try-it.tsx`. `TryBar` is two buttons for every visitor, under the
   hero's action and under the features heading: "Change image" (hero: the next film,
   `nextHeroFilm`; features: the first card's next loop, `CARD_LOOPS` / `nextCardLoop` in
-  `lib/editorial.ts`) and "Change texts" (hero: headline and subheadline; features: the heading
-  and every card's title and description). **In the hero the controls are the product frame's
+  `lib/editorial.ts`) and "Change texts" (every text of the page — see below). **In the hero the controls are the product frame's
   control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): three touch keys under
   the frame's title bar — picture, words and colour (the colour key presses the shared header's
   palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
   the frame's own device switch, everything a visitor can change in one place; a frame that carries
   the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to
-  stand in the first screen. A hero without a frame keeps the two buttons under its action. A line a visitor may retype is an `EditableText`:
-  `contenteditable="plaintext-only"` while editing, the section's own typography otherwise — two
-  elements with different keys, so React never reconciles into nodes the typing replaced; the
-  words are kept when the caret leaves the line. All of it stays in the visitor's browser: no
-  request, no cost, nothing saved; the hint under the buttons says what the real functions do on
+  stand in the first screen. A hero without a frame keeps the two buttons under its action.
+  **"Change texts" opens the whole page (founder, 2026-11-24: "any text that is shown on the whole
+  landing page").** It is ONE editing, whichever button starts it (`textEdit` in `lib/text-edit.ts`,
+  a store both buttons read through `useTextEditing`), and it is read off the DOM, not off a list
+  of sections: `editTexts(document.body)` finds every rendered run of words and makes the box that
+  lays it out a line (`contenteditable="plaintext-only"`, `data-try-text`) — the eyebrow, the
+  actions, the product frame, cards, questions and their answers (closed `<details>` open for the
+  editing), offers, the form's labels, the header's logo, the footer. **No section opts in: a new
+  section is editable the day it renders.** What stays a control is one selector, `CONTROLS`: the
+  try-it keys and the dock, the header's tools (`[data-shared-control]`), dialogs, the map, form
+  fields. While the editing is on a line is words — a press on a link or a button puts the caret
+  in it and acts on nothing (listeners on `window`, capture phase, above React's root), Enter and
+  Escape end the line, an emptied line gets its words back. The lines are React's: when the caret
+  leaves one, `restore` puts the page's own nodes back where the typing removed them, carrying the
+  visitor's words — otherwise React would write a changed label into a node nobody sees, or crash
+  removing one that is no longer a child. The headline, the subheadline and the features' lines
+  stay `EditableText` (two elements with different keys), because their typography is drawn from
+  the words. `TextEditing` (mounted by `app/[locale]/page.tsx` for a `tryIt` config) runs the
+  editing and shows the dock — what to do and "Done", fixed to the foot of the window whenever no
+  "Change texts" key is on screen. All of it stays in the visitor's browser: no request, no cost,
+  nothing saved, gone on reload; the hint under the buttons says what the real functions do on
   the visitor's own page (the AI hero image, the copy rewrite). Buttons, not links, and no icons
-  in features (its `svg`s are counted). Texts: `landing.try*` in all 8 `messages/*.json`. To give
-  another section the same: wrap its lines in `EditableText` and render a `TryBar`.
-  Tests: `tests/hero-film.spec.ts`; the backlight tests of `editorial-motion.spec.ts` /
+  in features (its `svg`s are counted). Texts: `landing.try*` in all 8 `messages/*.json`.
+  Tests: `tests/try-texts.spec.ts` (every text, links and buttons, the page's own nodes, the dock), `tests/hero-film.spec.ts`; the backlight tests of `editorial-motion.spec.ts` /
   `editorial-stage.spec.ts` skip under a film and keep running on the fixtures, none of which
   names one. **Not yet built (tasks T-461 … T-463):** the device switcher moving from the frame
   into the header, a map on the landing centred on the visitor's place, and the demo's action
