@@ -1,131 +1,114 @@
 {
-  "appName": "Golden App Template",
+  "appName": "test",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "ember-forge"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
-        "contact",
+        "faq",
         "cta"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring",
-      "film": "tower-dusk",
-      "tryIt": true
+      "font": "nunito",
+      "motion": "data-lines"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalSightings",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "injuredShare",
+          "field": "condition",
+          "agg": "share",
+          "value": "injured"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
     },
-    "contactForm": {
-      "phone": "optional"
-    },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "sighting",
         "fields": [
           {
-            "key": "name",
+            "key": "species",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "observedOn",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "place",
+            "type": "text"
+          },
+          {
+            "key": "count",
+            "type": "number"
+          },
+          {
+            "key": "condition",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "healthy",
+              "injured",
+              "missing"
             ]
-          },
-          {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "condition"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "birds",
+        "mammals",
+        "amphibians"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
+          "key": "volunteers"
         }
       ],
-      "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "program-1",
+          "category": "birds",
+          "status": "available",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "volunteers": 12
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
+          "id": "program-2",
+          "category": "mammals",
+          "status": "available",
+          "attributes": {
+            "volunteers": 8
+          }
+        },
+        {
+          "id": "program-3",
+          "category": "amphibians",
           "status": "reserved",
           "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
-          "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "volunteers": 5
           }
         }
       ]
@@ -133,182 +116,319 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "test helps communities record animal sightings in one shared place, so everyone can see what lives nearby and how it is doing.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Animal records for communities",
+        "headline": "Every animal your community sees is on record",
+        "subheadline": "For neighbourhood groups and volunteers: sign in and log your first sighting in a minute.",
+        "featuresHeading": "What your community can do",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "book-open",
+            "title": "Log every sighting",
+            "description": "Record the species, date, place and number of animals you saw."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Track animal condition",
+            "description": "Mark each animal as healthy, injured or missing and move it along a board."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "See your totals",
+            "description": "Open the dashboard to check how many sightings are logged and how many animals are injured."
+          },
+          {
+            "icon": "users",
+            "title": "Keep records together",
+            "description": "Keep one tidy register instead of scattered notes and chat messages."
           }
         ],
+        "manifesto": {
+          "lead": "Good records start with people who notice.",
+          "body": "Communities see animals every day. test gives those observations one place to live, so they are not forgotten."
+        },
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How it works",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
               "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "description": "Use your Google account to open your private workspace."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Add a sighting",
+              "description": "Enter the species, date, place, count and condition of the animals."
+            },
+            {
+              "title": "Follow the changes",
+              "description": "Filter the table, move records between conditions and check the dashboard."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who is test for?",
+              "answer": "It is made for communities, volunteer groups and neighbours who want to keep a shared record of the animals around them."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "What can I record?",
+              "answer": "Each sighting holds the species, the date, the place, how many animals you saw and their condition."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Do I need an account?",
+              "answer": "Yes. You sign in with Google so your records stay yours and are kept in your own workspace."
+            },
+            {
+              "question": "Are the monitoring programmes real?",
+              "answer": "No. The programmes on this page are illustrative examples until the owner publishes real ones."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Your sightings",
+        "intro": "A summary of the animals your community has recorded.",
+        "kpiLabels": {
+          "totalSightings": "Sightings logged",
+          "injuredShare": "Share injured"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Start recording",
+        "title": "Start your community's animal register",
+        "subtitle": "Sign in and add your first sighting today."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Sighting",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "species": "Species",
+          "observedOn": "Date seen",
+          "place": "Place",
+          "count": "Number of animals",
+          "condition": "Condition"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "species": "Hedgehog",
+            "observedOn": "2026-11-02",
+            "place": "Community garden",
+            "count": 1,
+            "condition": "healthy"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "species": "Blackbird",
+            "observedOn": "2026-11-10",
+            "place": "Park by the pond",
+            "count": 4,
+            "condition": "healthy"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "species": "Common frog",
+            "observedOn": "2026-11-18",
+            "place": "Meadow path",
+            "count": 2,
+            "condition": "injured"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Monitoring programmes",
+        "intro": "Examples of the kinds of community monitoring you can run and record with test.",
+        "notice": "These programmes are illustrative examples, not a live offer.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "birds": "Birds",
+          "mammals": "Mammals",
+          "amphibians": "Amphibians"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "volunteers": "Volunteers"
         },
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "program-1": {
+            "title": "Garden bird count",
+            "summary": "Neighbours note which birds visit their gardens and feeders over several weeks.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Weekly counts",
+              "Open to beginners"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "program-2": {
+            "title": "Hedgehog watch",
+            "summary": "Volunteers log hedgehog sightings and report any animal that looks injured.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Evening walks",
+              "Injury reports"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "program-3": {
+            "title": "Pond amphibian survey",
+            "summary": "A seasonal survey of frogs and newts in local ponds, recorded by the group.",
+            "highlights": [
+              "Seasonal",
+              "Small team"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "test pomáha komunitám zapisovať pozorovania zvierat na jedno miesto, aby každý videl, čo žije v okolí a ako sa tomu darí.",
+      "landing": {
+        "eyebrow": "Evidencia zvierat pre komunity",
+        "headline": "Každé zviera, ktoré vaša komunita vidí, je v evidencii",
+        "subheadline": "Pre susedské skupiny a dobrovoľníkov: prihláste sa a zapíšte prvé pozorovanie za minútu.",
+        "featuresHeading": "Čo môže vaša komunita robiť",
+        "features": [
+          {
+            "icon": "book-open",
+            "title": "Zapisujte každé pozorovanie",
+            "description": "Uložte druh, dátum, miesto a počet zvierat, ktoré ste videli."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Sledujte stav zvierat",
+            "description": "Označte každé zviera ako zdravé, zranené alebo nezvestné a presúvajte ho po tabuli."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Majte prehľad o súčtoch",
+            "description": "Na nástenke uvidíte, koľko pozorovaní je zapísaných a koľko zvierat je zranených."
+          },
+          {
+            "icon": "users",
+            "title": "Vedzte záznamy spoločne",
+            "description": "Namiesto rozhádzaných poznámok a správ máte jednu prehľadnú evidenciu."
+          }
+        ],
+        "manifesto": {
+          "lead": "Dobrá evidencia začína u ľudí, ktorí si všímajú.",
+          "body": "Komunity vidia zvieratá každý deň. test dáva týmto pozorovaniam jedno miesto, aby sa nestratili."
         },
-        "inquireLabel": "Ask about this offer"
+        "howItWorks": {
+          "heading": "Ako to funguje",
+          "steps": [
+            {
+              "title": "Prihláste sa cez Google",
+              "description": "Použite svoj účet Google a otvorte si súkromný priestor."
+            },
+            {
+              "title": "Pridajte pozorovanie",
+              "description": "Zadajte druh, dátum, miesto, počet a stav zvierat."
+            },
+            {
+              "title": "Sledujte zmeny",
+              "description": "Filtrujte tabuľku, presúvajte záznamy medzi stavmi a pozrite si nástenku."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Otázky",
+          "items": [
+            {
+              "question": "Pre koho je test určený?",
+              "answer": "Je pre komunity, skupiny dobrovoľníkov a susedov, ktorí chcú viesť spoločnú evidenciu zvierat vo svojom okolí."
+            },
+            {
+              "question": "Čo môžem zapisovať?",
+              "answer": "Každé pozorovanie obsahuje druh, dátum, miesto, počet videných zvierat a ich stav."
+            },
+            {
+              "question": "Potrebujem účet?",
+              "answer": "Áno. Prihlásite sa cez Google, aby vaše záznamy zostali vaše a boli uložené vo vašom priestore."
+            },
+            {
+              "question": "Sú programy monitoringu skutočné?",
+              "answer": "Nie. Programy na tejto stránke sú len ilustračné príklady, kým majiteľ nezverejní skutočné."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Vaše pozorovania",
+        "intro": "Prehľad zvierat, ktoré vaša komunita zapísala.",
+        "kpiLabels": {
+          "totalSightings": "Zapísané pozorovania",
+          "injuredShare": "Podiel zranených"
+        }
+      },
+      "cta": {
+        "label": "Začať zapisovať",
+        "title": "Začnite evidenciu zvierat vo vašej komunite",
+        "subtitle": "Prihláste sa a ešte dnes pridajte prvé pozorovanie."
+      },
+      "dataGrid": {
+        "entityLabel": "Pozorovanie",
+        "fieldLabels": {
+          "species": "Druh",
+          "observedOn": "Dátum pozorovania",
+          "place": "Miesto",
+          "count": "Počet zvierat",
+          "condition": "Stav"
+        },
+        "sampleRecords": [
+          {
+            "species": "Ježko",
+            "observedOn": "2026-11-02",
+            "place": "Komunitná záhrada",
+            "count": 1,
+            "condition": "healthy"
+          },
+          {
+            "species": "Drozd čierny",
+            "observedOn": "2026-11-10",
+            "place": "Park pri rybníku",
+            "count": 4,
+            "condition": "healthy"
+          },
+          {
+            "species": "Skokan hnedý",
+            "observedOn": "2026-11-18",
+            "place": "Lúčna cesta",
+            "count": 2,
+            "condition": "injured"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Programy monitoringu",
+        "intro": "Príklady druhov komunitného monitoringu, ktoré môžete viesť a zapisovať v aplikácii test.",
+        "notice": "Tieto programy sú ilustračné príklady, nie aktuálna ponuka.",
+        "categoryLabels": {
+          "birds": "Vtáky",
+          "mammals": "Cicavce",
+          "amphibians": "Obojživelníky"
+        },
+        "attributeLabels": {
+          "volunteers": "Dobrovoľníci"
+        },
+        "items": {
+          "program-1": {
+            "title": "Sčítanie vtákov v záhrade",
+            "summary": "Susedia si niekoľko týždňov zapisujú, ktoré vtáky navštevujú ich záhrady a kŕmidlá.",
+            "highlights": [
+              "Týždenné sčítanie",
+              "Aj pre začiatočníkov"
+            ]
+          },
+          "program-2": {
+            "title": "Stráž nad ježkami",
+            "summary": "Dobrovoľníci zapisujú pozorovania ježkov a hlásia každé zviera, ktoré vyzerá zranené.",
+            "highlights": [
+              "Večerné prechádzky",
+              "Hlásenie zranení"
+            ]
+          },
+          "program-3": {
+            "title": "Prieskum obojživelníkov pri rybníku",
+            "summary": "Sezónny prieskum žiab a mlokov v miestnych rybníkoch, ktorý zapisuje skupina.",
+            "highlights": [
+              "Sezónne",
+              "Malý tím"
+            ]
+          }
+        }
       }
     }
   }
