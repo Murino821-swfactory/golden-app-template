@@ -51,6 +51,7 @@
     "tryTexts": "Změnit texty",
     "tryTextsDone": "Hotovo",
     "tryImageHint": "Toto jsou záběry naší továrny. Na vaší stránce AI namaluje obraz vašeho podnikání.",
+    "tryStillHint": "Toto je scéna z knihovny naší továrny. Na vaší stránce AI namaluje obraz vašeho podnikání.",
     "tryTextsHint": "Klikněte na kterýkoli text na stránce a napište vlastní. Na vaší stránce AI přepíše všechny texty podle jednoho pokynu.",
     "tryTextsDock": "Klikněte na kterýkoli text a přepište ho"
   },

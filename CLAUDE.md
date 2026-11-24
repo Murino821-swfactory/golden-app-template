@@ -34,7 +34,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | New landing sections | `components/sections/how-it-works.tsx`, `faq.tsx` (+ `lib/faq-jsonld.ts`), `product-preview.tsx` (in the hero) |
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); finished assets in `public/motion/` — their Blender scenes left the template on 2026-11-22 (git history) |
-| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (five films, `HERO_FILMS` in `lib/hero-film.ts`), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`, `.editorial-dock`), `lib/text-edit.ts` ("Change texts" on the whole page), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
+| The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (one of the five films of the asset database, `HERO_ASSETS` in `lib/hero-film.ts` — "Change image" walks all of it: the films and ten still scenes), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`, `.editorial-dock`), `lib/text-edit.ts` ("Change texts" on the whole page), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `public/motion/stage-*`, `closing-light*` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -906,13 +906,29 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `~/Video/how-it-works-video/assets/films/` on the founder's PC). Each is a 1280 × 720 film, a
   540 × 960 phone cut and two posters, H.264 only, inside `FILM_BUDGET_BYTES`
   (adding one = encode it the same way — the encoder left on 2026-11-22 and is in git history —, a
-  line in `HERO_FILMS` and `HERO_FILM_HOLD`, `npm run schema`). `scripts/prune-film.mjs` (npm
+  record in `HERO_ASSETS` with its `hold`, `npm run schema`). `scripts/prune-film.mjs` (npm
   `postbuild`) removes `out/film` from every export whose config shows no film, so a customer's
   prototype ships none.
+  **The asset database (founder, 2026-11-25: "Change image must draw on a database of assets").**
+  `HERO_ASSETS` in `lib/hero-film.ts` is ONE RECORD PER PICTURE — `name` (its file name under
+  `public/film/`), `kind` (`film` or `still`), `scene` (what it shows), a film's `hold` — and its
+  order is the order "Change image" walks: the opening film, the ten stills, then the other films.
+  `HERO_FILMS` (what a config may name) and `HERO_STILLS` are read off it. The stills are ten
+  scenes of businesses a visitor may recognise as their own — `cafe-blue-hour`, `thermal-pool`,
+  `workshop-dusk`, `ice-rink`, `riverside-office`, `depot-sunrise`, `hillside-house`,
+  `flower-shop`, `vineyard-sunset`, `mountain-guesthouse` — generated in ChatGPT from one prompt
+  frame (the header of `lib/hero-film.ts`): the upper 40 % calm for the headline, the subject in
+  the lower half, no people, no text, no logos. Each is two WebP pictures, 1672 × 899 and a
+  506 × 899 phone cut around its subject, inside `STILL_BUDGET_BYTES`. `HeroStill`
+  (`hero-film.tsx`) lays one where a film lies — same place, same two cuts, `data-hero-kind="still"`,
+  no video — under a denser veil than a film's (`stage.css`), because a still is brighter than the
+  night footage and the subheadline has to stay readable. A config cannot name a still, so one is
+  never in the static HTML. Adding a still = two files and one record; no schema change.
   **Try-it** (`patterns.landing.tryIt: true`, the golden demo only — the content call never sets
   it): `components/editorial/try-it.tsx`. `TryBar` is two buttons for every visitor, under the
-  hero's action and under the features heading: "Change image" (hero: the next film,
-  `nextHeroFilm`; features: every card's next loop, `CARD_LOOPS` / `changeCardLoop` in
+  hero's action and under the features heading: "Change image" (hero: the next asset of the
+  database, `nextHeroAsset`, with a line that says which kind it is — `tryImageHint` for the
+  factory's footage, `tryStillHint` for a scene; features: every card's next loop, `CARD_LOOPS` / `changeCardLoop` in
   `lib/editorial.ts`) and "Change texts" (every text of the page — see below). **Every feature
   card also carries its own "Change image" key** (founder, 2026-11-25: every card's picture
   changes like the first card's): a plain card gains a picture, a card that has one takes the

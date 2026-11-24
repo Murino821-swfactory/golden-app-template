@@ -10,7 +10,7 @@ import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
-import { heroFilm, nextHeroFilm } from "@/lib/hero-film";
+import { heroFilm, isHeroFilm, nextHeroAsset, type HeroAssetName } from "@/lib/hero-film";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { ICONS } from "@/lib/icons";
 import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
@@ -18,7 +18,7 @@ import { formatPrice, listingCards, type ListingCard } from "@/lib/listings";
 import { localePath } from "@/lib/locale-routing";
 import { config, type IconId } from "@/lib/prototype-config";
 import { cn } from "@/lib/utils";
-import { HeroFilm } from "./hero-film";
+import { HeroFilm, HeroStill } from "./hero-film";
 import { LightLoop } from "./light-loop";
 import { EditableText, TryBar, TryPad, useTextEditing, type TryHint } from "./try-it";
 import { DisplayText, Eyebrow, TwoTone } from "./ui";
@@ -156,9 +156,10 @@ export function HeroSection() {
   // A route is served per language; an anchor is the same on every document.
   const href = action && action.startsWith("/") ? localePath(locale, action) : action;
   const hero = useHeroImage();
-  // The film this config opens on; "Change image" walks the library from it (T-460).
+  // The film this config opens on; "Change image" walks the asset database from it (T-460) —
+  // the still scenes first, then the factory's other films (`HERO_ASSETS`).
   const configuredFilm = heroFilm(config.patterns.landing?.film);
-  const [film, setFilm] = useState(configuredFilm);
+  const [picture, setPicture] = useState<HeroAssetName | null>(configuredFilm);
   const tryIt = config.patterns.landing?.tryIt === true;
   // "Change texts": the page's one editing. The headline and the subheadline are `EditableText`,
   // so their typography is drawn again from the visitor's words; every other line is found in
@@ -187,11 +188,12 @@ export function HeroSection() {
   // The title bar's date, like a dated concept: the month this document was built in.
   const built = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date());
   const deviceLabel: Record<Device, string> = { desktop: t("deviceDesktop"), tablet: t("deviceTablet"), phone: t("devicePhone") };
-  const showFilm = film !== null && !background && !object;
-  const changeImage = showFilm
+  const showPicture = picture !== null && !background && !object;
+  const changeImage = showPicture
     ? () => {
-        setFilm(nextHeroFilm(film));
-        setHint("tryImageHint");
+        const next = nextHeroAsset(picture);
+        setPicture(next);
+        setHint(isHeroFilm(next) ? "tryImageHint" : "tryStillHint");
       }
     : undefined;
   const changeTexts = () => {
@@ -211,8 +213,8 @@ export function HeroSection() {
       {/* The backlight (T-368 stage, `stage.css`): a light loop behind the headline — the stage
           board by default, or whichever of the T-350 library `patterns.landing.motion` names; an
           AI image owns the hero, so it gets no light. */}
-      {showFilm && <HeroFilm key={film} name={film} />}
-      {!background && !object && film === null && (
+      {showPicture && (isHeroFilm(picture) ? <HeroFilm key={picture} name={picture} /> : <HeroStill key={picture} name={picture} />)}
+      {!background && !object && picture === null && (
         <LightLoop name={heroLoop(config.patterns.landing?.motion)} marker="data-hero-light" className="editorial-light-hero" />
       )}
 
@@ -227,7 +229,7 @@ export function HeroSection() {
             tiles come last, so the delays of the four pieces of copy stay where they are. */}
         <div
           className={cn("editorial-hero-copy relative flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
-          style={background || showFilm ? { textShadow: HERO_TEXT_SHADOW } : undefined}
+          style={background || showPicture ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
             {eyebrow ?? config.appName}
@@ -273,8 +275,8 @@ export function HeroSection() {
               {config.appName}
             </span>
           )}
-          {/* A film is the hero's picture already: no tiles floating over it. */}
-          {!object && !showFilm && <FloatingTiles icons={icons} />}
+          {/* A film or a still is the hero's picture already: no tiles floating over it. */}
+          {!object && !showPicture && <FloatingTiles icons={icons} />}
         </div>
 
         {object && <HeroObject src={object} />}
