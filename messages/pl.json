@@ -44,7 +44,8 @@
     "tryTexts": "Zmień teksty",
     "tryTextsDone": "Gotowe",
     "tryImageHint": "To ujęcia naszej fabryki. Na Twojej stronie AI namaluje obraz Twojej firmy.",
-    "tryTextsHint": "Wpisz własny nagłówek. Na Twojej stronie AI przepisze wszystkie teksty według jednego polecenia."
+    "tryTextsHint": "Kliknij dowolny tekst na stronie i wpisz własny. Na Twojej stronie AI przepisze wszystkie teksty według jednego polecenia.",
+    "tryTextsDock": "Kliknij dowolny tekst i wpisz własny"
   },
   "features": {
     "title": "Funkcje",

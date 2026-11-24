@@ -427,3 +427,77 @@
 [data-presentation="editorial"] [data-section="features"] .editorial-try {
   margin-top: 0.5rem;
 }
+
+/* ── "Change texts" on the whole page (2026-11-24, `lib/text-edit.ts`): while the visitor edits,
+   every line the document shows is a line to type into. The state stands on the page root and
+   these rules outside the editorial root, because the lines are everywhere — the header's logo
+   and the footer are not inside a section. A faint dashed rule says "this can be typed over",
+   the accent says where the pointer is, a solid rule where the caret is. No radius of its own:
+   the rule follows the line's shape, a pill stays a pill. ── */
+html[data-try-editing] [data-try-text] {
+  outline: 1px dashed color-mix(in oklab, var(--primary) 38%, transparent);
+  outline-offset: 0.125rem;
+  cursor: text;
+  /* A wordmark set as decoration is not selectable; WebKit will not edit what it cannot select. */
+  -webkit-user-select: text;
+  user-select: text;
+}
+html[data-try-editing] [data-try-text]:hover {
+  outline-color: var(--primary);
+}
+html[data-try-editing] [data-try-text]:focus {
+  outline: 2px solid var(--primary);
+}
+/* A caption cannot be typed into while it slides past. */
+html[data-try-editing] .editorial-strip-row {
+  animation-play-state: paused;
+}
+/* The dock: what to do and "Done", at the foot of the window once the keys are out of sight. On a
+   phone it keeps to the left, the idea chat's launcher has the right corner. The page ends a
+   dock's height later while it is edited, so its last line can be scrolled clear of the dock. */
+html[data-try-editing] body {
+  padding-bottom: 5rem;
+}
+.editorial-dock {
+  position: fixed;
+  z-index: 40;
+  left: 1rem;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  max-width: calc(100vw - 6rem);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+  border-radius: 1.75rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 20%, transparent);
+  background: color-mix(in oklab, var(--background) 86%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 12px 32px color-mix(in oklab, var(--background) 70%, transparent);
+  color: var(--foreground);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+.editorial-dock-done {
+  flex: none;
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  cursor: pointer;
+}
+.editorial-dock-done:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+@media (min-width: 640px) {
+  .editorial-dock {
+    left: 50%;
+    bottom: 1.5rem;
+    translate: -50% 0;
+    font-size: 0.875rem;
+  }
+}

@@ -44,7 +44,8 @@
     "tryTexts": "Cambiar textos",
     "tryTextsDone": "Listo",
     "tryImageHint": "Son imágenes de nuestra fábrica. En su página, la IA pinta una imagen de su negocio.",
-    "tryTextsHint": "Escriba su propio titular. En su página, la IA reescribe todos los textos a partir de una sola instrucción."
+    "tryTextsHint": "Haga clic en cualquier texto de la página y escriba el suyo. En su página, la IA reescribe todos los textos a partir de una sola instrucción.",
+    "tryTextsDock": "Haga clic en cualquier texto y escriba el suyo"
   },
   "features": {
     "title": "Funciones",

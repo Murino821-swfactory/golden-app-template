@@ -44,7 +44,8 @@
     "tryTexts": "Zmeniť texty",
     "tryTextsDone": "Hotovo",
     "tryImageHint": "Toto sú zábery našej továrne. Na vašej stránke AI namaľuje obraz vášho podnikania.",
-    "tryTextsHint": "Napíšte vlastný nadpis. Na vašej stránke AI prepíše všetky texty podľa jedného pokynu."
+    "tryTextsHint": "Kliknite na ktorýkoľvek text na stránke a napíšte vlastný. Na vašej stránke AI prepíše všetky texty podľa jedného pokynu.",
+    "tryTextsDock": "Kliknite na ktorýkoľvek text a prepíšte ho"
   },
   "features": {
     "title": "Funkcie",

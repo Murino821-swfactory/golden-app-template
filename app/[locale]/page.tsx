@@ -14,6 +14,7 @@ import { LandingStory } from "@/components/sections/landing-story";
 import { landingJsonLd } from "@/lib/seo";
 import { config, landingPresentation } from "@/lib/prototype-config";
 import { EDITORIAL_SECTIONS } from "@/components/editorial/registry";
+import { TextEditing } from "@/components/editorial/try-it";
 
 // ONE source of truth for sections: prototype.config.json (P5). This used to also be
 // readable from a `?sections=` URL param, wired for a wizard iframe preview that stopped
@@ -55,6 +56,8 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         const Section = REGISTRY[id];
         return { id, content: Section ? <Section /> : null };
       })} />
+      {/* "Change texts" on the golden demo: one editing for every text of the document. */}
+      {config.patterns.landing?.tryIt === true && <TextEditing />}
     </>
   );
 }
