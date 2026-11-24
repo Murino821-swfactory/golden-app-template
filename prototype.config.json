@@ -1,7 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Test notifikácií",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -12,30 +13,36 @@
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
         "howItWorks",
-        "faq",
         "listings",
-        "contact",
+        "faq",
         "cta"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring",
-      "film": "tower-dusk",
-      "tryIt": true
+      "font": "nunito",
+      "tone": "light"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "total",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "healthyShare",
+          "field": "status",
+          "agg": "share",
+          "value": "Zdravé"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
     },
-    "contactForm": {
-      "phone": "optional"
-    },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "animal",
         "fields": [
           {
             "key": "name",
@@ -43,272 +50,370 @@
             "required": true
           },
           {
-            "key": "category",
+            "key": "species",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Pes",
+              "Mačka",
+              "Králik"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "status",
+            "type": "select",
+            "options": [
+              "Zdravé",
+              "Sledované",
+              "U veterinára"
+            ],
+            "required": true
+          },
+          {
+            "key": "lastVaccination",
             "type": "date"
           },
           {
-            "key": "active",
-            "type": "boolean"
+            "key": "feedingPlan",
+            "type": "text"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "health",
+        "feeding",
+        "vaccination"
       ],
-      "attributes": [
-        {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
-        }
-      ],
-      "currency": "EUR",
       "items": [
         {
           "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
-          "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
-          }
+          "category": "health"
         },
         {
           "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
+          "category": "feeding"
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
-          "pricePeriod": "month",
-          "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
-          }
+          "category": "vaccination"
         }
       ]
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Test notifikácií keeps your animals' health, feeding and vaccinations in one place. Sign in with Google and add your first animal.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Keep every animal of yours in check",
+        "subheadline": "For breeders and pet owners: sign in and add your first animal with its health, feeding and vaccinations.",
+        "eyebrow": "Animal monitoring in one place",
+        "featuresHeading": "Everything about your animals",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "heart",
+            "title": "Health overview",
+            "description": "Mark each animal as healthy, watched or at the vet."
+          },
+          {
+            "icon": "calendar",
+            "title": "Vaccination dates",
+            "description": "Record the last vaccination and see at once which animal is next."
           },
           {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "Feeding plan",
+            "description": "Save what, when and how much each animal is fed."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "chart-line",
+            "title": "Home with numbers",
+            "description": "After signing in, see how many animals you have and the share that are healthy."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How to start",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
               "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "description": "Only you see your animals and records after signing in."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Add an animal",
+              "description": "Enter its name, species, status and last vaccination date."
+            },
+            {
+              "title": "Record the feeding",
+              "description": "Fill in the feeding plan so it is always at hand."
+            },
+            {
+              "title": "Watch the overview",
+              "description": "Check the status of all your animals at once on the home screen."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Common questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who is it for?",
+              "answer": "Breeders and pet owners who want health, feeding and vaccinations in one place."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "How do I sign in?",
+              "answer": "You sign in with a Google account. Your records are then tied to your account."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Can I edit the records?",
+              "answer": "Yes, you can add, edit and filter animals by species or status."
+            },
+            {
+              "question": "Are the sample records real?",
+              "answer": "No, they are made up for demonstration. You can edit or replace them with your own."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Your animals",
+        "intro": "A quick overview of the status, feeding and vaccinations of all your animals.",
+        "kpiLabels": {
+          "total": "Animals",
+          "healthyShare": "Share healthy"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
-      },
-      "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "label": "Sign in and start",
+        "title": "Add your first animal",
+        "subtitle": "Sign in with Google and keep health, feeding and vaccinations in one place."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Animals",
         "fieldLabels": {
           "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "species": "Species",
+          "status": "Status",
+          "lastVaccination": "Last vaccination",
+          "feedingPlan": "Feeding plan"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "name": "Rex",
+            "species": "Pes",
+            "status": "Zdravé",
+            "lastVaccination": "2026-10-20",
+            "feedingPlan": "Kibble twice a day"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "name": "Micka",
+            "species": "Mačka",
+            "status": "Sledované",
+            "lastVaccination": "2026-09-28",
+            "feedingPlan": "Canned food three times a day"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "name": "Ušiak",
+            "species": "Králik",
+            "status": "Zdravé",
+            "lastVaccination": "2026-11-05",
+            "feedingPlan": "Hay and vegetables"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "What you can track",
+        "intro": "Three areas of care you keep for each animal in the app.",
+        "notice": "These are illustrative examples, not a live offer. The owner will replace them with real ones.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
-        },
-        "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "health": "Health",
+          "feeding": "Feeding",
+          "vaccination": "Vaccination"
         },
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Health card",
+            "summary": "The animal's status, notes from vet visits and changes over time.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Animal status",
+              "Notes",
+              "Changes over time"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Feeding plan",
+            "summary": "A saved feeding routine for each animal: type of food and how it is given.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Type of food",
+              "Daily routine"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Vaccination record",
+            "summary": "The date of the last vaccination for each animal in one place.",
+            "highlights": [
+              "Vaccination date",
+              "Animal overview"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "Test notifikácií: zdravie, kŕmenie a očkovanie vašich zvierat prehľadne na jednom mieste. Prihláste sa cez Google a pridajte prvé zviera.",
+      "landing": {
+        "headline": "Každé vaše zviera máte pod kontrolou",
+        "subheadline": "Pre chovateľov a majiteľov zvierat: prihláste sa a pridajte prvé zviera so zdravím, kŕmením a očkovaním.",
+        "eyebrow": "Monitoring zvierat na jednom mieste",
+        "featuresHeading": "Všetko o vašich zvieratách",
+        "features": [
+          {
+            "icon": "heart",
+            "title": "Prehľad zdravia",
+            "description": "Pri každom zvierati si zaznačíte, či je zdravé, sledované alebo u veterinára."
+          },
+          {
+            "icon": "calendar",
+            "title": "Termíny očkovania",
+            "description": "Zapíšete si dátum posledného očkovania a hneď vidíte, ktoré zviera je na rade."
+          },
+          {
+            "icon": "list-checks",
+            "title": "Plán kŕmenia",
+            "description": "Ku každému zvieraťu uložíte, čo, kedy a koľko dostáva."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Domov s číslami",
+            "description": "Po prihlásení vidíte počet zvierat a podiel tých, ktoré sú zdravé."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako začať",
+          "steps": [
+            {
+              "title": "Prihláste sa cez Google",
+              "description": "Vaše zvieratá a záznamy vidíte len vy po prihlásení."
+            },
+            {
+              "title": "Pridajte zviera",
+              "description": "Zadajte meno, druh, stav a dátum posledného očkovania."
+            },
+            {
+              "title": "Zapíšte kŕmenie",
+              "description": "Doplňte plán kŕmenia, aby ste ho mali stále po ruke."
+            },
+            {
+              "title": "Sledujte prehľad",
+              "description": "Na domovskej obrazovke skontrolujte stav všetkých zvierat naraz."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Časté otázky",
+          "items": [
+            {
+              "question": "Pre koho je aplikácia určená?",
+              "answer": "Pre chovateľov a majiteľov zvierat, ktorí chcú mať zdravie, kŕmenie a očkovanie na jednom mieste."
+            },
+            {
+              "question": "Ako sa prihlásim?",
+              "answer": "Prihlásite sa účtom Google. Vaše záznamy sú potom viazané na váš účet."
+            },
+            {
+              "question": "Môžem upravovať záznamy?",
+              "answer": "Áno, zvieratá môžete pridávať, upravovať a filtrovať podľa druhu alebo stavu."
+            },
+            {
+              "question": "Sú ukážkové záznamy skutočné?",
+              "answer": "Nie, sú vymyslené a slúžia len na ukážku. Môžete ich upraviť alebo nahradiť vlastnými."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Vaše zvieratá",
+        "intro": "Rýchly prehľad o stave, kŕmení a očkovaní všetkých vašich zvierat.",
+        "kpiLabels": {
+          "total": "Počet zvierat",
+          "healthyShare": "Podiel zdravých"
+        }
+      },
+      "cta": {
+        "label": "Prihlásiť sa a začať",
+        "title": "Pridajte prvé zviera",
+        "subtitle": "Prihláste sa cez Google a majte zdravie, kŕmenie a očkovanie na jednom mieste."
+      },
+      "dataGrid": {
+        "entityLabel": "Zvieratá",
+        "fieldLabels": {
+          "name": "Meno",
+          "species": "Druh",
+          "status": "Stav",
+          "lastVaccination": "Posledné očkovanie",
+          "feedingPlan": "Plán kŕmenia"
+        },
+        "sampleRecords": [
+          {
+            "name": "Rex",
+            "species": "Pes",
+            "status": "Zdravé",
+            "lastVaccination": "2026-10-20",
+            "feedingPlan": "2× denne granule"
+          },
+          {
+            "name": "Micka",
+            "species": "Mačka",
+            "status": "Sledované",
+            "lastVaccination": "2026-09-28",
+            "feedingPlan": "3× denne konzerva"
+          },
+          {
+            "name": "Ušiak",
+            "species": "Králik",
+            "status": "Zdravé",
+            "lastVaccination": "2026-11-05",
+            "feedingPlan": "Seno a zelenina"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Čo môžete sledovať",
+        "intro": "Tri oblasti starostlivosti, ktoré si v aplikácii vediete pri každom zvierati.",
+        "notice": "Ide o ilustračné ukážky, nie o živú ponuku. Majiteľ ich neskôr nahradí skutočnými.",
+        "categoryLabels": {
+          "health": "Zdravie",
+          "feeding": "Kŕmenie",
+          "vaccination": "Očkovanie"
+        },
+        "items": {
+          "offer-1": {
+            "title": "Karta zdravia",
+            "summary": "Stav zvieraťa, poznámky o návštevách veterinára a sledovanie zmien.",
+            "highlights": [
+              "Stav zvieraťa",
+              "Poznámky",
+              "Zmeny v čase"
+            ]
+          },
+          "offer-2": {
+            "title": "Plán kŕmenia",
+            "summary": "Uložený režim kŕmenia pre každé zviera: druh krmiva a spôsob podávania.",
+            "highlights": [
+              "Druh krmiva",
+              "Denný režim"
+            ]
+          },
+          "offer-3": {
+            "title": "Záznam očkovania",
+            "summary": "Dátum posledného očkovania pri každom zvierati na jednom mieste.",
+            "highlights": [
+              "Dátum očkovania",
+              "Prehľad zvierat"
+            ]
+          }
+        }
       }
     }
   }
