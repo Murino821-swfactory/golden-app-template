@@ -1,31 +1,46 @@
 {
-  "appName": "Golden App Template",
+  "appName": "parking evidence",
   "locales": [
-    "en"
+    "en",
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
-    "colorScheme": "chartreuse-pastel-deep-teal-green"
+    "colorScheme": "desert-dusk"
   },
   "patterns": {
     "landing": {
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
+        "listings",
         "howItWorks",
         "faq",
-        "listings",
         "contact",
         "cta"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring",
-      "film": "tower-dusk",
-      "tryIt": true
+      "font": "plus-jakarta-sans"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "totalSpots",
+          "field": "*",
+          "agg": "count"
+        },
+        {
+          "id": "rentedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "Rented"
+        },
+        {
+          "id": "monthlyIncome",
+          "field": "price",
+          "agg": "sum"
+        }
+      ]
+    },
     "authGoogle": {},
     "cta": {
       "href": "/login"
@@ -35,7 +50,7 @@
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "spot",
         "fields": [
           {
             "key": "name",
@@ -43,272 +58,462 @@
             "required": true
           },
           {
-            "key": "category",
+            "key": "address",
+            "type": "text"
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
-            ]
+              "Free",
+              "Shared",
+              "Rented"
+            ],
+            "required": true
           },
           {
-            "key": "opened",
+            "key": "price",
+            "type": "number"
+          },
+          {
+            "key": "availableFrom",
             "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "outdoor",
+        "garage",
+        "covered"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
+          "key": "width",
+          "unit": "m"
         },
         {
-          "key": "rooms"
+          "key": "spots"
         }
       ],
       "currency": "EUR",
       "items": [
         {
           "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "category": "outdoor",
+          "price": 35,
+          "pricePeriod": "month",
           "attributes": {
-            "area": 68,
-            "rooms": 3
+            "width": 2.5,
+            "spots": 1
           },
           "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "lat": 48.152,
+            "lng": 17.11
           }
         },
         {
           "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
+          "category": "garage",
+          "price": 80,
+          "pricePeriod": "month",
           "attributes": {
-            "area": 142,
-            "rooms": 5
+            "width": 2.8,
+            "spots": 1
           },
           "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
+            "lat": 48.144,
+            "lng": 17.115
           }
         },
         {
           "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "category": "covered",
+          "price": 55,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
+            "width": 2.6,
+            "spots": 2
           },
           "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "lat": 48.158,
+            "lng": 17.1
+          }
+        },
+        {
+          "id": "offer-4",
+          "category": "outdoor",
+          "price": 25,
+          "pricePeriod": "month",
+          "status": "reserved",
+          "attributes": {
+            "width": 2.4,
+            "spots": 1
+          },
+          "location": {
+            "lat": 48.147,
+            "lng": 17.095
           }
         }
       ]
+    },
+    "mapBase": {
+      "center": {
+        "lat": 48.1486,
+        "lng": 17.1077
+      },
+      "zoom": 12
     }
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Keep a record of your community's parking spots and share the free ones for a fee. Sign in, add your spots and see who rents them.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "eyebrow": "Parking spots for communities",
+        "headline": "Every parking spot accounted for, and paid when shared",
+        "subheadline": "For neighbours and building communities: list your spots first, then share the free ones for a fee.",
+        "featuresHeading": "Keep spots and income in order",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
-          },
-          {
             "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "title": "One register of spots",
+            "description": "Add each spot with its address, status and price and edit it any time."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "map-pin",
+            "title": "Spots on a map",
+            "description": "See where every offered spot is and pick the one closest to you."
+          },
+          {
+            "icon": "wallet",
+            "title": "Paid sharing",
+            "description": "Set a monthly price for a free spot and mark it rented once it is taken."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Your own overview",
+            "description": "Check how many spots are rented and what they bring in each month."
           }
         ],
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How it works",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
-            },
-            {
               "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "description": "Open your own private space for the community's spots."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Add your spots",
+              "description": "Record each spot with its address, status and monthly price."
+            },
+            {
+              "title": "Share the free ones",
+              "description": "Mark a spot as shared so neighbours can see it and ask about it."
+            },
+            {
+              "title": "Track what is rented",
+              "description": "Follow the status of every spot and the income from them on your dashboard."
             }
           ]
         },
         "faq": {
-          "heading": "What should you know before trying it?",
+          "heading": "Questions",
           "items": [
             {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
+              "question": "Who is it for?",
+              "answer": "For communities, neighbours and building residents who want to keep track of parking spots and share free ones for payment."
             },
             {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
+              "question": "Do I need an account?",
+              "answer": "Browsing the offers is open to everyone. To keep your own register of spots you sign in with Google."
             },
             {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
+              "question": "Are the offers on the page real?",
+              "answer": "No. They are illustrative examples until the owner replaces them with real spots."
+            },
+            {
+              "question": "How do I ask about a spot?",
+              "answer": "Use the inquiry button on a card or the contact form and leave your e-mail."
             }
           ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
+        "title": "Your parking spots",
+        "intro": "See your spots, which are rented and what they bring in.",
+        "kpiLabels": {
+          "totalSpots": "Spots recorded",
+          "rentedShare": "Share rented",
+          "monthlyIncome": "Monthly price total"
+        }
       },
       "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "label": "Sign in and add your spots",
+        "title": "Start your parking register",
+        "subtitle": "Sign in with Google and record your first spot."
       },
       "contactForm": {
-        "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "heading": "Ask about a spot",
+        "submitLabel": "Send message",
+        "intro": "Tell us which spot interests you or how you want to share yours, and leave your e-mail."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Parking spot",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "name": "Spot name",
+          "address": "Address",
+          "status": "Status",
+          "price": "Price per month (EUR)",
+          "availableFrom": "Available from"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "name": "Spot A1",
+            "address": "Sample Street 1",
+            "status": "Shared",
+            "price": 35,
+            "availableFrom": "2026-10-25"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "name": "Garage B2",
+            "address": "Sample Street 4",
+            "status": "Rented",
+            "price": 80,
+            "availableFrom": "2026-10-15"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "name": "Courtyard C3",
+            "address": "Sample Lane 7",
+            "status": "Free",
+            "price": 55,
+            "availableFrom": "2026-11-10"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
+        "heading": "Spots on offer",
+        "intro": "Browse spots shared by the community, filter by type and open them on the map.",
         "notice": "These offers are illustrative examples, not a live offer.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "outdoor": "Outdoor",
+          "garage": "Garage",
+          "covered": "Covered"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "width": "Width",
+          "spots": "Spots"
         },
+        "inquireLabel": "Ask about this spot",
         "items": {
           "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+            "title": "Outdoor spot near the park",
+            "summary": "A marked outdoor spot on a quiet street, free on weekdays and weekends.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "Quiet street",
+              "Marked space"
             ]
           },
           "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+            "title": "Garage space",
+            "summary": "A private garage space with a door, suitable for a larger car.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Lockable door",
+              "Wide space"
             ]
           },
           "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+            "title": "Covered courtyard parking",
+            "summary": "Two covered spaces in a shared courtyard, shared by the residents.",
+            "highlights": [
+              "Roof",
+              "Two spaces"
+            ]
+          },
+          "offer-4": {
+            "title": "Corner outdoor spot",
+            "summary": "A corner spot that is currently reserved by a neighbour.",
+            "highlights": [
+              "Corner",
+              "Reserved"
+            ]
           }
+        }
+      }
+    },
+    "sk": {
+      "description": "Evidujte parkovacie miesta vašej komunity a voľné z nich zdieľajte za poplatok. Prihláste sa, pridajte miesta a sledujte ich prenájom.",
+      "landing": {
+        "eyebrow": "Parkovacie miesta pre komunity",
+        "headline": "Každé parkovacie miesto v evidencii a platené, keď sa zdieľa",
+        "subheadline": "Pre susedov a komunity v bytových domoch: najprv zapíšte svoje miesta, potom voľné zdieľajte za poplatok.",
+        "featuresHeading": "Poriadok v miestach aj príjmoch",
+        "features": [
+          {
+            "icon": "list-checks",
+            "title": "Jedna evidencia miest",
+            "description": "Pridajte každé miesto s adresou, stavom a cenou a kedykoľvek ho upravte."
+          },
+          {
+            "icon": "map-pin",
+            "title": "Miesta na mape",
+            "description": "Pozrite si, kde sa ponúkané miesta nachádzajú, a vyberte si to najbližšie."
+          },
+          {
+            "icon": "wallet",
+            "title": "Platené zdieľanie",
+            "description": "Určte mesačnú cenu voľného miesta a po obsadení ho označte ako prenajaté."
+          },
+          {
+            "icon": "chart-line",
+            "title": "Váš vlastný prehľad",
+            "description": "Sledujte, koľko miest je prenajatých a koľko mesačne prinášajú."
+          }
+        ],
+        "howItWorks": {
+          "heading": "Ako to funguje",
+          "steps": [
+            {
+              "title": "Prihláste sa cez Google",
+              "description": "Otvorte si vlastný súkromný priestor pre miesta vašej komunity."
+            },
+            {
+              "title": "Pridajte svoje miesta",
+              "description": "Zapíšte každé miesto s adresou, stavom a mesačnou cenou."
+            },
+            {
+              "title": "Zdieľajte voľné miesta",
+              "description": "Označte miesto ako zdieľané, aby ho susedia videli a mohli sa naň opýtať."
+            },
+            {
+              "title": "Sledujte prenájmy",
+              "description": "Na prehľade sledujte stav každého miesta a príjem z nich."
+            }
+          ]
         },
-        "inquireLabel": "Ask about this offer"
+        "faq": {
+          "heading": "Otázky",
+          "items": [
+            {
+              "question": "Pre koho je aplikácia?",
+              "answer": "Pre komunity, susedov a obyvateľov bytových domov, ktorí chcú viesť evidenciu parkovacích miest a voľné zdieľať za platbu."
+            },
+            {
+              "question": "Potrebujem účet?",
+              "answer": "Prezerať ponuky môže každý. Na vlastnú evidenciu miest sa prihlásite cez Google."
+            },
+            {
+              "question": "Sú ponuky na stránke skutočné?",
+              "answer": "Nie. Ide o ilustračné príklady, kým ich majiteľ nenahradí skutočnými miestami."
+            },
+            {
+              "question": "Ako sa opýtam na miesto?",
+              "answer": "Použite tlačidlo dopytu na karte alebo kontaktný formulár a zanechajte e-mail."
+            }
+          ]
+        }
+      },
+      "dashboard": {
+        "title": "Vaše parkovacie miesta",
+        "intro": "Pozrite si svoje miesta, ktoré sú prenajaté a koľko prinášajú.",
+        "kpiLabels": {
+          "totalSpots": "Evidované miesta",
+          "rentedShare": "Podiel prenajatých",
+          "monthlyIncome": "Súčet mesačných cien"
+        }
+      },
+      "cta": {
+        "label": "Prihláste sa a pridajte miesta",
+        "title": "Začnite evidenciu parkovania",
+        "subtitle": "Prihláste sa cez Google a zapíšte svoje prvé miesto."
+      },
+      "contactForm": {
+        "heading": "Opýtajte sa na miesto",
+        "submitLabel": "Odoslať správu",
+        "intro": "Napíšte, ktoré miesto vás zaujíma alebo ako chcete zdieľať to svoje, a zanechajte e-mail."
+      },
+      "dataGrid": {
+        "entityLabel": "Parkovacie miesto",
+        "fieldLabels": {
+          "name": "Názov miesta",
+          "address": "Adresa",
+          "status": "Stav",
+          "price": "Cena za mesiac (EUR)",
+          "availableFrom": "Voľné od"
+        },
+        "sampleRecords": [
+          {
+            "name": "Miesto A1",
+            "address": "Ukážková ulica 1",
+            "status": "Shared",
+            "price": 35,
+            "availableFrom": "2026-10-25"
+          },
+          {
+            "name": "Garáž B2",
+            "address": "Ukážková ulica 4",
+            "status": "Rented",
+            "price": 80,
+            "availableFrom": "2026-10-15"
+          },
+          {
+            "name": "Dvor C3",
+            "address": "Ukážkový rad 7",
+            "status": "Free",
+            "price": 55,
+            "availableFrom": "2026-11-10"
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Ponúkané miesta",
+        "intro": "Prezrite si miesta zdieľané komunitou, filtrujte podľa typu a otvorte ich na mape.",
+        "notice": "Tieto ponuky sú ilustračné príklady, nie aktuálna ponuka.",
+        "categoryLabels": {
+          "outdoor": "Vonkajšie",
+          "garage": "Garáž",
+          "covered": "Zastrešené"
+        },
+        "attributeLabels": {
+          "width": "Šírka",
+          "spots": "Miesta"
+        },
+        "inquireLabel": "Opýtať sa na miesto",
+        "items": {
+          "offer-1": {
+            "title": "Vonkajšie miesto pri parku",
+            "summary": "Vyznačené vonkajšie miesto na pokojnej ulici, voľné cez týždeň aj cez víkend.",
+            "highlights": [
+              "Pokojná ulica",
+              "Vyznačené miesto"
+            ]
+          },
+          "offer-2": {
+            "title": "Garážové státie",
+            "summary": "Súkromné garážové státie s bránou, vhodné aj pre väčšie auto.",
+            "highlights": [
+              "Uzamykateľná brána",
+              "Široké miesto"
+            ]
+          },
+          "offer-3": {
+            "title": "Zastrešené státie na dvore",
+            "summary": "Dve zastrešené miesta na spoločnom dvore, ktoré zdieľajú obyvatelia.",
+            "highlights": [
+              "Strecha",
+              "Dve miesta"
+            ]
+          },
+          "offer-4": {
+            "title": "Rohové vonkajšie miesto",
+            "summary": "Rohové miesto, ktoré má momentálne rezervované jeden zo susedov.",
+            "highlights": [
+              "Roh",
+              "Rezervované"
+            ]
+          }
+        }
       }
     }
   }
