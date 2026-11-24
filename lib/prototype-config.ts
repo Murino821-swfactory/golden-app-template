@@ -330,7 +330,7 @@ export const PATTERN_SCHEMAS = {
     tryIt: z
       .boolean()
       .optional()
-      .describe("Leave out — the content call never sets this. true shows every visitor two buttons under the hero's action and under the features heading, Change image and Change texts, that change the page in their own browser only (the golden demo, where a visitor tries the page with their own hands). A customer's page never carries them."),
+      .describe("Leave out — the content call never sets this. true shows every visitor two buttons under the hero's action and under the features heading, Change image and Change texts, and a Change image key in every feature card, that change the page in their own browser only (the golden demo, where a visitor tries the page with their own hands). A customer's page never carries them."),
   }),
   dashboard: z.object({
     kpis: z
