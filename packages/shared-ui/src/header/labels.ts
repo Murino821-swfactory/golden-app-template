@@ -24,6 +24,10 @@ export interface HeaderLabels {
   changeAppearanceLabel: string;
   appearanceDark: string;
   appearanceLight: string;
+  /** The menu row of the action's look, as `font` is the font's. */
+  button: string;
+  /** `{name}`, `{position}`, `{total}`. */
+  changeButtonLabel: string;
   language: string;
   cart: string;
   /** `{count}`. */
@@ -48,6 +52,8 @@ export const DEFAULT_LABELS: HeaderLabels = {
   changeAppearanceLabel: "Change appearance: {name}",
   appearanceDark: "Dark",
   appearanceLight: "Light",
+  button: "Button",
+  changeButtonLabel: "Change button: {name} ({position} of {total})",
   language: "Language",
   cart: "Cart",
   cartLabel: "Cart, {count} items",

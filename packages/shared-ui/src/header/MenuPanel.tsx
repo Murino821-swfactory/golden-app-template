@@ -5,8 +5,10 @@ import { useEffect, useRef, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { Wordmark, type LogoProps } from "../brand/Wordmark";
 import { AppearanceSwitcher } from "../switchers/AppearanceSwitcher";
+import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
+import type { ButtonStyleId } from "../theming/button-styles";
 import type { Appearance } from "../theming/color-schemes";
 import type { FontId } from "../theming/font-families";
 import type { HeaderLabels } from "./labels";
@@ -17,8 +19,8 @@ const ROW =
 
 /**
  * The full-screen menu below 1024px. It exists for every variant, a prototype's included:
- * with no nav it still carries the font, the appearance and the languages, which do not fit
- * the bar.
+ * with no nav it still carries the font, the appearance, the action's look and the
+ * languages, which do not fit the bar.
  *
  * Portalled to `<body>` on purpose: the header carries a backdrop-filter, and an ancestor
  * with one becomes the containing block for `position: fixed` descendants. Rendered in
@@ -31,6 +33,7 @@ export function MenuPanel({
   onContact,
   defaultFont,
   defaultAppearance,
+  defaultButton,
   languages,
   labels,
   toggleRef,
@@ -43,6 +46,8 @@ export function MenuPanel({
   defaultFont: FontId;
   /** Absent: the host has no dark/light switch, so the menu shows no row for it. */
   defaultAppearance?: Appearance;
+  /** Absent: the host has no button switcher, so the menu has no row for it. */
+  defaultButton?: ButtonStyleId;
   languages: readonly LanguageLink[];
   labels: HeaderLabels;
   toggleRef: RefObject<HTMLButtonElement | null>;
@@ -142,6 +147,7 @@ export function MenuPanel({
         {defaultAppearance && (
           <AppearanceSwitcher defaultAppearance={defaultAppearance} labels={labels} layout="row" />
         )}
+        {defaultButton && <ButtonSwitcher defaultStyle={defaultButton} labels={labels} layout="row" />}
         <LanguageSwitcher languages={languages} labels={labels} layout="list" onNavigate={onClose} />
       </div>
     </div>,

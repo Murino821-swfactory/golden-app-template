@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState, useSyncExternalStore, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Image as ImageIcon, Palette, PenLine } from "lucide-react";
+import { Image as ImageIcon, MousePointerClick, Palette, PenLine } from "lucide-react";
 import { editTexts, textEdit } from "@/lib/text-edit";
 import { cn } from "@/lib/utils";
 
@@ -119,10 +119,12 @@ export function TryBar({
 
 /**
  * The control pad (founder, 2026-11-18: "the page's control panel"): the same controls as large
- * touch keys, set into the hero's product frame under its title bar — the picture, the words and
- * the colour, beside the frame's own device switch, so everything a visitor can change is in one
- * place. The colour key presses the shared header's palette button: the palette is stored and
- * cycled in one place (`@tokenwise/shared-ui`), and a second copy of that state would drift.
+ * touch keys, set into the hero's product frame under its title bar — the picture, the words,
+ * the colour and the look of the page's action (2026-11-25), beside the frame's own device
+ * switch, so everything a visitor can change is in one place. The colour key and the button key
+ * press the shared header's own controls: the palette and the look are stored and cycled in one
+ * place (`@tokenwise/shared-ui`), and a second copy of that state would drift. The header keeps
+ * its button control in the document at every width, so the key works on a phone too.
  */
 export function TryPad({
   onImage,
@@ -158,6 +160,15 @@ export function TryPad({
         >
           <Palette aria-hidden className="size-5" />
           <span>{tc("changeColour")}</span>
+        </button>
+        <button
+          type="button"
+          data-try="button"
+          className="editorial-pad-key"
+          onClick={() => document.querySelector<HTMLButtonElement>('[data-shared-control="button"]')?.click()}
+        >
+          <MousePointerClick aria-hidden className="size-5" />
+          <span>{tc("changeButton")}</span>
         </button>
       </div>
       <p data-try-hint aria-live="polite" className="editorial-try-hint">

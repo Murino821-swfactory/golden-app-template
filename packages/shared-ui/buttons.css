@@ -1,0 +1,403 @@
+/*
+ * @tokenwise/shared-ui — the looks of a page's action (0.9.0).
+ *
+ * Five looks a visitor steps through with the header's button (src/theming/button-styles.ts).
+ * Each is one material of the page's own vocabulary and answers the pointer and the click in
+ * its own way (founder, 2026-11-25: "five different visuals and an animation after the click;
+ * a different corner is not enough"):
+ *
+ *   glow    a pill of the accent in a pool of its own light       a ripple from where it was pressed
+ *   block   a slab of the accent standing on a hard shadow        it is pushed down onto the shadow
+ *   glass   a frosted pane over whatever lies behind it           a sheen crosses the pane
+ *   orbit   a dark capsule, a light running round its edge        the edge flares, a ring leaves it
+ *   marker  bare words on a stroke of marker                      the stroke rises over the words
+ *
+ * The contract with a host:
+ *   - it marks its action `data-cta` and sets `html[data-button="<id>"]`;
+ *   - the action keeps its own size, padding and typeface — a look sets surface, edge, depth,
+ *     weight and motion, nothing that moves the layout;
+ *   - every colour here is a `--shared-*` token of the host or a mix of them, so a look repaints
+ *     with the palette. `--shared-accent-ink` (the ink on the accent) and `--shared-surface`
+ *     (the raised plane) are optional and fall back to `--shared-bg`;
+ *   - `data-pressed` is set by src/theming/action-press.ts for the moment after a click.
+ *
+ * Unlayered on purpose: these rules win over a host's utility classes (Tailwind's live in a
+ * layer), which is the point — the look, not the button's default, decides.
+ *
+ * Motion: every animation and every moving transition sits inside
+ * `prefers-reduced-motion: no-preference`; without it a look is its states, switched at once.
+ * A look animates its own pseudo-elements and transitions its own properties — never the
+ * action's `animation`, which belongs to the host (an entrance would play again).
+ */
+
+/* The angle the orbit's light stands at. Registered, so it can be animated. */
+@property --shared-cta-turn {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ── What every look shares ─────────────────────────────────────────────────────────────── */
+html[data-button] [data-cta] {
+  /* Arrivals and settling; the second overshoots a little, for a thing that springs back. */
+  --shared-cta-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --shared-cta-spring: cubic-bezier(0.3, 1.5, 0.5, 1);
+  position: relative;
+  isolation: isolate;
+  /* A host's own hover on its button stands down: each look answers the pointer itself — and
+     moves only inside the motion block at the foot of this file. */
+  transform: none;
+  transition: none;
+  text-shadow: none;
+  text-decoration-line: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* Two layers a look may paint: under the words, over the action's own ground. */
+html[data-button] [data-cta]::before,
+html[data-button] [data-cta]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+/* A look sets its own shadow and edge — where a host's focus ring is usually drawn. This one
+   is an outline, which no look uses. */
+html[data-button] [data-cta]:focus-visible {
+  outline: 2px solid var(--shared-ink);
+  outline-offset: 3px;
+}
+
+/* ── glow — a pill of the accent in a pool of its own light ─────────────────────────────── */
+html[data-button="glow"] [data-cta] {
+  border-radius: 9999px;
+  border-color: transparent;
+  background-color: var(--shared-accent);
+  color: var(--shared-accent-ink, var(--shared-bg));
+  box-shadow:
+    0 0 0 0 color-mix(in oklab, var(--shared-accent) 0%, transparent),
+    0 0.85em 2.6em -0.85em color-mix(in oklab, var(--shared-accent) 72%, transparent);
+}
+@media (hover: hover) {
+  /* The light spreads: an aura round the pill, a deeper pool under it. */
+  html[data-button="glow"] [data-cta]:hover {
+    box-shadow:
+      0 0 0 0.32em color-mix(in oklab, var(--shared-accent) 24%, transparent),
+      0 1em 3em -0.7em color-mix(in oklab, var(--shared-accent) 92%, transparent);
+  }
+}
+html[data-button="glow"] [data-cta][data-pressed] {
+  box-shadow:
+    0 0 0 0.32em color-mix(in oklab, var(--shared-accent) 24%, transparent),
+    0 1em 3em -0.7em color-mix(in oklab, var(--shared-accent) 92%, transparent);
+}
+/* The ripple: a wave of the action's ink, cut to a circle that opens from where it was pressed. */
+html[data-button="glow"] [data-cta]::after {
+  background: currentColor;
+  opacity: 0;
+}
+
+/* ── block — a slab of the accent standing on a hard shadow ─────────────────────────────── */
+/* The slab and its shadow are one body: the slab is moved (`translate`) and the shadow's offset
+   takes the move back, so the shadow stays where it is and only the slab travels. At rest the
+   pair is centred on the action's own box; pressed, the slab lies on the shadow. The thin line
+   of the page's ground between them is the slab's edge. */
+html[data-button="block"] [data-cta] {
+  --shared-cta-lift: 0.42em;
+  border-radius: 0;
+  border-color: transparent;
+  background-color: var(--shared-accent);
+  color: var(--shared-accent-ink, var(--shared-bg));
+  font-weight: 700;
+  translate: calc(var(--shared-cta-lift) / -2) calc(var(--shared-cta-lift) / -2);
+  box-shadow:
+    0 0 0 0.14em var(--shared-bg),
+    var(--shared-cta-lift) var(--shared-cta-lift) 0 0.14em var(--shared-ink);
+}
+@media (hover: hover) {
+  /* Under the pointer the slab stands a little higher. */
+  html[data-button="block"] [data-cta]:hover {
+    translate: calc(var(--shared-cta-lift) / -2 - 0.16em) calc(var(--shared-cta-lift) / -2 - 0.16em);
+    box-shadow:
+      0 0 0 0.14em var(--shared-bg),
+      calc(var(--shared-cta-lift) + 0.16em) calc(var(--shared-cta-lift) + 0.16em) 0 0.14em var(--shared-ink);
+  }
+}
+html[data-button="block"] [data-cta]:active,
+html[data-button="block"] [data-cta][data-pressed] {
+  translate: calc(var(--shared-cta-lift) / 2) calc(var(--shared-cta-lift) / 2);
+  box-shadow:
+    0 0 0 0.14em var(--shared-bg),
+    0 0 0 0.14em var(--shared-ink);
+}
+
+/* ── glass — a frosted pane over whatever lies behind it ────────────────────────────────── */
+/* The pane is the host's raised plane, thinned, with the page blurred through it. What makes it
+   glass is the light: caught along the top third, reflected faintly at the foot, a bright line
+   on its upper edge — and none of it in the middle band, where the words stand. There the
+   ground is the thinned plane over the page: a ground between two the palettes already hold the
+   page's ink to. */
+html[data-button="glass"] [data-cta] {
+  border-radius: 0.95em;
+  border-color: color-mix(in oklab, var(--shared-ink) 42%, transparent);
+  background-color: color-mix(in oklab, var(--shared-surface, var(--shared-bg)) 58%, transparent);
+  background-image:
+    linear-gradient(to bottom, color-mix(in oklab, var(--shared-ink) 30%, transparent), transparent 32%),
+    linear-gradient(to top, color-mix(in oklab, var(--shared-ink) 12%, transparent), transparent 20%);
+  color: var(--shared-ink);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--shared-ink) 60%, transparent),
+    0 0.7em 1.8em -0.9em color-mix(in oklab, var(--shared-bg) 92%, transparent);
+}
+@media (hover: hover) {
+  /* The pane thickens: less of the page shows through, its edge catches more light. */
+  html[data-button="glass"] [data-cta]:hover {
+    border-color: color-mix(in oklab, var(--shared-ink) 68%, transparent);
+    background-color: color-mix(in oklab, var(--shared-surface, var(--shared-bg)) 78%, transparent);
+  }
+}
+html[data-button="glass"] [data-cta][data-pressed] {
+  border-color: color-mix(in oklab, var(--shared-ink) 68%, transparent);
+  background-color: color-mix(in oklab, var(--shared-surface, var(--shared-bg)) 78%, transparent);
+}
+/* The sheen: a band of light parked off the pane's left edge, sent across it by the click. */
+html[data-button="glass"] [data-cta]::after {
+  background: linear-gradient(
+      105deg,
+      transparent 38%,
+      color-mix(in oklab, var(--shared-ink) 36%, transparent) 50%,
+      transparent 62%
+    )
+    130% 0 / 220% 100% no-repeat;
+  opacity: 0;
+}
+
+/* ── orbit — a dark capsule with a light running round its edge ─────────────────────────── */
+/* The page's own ground, kept nearly whole so the words stand on it over a picture; a faint
+   track where the light runs; the light itself is the `::before` ring — the same construction
+   as a frame's running edge. */
+html[data-button="orbit"] [data-cta] {
+  border-radius: 9999px;
+  border-color: color-mix(in oklab, var(--shared-accent) 30%, transparent);
+  background-color: color-mix(in oklab, var(--shared-bg) 86%, transparent);
+  color: var(--shared-ink);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 1.5em -0.55em color-mix(in oklab, var(--shared-accent) 60%, transparent);
+}
+html[data-button="orbit"] [data-cta]::before {
+  inset: -1px;
+  padding: 1.5px;
+  /* A comet: a long tail thinning out behind a bright head, over two fifths of the way round. */
+  background: conic-gradient(
+    from var(--shared-cta-turn),
+    transparent 0turn 0.5turn,
+    color-mix(in oklab, var(--shared-accent) 45%, transparent) 0.72turn,
+    var(--shared-accent) 0.93turn 0.985turn,
+    transparent 1turn
+  );
+  /* Only the ring: the middle is cut out. The prefixed pair first — in Chromium `-webkit-mask`
+     is an alias that resets the composite, and `xor` is not a standard value; the standard
+     pair last, so it wins where it is understood. */
+  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
+  mask-composite: exclude;
+}
+@media (hover: hover) {
+  /* The track lights up and the capsule glows. */
+  html[data-button="orbit"] [data-cta]:hover {
+    border-color: color-mix(in oklab, var(--shared-accent) 55%, transparent);
+    box-shadow: 0 0 2em -0.35em color-mix(in oklab, var(--shared-accent) 85%, transparent);
+  }
+}
+/* The flare: the whole edge is lit at once. */
+html[data-button="orbit"] [data-cta][data-pressed] {
+  border-color: var(--shared-accent);
+  box-shadow: 0 0 2.2em -0.2em var(--shared-accent);
+}
+
+/* ── marker — bare words on a stroke of marker ──────────────────────────────────────────── */
+/* No box at all: the page's ink, a little heavier, on a thick stroke of the accent drawn under
+   the line of text — an underline, so it is exactly as long as the words. A halo of the page's
+   ground keeps the words legible over a picture (the answer the host's hero copy gives). Under
+   the pointer the stroke thickens; pressed, it is drawn up over the whole line like a marker
+   pen and the words take the accent's ink. */
+html[data-button="marker"] [data-cta] {
+  border-radius: 0.3em;
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--shared-ink);
+  font-weight: 600;
+  text-shadow:
+    0 1px 2px var(--shared-bg),
+    0 0 0.9em var(--shared-bg),
+    0 0 1.8em var(--shared-bg);
+  text-decoration-line: underline;
+  text-decoration-color: var(--shared-accent);
+  text-decoration-thickness: 0.22em;
+  text-underline-offset: 0.36em;
+  text-decoration-skip-ink: none;
+}
+@media (hover: hover) {
+  html[data-button="marker"] [data-cta]:hover {
+    text-decoration-thickness: 0.4em;
+    text-underline-offset: 0.26em;
+  }
+}
+html[data-button="marker"] [data-cta]:active,
+html[data-button="marker"] [data-cta][data-pressed] {
+  color: var(--shared-accent-ink, var(--shared-bg));
+  text-shadow: none;
+  text-decoration-thickness: 1.5em;
+  text-underline-offset: -1.08em;
+}
+
+/* ── Motion ─────────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-button="glow"] [data-cta] {
+    transition: box-shadow 280ms var(--shared-cta-out);
+  }
+  /* An even front, so the wave can be followed across the pill. */
+  html[data-button="glow"] [data-cta][data-pressed]::after {
+    animation: shared-cta-ripple 600ms linear both;
+  }
+  /* A ring of the light leaves the pill with the ripple. */
+  html[data-button="glow"] [data-cta][data-pressed]::before {
+    animation: shared-cta-ring 620ms var(--shared-cta-out) both;
+  }
+
+  /* Down fast, back with a spring. */
+  html[data-button="block"] [data-cta] {
+    transition:
+      translate 240ms var(--shared-cta-spring),
+      box-shadow 240ms var(--shared-cta-spring);
+  }
+  html[data-button="block"] [data-cta]:active,
+  html[data-button="block"] [data-cta][data-pressed] {
+    transition-duration: 70ms;
+    transition-timing-function: ease-out;
+  }
+
+  html[data-button="glass"] [data-cta] {
+    transition:
+      background-color 240ms var(--shared-cta-out),
+      border-color 240ms var(--shared-cta-out);
+  }
+  html[data-button="glass"] [data-cta][data-pressed]::after {
+    animation: shared-cta-sheen 560ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
+  html[data-button="orbit"] [data-cta] {
+    transition:
+      border-color 220ms var(--shared-cta-out),
+      box-shadow 320ms var(--shared-cta-out);
+  }
+  /* The one thing here that moves unasked: the look is the running light. Slow, and only it. */
+  html[data-button="orbit"] [data-cta]::before {
+    animation: shared-cta-orbit 5.5s linear infinite;
+  }
+  html[data-button="orbit"] [data-cta][data-pressed]::after {
+    animation: shared-cta-ring 680ms var(--shared-cta-out) both;
+  }
+
+  html[data-button="marker"] [data-cta] {
+    transition:
+      text-decoration-thickness 220ms var(--shared-cta-out),
+      text-underline-offset 220ms var(--shared-cta-out),
+      color 160ms var(--shared-cta-out),
+      text-shadow 160ms var(--shared-cta-out);
+  }
+}
+
+@keyframes shared-cta-ripple {
+  from {
+    opacity: 0.34;
+    clip-path: circle(0% at var(--shared-cta-x, 50%) var(--shared-cta-y, 50%));
+  }
+  70% {
+    opacity: 0.26;
+    clip-path: circle(115% at var(--shared-cta-x, 50%) var(--shared-cta-y, 50%));
+  }
+  to {
+    opacity: 0;
+    clip-path: circle(150% at var(--shared-cta-x, 50%) var(--shared-cta-y, 50%));
+  }
+}
+@keyframes shared-cta-ring {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--shared-accent) 62%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 1.15em color-mix(in oklab, var(--shared-accent) 0%, transparent);
+  }
+}
+@keyframes shared-cta-sheen {
+  from {
+    opacity: 1;
+    background-position: 130% 0;
+  }
+  to {
+    opacity: 1;
+    background-position: -30% 0;
+  }
+}
+@keyframes shared-cta-orbit {
+  to {
+    --shared-cta-turn: 1turn;
+  }
+}
+
+/* ── The header's icon: the look in small ───────────────────────────────────────────────── */
+.shared-button-glyph {
+  display: block;
+  box-sizing: border-box;
+  width: 22px;
+  height: 13px;
+}
+html[data-button="glow"] .shared-button-glyph {
+  border-radius: 9999px;
+  background-color: var(--shared-accent);
+  box-shadow: 0 0 9px 0 color-mix(in oklab, var(--shared-accent) 80%, transparent);
+}
+html[data-button="block"] .shared-button-glyph {
+  width: 19px;
+  height: 11px;
+  background-color: var(--shared-accent);
+  translate: -1.5px -1.5px;
+  box-shadow:
+    0 0 0 1px var(--shared-bg),
+    3px 3px 0 1px var(--shared-ink);
+}
+html[data-button="glass"] .shared-button-glyph {
+  border: 1px solid color-mix(in oklab, var(--shared-ink) 62%, transparent);
+  border-radius: 4px;
+  background-image: linear-gradient(
+    115deg,
+    color-mix(in oklab, var(--shared-ink) 14%, transparent) 30%,
+    color-mix(in oklab, var(--shared-ink) 52%, transparent) 50%,
+    color-mix(in oklab, var(--shared-ink) 14%, transparent) 70%
+  );
+}
+html[data-button="orbit"] .shared-button-glyph {
+  border: 1.5px solid color-mix(in oklab, var(--shared-accent) 30%, transparent);
+  border-top-color: var(--shared-accent);
+  border-right-color: var(--shared-accent);
+  border-radius: 9999px;
+}
+html[data-button="marker"] .shared-button-glyph {
+  background-image:
+    linear-gradient(var(--shared-ink), var(--shared-ink)),
+    linear-gradient(var(--shared-accent), var(--shared-accent));
+  background-repeat: no-repeat;
+  background-position:
+    50% 2px,
+    50% 8px;
+  background-size:
+    14px 2px,
+    18px 4px;
+}

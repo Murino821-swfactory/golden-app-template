@@ -1151,6 +1151,17 @@
               "dark",
               "light"
             ]
+          },
+          "button": {
+            "description": "The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Each look is a material with its own answer to the click. Omit for glow. glow: a pill of the accent in a pool of its own light, a ripple on the click — for most products; block: a slab of the accent on a hard offset shadow that is pushed down on the click — for bold, playful, sporty or streetwise brands; glass: a frosted pane over the page with a sheen crossing it on the click — for premium, calm, wellness and lifestyle pages; orbit: a dark capsule with a light running round its edge — for tech, AI, tools and anything nocturnal; marker: bare words on a stroke of marker pen that rises over them on the click — for editorial, personal, craft and advisory pages.",
+            "type": "string",
+            "enum": [
+              "glow",
+              "block",
+              "glass",
+              "orbit",
+              "marker"
+            ]
           }
         },
         "required": [

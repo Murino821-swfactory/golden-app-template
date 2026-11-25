@@ -132,7 +132,9 @@ test.describe("\"Change texts\" — every text on the page", () => {
       await action.click();
       await retype(page, "Book a table");
       await expect(action).toHaveText("Book a table");
-      await expect(action.locator("svg")).toHaveCount(1);
+      // The action is its words: its arrow left on 2026-11-25 (founder). That an icon survives
+      // retyping is held on the map's button, in the test below.
+      await expect(action.locator("svg")).toHaveCount(0);
     }
     // So is a link of the footer.
     const link = page.locator("footer nav a").first();

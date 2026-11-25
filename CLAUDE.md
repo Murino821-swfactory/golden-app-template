@@ -21,7 +21,8 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
 | Dark or light — the visitor's switch, and the side a first visit opens on | the header's switch in `packages/shared-ui` (`AppearanceSwitcher`, `appearanceStore`, `cssBlocksForBothAppearances`); `prototype.config.json` → `theme.appearance` (omit = `dark`); `lib/theme-appearance.ts` — see "Dark and light" under "Tailwind Colors" |
-| Header (logo, colour, font, dark/light, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
+| Header (logo, colour, font, dark/light, button look, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
+| The look of the landing's action — the CTA button (glow, block, glass, orbit, marker) and its answer to the click | `prototype.config.json` → `theme.button` (omit = glow); the looks in `packages/shared-ui/buttons.css` and `src/theming/button-styles.ts`, the click in `src/theming/action-press.ts`; the action itself is whatever carries `data-cta` — see "The look of the landing's action" below |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
@@ -414,8 +415,9 @@ Consequences when editing:
 ## The shared header — `packages/shared-ui` (2026-09-25)
 
 This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`**, the
-header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light ·
-language · cart · user. Spec and decision in the **sw-factory** repo
+header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light · button
+(5 looks, 0.9.0 — a host opts in, the prototype does) · language · cart · user. Spec and
+decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
 
@@ -455,6 +457,66 @@ language · cart · user. Spec and decision in the **sw-factory** repo
   checks); merging to `main` publishes it to npm. Live prototypes never change: the factory's
   `prototypes:refresh` was removed on 2026-11-23, so only new prototypes get a template change.
 - New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+
+## The look of the landing's action (2026-11-25)
+
+Founder: "the CTA button, the same way as the font and the colour" — and, on the first five,
+which differed by their corners: "five different visuals and an animation after the click; a
+different corner is not enough; the arrows go." A visitor steps through five looks of the
+landing's action with one button in the header (shared-ui 0.9.0, `ButtonSwitcher`: an icon drawn
+in the look on screen; a row in the menu below 1024px). It works as the palette and the font do:
+the look is `html[data-button]`, the pick is stored (`localStorage` `button`) and
+`ThemeBootstrap` brings it back before the first paint.
+
+| look | at rest | on the click |
+|---|---|---|
+| `glow` | a pill of the accent in a pool of its own light | a ripple from where it was pressed |
+| `block` | a slab of the accent standing on a hard offset shadow | it is pushed down onto the shadow |
+| `glass` | a frosted pane, the page blurred through it | a sheen crosses the pane |
+| `orbit` | a dark capsule with a light running round its edge | the edge flares, a ring leaves it |
+| `marker` | bare words on a stroke of marker pen | the stroke rises over the words |
+
+- **Where it lives:** all of it is `@tokenwise/shared-ui`'s — `buttons.css` (imported by
+  `app/globals.css`) holds every rule, keyed by `html[data-button="<id>"]`, for whatever is
+  marked `data-cta` and for the header's icon; `src/theming/button-styles.ts` is the table.
+  This repo marks the action and maps two tokens (`--shared-accent-ink`, `--shared-surface`).
+- **What wears it:** the landing's action and nothing else — the hero's and the closing band's
+  link, in every presentation. Its words and nothing else: the arrow left the editorial action.
+  The contact form's submit, the offers' "Ask about this offer" and the app's own buttons keep
+  their look.
+- **What a look may touch:** surface, edge, depth, weight, motion. Never the action's size, and
+  never its `animation` — the hero's action enters with `editorial-enter`, and a look that set
+  `animation` would play that entrance again when it let go. A look animates its two
+  pseudo-elements and transitions its own properties. No colour of its own — only `--shared-*`
+  tokens — so "Change colour" repaints it; the words are held to WCAG AA on every palette, at
+  rest and pressed (a wash of the accent under the page's ink is out: on a palette of two
+  colours the accent IS the ink, and 6 % of it takes the tightest pairs under AA — the glass
+  stands on the card instead and keeps its light off the band the words stand in).
+- **The click is held for 260 ms** (`PRESS_HOLD_MS`, `action-press.ts`, installed by the shared
+  header when it is given `button`). The action is a link and would leave the page before its
+  animation was seen, so a plain click sets `data-pressed`, the look answers, and the same click
+  is then let through to Next's `<Link>`. Not held: modifier keys and other mouse buttons, a
+  click "Change texts" already took, any click under reduced motion, and a page whose scripts
+  have not loaded yet (`html[data-shared-press]` says the hold is on).
+- **Motion:** only the orbit moves unasked (its light runs slowly round the edge — that is the
+  look); everything else answers the pointer or the click. All of it sits inside
+  `prefers-reduced-motion: no-preference`; without it a look switches its states at once and
+  the click goes straight through.
+- **First visit:** `theme.button` in `prototype.config.json`; a config that names none opens in
+  `glow` (`initialButtonStyle`), in every presentation. On the editorial page that is the pill
+  in its glow it always was, without the arrow. Under story and document the action used to be
+  the small rounded button of the shared sections; it wears the look now too.
+- **The golden demo:** the control pad carries a fourth key, "Change button", that presses the
+  header's control (as the colour key presses the palette's) — the header keeps that control in
+  the document at every width for it. On a phone the idea chat's launcher floats where the
+  pad's last key lands, so a stage with a pad ends two rems higher (`stage.css`); on a window
+  shorter than the hero's copy the launcher still lies over part of that key until the first
+  scroll.
+- Texts: `common.button`, `common.changeButton` (the pad's key), `common.changeButtonLabel` in
+  all 8 bundles. Tests: `tests/button-style.spec.ts` (config, cycle, persistence without a
+  flash, each look more than a corner, each look's own answer to the click, the hold, reduced
+  motion, modifier keys, focus, WCAG AA on every palette, the menu, the pad),
+  `packages/shared-ui/test/button-styles.test.ts`.
 
 ## The AI hero image (2026-09-25)
 
@@ -859,8 +921,9 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `li[data-lit]` (`stage.css`), and on the demo its words wear a halo of the card's ground
   (`.editorial-card-try`). The key is marked `data-try-key`, so it stays a key while the texts
   are edited (`KEYS` in `lib/text-edit.ts`). **In the hero the controls are the product frame's
-  control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): three touch keys under
-  the frame's title bar — picture, words and colour (the colour key presses the shared header's
+  control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): four touch keys under
+  the frame's title bar — picture, words, colour and, since 2026-11-25, the look of the page's
+  action (see "The look of the landing's action") (the colour key presses the shared header's
   palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
   the frame's own device switch, everything a visitor can change in one place; a frame that carries
   the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to

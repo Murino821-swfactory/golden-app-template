@@ -1,16 +1,18 @@
 # @tokenwise/shared-ui
 
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
-logo, nav, **Change colour** (30 palettes), **font** (10 faces), **language**, **cart**
-and **user**. A change to the header is one PR here.
+logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
+page's action, 0.9.0), **language**, **cart** and **user**. A change to the header is one PR
+here.
 
-Colour, font, language, cart and sign-in are icons with no visible words — a colour wheel,
-`Aa`, a globe, a cart, a figure (founder decision 2026-09-28, 0.3.0; the globe 2026-11-25,
-0.7.0 — it read `EN ▾` before). Each one's name is its `aria-label`, so a host's translations
-of `changeColourLabel`, `changeFontLabel`, `language` and `signIn` still matter. Colour and
-font step to the next one on a click; the globe opens a popup that lists `languages` — each a
-link named in itself, the one on screen marked — and titles it with `labels.language`. With
-fewer than two languages there is no globe at all.
+Colour, font, button, language, cart and sign-in are icons with no visible words — a colour
+wheel, `Aa`, a small action in the look on screen, a globe, a cart, a figure (founder decision
+2026-09-28, 0.3.0; the globe 2026-11-25, 0.7.0 — it read `EN ▾` before; the button 0.9.0).
+Each one's name is its `aria-label`, so a host's translations of `changeColourLabel`,
+`changeFontLabel`, `changeButtonLabel`, `language` and `signIn` still matter. Colour, font and
+the button's look step to the next one on a click; the globe opens a popup that lists
+`languages` — each a link named in itself, the one on screen marked — and titles it with
+`labels.language`. With fewer than two languages there is no globe at all.
 
 Spec: sw-factory `docs/superpowers/specs/2026-09-25-shared-header-design.md`.
 Decision: sw-factory `docs/decisions/shared-header-package.md`.
@@ -37,11 +39,11 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    @theme inline { --font-sans: var(--shared-font-sans); }
    ```
    Without `@source` the header renders unstyled and nothing fails.
-3. Layout: `<html data-font="<default>" [data-scheme="<default>"]>`, and
-   `<ThemeBootstrap palettes? />` as the **first child of `<body>`** — it applies a returning
-   visitor's palette, appearance and font before the first paint. Put `suppressHydrationWarning`
-   on `<html>`: the script changes those attributes (and the `.dark` class) before React
-   hydrates, on purpose.
+3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]>`,
+   and `<ThemeBootstrap palettes? buttons? />` as the **first child of `<body>`** — it applies a
+   returning visitor's palette, appearance, font and button look before the first paint. Put
+   `suppressHydrationWarning` on `<html>`: the script changes those attributes (and the `.dark`
+   class) before React hydrates, on purpose.
    **Dark and light (founder decision 2026-11-25: the dark-only rule is dropped).** With
    `palettes`, the stylesheet carries BOTH variants of every palette
    (`cssBlocksForBothAppearances()`): the dark rules as `html[data-scheme="x"]`, the light ones
@@ -61,6 +63,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   palette="midnight-teal-ocean-mist" // omit: no palette switcher
   font="inter"                      // same id as <html data-font>
   appearance="dark"                 // the side <html> opens on; omit: no dark/light switch
+  button="glow"                     // same id as <html data-button>; omit: no button switcher
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"
@@ -72,6 +75,51 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
 
 Node code that needs only data (palettes, font table) imports
 `@tokenwise/shared-ui/theming`, which carries no React.
+
+## The looks of an action (0.9.0)
+
+One button steps through five looks of the page's action — its CTA — the way **Change colour**
+steps through the palettes (`src/theming/button-styles.ts`; the choice is stored under `button`,
+as `html[data-button]`). A look is a character, not a corner radius: a surface, a depth, and its
+own answer to the pointer and to the click.
+
+| look | at rest | under the pointer | on the click |
+|---|---|---|---|
+| `glow` | a pill of the accent in a pool of its own light | the light spreads into an aura | a ripple from where it was pressed, a ring of light leaves the pill |
+| `block` | a slab of the accent standing on a hard offset shadow | the slab stands higher | it is pushed down onto the shadow and springs back |
+| `glass` | a frosted pane: the page blurred through it, light caught along its top | the pane thickens | a sheen crosses the pane |
+| `orbit` | a dark capsule with a light running round its edge | the track lights up | the whole edge flares and a ring leaves it |
+| `marker` | bare words on a stroke of marker pen | the stroke thickens | the stroke rises over the words like a highlighter |
+
+A host opts in with all of:
+
+1. `@import "@tokenwise/shared-ui/buttons.css";` — the looks, and the header's icon for each;
+2. `<html data-button="<default>">` and `<ThemeBootstrap buttons />` (brings a returning
+   visitor's look back before the first paint);
+3. the header's `button` prop — the control, and the click's answer (below);
+4. `data-cta` on its action.
+
+A host that does none of it gets no control, no CSS and an untouched action.
+
+**What a look may touch.** Surface, edge, depth, weight and motion — never the action's size or
+padding, and never its `animation` (that is the host's: an entrance would play again). Every
+colour is a `--shared-*` token or a mix of them, so a look repaints with the palette. Two
+optional tokens join the host's side of the contract: `--shared-accent-ink` (the ink on the
+accent) and `--shared-surface` (the raised plane the glass is made of); both fall back to
+`--shared-bg`. Keyboard focus is an outline, which no look uses. All motion sits inside
+`prefers-reduced-motion: no-preference`.
+
+**The click** (`src/theming/action-press.ts`, installed by the header). An action is a link, and
+a link leaves the page the moment it is clicked, so its animation would never be seen. A plain
+click is therefore held for `PRESS_HOLD_MS` (260 ms): the action wears `data-pressed`, the look
+answers, and the same click is then let through to the host's router or the browser. Never held:
+a click with a modifier key or another button, a click something above already took, any click
+under reduced motion. While installed, the document carries `html[data-shared-press]`.
+
+Adding a look is one entry in `BUTTON_STYLES` and its rules in `buttons.css`.
+`test/button-styles.test.ts` fails on a look without them, on a colour of its own and on an
+animation outside the motion block; the template's `tests/button-style.spec.ts` holds every look
+to WCAG AA on every palette, at rest and pressed.
 
 ## Adding a font
 

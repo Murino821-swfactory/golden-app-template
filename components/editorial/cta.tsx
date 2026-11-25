@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/hooks/use-content";
 import { landingActionHref, landingActionPrefetch } from "@/lib/landing-action";
@@ -34,10 +33,9 @@ export function CtaSection() {
         <h2 className={`${DISPLAY_H2} mx-auto`}>{copy?.title ?? t("title")}</h2>
         <p className="mx-auto mt-3 max-w-2xl text-balance text-muted-foreground sm:text-lg">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (
-          <Button asChild size="lg" className="editorial-pill mt-8 h-12 rounded-full px-6 text-sm">
+          <Button asChild size="lg" data-cta className="editorial-pill mt-8 h-12 rounded-full px-6 text-sm">
             <Link href={href} prefetch={landingActionPrefetch(action)}>
               {copy?.label ?? t("action")}
-              <ArrowUpRight aria-hidden className="size-4" />
             </Link>
           </Button>
         )}
