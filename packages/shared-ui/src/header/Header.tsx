@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Wordmark, type LogoProps } from "../brand/Wordmark";
 import { CartButton, type CartProps } from "../cart/CartButton";
 import { AppearanceSwitcher } from "../switchers/AppearanceSwitcher";
+import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
 import { PaletteSwitcher } from "../switchers/PaletteSwitcher";
+import { installActionPress } from "../theming/action-press";
+import type { ButtonStyleId } from "../theming/button-styles";
 import type { Appearance, ColorSchemeId } from "../theming/color-schemes";
 import type { FontId } from "../theming/font-families";
 import { UserMenu, type HeaderUser, type UserMenuItem } from "../user-menu/UserMenu";
@@ -35,6 +38,11 @@ export interface HeaderProps {
   /** The side the host renders first — what it themes `<html>` with (the `.dark` class, or
    * `data-appearance="light"`). Absent: no dark/light switch — a host with one fixed look. */
   appearance?: Appearance;
+  /** The look of the page's action the host renders first — the same id it puts on
+   * `<html data-button>`, with `<ThemeBootstrap buttons />` and `buttons.css` imported. The
+   * header then also plays the look's answer to a click on the action (`action-press.ts`).
+   * Absent: no button switcher, and the action is left alone. */
+  button?: ButtonStyleId;
   /** Fewer than two: no language switcher. */
   languages?: readonly LanguageLink[];
   /** Absent: the host has no accounts and the header shows no user control at all (a
@@ -54,15 +62,15 @@ const NAV_LINK =
 /**
  * The one header of tokenwise.sk and of every prototype.
  *
- *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [☾] [◍ language] [cart] [user]
- *   <1024px  [logo…]                      [◎] [cart] [user] [☰]
+ *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [☾] [▭ button] [◍ language] [cart] [user]
+ *   <1024px  [logo…]                                [◎] [cart] [user] [☰]
  *
  * Every control right of the nav is an icon and nothing else [founder decision 2026-09-28]:
- * a colour wheel, "Aa" in the face on screen, a moon or a sun for the side on screen and a
- * globe for the language [both 2026-11-25], the cart, the figure. Their names live in
- * `aria-label`, and the font, the appearance and the languages are spelled out in the menu
- * below 1024px. Colour, font and appearance step on a click; the globe opens a popup with
- * the languages to choose from.
+ * a colour wheel, "Aa" in the face on screen, a moon or a sun for the side on screen, the
+ * action in the look on screen and a globe for the language [all three 2026-11-25], the cart,
+ * the figure. Their names live in `aria-label`, and the font, the appearance, the look and
+ * the languages are spelled out in the menu below 1024px. Colour, font, appearance and look
+ * step on a click; the globe opens a popup with the languages to choose from.
  *
  * Translucent over the page (the host's background at 88% with a backdrop blur), no bottom
  * rule — as tokenwise.sk's header was before it moved here. Every colour and typeface is a
@@ -77,6 +85,7 @@ export function Header({
   palette,
   font,
   appearance,
+  button,
   languages = [],
   user,
   signInHref,
@@ -90,6 +99,9 @@ export function Header({
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const closeMenu = useCallback(() => setMenuOpen(false), [setMenuOpen]);
+  // A host with looks gets their answer to the click from the same place as their control.
+  const looks = button !== undefined;
+  useEffect(() => (looks ? installActionPress() : undefined), [looks]);
   const items = navFor(variant, { hasContact: Boolean(onContact), contactLabel: labels.contact, siteOrigin });
 
   const positionClass =
@@ -149,6 +161,13 @@ export function Header({
             <AppearanceSwitcher defaultAppearance={appearance} labels={labels} />
           </div>
         )}
+        {/* Rendered at every width and shown from 1024px: a host's own key may press it (the
+            golden demo's control pad does), as it presses the palette button. */}
+        {button && (
+          <div className="hidden lg:flex">
+            <ButtonSwitcher defaultStyle={button} labels={labels} />
+          </div>
+        )}
         <div className="hidden lg:flex">
           <LanguageSwitcher languages={languages} labels={labels} />
         </div>
@@ -187,6 +206,7 @@ export function Header({
           onContact={onContact}
           defaultFont={font}
           defaultAppearance={appearance}
+          defaultButton={button}
           languages={languages}
           labels={labels}
           toggleRef={toggleRef}

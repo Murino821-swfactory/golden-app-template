@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 /* The shared header's typefaces (self-hosted @font-face) and html[data-font] rules. */
 @import "@tokenwise/shared-ui/styles.css";
+/* The looks of the landing's action (html[data-button]) and the header's icon for each. */
+@import "@tokenwise/shared-ui/buttons.css";
 /* Tailwind 4 does not scan node_modules; without this the header renders unstyled. */
 @source "../packages/shared-ui/src";
 
@@ -64,6 +66,10 @@
   --shared-ink: var(--foreground);
   --shared-ink-muted: var(--muted-foreground);
   --shared-accent: var(--primary);
+  /* The ink that reads on the accent — what a filled action sets its words in (2026-11-25). */
+  --shared-accent-ink: var(--primary-foreground);
+  /* The raised plane the glass action is made of — the card, which every palette holds the ink to. */
+  --shared-surface: var(--card);
   --shared-rule: var(--border);
   --shared-gutter: var(--gutter);
   --background: oklch(1 0 0);
@@ -226,4 +232,18 @@
   [data-landing-mode="story"] [data-story-stage] { position: static; height: auto; overflow: visible; }
   [data-landing-mode="story"] [data-story-panel] { position: static; display: block; opacity: 1; visibility: visible; transform: none; overflow: visible; animation: none !important; }
   [data-story-navigation] { display: none; }
+}
+
+/* ── The landing's action wears the look the visitor chose (founder, 2026-11-25) ─────────────
+   The five looks — glow, block, glass, orbit, marker — are `@tokenwise/shared-ui`'s
+   (`buttons.css`, imported at the top): rules keyed by `html[data-button="<id>"]` for whatever
+   is marked `data-cta`, which here is the hero's and the closing band's action in every
+   presentation. A look sets surface, edge, depth, weight and motion; the action keeps its size.
+   This file's part is the tokens above (`--shared-accent-ink`, `--shared-surface`) and the one
+   rule below. */
+/* The shared sections' action (story, document) is padded for a small rounded button; a look
+   may draw it as a pill or as bare words, which need room at their ends. The editorial action
+   is padded for a pill already. */
+html[data-button] [data-cta]:not(.editorial-pill) {
+  padding-inline: 1.25rem;
 }

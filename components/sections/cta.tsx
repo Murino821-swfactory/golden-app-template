@@ -28,7 +28,7 @@ export function CtaSection() {
         <h2 className="text-3xl font-semibold tracking-tight">{copy?.title ?? t("title")}</h2>
         <p className="mt-2 text-muted-foreground">{copy?.subtitle ?? t("subtitle")}</p>
         {href && (
-          <Button asChild size="lg" className="mt-6">
+          <Button asChild size="lg" data-cta className="mt-6">
             <Link href={href} prefetch={landingActionPrefetch(href)}>{label}</Link>
           </Button>
         )}

@@ -1,3 +1,4 @@
+import { BUTTON_STYLE_IDS, type ButtonStyleId } from "./button-styles";
 import { APPEARANCES, COLOR_SCHEME_IDS, type Appearance, type ColorSchemeId } from "./color-schemes";
 import { FONT_IDS, type FontId } from "./font-families";
 import { createAttributeStore } from "./theme-store";
@@ -30,4 +31,12 @@ export const appearanceStore = createAttributeStore<Appearance>({
   event: "appearance-change",
   ids: APPEARANCES,
   apply: (value) => document.documentElement.classList.toggle("dark", value === "dark"),
+});
+
+/** The look of the page's action (2026-11-25): `html[data-button]`, stored like the other three. */
+export const buttonStore = createAttributeStore<ButtonStyleId>({
+  attribute: "button",
+  storageKey: "button",
+  event: "button-change",
+  ids: BUTTON_STYLE_IDS,
 });

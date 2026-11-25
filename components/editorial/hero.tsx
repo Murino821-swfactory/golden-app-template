@@ -3,7 +3,6 @@
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroImageControls } from "@/components/sections/hero-image-controls";
 import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
@@ -60,8 +59,8 @@ import { DisplayText, Eyebrow, TwoTone } from "./ui";
  * demo, where a visitor from a social network lands, lets them change the page with their own
  * hands. Both stay in the browser: no request, nothing saved. Buttons, not links: the hero keeps
  * its one action. When the hero has its product frame, the buttons are the frame's control pad
- * instead (`TryPad`: picture, words, colour — beside the device switch), the page's one control
- * panel.
+ * instead (`TryPad`: picture, words, colour and the look of the action — beside the device
+ * switch), the page's one control panel.
  */
 
 const listings = config.patterns.listings;
@@ -249,12 +248,13 @@ export function HeroSection() {
             view={(text) => <TwoTone text={text} />}
           />
           {/* One next step, as the contract requires (tests/landing-action.spec.ts); the
-              fold-cut frame below is the invitation to scroll. */}
+              fold-cut frame below is the invitation to scroll. `data-cta`: the action wears
+              the look the visitor chose (`html[data-button]`, shared-ui's buttons.css). Its
+              words and nothing else — the arrow left on 2026-11-25 (founder). */}
           {href && (
-            <Button asChild size="lg" className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm [text-shadow:none]">
+            <Button asChild size="lg" data-cta className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm [text-shadow:none]">
               <Link href={href} prefetch={landingActionPrefetch(action)}>
                 {content.cta?.label ?? t("cta")}
-                <ArrowUpRight aria-hidden className="size-4" />
               </Link>
             </Button>
           )}
@@ -313,9 +313,10 @@ export function HeroSection() {
                   ))}
                 </div>
               </div>
-              {/* The page's control pad (founder, 2026-11-18): picture, words and colour as touch
-                  keys, in the same frame as the device switch — everything a visitor can change,
-                  in one place. Buttons only: the frame still carries no link. */}
+              {/* The page's control pad (founder, 2026-11-18): picture, words, colour and the look
+                  of the action (2026-11-25) as touch keys, in the same frame as the device switch —
+                  everything a visitor can change, in one place. Buttons only: the frame still
+                  carries no link. */}
               {tryIt && (
                 <div data-hero-try>
                   <TryPad onImage={changeImage} editing={editing} onTexts={changeTexts} hint={hint} />
