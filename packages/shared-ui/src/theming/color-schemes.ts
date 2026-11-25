@@ -22,19 +22,31 @@
  *
  * Canonical documentation: sw-factory `docs/COLOR_SCHEMES.md`.
  *
- * Golden rule 1: dark is the DEFAULT and the baseline of every project — the darkest colour
- * of a palette is the background. Since 2026-11-09 (T-400) a project may opt into a LIGHT
- * variant as a paid add-on (founder decision, D6 of T-360): the same deterministic rule run
- * with `appearance: "light"` MIRRORS it — the lightest colour becomes the page, the darkest
- * the words, grounds and inks swap ends, and contrast is moved by lifting toward black rather
- * than white. One argument, no palette hand-written twice, every pair still WCAG AA. The
- * choice is a build-time project setting (`theme.appearance` in prototype.config.json), not a
- * visitor toggle, so a build ships exactly one variant.
+ * Dark and light. In the dark variant the darkest colour of a palette is the background; the
+ * same deterministic rule run with `appearance: "light"` MIRRORS it (T-400, 2026-11-09) — the
+ * lightest colour becomes the page, the darkest the words, grounds and inks swap ends, and
+ * contrast is moved by lifting toward black rather than white. One argument, no palette
+ * hand-written twice, every pair still WCAG AA.
+ *
+ * Which of the two is on screen is the VISITOR's choice (founder decision 2026-11-25: the
+ * dark-only rule — golden rule 1 — is dropped). The header carries a switch beside colour and
+ * font, so a build ships BOTH variants of every palette (`cssBlocksForBothAppearances`) and
+ * the switch is an attribute write. `theme.appearance` in prototype.config.json is what a
+ * first-time visitor sees, dark when the config names none. Until that decision light was a
+ * build-time paid add-on and a build shipped exactly one variant.
  */
 
-/** A project's chosen variant. Dark is the default and the baseline of every project; light
- * (T-400) is a paid add-on for a brand whose identity is light. */
+/** Which side of a palette is on screen. The project names the one a first visit opens in
+ * (dark by default); the visitor's switch in the header chooses after that. */
 export type Appearance = "dark" | "light";
+
+/** Both appearances, in the order the header's switch steps through them. */
+export const APPEARANCES = ["dark", "light"] as const satisfies readonly Appearance[];
+
+/** The other side — what one press of the header's switch turns the page to. */
+export function nextAppearance(appearance: Appearance): Appearance {
+  return appearance === "dark" ? "light" : "dark";
+}
 
 /** Cycle order — the header's button walks this list and wraps after the last. */
 export const COLOR_SCHEME_IDS = [
@@ -362,9 +374,9 @@ const MAX_MUTED_PERCENT = 35;
  * is readable everywhere. An accent under WCAG AA there is pulled toward the ink's extreme —
  * white on a dark build, black on a light one — one percent at a time, like the text.
  *
- * `appearance` picks the ends. Dark (the default and the baseline of every project): the
- * darkest colour is the page, the lightest the words. Light (T-400, a paid add-on): the
- * mirror — the lightest is the page, the darkest the words — and every pull reverses with it.
+ * `appearance` picks the ends. Dark (the default): the darkest colour is the page, the
+ * lightest the words. Light (T-400): the mirror — the lightest is the page, the darkest the
+ * words — and every pull reverses with it.
  * The dark path is byte-for-byte what it has always been, so no existing palette moves.
  */
 export function derivePaletteRoles(
@@ -558,8 +570,8 @@ export function rolesFor(id: ColorSchemeId, appearance: Appearance = "dark"): Sc
 
 /**
  * Roles mapped onto the shadcn token set the components already use. The harness never
- * has to rewrite `globals.css`: a palette is data here, and `cssBlocksForAll` turns all of
- * them into CSS at build time, in the project's chosen appearance (dark by default).
+ * has to rewrite `globals.css`: a palette is data here, and `cssBlocksForBothAppearances`
+ * turns all of them into CSS at build time, dark and light.
  */
 export function cssVariablesFor(
   id: ColorSchemeId,
@@ -576,13 +588,27 @@ export function cssVariablesFor(
  * Calling `cssVariablesFor` for every palette also runs `assertReadable` on each at build,
  * so no palette the header can reach ships unchecked.
  */
-export function cssBlocksForAll(appearance: Appearance = "dark"): string {
+export function cssBlocksForAll(appearance: Appearance = "dark", scope = ""): string {
   return COLOR_SCHEME_IDS.map((id) => {
     const body = Object.entries(cssVariablesFor(id, appearance))
       .map(([name, value]) => `${name}:${value}`)
       .join(";");
-    return `html[data-scheme="${id}"]{${body}}`;
+    return `html${scope}[data-scheme="${id}"]{${body}}`;
   }).join("");
+}
+
+/**
+ * Both variants of every palette in one stylesheet — what a build ships since the visitor
+ * chooses dark or light in the header (founder decision 2026-11-25).
+ *
+ * The dark rules are the ones every build has always carried, byte for byte. A light rule is
+ * keyed by the document's mark as well — `html[data-appearance="light"][data-scheme="x"]`,
+ * (0,2,1) — so it outranks its dark rule (0,1,1) wherever the host places the stylesheet, and
+ * turning the page over is one attribute write. Dark needs no mark: it is the document
+ * without the light one.
+ */
+export function cssBlocksForBothAppearances(): string {
+  return cssBlocksForAll("dark") + cssBlocksForAll("light", '[data-appearance="light"]');
 }
 
 function variablesFrom(r: SchemeRoles): Record<string, string> {

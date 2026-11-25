@@ -374,12 +374,13 @@
   isolation: isolate;
 }
 
-/* The light variant's fallback for the loops (T-400). Each Blender render is neutral light on
-   black and `screen`s onto the page, which needs a dark ground to read; on a light build the
-   black cannot vanish and the loop washes out. Rather than re-render for light (out of scope),
-   the light build stands the loops down and keeps the page's own token-driven gradients and
-   hairlines, which already follow the palette — a clean neutral treatment, no colour of its own
-   (the no-hex test greps this file). */
+/* The light side's fallback for the loops (T-400; since 2026-11-25 the visitor switches sides
+   in the header, so this rule comes and goes with the mark). Each Blender render is neutral
+   light on black and `screen`s onto the page, which needs a dark ground to read; on a light
+   page the black cannot vanish and the loop washes out. Rather than re-render for light (out of
+   scope), the light side stands the loops down and keeps the page's own token-driven gradients
+   and hairlines, which already follow the palette — a clean neutral treatment, no colour of its
+   own (the no-hex test greps this file). */
 [data-appearance="light"] .editorial-light {
   display: none;
 }
