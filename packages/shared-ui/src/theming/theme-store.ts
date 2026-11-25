@@ -1,7 +1,7 @@
 /**
- * The visitor's palette, font, appearance and button look live in the DOM
- * (`html[data-scheme]`, `html[data-font]`, `html[data-appearance]`, `html[data-button]`) and
- * in localStorage — outside React, because
+ * The visitor's palette, font, appearance, button look and picture transparency live in the
+ * DOM (`html[data-scheme]`, `html[data-font]`, `html[data-appearance]`, `html[data-button]`,
+ * `html[data-image-transparency]`) and in localStorage — outside React, because
  * `ThemeBootstrap` sets them before React exists. `useSyncExternalStore` is the primitive for reading exactly that kind of state,
  * and `getServerSnapshot` keeps `window` out of the render path during static export.
  * Reading it in an effect and then setting state would render one frame with the wrong

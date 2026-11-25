@@ -20,6 +20,8 @@
     "button": "Gomb",
     "changeButton": "Gomb váltása",
     "changeButtonLabel": "Gomb váltása: {name} ({position}/{total})",
+    "imageTransparency": "Kép átlátszósága",
+    "changeImageTransparencyLabel": "Kép átlátszóságának váltása: {value} % ({position}/{total})",
     "cart": "Kosár",
     "cartLabel": "Kosár, {count} tétel",
     "cartEmpty": "A kosár üres",

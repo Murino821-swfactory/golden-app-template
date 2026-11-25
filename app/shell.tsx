@@ -11,7 +11,7 @@ import { IdeaChat } from "@/components/idea-chat";
 import { config, initialButtonStyle } from "@/lib/prototype-config";
 import { landingMetadata } from "@/lib/seo";
 import { htmlAppearance } from "@/lib/theme-appearance";
-import { ThemeBootstrap } from "@tokenwise/shared-ui";
+import { DEFAULT_IMAGE_TRANSPARENCY, ThemeBootstrap } from "@tokenwise/shared-ui";
 
 /**
  * The document every page of a prototype is rendered into, in one language.
@@ -25,10 +25,10 @@ import { ThemeBootstrap } from "@tokenwise/shared-ui";
  * with no route to read. Both root layouts render this, so the shell still exists once.
  */
 
-// The visitor's palette, appearance (dark or light), font and button look are applied before
-// the first paint by the package's `ThemeBootstrap` (first child of <body>, the standard
-// blocking-script slot in the App Router), so a returning visitor never sees the customer's
-// default flash first.
+// The visitor's palette, appearance (dark or light), font, button look and the transparency of
+// the hero's picture are applied before the first paint by the package's `ThemeBootstrap`
+// (first child of <body>, the standard blocking-script slot in the App Router), so a returning
+// visitor never sees the customer's default flash first.
 // Typefaces are self-hosted by `@tokenwise/shared-ui` — no next/font, no Google CDN.
 
 /**
@@ -85,12 +85,16 @@ export async function PrototypeShell({
       data-appearance={dataAppearance}
       data-font={config.patterns.landing?.font ?? "inter"}
       data-button={initialButtonStyle(config)}
-      // ThemeBootstrap rewrites data-scheme / data-appearance / data-font / data-button and
-      // the `.dark` class before React hydrates; the mismatch is the point, not a bug.
+      // How transparent the hero's picture is (2026-11-25): 0 % for every first visit — the
+      // picture as the page draws it — and the visitor's step after that (`stage.css`).
+      data-image-transparency={DEFAULT_IMAGE_TRANSPARENCY}
+      // ThemeBootstrap rewrites data-scheme / data-appearance / data-font / data-button /
+      // data-image-transparency and the `.dark` class before React hydrates; the mismatch is
+      // the point, not a bug.
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeBootstrap palettes buttons />
+        <ThemeBootstrap palettes buttons imageTransparency />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page
