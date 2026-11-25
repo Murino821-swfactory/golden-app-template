@@ -2,16 +2,32 @@ import { test, expect } from "@playwright/test";
 import { existsSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, landingPresentation, prototypeConfigSchema } from "../lib/prototype-config";
-import { FILM_BUDGET_BYTES, FILM_SMALL_QUERY, HERO_FILMS, heroFilm, heroFilmFiles, heroFilmHold, nextHeroFilm, type HeroFilmName } from "../lib/hero-film";
+import {
+  FILM_BUDGET_BYTES,
+  FILM_SMALL_QUERY,
+  HERO_ASSETS,
+  HERO_FILMS,
+  HERO_STILLS,
+  STILL_BUDGET_BYTES,
+  heroAsset,
+  heroFilm,
+  heroFilmFiles,
+  heroFilmHold,
+  heroPictureFiles,
+  nextHeroAsset,
+  type HeroAssetName,
+} from "../lib/hero-film";
 import { CARD_LOOPS, MOTION_SMALL_QUERY, changeCardLoop, initialCardLoop, motionLoop, nextCardLoop, type CardLoopName } from "../lib/editorial";
+import en from "../messages/en.json";
 
 /**
  * The hero film (T-460, 2026-11-17, after the cinematic landings of wismeo and PropCheck): real
  * footage behind the editorial hero instead of the light loop. The founder's goal for the golden
  * demo — the page a visitor from a social network lands on — is that it reads as THEIR new page
- * and that they can change it with their own hands: the picture ("Change image" walks the film
- * library) and the words ("Change texts" makes the headline and the subheadline editable in
- * place). Both are local to the visitor's browser: no request, no cost, nothing saved.
+ * and that they can change it with their own hands: the picture ("Change image" walks the asset
+ * database — the films and, since 2026-11-25, ten still scenes of other businesses) and the words
+ * ("Change texts" makes the headline and the subheadline editable in place). Both are local to
+ * the visitor's browser: no request, no cost, nothing saved.
  */
 
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
@@ -45,15 +61,59 @@ test.describe("hero film — pure rules", () => {
     expect(FILM_SMALL_QUERY).toBe("(max-width: 639px)");
   });
 
-  test("\"Change image\" walks the library and comes back round", () => {
-    const seen = new Set<string>();
-    let name: HeroFilmName = HERO_FILMS[0];
-    for (let i = 0; i < HERO_FILMS.length; i++) {
-      seen.add(name);
-      name = nextHeroFilm(name);
+  test("the asset database: one record per picture — a unique file name, a kind and what it shows", () => {
+    const names = HERO_ASSETS.map((asset) => asset.name);
+    expect(new Set(names).size).toBe(names.length);
+    for (const asset of HERO_ASSETS) {
+      // The name is the file name under public/film/, so it stays a plain slug.
+      expect(asset.name, asset.name).toMatch(/^[a-z]+(-[a-z]+)*$/);
+      expect(["film", "still"], asset.name).toContain(asset.kind);
+      expect(asset.scene.length, asset.name).toBeGreaterThan(20);
+      expect(heroAsset(asset.name)).toBe(asset);
     }
-    expect(seen.size).toBe(HERO_FILMS.length);
-    expect(name).toBe(HERO_FILMS[0]);
+    // The films a config may name are the database's films; the stills are everything else.
+    expect(HERO_ASSETS.filter((asset) => asset.kind === "film").map((asset) => asset.name)).toEqual([...HERO_FILMS]);
+    expect(HERO_ASSETS.filter((asset) => asset.kind === "still").map((asset) => asset.name)).toEqual([...HERO_STILLS]);
+    expect(HERO_STILLS.length).toBeGreaterThanOrEqual(10);
+  });
+
+  test("\"Change image\" walks the whole database, films and stills, and comes back round", () => {
+    const seen = new Set<string>();
+    let name: HeroAssetName = HERO_ASSETS[0].name;
+    for (let i = 0; i < HERO_ASSETS.length; i++) {
+      seen.add(name);
+      name = nextHeroAsset(name);
+    }
+    expect(seen.size).toBe(HERO_ASSETS.length);
+    expect(name).toBe(HERO_ASSETS[0].name);
+    // A visitor meets the still scenes before the factory's other footage: the first press shows one.
+    expect(heroAsset(nextHeroAsset(HERO_FILMS[0])).kind).toBe("still");
+  });
+
+  test("a still's files: the wide picture and its phone cut, under the build's base path", () => {
+    expect(heroPictureFiles("", HERO_STILLS[0])).toEqual({
+      poster: `/film/${HERO_STILLS[0]}.webp`,
+      posterSmall: `/film/${HERO_STILLS[0]}-sm.webp`,
+    });
+    expect(heroPictureFiles("/newapp/x", "tower-dusk")).toEqual({ poster: "/newapp/x/film/tower-dusk.webp", posterSmall: "/newapp/x/film/tower-dusk-sm.webp" });
+  });
+
+  test("every still ships as two WebP pictures inside the budget", () => {
+    for (const name of HERO_STILLS) {
+      const files = heroPictureFiles("", name);
+      const size = (path: string) => {
+        const file = resolve(__dirname, "../public", `.${path}`);
+        expect(existsSync(file), path).toBe(true);
+        return statSync(file).size;
+      };
+      const [poster, posterSmall] = [size(files.poster), size(files.posterSmall)];
+      expect(poster + posterSmall, name).toBeLessThanOrEqual(STILL_BUDGET_BYTES);
+      // A phone never pays for the desktop picture.
+      expect(posterSmall, name).toBeLessThan(poster);
+      expect(posterSmall, name).toBeLessThan(80_000);
+      // A still is a picture only: no film ships under its name.
+      expect(existsSync(resolve(__dirname, "../public/film", `${name}.mp4`)), name).toBe(false);
+    }
   });
 
   test("every film is told in two parts: it names the second it rests at until the first scroll, for both cuts", () => {
@@ -126,6 +186,8 @@ test.describe("hero film — pure rules", () => {
     expect(prototypeConfigSchema.safeParse(landing({ film: "tower-dusk", tryIt: true })).success).toBe(true);
     expect(prototypeConfigSchema.safeParse(landing({})).success).toBe(true);
     expect(prototypeConfigSchema.safeParse(landing({ film: "my-own.mp4" })).success).toBe(false);
+    // A config opens on a film; the still scenes are only what "Change image" shows a visitor.
+    expect(prototypeConfigSchema.safeParse(landing({ film: HERO_STILLS[0] })).success).toBe(false);
     expect(prototypeConfigSchema.safeParse(landing({ tryIt: "yes" })).success).toBe(false);
   });
 });
@@ -410,26 +472,87 @@ test.describe("hero film — the visitor changes the page with their own hands",
     await expect(hero.locator("a")).toHaveCount(1);
   });
 
-  test("\"Change image\" swaps the film for the next one in the library — no request beyond the film itself", async ({ page }) => {
+  test("\"Change image\" shows the next asset of the database — a still scene is a picture, never a film", async ({ page }) => {
     test.skip(!TRY || FILM === null, "no try-it buttons over a film in this config");
     const api: string[] = [];
+    const films: string[] = [];
     page.on("request", (req) => {
-      if (new URL(req.url()).pathname.includes("/api/")) api.push(req.url());
+      const path = new URL(req.url()).pathname;
+      if (path.includes("/api/")) api.push(req.url());
+      if (path.endsWith(".mp4")) films.push(path);
     });
     await page.goto("./");
     const hero = page.locator('[data-section="hero"]');
-    const film = hero.locator("[data-hero-film]");
+    const picture = hero.locator("[data-hero-film]");
     const button = hero.locator("[data-hero-try] button[data-try='image']");
     await expect(button).toBeVisible();
     expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+    await expect(picture).toHaveAttribute("data-hero-kind", "film");
+    // Where the headline is laid out, whatever the scroll (a tap on a phone may bring the key into view).
+    const laidOut = () => hero.locator("h1").evaluate((el: HTMLElement) => [el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight]);
+    const before = await laidOut();
+    const veil = () => picture.evaluate((el) => getComputedStyle(el, "::after").backgroundImage);
+    const filmVeil = await veil();
     await button.click();
-    const next = nextHeroFilm(FILM!);
-    await expect(film).toHaveAttribute("data-hero-film", next);
-    await expect(film.locator("picture img")).toHaveAttribute("src", heroFilmFiles(BASE, next).poster);
-    await expect.poll(() => film.locator("video").evaluate((v: HTMLVideoElement) => v.currentTime > 0)).toBe(true);
-    // The hero keeps its one link; the buttons are buttons.
+    const next = nextHeroAsset(FILM!);
+    expect(heroAsset(next).kind).toBe("still");
+    await expect(picture).toHaveCount(1);
+    await expect(picture).toHaveAttribute("data-hero-film", next);
+    await expect(picture).toHaveAttribute("data-hero-kind", "still");
+    await expect(picture).toHaveAttribute("aria-hidden", "true");
+    // The same two cuts as a film's first frame — a phone gets its own — and no video at all.
+    const files = heroPictureFiles(BASE, next);
+    await expect(picture.locator("picture source")).toHaveAttribute("srcset", files.posterSmall);
+    await expect(picture.locator("picture source")).toHaveAttribute("media", FILM_SMALL_QUERY);
+    await expect(picture.locator("picture img")).toHaveAttribute("src", files.poster);
+    await expect(picture.locator("picture img")).toHaveAttribute("alt", "");
+    await expect(picture.locator("video")).toHaveCount(0);
+    await expect.poll(() => picture.locator("picture img").evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    const small = await page.evaluate((query) => window.matchMedia(query).matches, FILM_SMALL_QUERY);
+    expect(await picture.locator("picture img").evaluate((img: HTMLImageElement) => new URL(img.currentSrc).pathname)).toBe(small ? files.posterSmall : files.poster);
+    // It lies where the film lay — under the words, across the first screen — and nothing moves.
+    expect(await picture.evaluate((el) => getComputedStyle(el).zIndex)).toBe("-1");
+    expect((await picture.boundingBox())!.width).toBeGreaterThanOrEqual(page.viewportSize()!.width - 1);
+    expect(await laidOut()).toEqual(before);
+    expect(await hero.locator("h1").evaluate((el) => getComputedStyle(el).textShadow)).not.toBe("none");
+    // A still is brighter and busier than the factory's night footage: it wears its own, denser veil
+    // behind the copy — still a veil of the page's background, so it follows "Change colour".
+    expect(await veil()).toContain("linear-gradient");
+    expect(await veil()).not.toBe(filmVeil);
+    // The line under the keys says what the visitor is looking at: a scene, not the factory's footage.
+    await expect(hero.locator("[data-hero-try] [data-try-hint]")).toHaveText(en.landing.tryStillHint);
+    // The hero keeps its one link; the buttons are buttons; the only film fetched is the opening one.
     await expect(hero.locator("a")).toHaveCount(1);
     expect(api).toEqual([]);
+    expect(films.every((path) => path.includes(`/film/${FILM}`))).toBe(true);
+  });
+
+  test("\"Change image\" walks the whole database on the page: every picture loads, and a film plays again", async ({ page }) => {
+    test.skip(!TRY || FILM === null, "no try-it buttons over a film in this config");
+    test.slow();
+    const failed: string[] = [];
+    page.on("response", (res) => {
+      if (new URL(res.url()).pathname.includes("/film/") && res.status() >= 400) failed.push(res.url());
+    });
+    await page.goto("./");
+    const hero = page.locator('[data-section="hero"]');
+    const picture = hero.locator("[data-hero-film]");
+    const button = hero.locator("[data-hero-try] button[data-try='image']");
+    let name: HeroAssetName = FILM!;
+    for (let i = 0; i < HERO_ASSETS.length; i++) {
+      await button.click();
+      name = nextHeroAsset(name);
+      const { kind } = heroAsset(name);
+      await expect(picture).toHaveAttribute("data-hero-film", name);
+      await expect(picture).toHaveAttribute("data-hero-kind", kind);
+      await expect.poll(() => picture.locator("picture img").evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0), { message: name }).toBe(true);
+      await expect(picture.locator("video")).toHaveCount(kind === "film" ? 1 : 0);
+      await expect(hero.locator("[data-hero-try] [data-try-hint]")).toHaveText(kind === "film" ? en.landing.tryImageHint : en.landing.tryStillHint);
+    }
+    // Round the whole database and back on the film the page opened with — which plays again.
+    expect(name).toBe(FILM);
+    await expect.poll(() => picture.locator("video").evaluate((v: HTMLVideoElement) => v.currentTime > 0)).toBe(true);
+    expect(failed).toEqual([]);
   });
 
   test("\"Change texts\" lets the visitor type their own headline in place — and nothing leaves the browser", async ({ page }) => {

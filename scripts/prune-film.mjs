@@ -1,11 +1,11 @@
 /**
  * prune-film.mjs — runs after `next build` (npm `postbuild`).
  *
- * The hero films (`public/film/`, `lib/hero-film.ts`) are the factory's own footage, shown only
- * by a config that names one (`patterns.landing.film`) or lets a visitor walk the library
- * (`patterns.landing.tryIt`) — the golden demo. Every other export drops the folder, so a
- * customer's prototype never ships footage it cannot show (`tests/hero-film.spec.ts` asks the
- * built site for a film and expects 404 there).
+ * The hero assets (`public/film/`, `lib/hero-film.ts` — the films and the still scenes) are the
+ * factory's own pictures, shown only by a config that names a film (`patterns.landing.film`) or
+ * lets a visitor walk the database (`patterns.landing.tryIt`) — the golden demo. Every other
+ * export drops the folder, so a customer's prototype never ships pictures it cannot show
+ * (`tests/hero-film.spec.ts` asks the built site for a film and expects 404 there).
  */
 import { existsSync, readFileSync, rmSync } from "node:fs";
 
