@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 /* The shared header's typefaces (self-hosted @font-face) and html[data-font] rules. */
 @import "@tokenwise/shared-ui/styles.css";
+/* The looks of the landing's action (html[data-button]) and the header's icon for each. */
+@import "@tokenwise/shared-ui/buttons.css";
 /* Tailwind 4 does not scan node_modules; without this the header renders unstyled. */
 @source "../packages/shared-ui/src";
 
@@ -66,7 +68,7 @@
   --shared-accent: var(--primary);
   /* The ink that reads on the accent — what a filled action sets its words in (2026-11-25). */
   --shared-accent-ink: var(--primary-foreground);
-  /* The raised plane a quiet action stands on — the card, which every palette holds the ink to. */
+  /* The raised plane the glass action is made of — the card, which every palette holds the ink to. */
   --shared-surface: var(--card);
   --shared-rule: var(--border);
   --shared-gutter: var(--gutter);
@@ -233,38 +235,15 @@
 }
 
 /* ── The landing's action wears the look the visitor chose (founder, 2026-11-25) ─────────────
-   `@tokenwise/shared-ui` ships every look as an `html[data-button="<id>"]` rule that sets five
-   variables (`<ThemeBootstrap buttons />`); the header's button steps through them and the pick
-   persists, as with the palette and the font. The action — the hero's and the closing band's,
-   marked `data-cta` — only reads the variables, so a new look in the package needs nothing
-   here. Unlayered on purpose: these rules win over the button's own utilities (`rounded-full`,
-   `bg-primary`), which is the point. The first look of each presentation is what it always
-   drew — a pill on the editorial page, `rounded` under story and document
-   (`initialButtonStyle`) — so a first visit sees the page as it was. */
-html[data-button] [data-cta] {
-  border-radius: var(--shared-button-radius);
-  border-color: var(--shared-button-edge);
-  background-color: var(--shared-button-bg);
-  color: var(--shared-button-ink);
-}
-@media (hover: hover) {
-  html[data-button] [data-cta]:hover {
-    background-color: var(--shared-button-bg-hover);
-  }
-}
-/* A look whose ground is the page's own lets a little of what lies under it through (the hero's
-   film): blurred, so its words stand on a calm ground. */
-html[data-button="outline"] [data-cta] {
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-/* The shared sections' action (story, document) is padded for a rounded corner; drawn as a pill
-   its words need room at the round ends. The editorial action is padded for a pill already. */
-html:is([data-button="pill"], [data-button="outline"]) [data-cta]:not(.editorial-pill) {
+   The five looks — glow, block, glass, orbit, marker — are `@tokenwise/shared-ui`'s
+   (`buttons.css`, imported at the top): rules keyed by `html[data-button="<id>"]` for whatever
+   is marked `data-cta`, which here is the hero's and the closing band's action in every
+   presentation. A look sets surface, edge, depth, weight and motion; the action keeps its size.
+   This file's part is the tokens above (`--shared-accent-ink`, `--shared-surface`) and the one
+   rule below. */
+/* The shared sections' action (story, document) is padded for a small rounded button; a look
+   may draw it as a pill or as bare words, which need room at their ends. The editorial action
+   is padded for a pill already. */
+html[data-button] [data-cta]:not(.editorial-pill) {
   padding-inline: 1.25rem;
-}
-/* The editorial action's glow is the accent's light; the two looks that are not filled with
-   the accent cast none. */
-html:is([data-button="outline"], [data-button="soft"]) [data-cta].editorial-pill {
-  box-shadow: none;
 }

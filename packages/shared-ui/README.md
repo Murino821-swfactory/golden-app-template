@@ -67,34 +67,48 @@ Node code that needs only data (palettes, font table) imports
 
 ## The looks of an action (0.7.0)
 
-One button steps through the looks of the page's action — its CTA — the way **Change colour**
-steps through the palettes: `pill`, `rounded`, `square`, `outline`, `soft`
-(`src/theming/button-styles.ts`; the choice is stored under `button`, as `html[data-button]`).
-A host opts in with all three of: `<html data-button="<default>">`, `<ThemeBootstrap buttons />`
-and the header's `button` prop. A host that passes none of them gets no control and no CSS.
+One button steps through five looks of the page's action — its CTA — the way **Change colour**
+steps through the palettes (`src/theming/button-styles.ts`; the choice is stored under `button`,
+as `html[data-button]`). A look is a character, not a corner radius: a surface, a depth, and its
+own answer to the pointer and to the click.
 
-`ThemeBootstrap` then ships every look as one rule that sets five variables, and the host's
-action only reads them:
+| look | at rest | under the pointer | on the click |
+|---|---|---|---|
+| `glow` | a pill of the accent in a pool of its own light | the light spreads into an aura | a ripple from where it was pressed, a ring of light leaves the pill |
+| `block` | a slab of the accent standing on a hard offset shadow | the slab stands higher | it is pushed down onto the shadow and springs back |
+| `glass` | a frosted pane: the page blurred through it, light caught along its top | the pane thickens | a sheen crosses the pane |
+| `orbit` | a dark capsule with a light running round its edge | the track lights up | the whole edge flares and a ring leaves it |
+| `marker` | bare words on a stroke of marker pen | the stroke thickens | the stroke rises over the words like a highlighter |
 
-```css
-html[data-button] .my-action {
-  border-radius: var(--shared-button-radius);
-  border: 1px solid var(--shared-button-edge);
-  background: var(--shared-button-bg);
-  color: var(--shared-button-ink);
-}
-html[data-button] .my-action:hover { background: var(--shared-button-bg-hover); }
-```
+A host opts in with all of:
 
-A look names no colour of its own: every value is a `--shared-*` token or a mix of them, so it
-repaints with the palette. Two optional tokens join the host's side of the contract:
-`--shared-accent-ink` (the ink on the accent; falls back to `--shared-bg`) and
-`--shared-surface` (the raised plane `outline` fills with under the pointer and `soft` stands
-on; falls back to `--shared-bg`). The header's icon is drawn from the same five variables.
+1. `@import "@tokenwise/shared-ui/buttons.css";` — the looks, and the header's icon for each;
+2. `<html data-button="<default>">` and `<ThemeBootstrap buttons />` (brings a returning
+   visitor's look back before the first paint);
+3. the header's `button` prop — the control, and the click's answer (below);
+4. `data-cta` on its action.
 
-Adding a look is one entry in `BUTTON_STYLES`. `test/button-styles.test.ts` holds it to the
-five variables and the tokens; the template's `tests/button-style.spec.ts` to WCAG AA on every
-palette.
+A host that does none of it gets no control, no CSS and an untouched action.
+
+**What a look may touch.** Surface, edge, depth, weight and motion — never the action's size or
+padding, and never its `animation` (that is the host's: an entrance would play again). Every
+colour is a `--shared-*` token or a mix of them, so a look repaints with the palette. Two
+optional tokens join the host's side of the contract: `--shared-accent-ink` (the ink on the
+accent) and `--shared-surface` (the raised plane the glass is made of); both fall back to
+`--shared-bg`. Keyboard focus is an outline, which no look uses. All motion sits inside
+`prefers-reduced-motion: no-preference`.
+
+**The click** (`src/theming/action-press.ts`, installed by the header). An action is a link, and
+a link leaves the page the moment it is clicked, so its animation would never be seen. A plain
+click is therefore held for `PRESS_HOLD_MS` (260 ms): the action wears `data-pressed`, the look
+answers, and the same click is then let through to the host's router or the browser. Never held:
+a click with a modifier key or another button, a click something above already took, any click
+under reduced motion. While installed, the document carries `html[data-shared-press]`.
+
+Adding a look is one entry in `BUTTON_STYLES` and its rules in `buttons.css`.
+`test/button-styles.test.ts` fails on a look without them, on a colour of its own and on an
+animation outside the motion block; the template's `tests/button-style.spec.ts` holds every look
+to WCAG AA on every palette, at rest and pressed.
 
 ## Adding a font
 

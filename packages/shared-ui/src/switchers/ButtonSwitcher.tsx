@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import { BUTTON_STYLE_IDS, buttonStyleById, nextButtonStyleId, type ButtonStyleId } from "../theming/button-styles";
 import { buttonStore } from "../theming/stores";
 import { format, type HeaderLabels } from "../header/labels";
@@ -9,21 +8,12 @@ import { format, type HeaderLabels } from "../header/labels";
  * One button that steps to the next look of the page's action, like "Change colour" and the
  * font button beside it [founder, 2026-11-25].
  *
- * `inline` is the header bar: an icon among icons — a small action drawn from the very
- * variables the page's action reads (`--shared-button-*`), so the icon is the look on screen,
- * as "Aa" is the face on screen. The look's name is in `aria-label`, and spelled out in the
- * menu below 1024px. `row` is that menu panel: "Button: ▭ Pill", full width.
+ * `inline` is the header bar: an icon among icons — the look on screen in small, as "Aa" is the
+ * face on screen. `buttons.css` draws it (`.shared-button-glyph`, one rule per look, from the
+ * same tokens the action is drawn from), so the icon repaints with the palette too. The look's
+ * name is in `aria-label`, and spelled out in the menu below 1024px. `row` is that menu panel:
+ * "Button: ▭ Glow", full width.
  */
-
-/** The look in small. The corner is scaled with the icon: the rounded corner of a 48px action
- * set unscaled on a 13px icon would read as a pill. */
-const GLYPH: CSSProperties = {
-  width: 22,
-  height: 13,
-  borderRadius: "calc(var(--shared-button-radius) * 0.3)",
-  background: "var(--shared-button-bg)",
-  border: "1.5px solid var(--shared-button-edge)",
-};
 
 export function ButtonSwitcher({
   defaultStyle,
@@ -55,7 +45,7 @@ export function ButtonSwitcher({
       >
         <span>{labels.button}</span>
         <span className="flex items-center gap-3 normal-case tracking-normal" style={{ fontFamily: "var(--shared-font-sans)" }}>
-          <span aria-hidden className="block shrink-0" style={GLYPH} />
+          <span aria-hidden className="shared-button-glyph shrink-0" />
           {look.name}
         </span>
       </button>
@@ -68,14 +58,9 @@ export function ButtonSwitcher({
       data-shared-control="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      className="group flex h-11 w-11 shrink-0 items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--shared-accent)]"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--shared-accent)]"
     >
-      {/* A little larger under the pointer: the button cycles, and the icon says it can be pressed. */}
-      <span
-        aria-hidden
-        className="block transition-transform duration-200 group-hover:scale-110 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-        style={GLYPH}
-      />
+      <span aria-hidden className="shared-button-glyph" />
     </button>
   );
 }

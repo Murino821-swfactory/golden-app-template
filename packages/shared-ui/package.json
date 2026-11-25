@@ -14,11 +14,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./theming": "./src/theming/index.ts",
-    "./styles.css": "./styles.css"
+    "./styles.css": "./styles.css",
+    "./buttons.css": "./buttons.css"
   },
   "files": [
     "src",
     "styles.css",
+    "buttons.css",
     "fonts",
     "README.md"
   ],

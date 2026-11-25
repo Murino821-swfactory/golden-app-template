@@ -3,7 +3,6 @@
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroImageControls } from "@/components/sections/hero-image-controls";
 import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
@@ -250,12 +249,12 @@ export function HeroSection() {
           />
           {/* One next step, as the contract requires (tests/landing-action.spec.ts); the
               fold-cut frame below is the invitation to scroll. `data-cta`: the action wears
-              the look the visitor chose (`html[data-button]`, app/globals.css). */}
+              the look the visitor chose (`html[data-button]`, shared-ui's buttons.css). Its
+              words and nothing else — the arrow left on 2026-11-25 (founder). */}
           {href && (
             <Button asChild size="lg" data-cta className="editorial-pill editorial-enter h-12 rounded-full px-6 text-sm [text-shadow:none]">
               <Link href={href} prefetch={landingActionPrefetch(action)}>
                 {content.cta?.label ?? t("cta")}
-                <ArrowUpRight aria-hidden className="size-4" />
               </Link>
             </Button>
           )}

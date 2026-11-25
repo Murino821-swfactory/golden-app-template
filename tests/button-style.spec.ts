@@ -2,6 +2,8 @@ import { test, expect, type Page } from "@playwright/test";
 import {
   BUTTON_STYLE_IDS,
   COLOR_SCHEME_IDS,
+  DEFAULT_BUTTON_STYLE,
+  PRESS_HOLD_MS,
   WCAG_AA_TEXT,
   buttonStyleById,
   nextButtonStyleId,
@@ -13,10 +15,13 @@ import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
 
 /**
  * The look of the landing's action (founder, 2026-11-25: "the CTA button, the same way as the
- * font and the colour"). A visitor steps through the looks with one button in the header — as
- * they step through the palettes and the faces — the choice survives a reload without a flash,
- * and `prototype.config.json` still decides what a first visit sees. On the golden demo the
- * control pad carries the same step as a fourth key.
+ * font and the colour" — and, the same day: "five different visuals and an animation after the
+ * click; a different corner is not enough; no arrows"). A visitor steps through five looks with
+ * one button in the header — as they step through the palettes and the faces — the choice
+ * survives a reload without a flash, and `prototype.config.json` still decides what a first visit
+ * sees. Each look is a character of its own and answers the click in its own way; the click waits
+ * a moment for that answer and then goes through. On the golden demo the control pad carries the
+ * same step as a fourth key.
  */
 
 const START = initialButtonStyle(config);
@@ -65,9 +70,43 @@ function labelFor(id: ButtonStyleId): string {
   });
 }
 
-/** The action is a shadcn button with `transition-all`: read it at rest, not mid-way. */
+/** Read the action at rest, not mid-way through a transition. */
 async function still(page: Page) {
-  await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important;animation:none!important}" });
+  await page.addStyleTag({ content: "*,*::before,*::after{transition:none!important}" });
+}
+
+/** Set the look as the header's button would, without the click. */
+async function wear(page: Page, look: ButtonStyleId) {
+  await page.evaluate((id) => {
+    document.documentElement.dataset.button = id;
+    window.dispatchEvent(new Event("button-change"));
+  }, look);
+}
+
+/** What a look puts on the action — everything a visitor could tell two looks apart by. */
+function drawn(page: Page, pressed = false) {
+  return page.locator("a[data-cta]").first().evaluate((el, pressed) => {
+    if (pressed) el.setAttribute("data-pressed", "");
+    const s = getComputedStyle(el);
+    const before = getComputedStyle(el, "::before");
+    const after = getComputedStyle(el, "::after");
+    const height = el.getBoundingClientRect().height;
+    const read = {
+      corner: parseFloat(s.borderTopLeftRadius) >= height / 2 ? "full" : s.borderTopLeftRadius,
+      ground: s.backgroundColor,
+      ink: s.color,
+      edge: s.borderTopColor,
+      shadow: s.boxShadow,
+      blur: s.backdropFilter,
+      weight: s.fontWeight,
+      line: `${s.textDecorationLine} ${s.textDecorationThickness} ${s.textUnderlineOffset}`,
+      shift: s.translate,
+      ring: before.backgroundImage,
+      motion: `${before.animationName}|${after.animationName}`,
+    };
+    if (pressed) el.removeAttribute("data-pressed");
+    return read;
+  }, pressed);
 }
 
 test.describe("the action's look — the config", () => {
@@ -79,19 +118,16 @@ test.describe("the action's look — the config", () => {
     expect(() => withLanding({}, { button: "constructor" })).toThrow(/theme\.button/);
   });
 
-  // The looks are named after what the pages already drew, so a config that names none — every
-  // config before 2026-11-25 — opens exactly as it did: a pill on the editorial page, the
-  // rounded button of the shared sections under story and document.
-  test("a config that names none opens in the look its presentation always drew", () => {
-    expect(initialButtonStyle(withLanding({}))).toBe("pill");
-    expect(initialButtonStyle(withLanding({ presentation: "editorial" }))).toBe("pill");
-    expect(initialButtonStyle(withLanding({ presentation: "story" }))).toBe("rounded");
-    expect(initialButtonStyle(withLanding({ presentation: "document" }))).toBe("rounded");
+  test("a config that names none opens in the first look, whatever its presentation", () => {
+    expect(DEFAULT_BUTTON_STYLE).toBe(BUTTON_STYLE_IDS[0]);
+    for (const presentation of [undefined, "editorial", "story", "document"]) {
+      expect(initialButtonStyle(withLanding(presentation ? { presentation } : {}))).toBe(DEFAULT_BUTTON_STYLE);
+    }
   });
 
   test("a named look wins in every presentation", () => {
     for (const presentation of ["editorial", "story", "document"]) {
-      expect(initialButtonStyle(withLanding({ presentation }, { button: "outline" }))).toBe("outline");
+      expect(initialButtonStyle(withLanding({ presentation }, { button: "orbit" }))).toBe("orbit");
     }
   });
 });
@@ -105,6 +141,14 @@ test.describe("the action's look — the page", () => {
     // One action per section that carries one — and nothing else on the page wears the look.
     for (const id of ACTION_SECTIONS) await expect(page.locator(`[data-section="${id}"] a[data-cta]`), id).toHaveCount(1);
     await expect(page.locator("[data-cta]")).toHaveCount(ACTION_SECTIONS.length);
+  });
+
+  // Founder, 2026-11-25: the arrows go. The action is its words.
+  test("the action carries no arrow: its words and nothing else", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await page.goto("./");
+    await expect(page.locator("[data-cta] svg")).toHaveCount(0);
+    for (const text of await page.locator("a[data-cta]").allInnerTexts()) expect(text).not.toMatch(/[→↗➔›»]/);
   });
 
   test("is one button in the header, not a picker", async ({ page }) => {
@@ -136,27 +180,46 @@ test.describe("the action's look — the page", () => {
     await expect(buttonControl(page)).toHaveAttribute("aria-label", labelFor(nextButtonStyleId(START)));
   });
 
-  test("every look draws the landing's action its own way", async ({ page }) => {
+  test("the header's icon is drawn in the look on screen", async ({ page }) => {
+    await page.goto("./");
+    await still(page);
+    const glyph = buttonControl(page).locator(".shared-button-glyph");
+    const icons = new Set<string>();
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      icons.add(
+        await glyph.evaluate((el) => {
+          const s = getComputedStyle(el);
+          return [s.borderRadius, s.backgroundColor, s.backgroundImage, s.boxShadow, s.borderTopColor, s.borderLeftColor].join("|");
+        })
+      );
+    }
+    expect(icons.size).toBe(BUTTON_STYLE_IDS.length);
+  });
+
+  // The founder's word on the first five: a different corner is not a different look.
+  test("every look draws the action its own way — more than a different corner", async ({ page }) => {
     test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
     await page.goto("./");
     await still(page);
-    const action = page.locator("a[data-cta]").first();
-    const drawn = new Map<ButtonStyleId, string>();
-    let look = START;
-    for (let i = 0; i < BUTTON_STYLE_IDS.length; i++) {
-      await expect(page.locator("html")).toHaveAttribute("data-button", look);
-      const style = await action.evaluate((el) => {
-        const s = getComputedStyle(el);
-        return { radius: parseFloat(s.borderTopLeftRadius), height: el.getBoundingClientRect().height, background: s.backgroundColor, edge: s.borderTopColor, ink: s.color };
-      });
-      if (look === "pill" || look === "outline") expect(style.radius, look).toBeGreaterThanOrEqual(style.height / 2);
-      if (look === "rounded" || look === "soft") expect(style.radius, look).toBe(10);
-      if (look === "square") expect(style.radius, look).toBe(0);
-      drawn.set(look, `${style.radius >= style.height / 2 ? "full" : style.radius}|${style.background}|${style.edge}|${style.ink}`);
-      await buttonControl(page).click();
-      look = nextButtonStyleId(look);
+    const looks = new Map<ButtonStyleId, Awaited<ReturnType<typeof drawn>>>();
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      looks.set(look, await drawn(page));
     }
-    expect(new Set(drawn.values()).size, JSON.stringify([...drawn])).toBe(BUTTON_STYLE_IDS.length);
+    const whole = [...looks.values()].map((l) => JSON.stringify({ ...l, motion: "" }));
+    expect(new Set(whole).size, whole.join("\n")).toBe(BUTTON_STYLE_IDS.length);
+    const cornerless = [...looks.values()].map((l) => JSON.stringify({ ...l, corner: "", motion: "" }));
+    expect(new Set(cornerless).size, cornerless.join("\n")).toBe(BUTTON_STYLE_IDS.length);
+    // What each one is: a pool of light, a slab on a hard shadow, frosted glass, a running light
+    // round a dark capsule, a stroke of marker under bare words.
+    expect(looks.get("glow")!.shadow).not.toBe("none");
+    expect(looks.get("block")!.corner).toBe("0px");
+    expect(looks.get("block")!.shift).not.toBe("none");
+    expect(looks.get("glass")!.blur).toContain("blur");
+    expect(looks.get("orbit")!.ring).toContain("conic-gradient");
+    expect(looks.get("marker")!.line).toContain("underline");
+    expect(looks.get("marker")!.shadow).toBe("none");
     // Every action of the page wears the same look.
     const radii = await page.locator("a[data-cta]").evaluateAll((els) => els.map((el) => getComputedStyle(el).borderTopLeftRadius));
     expect(new Set(radii).size).toBe(1);
@@ -198,13 +261,13 @@ test.describe("the action's look — the page", () => {
     await expect(page.locator("html")).toHaveAttribute("data-button", START);
   });
 
-  // Every look on every palette: the action's words against what they stand on. The filled looks
-  // set the accent's own ink on the accent; outline and soft set the page's ink on a ground of
-  // the palette — read from the browser, because a mix is the browser's (`color-mix`). The two
-  // looks that bring a ground of their own are held to AA under the pointer as well; the filled
-  // ones keep the hover the template's button always had (the accent thinned by a fifth).
+  // Every look on every palette: the action's words against what they stand on, at rest and in
+  // the state the click leaves it in while it is held. Read from the browser, because a mix is
+  // the browser's (`color-mix`). A look that brings no ground of its own (the marker at rest)
+  // stands on the page.
   test("every look keeps the action's words readable on every palette (WCAG AA)", async ({ page }) => {
     await page.goto("login");
+    await still(page);
     const failures = await page.evaluate(
       ({ schemes, looks, floor }) => {
         const ctx = document.createElement("canvas").getContext("2d", { willReadFrequently: true })!;
@@ -240,19 +303,18 @@ test.describe("the action's look — the page", () => {
           const page = getComputedStyle(document.body).backgroundColor;
           for (const look of looks) {
             html.dataset.button = look;
-            const style = getComputedStyle(probe);
-            const ink = shown(style.color);
-            const states = [["rest", style.backgroundColor]];
-            if (look === "outline" || look === "soft") {
-              probe.style.backgroundColor = "var(--shared-button-bg-hover)";
-              states.push(["hover", getComputedStyle(probe).backgroundColor]);
-              probe.style.backgroundColor = "";
-            }
-            for (const [state, ground] of states) {
-              const contrast = ratio(ink, shown(ground!, page));
+            for (const state of ["rest", "pressed"]) {
+              probe.toggleAttribute("data-pressed", state === "pressed");
+              const style = getComputedStyle(probe);
+              // Under the words: the action's own ground — or the stroke of marker a look lays
+              // behind them (an underline drawn up over the line of text).
+              const marked = style.textDecorationLine.includes("underline") && parseFloat(style.textUnderlineOffset) < 0;
+              const ground = shown(marked ? style.textDecorationColor : style.backgroundColor, page);
+              const contrast = ratio(shown(style.color), ground);
               // A little slack for the canvas's 8-bit rounding of a mixed colour.
               if (contrast < floor - 0.05) failed.push(`${scheme} / ${look} / ${state}: ${contrast.toFixed(2)}`);
             }
+            probe.removeAttribute("data-pressed");
           }
         }
         html.dataset.scheme = before.scheme;
@@ -263,6 +325,146 @@ test.describe("the action's look — the page", () => {
       { schemes: [...COLOR_SCHEME_IDS], looks: [...BUTTON_STYLE_IDS], floor: WCAG_AA_TEXT }
     );
     expect(failures).toEqual([]);
+  });
+
+  // A look sets its own shadow and edge, which is where the button's focus ring was drawn.
+  test("keyboard focus is visible on every look", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await page.goto("./");
+    const action = page.locator("a[data-cta]").first();
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      await action.focus();
+      // Leave and come back by keyboard, so the focus is the visible kind.
+      await page.keyboard.press("Shift+Tab");
+      await page.keyboard.press("Tab");
+      await expect(action).toBeFocused();
+      const outline = await action.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return { style: s.outlineStyle, width: parseFloat(s.outlineWidth) };
+      });
+      expect(outline.style, look).not.toBe("none");
+      expect(outline.width, look).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
+test.describe("the action's look — the click", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  type Click = { at: number; pressed: boolean };
+  /** Every click that reaches the page's action, with its time — recorded above the package. */
+  async function recordClicks(page: Page) {
+    await page.addInitScript(() => {
+      const log: { at: number; pressed: boolean }[] = [];
+      (window as unknown as { __ctaClicks: typeof log }).__ctaClicks = log;
+      window.addEventListener(
+        "click",
+        (event) => {
+          const action = event.target instanceof Element ? event.target.closest("[data-cta]") : null;
+          if (action) log.push({ at: performance.now(), pressed: action.hasAttribute("data-pressed") });
+        },
+        true
+      );
+    });
+  }
+  const clicks = (page: Page) => page.evaluate(() => (window as unknown as { __ctaClicks: Click[] }).__ctaClicks);
+  /** The header has installed the click's answer. Before that — a page still loading its
+   * scripts — a click is an ordinary click. */
+  const ready = (page: Page) => page.locator("html[data-shared-press]").waitFor({ state: "attached" });
+
+  test("each look answers the click in its own way", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await page.goto("./");
+    await still(page);
+    const answers = new Set<string>();
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      const rest = await drawn(page);
+      const pressed = await drawn(page, true);
+      // The click changes what the visitor sees…
+      expect(JSON.stringify(pressed), look).not.toBe(JSON.stringify(rest));
+      // …and what changes is the look's own: which of its parts move, shift or fill.
+      const changed = (Object.keys(rest) as (keyof typeof rest)[]).filter((key) => rest[key] !== pressed[key]);
+      answers.add(`${changed.join(",")}|${pressed.motion}`);
+    }
+    expect(answers.size, [...answers].join("\n")).toBe(BUTTON_STYLE_IDS.length);
+  });
+
+  test("a click plays the look's answer first and then goes through", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await recordClicks(page);
+    await page.goto("./");
+    await ready(page);
+    const startUrl = page.url();
+    // In one turn of the page: the click, and what it left behind.
+    const held = await page.locator("a[data-cta]").first().evaluate((el) => {
+      (el as HTMLElement).click();
+      return { pressed: el.hasAttribute("data-pressed"), url: location.href };
+    });
+    expect(held.pressed).toBe(true);
+    expect(held.url).toBe(startUrl);
+    // Then it goes where the action leads.
+    if (ACTION!.startsWith("#")) await expect(page).toHaveURL(new RegExp(`${ACTION}$`));
+    else if (ACTION!.startsWith("/")) await expect(page).toHaveURL(new RegExp(`${ACTION!.slice(1)}/?$`));
+    await expect.poll(async () => (await clicks(page)).length).toBe(2);
+    const log = await clicks(page);
+    // The second click is the first one let through: after the hold, the answer still playing.
+    expect(log[1]!.at - log[0]!.at).toBeGreaterThanOrEqual(PRESS_HOLD_MS - 20);
+    expect(log[1]!.pressed).toBe(true);
+  });
+
+  test("a second click while the first is held does not go through twice", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await recordClicks(page);
+    await page.goto("./");
+    await ready(page);
+    await page.locator("a[data-cta]").first().evaluate((el) => {
+      (el as HTMLElement).click();
+      (el as HTMLElement).click();
+    });
+    await page.waitForTimeout(PRESS_HOLD_MS * 3);
+    // Two presses and one click let through — not two.
+    expect(await clicks(page)).toHaveLength(3);
+  });
+
+  test("with reduced motion nothing is animated and the click goes straight through", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await recordClicks(page);
+    await page.goto("./");
+    await ready(page);
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      expect((await drawn(page)).motion, look).toBe("none|none");
+      expect((await drawn(page, true)).motion, look).toBe("none|none");
+    }
+    const pressed = await page.locator("a[data-cta]").first().evaluate((el) => {
+      (el as HTMLElement).click();
+      return el.hasAttribute("data-pressed");
+    });
+    expect(pressed).toBe(false);
+    expect(await clicks(page)).toHaveLength(1);
+  });
+
+  // Ctrl/⌘-click opens a tab, Shift-click a window: those are the browser's, untouched.
+  test("a click with a modifier key is left to the browser", async ({ page }) => {
+    test.skip(ACTION_SECTIONS.length === 0, "this landing has no action");
+    await page.goto("./");
+    await ready(page);
+    const result = await page.locator("a[data-cta]").first().evaluate((el) => {
+      let reached = false;
+      const stop = (event: Event) => {
+        reached = true;
+        event.preventDefault();
+      };
+      // On the action itself: only a click the package let pass gets this far.
+      el.addEventListener("click", stop);
+      el.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, ctrlKey: true, button: 0 }));
+      el.removeEventListener("click", stop);
+      return { reached, pressed: el.hasAttribute("data-pressed") };
+    });
+    expect(result).toEqual({ reached: true, pressed: false });
   });
 });
 
@@ -281,6 +483,14 @@ test.describe("the action's look — at 390px", () => {
     await row.click();
     await expect(page.locator("html")).toHaveAttribute("data-button", nextButtonStyleId(START));
     await expect(row).toContainText(buttonStyleById(nextButtonStyleId(START)).name);
+  });
+
+  test("no look pushes the page sideways", async ({ page }) => {
+    await page.goto("./");
+    for (const look of BUTTON_STYLE_IDS) {
+      await wear(page, look);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), look).toBeLessThanOrEqual(0);
+    }
   });
 });
 
@@ -304,11 +514,10 @@ test.describe("the action's look — the golden demo's control pad", () => {
     // The pad still fits the frame: no key pushed out of it, no sideways scroll.
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
 
-    const action = page.locator('[data-section="hero"] a[data-cta]');
-    const before = await action.evaluate((el) => getComputedStyle(el).borderTopLeftRadius + getComputedStyle(el).backgroundColor);
+    const before = JSON.stringify(await drawn(page));
     await key.click();
     await expect(page.locator("html")).toHaveAttribute("data-button", nextButtonStyleId(START));
-    expect(await action.evaluate((el) => getComputedStyle(el).borderTopLeftRadius + getComputedStyle(el).backgroundColor)).not.toBe(before);
+    expect(JSON.stringify(await drawn(page))).not.toBe(before);
     // The whole cycle from the pad, back to where the page opened.
     for (let i = 1; i < BUTTON_STYLE_IDS.length; i++) await key.click();
     await expect(page.locator("html")).toHaveAttribute("data-button", START);

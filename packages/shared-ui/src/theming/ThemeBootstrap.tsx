@@ -1,4 +1,4 @@
-import { BUTTON_STYLE_IDS, buttonCssBlocks } from "./button-styles";
+import { BUTTON_STYLE_IDS } from "./button-styles";
 import { COLOR_SCHEME_IDS, cssBlocksForAll, type Appearance } from "./color-schemes";
 import { FONT_IDS } from "./font-families";
 
@@ -32,8 +32,9 @@ export function ThemeBootstrap({
   appearance = "dark",
 }: {
   palettes?: boolean;
-  /** The looks of the page's action (2026-11-25). Off by default: a host turns them on
-   * together with the header's `button` prop and its own `html[data-button]` default. */
+  /** The looks of the page's action (2026-11-25): bring a returning visitor's look back. Off
+   * by default: a host turns it on together with the header's `button` prop, its own
+   * `html[data-button]` default and the import of `@tokenwise/shared-ui/buttons.css`. */
   buttons?: boolean;
   /** The project's variant (T-400). Dark by default — the add-on ships ONE variant, so the
    * blocks are emitted in the chosen appearance; there is no visitor dark/light toggle. */
@@ -45,8 +46,6 @@ export function ThemeBootstrap({
       {/* Every palette as a `data-scheme` rule, so switching is an attribute write. Only
           when the host turned palettes on — tokenwise.sk does not in wave 1. */}
       {palettes && <style dangerouslySetInnerHTML={{ __html: cssBlocksForAll(appearance) }} />}
-      {/* Every look as a `data-button` rule, for the same reason. */}
-      {buttons && <style dangerouslySetInnerHTML={{ __html: buttonCssBlocks() }} />}
     </>
   );
 }

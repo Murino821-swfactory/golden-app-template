@@ -1153,14 +1153,14 @@
             ]
           },
           "button": {
-            "description": "The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Omit for the page's own: a pill on the editorial page, a rounded button under story and document. pill: fully rounded, filled with the accent; rounded: soft corners, filled; square: sharp corners, filled — for technical, industrial and editorial brands; outline: a pill drawn as a line in the accent — for quiet, premium pages; soft: soft corners on a wash of the accent — for calm, friendly pages.",
+            "description": "The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Each look is a material with its own answer to the click. Omit for glow. glow: a pill of the accent in a pool of its own light, a ripple on the click — for most products; block: a slab of the accent on a hard offset shadow that is pushed down on the click — for bold, playful, sporty or streetwise brands; glass: a frosted pane over the page with a sheen crossing it on the click — for premium, calm, wellness and lifestyle pages; orbit: a dark capsule with a light running round its edge — for tech, AI, tools and anything nocturnal; marker: bare words on a stroke of marker pen that rises over them on the click — for editorial, personal, craft and advisory pages.",
             "type": "string",
             "enum": [
-              "pill",
-              "rounded",
-              "square",
-              "outline",
-              "soft"
+              "glow",
+              "block",
+              "glass",
+              "orbit",
+              "marker"
             ]
           }
         },

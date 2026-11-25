@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Wordmark, type LogoProps } from "../brand/Wordmark";
 import { CartButton, type CartProps } from "../cart/CartButton";
 import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
 import { PaletteSwitcher } from "../switchers/PaletteSwitcher";
+import { installActionPress } from "../theming/action-press";
 import type { ButtonStyleId } from "../theming/button-styles";
 import type { ColorSchemeId } from "../theming/color-schemes";
 import type { FontId } from "../theming/font-families";
@@ -34,7 +35,9 @@ export interface HeaderProps {
   /** The font the host renders first — the same id it puts on `<html data-font>`. */
   font: FontId;
   /** The look of the page's action the host renders first — the same id it puts on
-   * `<html data-button>`, with `<ThemeBootstrap buttons />`. Absent: no button switcher. */
+   * `<html data-button>`, with `<ThemeBootstrap buttons />` and `buttons.css` imported. The
+   * header then also plays the look's answer to a click on the action (`action-press.ts`).
+   * Absent: no button switcher, and the action is left alone. */
   button?: ButtonStyleId;
   /** Fewer than two: no language switcher. */
   languages?: readonly LanguageLink[];
@@ -89,6 +92,9 @@ export function Header({
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const closeMenu = useCallback(() => setMenuOpen(false), [setMenuOpen]);
+  // A host with looks gets their answer to the click from the same place as their control.
+  const looks = button !== undefined;
+  useEffect(() => (looks ? installActionPress() : undefined), [looks]);
   const items = navFor(variant, { hasContact: Boolean(onContact), contactLabel: labels.contact, siteOrigin });
 
   const positionClass =

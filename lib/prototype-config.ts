@@ -28,7 +28,7 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
-import { BUTTON_STYLE_IDS, COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type ButtonStyleId, type FontId } from "@tokenwise/shared-ui/theming";
+import { BUTTON_STYLE_IDS, COLOR_SCHEME_IDS, DEFAULT_BUTTON_STYLE, FONT_IDS, LEGACY_SCHEME_IDS, type ButtonStyleId, type FontId } from "@tokenwise/shared-ui/theming";
 import { HERO_ARCHETYPES, HERO_LOOPS } from "./editorial";
 import { HERO_FILMS } from "./hero-film";
 
@@ -668,12 +668,11 @@ const themeSchema = z.object({
   // The look of the landing's action (founder, 2026-11-25): what a first-time visitor sees —
   // the header's button steps on from it and the visitor's pick persists, as with the palette
   // and the font. Optional with no default on purpose: a config that names none opens in the
-  // look its presentation always drew (`initialButtonStyle`), so every existing config reads
-  // and parses exactly as it did.
+  // first look (`initialButtonStyle`), and `theme` parses exactly as it did.
   button: z
     .enum(BUTTON_CHOICES)
     .optional()
-    .describe("The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Omit for the page's own: a pill on the editorial page, a rounded button under story and document. pill: fully rounded, filled with the accent; rounded: soft corners, filled; square: sharp corners, filled — for technical, industrial and editorial brands; outline: a pill drawn as a line in the accent — for quiet, premium pages; soft: soft corners on a wash of the accent — for calm, friendly pages."),
+    .describe("The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Each look is a material with its own answer to the click. Omit for glow. glow: a pill of the accent in a pool of its own light, a ripple on the click — for most products; block: a slab of the accent on a hard offset shadow that is pushed down on the click — for bold, playful, sporty or streetwise brands; glass: a frosted pane over the page with a sheen crossing it on the click — for premium, calm, wellness and lifestyle pages; orbit: a dark capsule with a light running round its edge — for tech, AI, tools and anything nocturnal; marker: bare words on a stroke of marker pen that rises over them on the click — for editorial, personal, craft and advisory pages."),
 });
 
 export const prototypeConfigSchema = z
@@ -1095,12 +1094,12 @@ export function landingPresentation(cfg: Pick<PrototypeConfig, "patterns">): Pre
 
 /**
  * The look the landing's action opens in (2026-11-25): the one the config names
- * (`theme.button`), else the one its presentation always drew — a pill on the editorial page,
- * the rounded button of the shared sections under story and document. Pure. The shell puts it
- * on `<html data-button>` and the header's switcher steps on from it, so both read it here.
+ * (`theme.button`), else the package's first (glow) — in every presentation. Pure. The shell
+ * puts it on `<html data-button>` and the header's switcher steps on from it, so both read it
+ * here.
  */
-export function initialButtonStyle(cfg: Pick<PrototypeConfig, "theme" | "patterns">): ButtonStyleId {
-  return cfg.theme.button ?? (landingPresentation(cfg) === "editorial" ? "pill" : "rounded");
+export function initialButtonStyle(cfg: Pick<PrototypeConfig, "theme">): ButtonStyleId {
+  return cfg.theme.button ?? DEFAULT_BUTTON_STYLE;
 }
 
 /** True when the customer enabled this pattern. Presence of the structure slice IS the switch. */

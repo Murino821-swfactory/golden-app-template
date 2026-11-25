@@ -73,8 +73,8 @@ export async function PrototypeShell({
     // `data-font` works the same way: the face the config names for this prototype
     // (`patterns.landing.font`, 2026-10-26) — `inter` when it names none — for every first
     // visit, the visitor's pick after that. And so does `data-button` (2026-11-25), the look
-    // of the landing's action: the config's (`theme.button`), else the one this presentation
-    // always drew (`initialButtonStyle`).
+    // of the landing's action: the config's (`theme.button`), else the package's first
+    // (`initialButtonStyle`). The looks themselves are `@tokenwise/shared-ui/buttons.css`.
     <html
       lang={locale}
       className={cn("font-sans", darkClass && "dark")}
