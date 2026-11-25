@@ -9,7 +9,7 @@ import {
   WCAG_AA_TEXT,
   type Appearance,
 } from "@tokenwise/shared-ui/theming";
-import { LOCALES, parsePrototypeConfig, config } from "../lib/prototype-config";
+import { LOCALES, landingPresentation, parsePrototypeConfig, config } from "../lib/prototype-config";
 import { htmlAppearance } from "../lib/theme-appearance";
 import { uiCopy, formatLabel, labelPrefix } from "./ui-copy";
 
@@ -252,6 +252,60 @@ test.describe("a hero film on the light side", () => {
     await expect(line).toHaveCSS("color", inkOn(START));
     await appearanceButton(page).click();
     await expect(line).toHaveCSS("color", inkOn(OTHER));
+  });
+});
+
+test.describe("the cards' pictures on the light side", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  const sections: readonly string[] = config.patterns.landing?.sections ?? [];
+  test.skip(
+    landingPresentation(config) !== "editorial" || !sections.includes("features"),
+    "no editorial features in this config"
+  );
+
+  // A card's picture is a Blender loop of neutral light on black. On a dark card it is ADDED
+  // (`screen`: the black vanishes). A light card cannot be lit any further, so there the same
+  // render is turned over and LAID ON as ink (`multiply`: the white vanishes), still tinted by
+  // the palette. Until 2026-11-25 the light side hid every loop, which was invisible while a
+  // build shipped one side; with the visitor's switch a card's "Change image" then changed a
+  // picture nobody could see.
+  test("a lit card shows its picture on both sides: light on a dark card, ink on a light one", async ({ page }) => {
+    await page.goto("./");
+    const picture = page.locator('[data-section="features"] [data-bento] > li').first().locator("[data-card-light]");
+    for (const side of [START, OTHER]) {
+      if (side !== START) await appearanceButton(page).click();
+      await expectAppearance(page, side);
+      await expect(picture, side).toBeVisible();
+      await expect(picture, side).toHaveCSS("mix-blend-mode", side === "dark" ? "screen" : "multiply");
+    }
+  });
+
+  test("on the light side a card's own key gives it a picture the visitor can see, and the next press another", async ({ page }) => {
+    test.skip(config.patterns.landing?.tryIt !== true, "no try-it keys in this config");
+    await page.goto("./");
+    if (START !== "light") await appearanceButton(page).click();
+    await expectAppearance(page, "light");
+    // The second card: it wears no picture until the visitor gives it one.
+    const card = page.locator('[data-section="features"] [data-bento] > li').nth(1);
+    const picture = card.locator("[data-card-light]");
+    await expect(picture).toHaveCount(0);
+    const key = card.locator("button[data-try-key]");
+    await key.click();
+    await expect(picture).toBeVisible();
+    const first = await picture.getAttribute("data-loop");
+    await key.click();
+    await expect(picture).toBeVisible();
+    await expect(picture).not.toHaveAttribute("data-loop", first!);
+  });
+
+  // Only the cards changed sides. The hero's backlight and the closing band's ribbons are light
+  // across a whole dark section, not a picture in a card, and still stand down on a light page.
+  test("the hero's backlight and the closing ribbons still stand down on the light side", async ({ page }) => {
+    await page.goto("./");
+    if (START !== "light") await appearanceButton(page).click();
+    await expectAppearance(page, "light");
+    for (const light of await page.locator("[data-hero-light], [data-closing-light]").all()) await expect(light).toBeHidden();
   });
 });
 
