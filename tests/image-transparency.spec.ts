@@ -22,7 +22,7 @@ const START = DEFAULT_IMAGE_TRANSPARENCY;
 const sections: readonly string[] = config.patterns.landing?.sections ?? [];
 /** A page whose hero opens on a picture: a film or, after "Change image", a still scene. */
 const PICTURE =
-  landingPresentation(config) === "editorial" && sections.includes("hero") && heroFilm(config.patterns.landing?.film) !== undefined;
+  landingPresentation(config) === "editorial" && sections.includes("hero") && heroFilm(config.patterns.landing?.film) !== null;
 
 function control(page: Page) {
   return page
