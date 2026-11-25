@@ -401,6 +401,12 @@ Consequences when editing:
   bundle. `npm run schema` publishes the list as `menu.locales` and the harness reads it
   from there — the wizard and the harness keep no copy.
 - One declared language means no language switcher at all, and no hreflang alternates.
+- **The golden demo is in all eight languages (founder, 2026-11-25).** `prototype.config.json`
+  declares every id in `LOCALES`, so tokenwise.sk/demo/golden shows the language icon and a
+  visitor reads — and tries "Change texts" on — the page in their own language
+  (`/demo/golden/sk`, `/de`, …). Its `content.<locale>` blocks are translations of `content.en`:
+  change a text there and change it in all eight. zod refuses a missing slice, but nothing
+  notices a stale translation.
 - `fixtures/full.config.json` and `fixtures/multilingual.config.json` both declare two
   locales, so both CI jobs exercise locale routing.
 
@@ -424,6 +430,13 @@ user. Spec and decision in the **sw-factory** repo
   colour wheel (Change colour), `Aa` in the face on screen (font), the cart, the figure
   (Sign in). Their words live only in `aria-label` — so the `changeColourLabel`,
   `changeFontLabel` and `signIn` strings in `messages/*.json` are still load-bearing.
+- **The language is an icon too, and a click opens a popup (founder decision 2026-11-25,
+  shared-ui 0.7.0):** a globe between `Aa` and the cart (it read `EN ▾` before). Colour and
+  font step on a click; the globe opens a popup titled with `common.language` that lists the
+  declared languages — links named in themselves, the one on screen ticked, the code beside
+  each for the eye only. Escape and a click outside close it, and Escape returns the focus to
+  the icon. Below 1024px the bar is unchanged and the same links are in the menu. Tests:
+  `tests/language-switcher.spec.ts`, beside the baseline `tests/locale.spec.ts`.
 - The package never imports Firebase, next-intl or `@/…` — the adapter
   `components/layout/header.tsx` turns auth, locale routing and `messages/*.json` into props.
 - It reads only `--shared-*` CSS variables; `app/globals.css` maps them onto the shadcn
