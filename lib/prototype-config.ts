@@ -660,10 +660,11 @@ export const DEFAULT_PATTERNS: readonly PatternId[] = [
 
 const themeSchema = z.object({
   colorScheme: z.enum(COLOR_SCHEMES),
-  // The light variant is a paid add-on (T-400, founder 2026-11-09). Dark is the DEFAULT and
-  // the baseline of every project; a customer whose brand is light opts in with `"light"`.
-  // One build-time choice for the whole site — not a visitor dark/light toggle — so the build
-  // ships exactly one variant. Omitted ⇒ dark, which keeps every existing config unchanged.
+  // The side a FIRST visit opens on. Dark or light is the visitor's choice (founder decision
+  // 2026-11-25: the dark-only rule is dropped) — the header carries the switch and every build
+  // ships both variants of every palette — so this names only the starting side, as
+  // `colorScheme` names only the starting palette. Omitted ⇒ dark, which keeps every existing
+  // config opening as it did. (T-400, 2026-11-09, introduced it as a build-time add-on.)
   appearance: z.enum(["dark", "light"]).default("dark"),
   // The look of the landing's action (founder, 2026-11-25): what a first-time visitor sees —
   // the header's button steps on from it and the visitor's pick persists, as with the palette
@@ -994,8 +995,8 @@ function migrateLegacyConfig(input: Record<string, unknown>): Record<string, unk
     defaultLocale: "en",
     // `style` (minimal | bold | playful) is dropped rather than carried: it was validated
     // here and consumed by nothing, so a customer who picked "bold" always got "minimal".
-    // `appearance` (T-400) is carried when present so a legacy config that already named the
-    // light add-on keeps it; omitted, the schema defaults it to dark.
+    // `appearance` (T-400) is carried when present so a legacy config that already named
+    // light still opens light; omitted, the schema defaults it to dark.
     theme: {
       colorScheme: theme.colorScheme,
       ...(typeof theme.appearance === "string" ? { appearance: theme.appearance } : {}),

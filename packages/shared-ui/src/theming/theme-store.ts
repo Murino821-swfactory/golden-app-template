@@ -1,6 +1,7 @@
 /**
- * The visitor's palette, font and button look live in the DOM (`html[data-scheme]`,
- * `html[data-font]`, `html[data-button]`) and in localStorage — outside React, because
+ * The visitor's palette, font, appearance and button look live in the DOM
+ * (`html[data-scheme]`, `html[data-font]`, `html[data-appearance]`, `html[data-button]`) and
+ * in localStorage — outside React, because
  * `ThemeBootstrap` sets them before React exists. `useSyncExternalStore` is the primitive for reading exactly that kind of state,
  * and `getServerSnapshot` keeps `window` out of the render path during static export.
  * Reading it in an effect and then setting state would render one frame with the wrong
@@ -24,8 +25,11 @@ export function createAttributeStore<T extends string>(opts: {
   storageKey: string;
   event: string;
   ids: readonly T[];
+  /** What else the document needs when a value is chosen — the appearance also moves
+   * shadcn's `.dark` class. The bootstrap script does the same for a returning visitor. */
+  apply?: (value: T) => void;
 }): AttributeStore<T> {
-  const { attribute, storageKey, event, ids } = opts;
+  const { attribute, storageKey, event, ids, apply } = opts;
 
   const subscribe = (onChange: () => void) => {
     window.addEventListener(event, onChange);
@@ -48,6 +52,7 @@ export function createAttributeStore<T extends string>(opts: {
     },
     select(value: T): void {
       document.documentElement.dataset[attribute] = value;
+      apply?.(value);
       try {
         localStorage.setItem(storageKey, value);
       } catch {

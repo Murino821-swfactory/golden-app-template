@@ -18,6 +18,12 @@ export interface HeaderLabels {
   font: string;
   /** `{name}`, `{position}`, `{total}`. */
   changeFontLabel: string;
+  /** The dark/light row's name in the menu below 1024px. */
+  appearance: string;
+  /** `{name}` — the side on screen, `appearanceDark` or `appearanceLight`. */
+  changeAppearanceLabel: string;
+  appearanceDark: string;
+  appearanceLight: string;
   /** The menu row of the action's look, as `font` is the font's. */
   button: string;
   /** `{name}`, `{position}`, `{total}`. */
@@ -42,6 +48,10 @@ export const DEFAULT_LABELS: HeaderLabels = {
   changeColourLabel: "Change colour — {name}, {position} of {total}",
   font: "Font",
   changeFontLabel: "Change font: {name} ({position} of {total})",
+  appearance: "Appearance",
+  changeAppearanceLabel: "Change appearance: {name}",
+  appearanceDark: "Dark",
+  appearanceLight: "Light",
   button: "Button",
   changeButtonLabel: "Change button: {name} ({position} of {total})",
   language: "Language",

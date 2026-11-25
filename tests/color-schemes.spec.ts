@@ -126,7 +126,7 @@ test.describe("the palettes", () => {
       expect(contrastRatio(r.background, r.primary)).toBeGreaterThanOrEqual(WCAG_AA_TEXT);
     });
 
-    test(`${id}: the background comes from the darker colour (dark-only)`, () => {
+    test(`${id}: the dark side's background comes from the darker colour`, () => {
       const [darker] = darkerAndLighter(id);
       expect(relativeLuminance(rolesFor(id).background)).toBeLessThanOrEqual(
         relativeLuminance(darker)
@@ -456,10 +456,12 @@ test.describe("a tonal palette reaches the CSS", () => {
 });
 
 /**
- * The light variant — a paid add-on (T-400, founder decision 2026-11-09).
+ * The light variant (T-400, 2026-11-09) — since 2026-11-25 one of the two sides the VISITOR
+ * switches between in the header (founder decision: the dark-only rule is dropped; before it
+ * light was a build-time paid add-on).
  *
- * Dark stays the default and the baseline of every project (golden rule). A project whose
- * brand is light opts in, and the SAME token layer derives a light counterpart of every
+ * Dark stays what a first visit opens on unless the config names light. The SAME token layer
+ * derives a light counterpart of every
  * palette: the rule is mirrored — the LIGHTEST colour is the page and the DARKEST the words,
  * grounds and inks swapped end for end, and contrast moved by lifting toward black rather than
  * white. No colour is hard-coded and no palette is hand-written twice: `appearance` is one
@@ -529,7 +531,9 @@ test.describe("the light variant (T-400)", () => {
     const light = cssBlocksForAll("light");
     expect(cssBlocksForAll()).toBe(dark);
     expect(light).not.toBe(dark);
-    // Same selectors — the build ships ONE variant; the scheme id a visitor cycles is unchanged.
+    // Same selectors when asked for one variant; the scheme id a visitor cycles is unchanged.
+    // What a build ships is both, the light rules keyed by the document's mark as well
+    // (`cssBlocksForBothAppearances`, packages/shared-ui/test/appearance.test.ts).
     for (const id of COLOR_SCHEME_IDS) {
       expect(light).toContain(`html[data-scheme="${id}"]{`);
       expect(cssVariablesFor(id, "light")["--background"]).toBe(rolesFor(id, "light").background);

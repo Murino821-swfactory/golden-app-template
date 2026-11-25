@@ -2,13 +2,17 @@
 
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
 logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
-page's action, 0.7.0), **language**, **cart** and **user**. A change to the header is one PR
+page's action, 0.9.0), **language**, **cart** and **user**. A change to the header is one PR
 here.
 
-Colour, font, button, cart and sign-in are icons with no visible words — a colour wheel,
-`Aa`, a small action in the look on screen, a cart, a figure (founder decision 2026-09-28,
-0.3.0). Each one's name is its `aria-label`, so a host's translations of `changeColourLabel`,
-`changeFontLabel`, `changeButtonLabel` and `signIn` still matter.
+Colour, font, button, language, cart and sign-in are icons with no visible words — a colour
+wheel, `Aa`, a small action in the look on screen, a globe, a cart, a figure (founder decision
+2026-09-28, 0.3.0; the globe 2026-11-25, 0.7.0 — it read `EN ▾` before; the button 0.9.0).
+Each one's name is its `aria-label`, so a host's translations of `changeColourLabel`,
+`changeFontLabel`, `changeButtonLabel`, `language` and `signIn` still matter. Colour, font and
+the button's look step to the next one on a click; the globe opens a popup that lists
+`languages` — each a link named in itself, the one on screen marked — and titles it with
+`labels.language`. With fewer than two languages there is no globe at all.
 
 Spec: sw-factory `docs/superpowers/specs/2026-09-25-shared-header-design.md`.
 Decision: sw-factory `docs/decisions/shared-header-package.md`.
@@ -36,14 +40,20 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    ```
    Without `@source` the header renders unstyled and nothing fails.
 3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]>`,
-   and `<ThemeBootstrap palettes? buttons? appearance? />` as the **first child of `<body>`** —
-   it applies a returning visitor's palette, font and button look before the first paint. Put
-   `suppressHydrationWarning` on `<html>`: the script changes those attributes before React
-   hydrates, on purpose.
-   `appearance` (`"dark"` default | `"light"`, T-400) is the project's build-time variant, a
-   paid add-on: the same deterministic rule derives a LIGHT counterpart of every palette
-   (`cssBlocksForAll("light")`, `rolesFor(id, "light")`). It is NOT a visitor toggle — a build
-   ships one variant — so the host also drops shadcn's `.dark` class on `<html>` for light.
+   and `<ThemeBootstrap palettes? buttons? />` as the **first child of `<body>`** — it applies a
+   returning visitor's palette, appearance, font and button look before the first paint. Put
+   `suppressHydrationWarning` on `<html>`: the script changes those attributes (and the `.dark`
+   class) before React hydrates, on purpose.
+   **Dark and light (founder decision 2026-11-25: the dark-only rule is dropped).** With
+   `palettes`, the stylesheet carries BOTH variants of every palette
+   (`cssBlocksForBothAppearances()`): the dark rules as `html[data-scheme="x"]`, the light ones
+   — the same deterministic rule mirrored, `rolesFor(id, "light")` — as
+   `html[data-appearance="light"][data-scheme="x"]`. The host themes `<html>` for a first visit:
+   dark is shadcn's `.dark` class and no mark, light is `data-appearance="light"` and no
+   `.dark`. Pass the same side to `<Header appearance>` and the header shows the switch — in the
+   bar from 1024px, in the menu below — which moves the mark and the class together and stores
+   the choice (`localStorage` key `appearance`). Without `palettes` no stored appearance is
+   applied: a host with one fixed look is never turned over by another app on its origin.
 
 ```tsx
 <Header
@@ -52,7 +62,8 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   logo={{ href: "https://tokenwise.sk/", text: "tokenwise", accent: ".sk" }}
   palette="midnight-teal-ocean-mist" // omit: no palette switcher
   font="inter"                      // same id as <html data-font>
-  button="pill"                     // same id as <html data-button>; omit: no button switcher
+  appearance="dark"                 // the side <html> opens on; omit: no dark/light switch
+  button="glow"                     // same id as <html data-button>; omit: no button switcher
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"
@@ -65,7 +76,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
 Node code that needs only data (palettes, font table) imports
 `@tokenwise/shared-ui/theming`, which carries no React.
 
-## The looks of an action (0.7.0)
+## The looks of an action (0.9.0)
 
 One button steps through five looks of the page's action — its CTA — the way **Change colour**
 steps through the palettes (`src/theming/button-styles.ts`; the choice is stored under `button`,

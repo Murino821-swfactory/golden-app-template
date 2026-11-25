@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Wordmark, type LogoProps } from "../brand/Wordmark";
 import { CartButton, type CartProps } from "../cart/CartButton";
+import { AppearanceSwitcher } from "../switchers/AppearanceSwitcher";
 import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
 import { PaletteSwitcher } from "../switchers/PaletteSwitcher";
 import { installActionPress } from "../theming/action-press";
 import type { ButtonStyleId } from "../theming/button-styles";
-import type { ColorSchemeId } from "../theming/color-schemes";
+import type { Appearance, ColorSchemeId } from "../theming/color-schemes";
 import type { FontId } from "../theming/font-families";
 import { UserMenu, type HeaderUser, type UserMenuItem } from "../user-menu/UserMenu";
 import { VERSION } from "../version";
@@ -34,6 +35,9 @@ export interface HeaderProps {
   palette?: ColorSchemeId;
   /** The font the host renders first — the same id it puts on `<html data-font>`. */
   font: FontId;
+  /** The side the host renders first — what it themes `<html>` with (the `.dark` class, or
+   * `data-appearance="light"`). Absent: no dark/light switch — a host with one fixed look. */
+  appearance?: Appearance;
   /** The look of the page's action the host renders first — the same id it puts on
    * `<html data-button>`, with `<ThemeBootstrap buttons />` and `buttons.css` imported. The
    * header then also plays the look's answer to a click on the action (`action-press.ts`).
@@ -58,13 +62,15 @@ const NAV_LINK =
 /**
  * The one header of tokenwise.sk and of every prototype.
  *
- *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [▭ button] [EN ▾] [cart] [user]
- *   <1024px  [logo…]                  [◎] [cart] [user] [☰]
+ *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [☾] [▭ button] [◍ language] [cart] [user]
+ *   <1024px  [logo…]                                [◎] [cart] [user] [☰]
  *
  * Every control right of the nav is an icon and nothing else [founder decision 2026-09-28]:
- * a colour wheel, "Aa" in the face on screen, the action in the look on screen (2026-11-25),
- * the cart, the figure. Their names live in `aria-label`, and the font, the look and the
- * languages are spelled out in the menu below 1024px.
+ * a colour wheel, "Aa" in the face on screen, a moon or a sun for the side on screen, the
+ * action in the look on screen and a globe for the language [all three 2026-11-25], the cart,
+ * the figure. Their names live in `aria-label`, and the font, the appearance, the look and
+ * the languages are spelled out in the menu below 1024px. Colour, font, appearance and look
+ * step on a click; the globe opens a popup with the languages to choose from.
  *
  * Translucent over the page (the host's background at 88% with a backdrop blur), no bottom
  * rule — as tokenwise.sk's header was before it moved here. Every colour and typeface is a
@@ -78,6 +84,7 @@ export function Header({
   siteOrigin,
   palette,
   font,
+  appearance,
   button,
   languages = [],
   user,
@@ -142,12 +149,18 @@ export function Header({
 
         {palette && <PaletteSwitcher defaultScheme={palette} labels={labels} />}
 
-        {/* Nav, font and language sit in the bar from 1024px and in the menu below it.
-            Measured on tokenwise.sk (2026-09-25): the full row overflows by 213px at 640 and
-            113px at 768, and fits from 900 — so the bar/menu swap is `lg`, not `sm`. */}
+        {/* Nav, font, appearance and language sit in the bar from 1024px and in the menu
+            below it. Measured on tokenwise.sk (2026-09-25): the full row overflows by 213px
+            at 640 and 113px at 768, and fits from 900 — so the bar/menu swap is `lg`, not
+            `sm`. */}
         <div className="hidden lg:flex">
           <FontSwitcher defaultFont={font} labels={labels} />
         </div>
+        {appearance && (
+          <div className="hidden lg:flex">
+            <AppearanceSwitcher defaultAppearance={appearance} labels={labels} />
+          </div>
+        )}
         {/* Rendered at every width and shown from 1024px: a host's own key may press it (the
             golden demo's control pad does), as it presses the palette button. */}
         {button && (
@@ -192,6 +205,7 @@ export function Header({
           items={items}
           onContact={onContact}
           defaultFont={font}
+          defaultAppearance={appearance}
           defaultButton={button}
           languages={languages}
           labels={labels}

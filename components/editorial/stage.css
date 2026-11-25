@@ -263,6 +263,24 @@
     var(--background) 100%
   );
 }
+/* The light side (founder, 2026-11-25: the visitor chooses dark or light in the header). The
+   veil is now a LIGHT ground over footage shot at dusk and at night, so it lies denser behind
+   the header and the words, and the hero's second line takes the page's full ink: the muted ink
+   is measured against a card, not against a picture. The film still shows through its lower
+   third, as on the dark side. */
+[data-appearance="light"] [data-presentation="editorial"] .editorial-film::after {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--background) 86%, transparent) 0%,
+    color-mix(in oklab, var(--background) 68%, transparent) 34%,
+    color-mix(in oklab, var(--background) 36%, transparent) 62%,
+    color-mix(in oklab, var(--background) 48%, transparent) 84%,
+    var(--background) 100%
+  );
+}
+[data-appearance="light"] [data-presentation="editorial"] [data-hero-layout="film"] .editorial-hero-copy > p {
+  color: var(--foreground);
+}
 /* The stage ends high enough for the frame's title bar and control pad to stand in the first
    screen: what a visitor can change is in reach before any scroll. */
 [data-presentation="editorial"] [data-hero-layout="film"] .editorial-hero-stage {

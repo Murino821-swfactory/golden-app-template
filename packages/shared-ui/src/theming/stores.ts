@@ -1,5 +1,5 @@
 import { BUTTON_STYLE_IDS, type ButtonStyleId } from "./button-styles";
-import { COLOR_SCHEME_IDS, type ColorSchemeId } from "./color-schemes";
+import { APPEARANCES, COLOR_SCHEME_IDS, type Appearance, type ColorSchemeId } from "./color-schemes";
 import { FONT_IDS, type FontId } from "./font-families";
 import { createAttributeStore } from "./theme-store";
 
@@ -19,7 +19,21 @@ export const fontStore = createAttributeStore<FontId>({
   ids: FONT_IDS,
 });
 
-/** The look of the page's action (2026-11-25): `html[data-button]`, stored like the other two. */
+/**
+ * Dark or light (founder decision 2026-11-25). The mark is `html[data-appearance]` — the
+ * light rules of every palette are keyed by it — and shadcn's `.dark` class moves with it, so
+ * `dark:` utilities and the `.dark` base tokens follow the same switch. A document that
+ * carries no mark yet is the host's first-visit appearance (`use(serverDefault)`).
+ */
+export const appearanceStore = createAttributeStore<Appearance>({
+  attribute: "appearance",
+  storageKey: "appearance",
+  event: "appearance-change",
+  ids: APPEARANCES,
+  apply: (value) => document.documentElement.classList.toggle("dark", value === "dark"),
+});
+
+/** The look of the page's action (2026-11-25): `html[data-button]`, stored like the other three. */
 export const buttonStore = createAttributeStore<ButtonStyleId>({
   attribute: "button",
   storageKey: "button",

@@ -25,9 +25,10 @@ import { ThemeBootstrap } from "@tokenwise/shared-ui";
  * with no route to read. Both root layouts render this, so the shell still exists once.
  */
 
-// The visitor's palette, font and button look are applied before the first paint by the
-// package's `ThemeBootstrap` (first child of <body>, the standard blocking-script slot in the
-// App Router), so a returning visitor never sees the customer's default flash first.
+// The visitor's palette, appearance (dark or light), font and button look are applied before
+// the first paint by the package's `ThemeBootstrap` (first child of <body>, the standard
+// blocking-script slot in the App Router), so a returning visitor never sees the customer's
+// default flash first.
 // Typefaces are self-hosted by `@tokenwise/shared-ui` — no next/font, no Google CDN.
 
 /**
@@ -59,14 +60,16 @@ export async function PrototypeShell({
   setRequestLocale(locale);
   const messages = await getMessages({ locale });
 
-  // The project's variant (T-400). Dark (the default) keeps the `.dark` class and marks
-  // nothing, so the document is byte-for-byte what it was; light drops `.dark` and marks the
-  // page so the light-only CSS refinements apply, under the palette's light tokens below.
+  // The side a FIRST visit opens on (`theme.appearance`, dark when the config names none).
+  // Dark keeps the `.dark` class and marks nothing; light drops `.dark` and marks the page, so
+  // the palette's light tokens and the light-only CSS refinements apply. The visitor's switch
+  // in the header moves the same class and the same mark (founder decision 2026-11-25).
   const { darkClass, dataAppearance } = htmlAppearance(config.theme.appearance);
 
   return (
-    // EVERY palette ships as a CSS rule keyed by `data-scheme`, computed at build time by
-    // the deterministic rule in @tokenwise/shared-ui (theming/color-schemes.ts), so switching one is an attribute
+    // EVERY palette ships as CSS rules keyed by `data-scheme` — a dark one and a light one —
+    // computed at build time by the deterministic rule in @tokenwise/shared-ui
+    // (theming/color-schemes.ts), so switching the palette or the side is an attribute
     // write rather than a rebuild. `data-scheme` starts on the palette the customer picked
     // in the wizard — that is what a first-time visitor sees — and the bootstrap script
     // below overrides it only for a visitor who chose differently on this device.
@@ -82,12 +85,12 @@ export async function PrototypeShell({
       data-appearance={dataAppearance}
       data-font={config.patterns.landing?.font ?? "inter"}
       data-button={initialButtonStyle(config)}
-      // ThemeBootstrap rewrites data-scheme / data-font / data-button before React hydrates;
-      // the mismatch is the point, not a bug.
+      // ThemeBootstrap rewrites data-scheme / data-appearance / data-font / data-button and
+      // the `.dark` class before React hydrates; the mismatch is the point, not a bug.
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeBootstrap palettes buttons appearance={config.theme.appearance} />
+        <ThemeBootstrap palettes buttons />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page
