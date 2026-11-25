@@ -18,6 +18,10 @@ export interface HeaderLabels {
   font: string;
   /** `{name}`, `{position}`, `{total}`. */
   changeFontLabel: string;
+  /** The menu row of the action's look, as `font` is the font's. */
+  button: string;
+  /** `{name}`, `{position}`, `{total}`. */
+  changeButtonLabel: string;
   language: string;
   cart: string;
   /** `{count}`. */
@@ -38,6 +42,8 @@ export const DEFAULT_LABELS: HeaderLabels = {
   changeColourLabel: "Change colour — {name}, {position} of {total}",
   font: "Font",
   changeFontLabel: "Change font: {name} ({position} of {total})",
+  button: "Button",
+  changeButtonLabel: "Change button: {name} ({position} of {total})",
   language: "Language",
   cart: "Cart",
   cartLabel: "Cart, {count} items",

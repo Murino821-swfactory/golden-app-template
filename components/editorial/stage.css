@@ -275,6 +275,12 @@
   [data-presentation="editorial"] [data-hero-layout="film"] .editorial-hero-stage {
     padding-top: 2.5rem;
   }
+  /* On a phone the idea chat's launcher floats in the window's bottom right corner — where the
+     pad's last key lands. With four keys in the row (2026-11-25) the launcher lay over that
+     key's word, so a stage that carries a pad ends two rems higher and the row clears it. */
+  [data-presentation="editorial"] [data-hero-layout="film"]:has([data-try-pad]) .editorial-hero-stage {
+    min-height: calc(100svh - 4.75rem - 13rem);
+  }
 }
 @media (min-width: 640px) {
   [data-presentation="editorial"] [data-hero-layout="film"] .editorial-hero-stage {

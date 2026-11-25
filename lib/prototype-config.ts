@@ -28,7 +28,7 @@
 
 import { z } from "zod";
 import rawConfig from "../prototype.config.json";
-import { COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type FontId } from "@tokenwise/shared-ui/theming";
+import { BUTTON_STYLE_IDS, COLOR_SCHEME_IDS, FONT_IDS, LEGACY_SCHEME_IDS, type ButtonStyleId, type FontId } from "@tokenwise/shared-ui/theming";
 import { HERO_ARCHETYPES, HERO_LOOPS } from "./editorial";
 import { HERO_FILMS } from "./hero-film";
 
@@ -89,6 +89,9 @@ export type Tone = (typeof TONES)[number];
 
 /** The faces a prototype may open in: `@tokenwise/shared-ui`'s cycle, as a closed enum. */
 const FONT_CHOICES = [...FONT_IDS] as [FontId, ...FontId[]];
+
+/** The looks the landing's action may open in — the same package's cycle, as a closed enum. */
+const BUTTON_CHOICES = [...BUTTON_STYLE_IDS] as [ButtonStyleId, ...ButtonStyleId[]];
 
 /** Public paths with a page in app/(default). Locale and base-path prefixes are
  * applied by routing, never invented by the composition model. */
@@ -662,6 +665,15 @@ const themeSchema = z.object({
   // One build-time choice for the whole site — not a visitor dark/light toggle — so the build
   // ships exactly one variant. Omitted ⇒ dark, which keeps every existing config unchanged.
   appearance: z.enum(["dark", "light"]).default("dark"),
+  // The look of the landing's action (founder, 2026-11-25): what a first-time visitor sees —
+  // the header's button steps on from it and the visitor's pick persists, as with the palette
+  // and the font. Optional with no default on purpose: a config that names none opens in the
+  // look its presentation always drew (`initialButtonStyle`), so every existing config reads
+  // and parses exactly as it did.
+  button: z
+    .enum(BUTTON_CHOICES)
+    .optional()
+    .describe("The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Omit for the page's own: a pill on the editorial page, a rounded button under story and document. pill: fully rounded, filled with the accent; rounded: soft corners, filled; square: sharp corners, filled — for technical, industrial and editorial brands; outline: a pill drawn as a line in the accent — for quiet, premium pages; soft: soft corners on a wash of the accent — for calm, friendly pages."),
 });
 
 export const prototypeConfigSchema = z
@@ -1079,6 +1091,16 @@ export function contentFor(
 /** The presentation this config reads in — `editorial` unless it names another. Pure. */
 export function landingPresentation(cfg: Pick<PrototypeConfig, "patterns">): Presentation {
   return cfg.patterns.landing?.presentation ?? DEFAULT_PRESENTATION;
+}
+
+/**
+ * The look the landing's action opens in (2026-11-25): the one the config names
+ * (`theme.button`), else the one its presentation always drew — a pill on the editorial page,
+ * the rounded button of the shared sections under story and document. Pure. The shell puts it
+ * on `<html data-button>` and the header's switcher steps on from it, so both read it here.
+ */
+export function initialButtonStyle(cfg: Pick<PrototypeConfig, "theme" | "patterns">): ButtonStyleId {
+  return cfg.theme.button ?? (landingPresentation(cfg) === "editorial" ? "pill" : "rounded");
 }
 
 /** True when the customer enabled this pattern. Presence of the structure slice IS the switch. */

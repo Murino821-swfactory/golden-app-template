@@ -85,7 +85,7 @@ export function HeroSection() {
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{headline}</h1>
           <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">{subheadline}</p>
           {href && (
-            <Button asChild size="lg" className="h-11">
+            <Button asChild size="lg" data-cta className="h-11">
               <Link href={href} prefetch={landingActionPrefetch(href)}>{content.cta?.label ?? t("cta")}</Link>
             </Button>
           )}

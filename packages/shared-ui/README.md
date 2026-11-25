@@ -1,12 +1,14 @@
 # @tokenwise/shared-ui
 
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
-logo, nav, **Change colour** (30 palettes), **font** (10 faces), **language**, **cart**
-and **user**. A change to the header is one PR here.
+logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
+page's action, 0.7.0), **language**, **cart** and **user**. A change to the header is one PR
+here.
 
-Colour, font, cart and sign-in are icons with no visible words — a colour wheel, `Aa`, a
-cart, a figure (founder decision 2026-09-28, 0.3.0). Each one's name is its `aria-label`,
-so a host's translations of `changeColourLabel`, `changeFontLabel` and `signIn` still matter.
+Colour, font, button, cart and sign-in are icons with no visible words — a colour wheel,
+`Aa`, a small action in the look on screen, a cart, a figure (founder decision 2026-09-28,
+0.3.0). Each one's name is its `aria-label`, so a host's translations of `changeColourLabel`,
+`changeFontLabel`, `changeButtonLabel` and `signIn` still matter.
 
 Spec: sw-factory `docs/superpowers/specs/2026-09-25-shared-header-design.md`.
 Decision: sw-factory `docs/decisions/shared-header-package.md`.
@@ -33,10 +35,11 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    @theme inline { --font-sans: var(--shared-font-sans); }
    ```
    Without `@source` the header renders unstyled and nothing fails.
-3. Layout: `<html data-font="<default>" [data-scheme="<default>"]>`, and
-   `<ThemeBootstrap palettes? appearance? />` as the **first child of `<body>`** — it applies a
-   returning visitor's palette and font before the first paint. Put `suppressHydrationWarning`
-   on `<html>`: the script changes those attributes before React hydrates, on purpose.
+3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]>`,
+   and `<ThemeBootstrap palettes? buttons? appearance? />` as the **first child of `<body>`** —
+   it applies a returning visitor's palette, font and button look before the first paint. Put
+   `suppressHydrationWarning` on `<html>`: the script changes those attributes before React
+   hydrates, on purpose.
    `appearance` (`"dark"` default | `"light"`, T-400) is the project's build-time variant, a
    paid add-on: the same deterministic rule derives a LIGHT counterpart of every palette
    (`cssBlocksForAll("light")`, `rolesFor(id, "light")`). It is NOT a visitor toggle — a build
@@ -49,6 +52,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   logo={{ href: "https://tokenwise.sk/", text: "tokenwise", accent: ".sk" }}
   palette="midnight-teal-ocean-mist" // omit: no palette switcher
   font="inter"                      // same id as <html data-font>
+  button="pill"                     // same id as <html data-button>; omit: no button switcher
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"
@@ -60,6 +64,37 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
 
 Node code that needs only data (palettes, font table) imports
 `@tokenwise/shared-ui/theming`, which carries no React.
+
+## The looks of an action (0.7.0)
+
+One button steps through the looks of the page's action — its CTA — the way **Change colour**
+steps through the palettes: `pill`, `rounded`, `square`, `outline`, `soft`
+(`src/theming/button-styles.ts`; the choice is stored under `button`, as `html[data-button]`).
+A host opts in with all three of: `<html data-button="<default>">`, `<ThemeBootstrap buttons />`
+and the header's `button` prop. A host that passes none of them gets no control and no CSS.
+
+`ThemeBootstrap` then ships every look as one rule that sets five variables, and the host's
+action only reads them:
+
+```css
+html[data-button] .my-action {
+  border-radius: var(--shared-button-radius);
+  border: 1px solid var(--shared-button-edge);
+  background: var(--shared-button-bg);
+  color: var(--shared-button-ink);
+}
+html[data-button] .my-action:hover { background: var(--shared-button-bg-hover); }
+```
+
+A look names no colour of its own: every value is a `--shared-*` token or a mix of them, so it
+repaints with the palette. Two optional tokens join the host's side of the contract:
+`--shared-accent-ink` (the ink on the accent; falls back to `--shared-bg`) and
+`--shared-surface` (the raised plane `outline` fills with under the pointer and `soft` stands
+on; falls back to `--shared-bg`). The header's icon is drawn from the same five variables.
+
+Adding a look is one entry in `BUTTON_STYLES`. `test/button-styles.test.ts` holds it to the
+five variables and the tokens; the template's `tests/button-style.spec.ts` to WCAG AA on every
+palette.
 
 ## Adding a font
 

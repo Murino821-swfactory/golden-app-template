@@ -1151,6 +1151,17 @@
               "dark",
               "light"
             ]
+          },
+          "button": {
+            "description": "The look of the landing's action (the hero's and the closing band's button) a first-time visitor sees; they can switch later. Omit for the page's own: a pill on the editorial page, a rounded button under story and document. pill: fully rounded, filled with the accent; rounded: soft corners, filled; square: sharp corners, filled — for technical, industrial and editorial brands; outline: a pill drawn as a line in the accent — for quiet, premium pages; soft: soft corners on a wash of the accent — for calm, friendly pages.",
+            "type": "string",
+            "enum": [
+              "pill",
+              "rounded",
+              "square",
+              "outline",
+              "soft"
+            ]
           }
         },
         "required": [

@@ -64,6 +64,10 @@
   --shared-ink: var(--foreground);
   --shared-ink-muted: var(--muted-foreground);
   --shared-accent: var(--primary);
+  /* The ink that reads on the accent — what a filled action sets its words in (2026-11-25). */
+  --shared-accent-ink: var(--primary-foreground);
+  /* The raised plane a quiet action stands on — the card, which every palette holds the ink to. */
+  --shared-surface: var(--card);
   --shared-rule: var(--border);
   --shared-gutter: var(--gutter);
   --background: oklch(1 0 0);
@@ -226,4 +230,41 @@
   [data-landing-mode="story"] [data-story-stage] { position: static; height: auto; overflow: visible; }
   [data-landing-mode="story"] [data-story-panel] { position: static; display: block; opacity: 1; visibility: visible; transform: none; overflow: visible; animation: none !important; }
   [data-story-navigation] { display: none; }
+}
+
+/* ── The landing's action wears the look the visitor chose (founder, 2026-11-25) ─────────────
+   `@tokenwise/shared-ui` ships every look as an `html[data-button="<id>"]` rule that sets five
+   variables (`<ThemeBootstrap buttons />`); the header's button steps through them and the pick
+   persists, as with the palette and the font. The action — the hero's and the closing band's,
+   marked `data-cta` — only reads the variables, so a new look in the package needs nothing
+   here. Unlayered on purpose: these rules win over the button's own utilities (`rounded-full`,
+   `bg-primary`), which is the point. The first look of each presentation is what it always
+   drew — a pill on the editorial page, `rounded` under story and document
+   (`initialButtonStyle`) — so a first visit sees the page as it was. */
+html[data-button] [data-cta] {
+  border-radius: var(--shared-button-radius);
+  border-color: var(--shared-button-edge);
+  background-color: var(--shared-button-bg);
+  color: var(--shared-button-ink);
+}
+@media (hover: hover) {
+  html[data-button] [data-cta]:hover {
+    background-color: var(--shared-button-bg-hover);
+  }
+}
+/* A look whose ground is the page's own lets a little of what lies under it through (the hero's
+   film): blurred, so its words stand on a calm ground. */
+html[data-button="outline"] [data-cta] {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+/* The shared sections' action (story, document) is padded for a rounded corner; drawn as a pill
+   its words need room at the round ends. The editorial action is padded for a pill already. */
+html:is([data-button="pill"], [data-button="outline"]) [data-cta]:not(.editorial-pill) {
+  padding-inline: 1.25rem;
+}
+/* The editorial action's glow is the accent's light; the two looks that are not filled with
+   the accent cast none. */
+html:is([data-button="outline"], [data-button="soft"]) [data-cta].editorial-pill {
+  box-shadow: none;
 }

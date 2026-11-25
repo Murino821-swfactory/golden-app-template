@@ -8,7 +8,7 @@ import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { IdeaChat } from "@/components/idea-chat";
-import { config } from "@/lib/prototype-config";
+import { config, initialButtonStyle } from "@/lib/prototype-config";
 import { landingMetadata } from "@/lib/seo";
 import { htmlAppearance } from "@/lib/theme-appearance";
 import { ThemeBootstrap } from "@tokenwise/shared-ui";
@@ -25,9 +25,9 @@ import { ThemeBootstrap } from "@tokenwise/shared-ui";
  * with no route to read. Both root layouts render this, so the shell still exists once.
  */
 
-// The visitor's palette and font are applied before the first paint by the package's
-// `ThemeBootstrap` (first child of <body>, the standard blocking-script slot in the App
-// Router), so a returning visitor never sees the customer's default flash first.
+// The visitor's palette, font and button look are applied before the first paint by the
+// package's `ThemeBootstrap` (first child of <body>, the standard blocking-script slot in the
+// App Router), so a returning visitor never sees the customer's default flash first.
 // Typefaces are self-hosted by `@tokenwise/shared-ui` — no next/font, no Google CDN.
 
 /**
@@ -72,19 +72,22 @@ export async function PrototypeShell({
     // below overrides it only for a visitor who chose differently on this device.
     // `data-font` works the same way: the face the config names for this prototype
     // (`patterns.landing.font`, 2026-10-26) — `inter` when it names none — for every first
-    // visit, the visitor's pick after that.
+    // visit, the visitor's pick after that. And so does `data-button` (2026-11-25), the look
+    // of the landing's action: the config's (`theme.button`), else the one this presentation
+    // always drew (`initialButtonStyle`).
     <html
       lang={locale}
       className={cn("font-sans", darkClass && "dark")}
       data-scheme={config.theme.colorScheme}
       data-appearance={dataAppearance}
       data-font={config.patterns.landing?.font ?? "inter"}
-      // ThemeBootstrap rewrites data-scheme / data-font before React hydrates; the
-      // mismatch is the point, not a bug.
+      data-button={initialButtonStyle(config)}
+      // ThemeBootstrap rewrites data-scheme / data-font / data-button before React hydrates;
+      // the mismatch is the point, not a bug.
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeBootstrap palettes appearance={config.theme.appearance} />
+        <ThemeBootstrap palettes buttons appearance={config.theme.appearance} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page
