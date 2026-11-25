@@ -156,6 +156,21 @@
     object-position: 78% 50%;
   }
 }
+/* A lit card on the light side (2026-11-25, the visitor's dark/light switch). A light card
+   cannot be lit any further, so the picture changes sides with the page: the same render turned
+   over — its light becomes ink, the black it stood on becomes white — and LAID ON the card
+   (`multiply`: the white vanishes, as the black does under `screen`). The palette's tint still
+   rides above the video (`editorial.css`), so "Change colour" re-inks it; no colour of its own.
+   Held at 70 %: at full strength the hottest light of a render is near-black ink, and where a
+   narrow card's words cross the picture, dark words on it read worse than light words do on
+   the light. */
+[data-appearance="light"] [data-presentation="editorial"] .editorial-light-card {
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+}
+[data-appearance="light"] [data-presentation="editorial"] .editorial-light-card video {
+  filter: invert(1);
+}
 
 /* The manifesto on a bright panel: the pin's height, breathing 5rem beyond it at both ends. */
 [data-presentation="editorial"] .editorial-manifesto-pin {

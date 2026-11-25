@@ -696,7 +696,10 @@ the dark rules as `html[data-scheme="x"]`, the light ones as
 the token layer flips the whole site. One contract, three writers (`lib/theme-appearance.ts` for
 the first visit, the switch's `appearanceStore`, the bootstrap script): dark is shadcn's `.dark`
 class and no light mark; light is `data-appearance="light"` and no `.dark`. Under the light mark
-the Blender light loops (made for a dark ground) stand down (`editorial.css`), and a hero film's
+the Blender light loops that are light across a section (made for a dark ground: the hero's
+backlight, the closing ribbons) stand down (`editorial.css`); a card's picture changes sides
+instead — the same render turned over and laid on the card as ink (`multiply`, held at 70 %,
+`stage.css`), so a card's "Change image" shows on both sides — and a hero film's
 veil lies denser with the second line in full ink (`stage.css`). A new rule that only suits one
 side is keyed by `[data-appearance="light"]`, never by a colour. Tests:
 `tests/appearance.spec.ts` (the switch, both sides, persistence, no flash, the phone menu),
