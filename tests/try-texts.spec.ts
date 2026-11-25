@@ -21,12 +21,13 @@ const EDITABLE = "[contenteditable='plaintext-only']";
 const TEXTS = "[data-hero-try] button[data-try='texts']";
 
 /** The words the page shows that the visitor cannot type into. The test's own reading of "any
- * text on the page": every rendered run of words outside the controls — the try-it keys and the
- * dock, the header's tools, dialogs, form fields, the map. */
+ * text on the page": every rendered run of words outside the controls — the try-it keys (the two
+ * bars and each feature card's own picture key) and the dock, the header's tools, dialogs, form
+ * fields, the map. */
 function outOfReach(page: Page): Promise<string[]> {
   return page.evaluate((editable) => {
     const CONTROLS =
-      "[data-try-bar], [data-try-dock], [data-shared-control], header button, [role='dialog'], [data-pattern='map-base'], input, textarea, select, script, style, noscript, svg, .sr-only";
+      "[data-try-bar], [data-try-key], [data-try-dock], [data-shared-control], header button, [role='dialog'], [data-pattern='map-base'], input, textarea, select, script, style, noscript, svg, .sr-only";
     const missed: string[] = [];
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     for (let node = walker.nextNode(); node; node = walker.nextNode()) {
@@ -75,6 +76,12 @@ test.describe("\"Change texts\" — every text on the page", () => {
     // The page's own controls stay controls: the keys that started this, and the header's tools.
     await expect(page.locator(`[data-try-bar] ${EDITABLE}`)).toHaveCount(0);
     await expect(page.locator(`[data-shared-control] ${EDITABLE}, [data-shared-control]${EDITABLE}`)).toHaveCount(0);
+    // So does each feature card's own "Change image" key: a try-it key, not a text of the page.
+    if (sections.includes("features")) {
+      const keys = page.locator('[data-section="features"] [data-bento] button[data-try="image"]');
+      await expect(keys).not.toHaveCount(0);
+      await expect(page.locator(`[data-bento] button[data-try="image"]${EDITABLE}, [data-bento] button[data-try="image"] ${EDITABLE}`)).toHaveCount(0);
+    }
   });
 
   test("both buttons show the one state, and the dock is the way out once the keys are out of sight", async ({ page }) => {

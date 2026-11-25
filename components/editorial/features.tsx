@@ -3,7 +3,7 @@
 import { useState, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { useContent } from "@/hooks/use-content";
-import { CARD_LOOPS, bentoSpan, nextCardLoop, type CardLoopName } from "@/lib/editorial";
+import { bentoSpan, changeCardLoop, initialCardLoop, type CardLoopName } from "@/lib/editorial";
 import { ICONS } from "@/lib/icons";
 import { config } from "@/lib/prototype-config";
 import type { Feature } from "@/lib/prototype-config";
@@ -26,10 +26,15 @@ import { DISPLAY_H2, Numeral, SectionHead, Words } from "./ui";
  * zones (`stage.css`).
  *
  * T-460 (the visitor's own hands, `try-it.tsx`): with `patterns.landing.tryIt` the section offers
- * the hero's two buttons under its heading — "Change image" gives the first card the next loop of
- * the library (`CARD_LOOPS`), "Change texts" is the page's one editing (every text of the page
- * editable in place, the caret in this heading). Browser only; no icons on the buttons, because
- * the section's `svg`s are counted.
+ * the hero's two buttons under its heading — "Change image" gives every card the next loop of the
+ * library (`CARD_LOOPS`), "Change texts" is the page's one editing (every text of the page
+ * editable in place, the caret in this heading). Every card also carries its own "Change image"
+ * key (founder, 2026-11-25: every card's picture changes like the first card's): a plain card
+ * gains a picture, a card that has one takes the next (`changeCardLoop`). The key stays a key
+ * while the texts are edited (`data-try-key`, `lib/text-edit.ts`). At rest the page is the one
+ * every prototype shows — the device in the first card only (`initialCardLoop`) — so no visitor
+ * downloads a loop they did not ask for. Browser only; no icons on the buttons, because the
+ * section's `svg`s are counted.
  *
  * Contract kept from the shared features section: the configured heading is the only
  * `h2`, and the section draws exactly one `svg` per feature with an icon (the numerals, the
@@ -44,14 +49,19 @@ const TRANSLATION_FALLBACK: Feature[] = [
 
 export function FeaturesSection() {
   const t = useTranslations("features");
+  const tl = useTranslations("landing");
   const content = useContent();
   const landing = content.landing;
   const features = landing?.features ?? TRANSLATION_FALLBACK;
   const manifesto = landing?.manifesto;
   const leadWords = manifesto ? manifesto.lead.split(" ").length : 0;
   const tryIt = config.patterns.landing?.tryIt === true;
-  const [cardLoop, setCardLoop] = useState<CardLoopName>(CARD_LOOPS[0]);
+  // The pictures the visitor changed, by card; a card that is not here wears what it started with.
+  const [changed, setChanged] = useState<Readonly<Record<number, CardLoopName>>>({});
   const { editing, here, toggle } = useTextEditing("features");
+  const loopOf = (pictures: Readonly<Record<number, CardLoopName>>, i: number) => pictures[i] ?? initialCardLoop(i);
+  const changeCard = (i: number) => setChanged((was) => ({ ...was, [i]: changeCardLoop(loopOf(was, i), i) }));
+  const changeEveryCard = () => setChanged((was) => Object.fromEntries(features.map((_, i) => [i, changeCardLoop(loopOf(was, i), i)])));
 
   return (
     <section id="features" data-section="features" className="scroll-mt-24 relative mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
@@ -60,7 +70,7 @@ export function FeaturesSection() {
         {tryIt && (
           <TryBar
             icons={false}
-            onImage={() => setCardLoop(nextCardLoop(cardLoop))}
+            onImage={changeEveryCard}
             editing={editing}
             onTexts={toggle}
             hint={editing ? "tryTextsHint" : null}
@@ -72,17 +82,20 @@ export function FeaturesSection() {
         {features.map((feature, i) => {
           const Icon = feature.icon ? ICONS[feature.icon] : null;
           const span = bentoSpan(i, features.length);
+          const loop = loopOf(changed, i);
           return (
             <li
               key={feature.title + i}
               data-span={span.wide ? "wide" : "one"}
+              data-lit={loop ? "" : undefined}
               data-reveal
               style={{ "--i": i % 3 } as CSSProperties}
-              className={cn("editorial-card relative overflow-clip rounded-3xl p-6 sm:p-8", span.className)}
+              className={cn("editorial-card relative overflow-clip rounded-3xl p-6 sm:p-8", tryIt && "editorial-card-try flex flex-col", span.className)}
             >
               {/* T-368 stage: the first card holds the product as an object — a device rendered
-                  in Blender, turning under a light (`stage.css` keeps it on the card's far side). */}
-              {i === 0 && <LightLoop key={cardLoop} name={cardLoop} marker="data-card-light" className="editorial-light-card" />}
+                  in Blender, turning under a light (`stage.css` keeps it on the card's far side).
+                  On the golden demo any card can be given one (`data-lit`, the card's own key). */}
+              {loop && <LightLoop key={loop} name={loop} marker="data-card-light" className="editorial-light-card" />}
               <Numeral index={i} className="absolute right-5 top-4" />
               {Icon && <Icon className="size-6 text-primary" aria-hidden />}
               <EditableText
@@ -97,6 +110,22 @@ export function FeaturesSection() {
                 text={feature.description}
                 className={cn("mt-2 max-w-prose text-sm text-muted-foreground sm:text-base", span.wide && "lg:max-w-xl")}
               />
+              {/* The card's own key, at its foot: the card is a column so the keys of one row
+                  stand on one line whatever the length of the words above them. */}
+              {tryIt && (
+                <div className="mt-auto pt-6">
+                  <button
+                    type="button"
+                    data-try="image"
+                    data-try-key
+                    aria-label={`${tl("tryImage")} ${String(i + 1).padStart(2, "0")}`}
+                    className="editorial-try-button"
+                    onClick={() => changeCard(i)}
+                  >
+                    {tl("tryImage")}
+                  </button>
+                </div>
+              )}
             </li>
           );
         })}

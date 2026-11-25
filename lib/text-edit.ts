@@ -57,8 +57,9 @@ export const textEdit = {
 
 /* ── Which elements are lines ── */
 
-/** The keys that start and end the editing. A line never holds them, or they could not be pressed. */
-const KEYS = "[data-try-bar], [data-try-dock]";
+/** The try-it keys: those that start and end the editing, and a feature card's own "Change image"
+ * (`data-try-key`). A line never holds them, or they could not be pressed. */
+const KEYS = "[data-try-bar], [data-try-key], [data-try-dock]";
 
 /** What stays a control while the visitor edits: those keys, the header's tools (colour, font,
  * language, sign-in), dialogs, the map (its attribution is not the page's to rewrite), form

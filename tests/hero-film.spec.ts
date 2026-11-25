@@ -3,7 +3,7 @@ import { existsSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { config, landingPresentation, prototypeConfigSchema } from "../lib/prototype-config";
 import { FILM_BUDGET_BYTES, FILM_SMALL_QUERY, HERO_FILMS, heroFilm, heroFilmFiles, heroFilmHold, nextHeroFilm, type HeroFilmName } from "../lib/hero-film";
-import { CARD_LOOPS, nextCardLoop } from "../lib/editorial";
+import { CARD_LOOPS, MOTION_SMALL_QUERY, changeCardLoop, initialCardLoop, motionLoop, nextCardLoop, type CardLoopName } from "../lib/editorial";
 
 /**
  * The hero film (T-460, 2026-11-17, after the cinematic landings of wismeo and PropCheck): real
@@ -75,6 +75,31 @@ test.describe("hero film — pure rules", () => {
     }
     expect(seen.size).toBe(CARD_LOOPS.length);
     expect(loop).toBe("stage-slab");
+  });
+
+  test("every feature card has a picture of its own: the first starts on the stage's device, the others plain, and cards changed together never wear their neighbour's loop", () => {
+    expect(initialCardLoop(0)).toBe("stage-slab");
+    for (let i = 1; i < 6; i++) expect(initialCardLoop(i)).toBeNull();
+    // A card that wears a loop walks the library exactly as the first card always did.
+    for (const loop of CARD_LOOPS) for (let i = 0; i < 6; i++) expect(changeCardLoop(loop, i)).toBe(nextCardLoop(loop));
+    // "Change image" under the heading changes every card at once: after any number of presses
+    // every card wears a loop of the library and none wears the loop of the card before it.
+    let row: (CardLoopName | null)[] = Array.from({ length: 6 }, (_, i) => initialCardLoop(i));
+    for (let press = 1; press <= CARD_LOOPS.length * 2; press++) {
+      row = row.map((loop, i) => changeCardLoop(loop, i));
+      for (let i = 0; i < row.length; i++) {
+        expect(CARD_LOOPS, `press ${press}, card ${i + 1}`).toContain(row[i]);
+        if (i > 0) expect(row[i], `press ${press}, card ${i + 1}`).not.toBe(row[i - 1]);
+      }
+    }
+    // A plain card pressed on its own comes round to every loop of the library.
+    const seen = new Set<string>();
+    let own = initialCardLoop(2);
+    for (let i = 0; i < CARD_LOOPS.length; i++) {
+      own = changeCardLoop(own, 2);
+      seen.add(own);
+    }
+    expect(seen.size).toBe(CARD_LOOPS.length);
   });
 
   test("every film ships encoded and inside the budget", () => {
@@ -228,9 +253,14 @@ test.describe("hero film — the visitor changes the page with their own hands",
     await page.goto("./");
     await expect(page.locator("[data-hero-try]")).toHaveCount(0);
     await expect(page.locator("[data-try-bar]")).toHaveCount(0);
+    // Nor a key on any card: only the first card wears a picture, the stage's device.
+    await expect(page.locator("button[data-try]")).toHaveCount(0);
+    const lights = page.locator("[data-bento] [data-card-light]");
+    await expect(lights).toHaveCount(sections.includes("features") ? 1 : 0);
+    if (sections.includes("features")) await expect(lights).toHaveAttribute("data-loop", CARD_LOOPS[0]);
   });
 
-  test("features: the same two buttons — the first card's picture changes and every text can be retyped", async ({ page }) => {
+  test("features: the same two buttons — the cards' pictures change and every text can be retyped", async ({ page }) => {
     test.skip(!TRY || !sections.includes("features"), "no try-it buttons over features in this config");
     const api: string[] = [];
     page.on("request", (req) => {
@@ -242,7 +272,8 @@ test.describe("hero film — the visitor changes the page with their own hands",
     const card = features.locator("[data-bento] > li").first();
     const light = card.locator("[data-card-light]");
     await expect(light).toHaveAttribute("data-loop", CARD_LOOPS[0]);
-    // "Change image": the first card wears the next loop of the library.
+    // "Change image": the first card wears the next loop of the library (and every other card
+    // its own — the next test).
     await bar.locator("button[data-try='image']").click();
     await expect(light).toHaveAttribute("data-loop", CARD_LOOPS[1]);
     await expect(light).toHaveCount(1);
@@ -254,6 +285,10 @@ test.describe("hero film — the visitor changes the page with their own hands",
     const title = card.locator("h3");
     await expect(title).toHaveAttribute("contenteditable", "plaintext-only");
     await expect(card.locator("p")).toHaveAttribute("contenteditable", "plaintext-only");
+    const cards = features.locator("[data-bento] > li");
+    const count = await cards.count();
+    await expect(cards.locator("h3[contenteditable='plaintext-only']")).toHaveCount(count);
+    await expect(cards.locator("p[contenteditable='plaintext-only']")).toHaveCount(count);
     await title.click();
     await page.keyboard.press("ControlOrMeta+A");
     await page.keyboard.type("Open every day");
@@ -263,6 +298,87 @@ test.describe("hero film — the visitor changes the page with their own hands",
     // The section's contract holds: one heading, and no svg beyond the configured icons.
     await expect(features.locator("h2")).toHaveCount(1);
     await expect(features.locator("[data-try-bar] svg")).toHaveCount(0);
+    expect(api).toEqual([]);
+  });
+
+  test("features: every card has its own \"Change image\" key — a plain card gains a picture, the button under the heading changes them all", async ({ page }) => {
+    test.skip(!TRY || !sections.includes("features"), "no try-it buttons over features in this config");
+    const api: string[] = [];
+    page.on("request", (req) => {
+      if (new URL(req.url()).pathname.includes("/api/")) api.push(req.url());
+    });
+    await page.goto("./");
+    const features = page.locator('[data-section="features"]');
+    const cards = features.locator("[data-bento] > li");
+    const count = await cards.count();
+    test.skip(count < 2, "a single card: the button under the heading already changes it");
+    const light = (i: number) => cards.nth(i).locator("[data-card-light]");
+    const key = (i: number) => cards.nth(i).locator("button[data-try='image']");
+
+    // One key in every card, a touch target, each saying which card it changes.
+    const keys = cards.locator("button[data-try='image']");
+    await expect(keys).toHaveCount(count);
+    for (let i = 0; i < count; i++) await expect(key(i)).toHaveCount(1);
+    for (const height of await keys.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))) expect(height).toBeGreaterThanOrEqual(44);
+    const names = await keys.evaluateAll((els) => els.map((el) => el.getAttribute("aria-label") ?? ""));
+    expect(new Set(names).size).toBe(count);
+    for (const name of names) expect(name.length).toBeGreaterThan(0);
+
+    // At rest the page is the one every prototype shows: the device in the first card only.
+    await expect(light(0)).toHaveAttribute("data-loop", CARD_LOOPS[0]);
+    for (let i = 1; i < count; i++) await expect(light(i)).toHaveCount(0);
+
+    // The last card's own key: that card gains a picture — drawn like the first card's (inside
+    // the card, under its words, screened onto the palette) — and no other card changes.
+    const last = count - 1;
+    let own = changeCardLoop(initialCardLoop(last), last);
+    await key(last).click();
+    await expect(light(last)).toHaveCount(1);
+    await expect(light(last)).toHaveAttribute("data-loop", own);
+    await expect(light(last)).toHaveAttribute("aria-hidden", "true");
+    const small = await page.evaluate((query) => window.matchMedia(query).matches, MOTION_SMALL_QUERY);
+    const file = motionLoop(BASE, own).sources[0]!;
+    await expect(light(last).locator("video source").first()).toHaveAttribute("src", small ? file.small : file.src);
+    expect(await light(last).evaluate((el) => getComputedStyle(el).mixBlendMode)).toBe("screen");
+    expect(await cards.nth(last).evaluate((el) => getComputedStyle(el).isolation)).toBe("isolate");
+    await expect(light(0)).toHaveAttribute("data-loop", CARD_LOOPS[0]);
+    for (let i = 1; i < last; i++) await expect(light(i)).toHaveCount(0);
+    // Pressed again it walks on through the library.
+    own = changeCardLoop(own, last);
+    await key(last).click();
+    await expect(light(last)).toHaveAttribute("data-loop", own);
+
+    // The button under the heading changes every card at once.
+    await features.locator("[data-try-bar] button[data-try='image']").click();
+    for (let i = 0; i < count; i++) {
+      await expect(light(i)).toHaveCount(1);
+      await expect(light(i)).toHaveAttribute("data-loop", changeCardLoop(i === last ? own : initialCardLoop(i), i));
+    }
+
+    // And the words of the last card can be retyped like the first card's.
+    const texts = features.locator("[data-try-bar] button[data-try='texts']");
+    await texts.click();
+    const words = cards.nth(last).locator("p");
+    await expect(words).toHaveAttribute("contenteditable", "plaintext-only");
+    await words.click();
+    await page.keyboard.press("ControlOrMeta+A");
+    await page.keyboard.type("Baked before six");
+    // While the texts are edited every text of the page is a line (tests/try-texts.spec.ts) — but
+    // a card's key stays a key, like the two under the heading: it is not typed into, it acts.
+    await expect(cards.locator("button[data-try='image'][contenteditable], button[data-try='image'] [contenteditable]")).toHaveCount(0);
+    const worn = await light(0).getAttribute("data-loop");
+    await key(0).click();
+    await expect(light(0)).not.toHaveAttribute("data-loop", worn!);
+    await expect(key(0)).toHaveText(await key(1).innerText());
+    await texts.click();
+    await expect(words).not.toHaveAttribute("contenteditable", /.+/);
+    await expect(words).toHaveText("Baked before six");
+
+    // Keys, not links, and no icon on them: the section's svgs are counted. Nothing left the browser.
+    await expect(cards.locator("a")).toHaveCount(0);
+    await expect(cards.locator("button svg")).toHaveCount(0);
+    await expect(features.locator("h2")).toHaveCount(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(await page.evaluate(() => window.innerWidth));
     expect(api).toEqual([]);
   });
 
