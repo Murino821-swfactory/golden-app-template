@@ -17,7 +17,8 @@ import { localePath, routeFromPathname } from "@/lib/locale-routing";
  * nav moved to the footer (founder decision 2026-10-26), so no `siteOrigin` is passed here
  * and the package renders no nav, in the bar or in the phone menu. The customer's name is
  * in the footer, the `<title>` and the page (it used to be the logo). The controls —
- * palette, font, language, cart, the prototype's own sign-in — stay the prototype's.
+ * palette, font, appearance (dark or light), language, cart, the prototype's own sign-in —
+ * stay the prototype's.
  *
  * The cart opens tokenwise.sk's token window (`/pricing?buy=1`): the one place tokens are
  * bought, priced by its server; payment needs a tokenwise.sk sign-in and the tokens go
@@ -53,6 +54,10 @@ const LABEL_KEYS = [
   "changeColourLabel",
   "font",
   "changeFontLabel",
+  "appearance",
+  "changeAppearanceLabel",
+  "appearanceDark",
+  "appearanceLight",
   "language",
   "cart",
   "cartLabel",
@@ -87,6 +92,9 @@ export function Header() {
       // document said otherwise left the switcher believing "inter" until hydration
       // finished; a click in that window stepped from the wrong face (PR D).
       font={config.patterns.landing?.font ?? "inter"}
+      // The side a first visit opens on — the same value `app/shell.tsx` themes <html> with.
+      // Passing it is what puts the dark/light switch in the bar (founder, 2026-11-25).
+      appearance={config.theme.appearance}
       languages={config.locales.map((id) => ({
         code: id,
         name: LOCALE_NAMES[id] ?? id,
