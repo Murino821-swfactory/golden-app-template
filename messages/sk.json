@@ -20,6 +20,8 @@
     "button": "Tlačidlo",
     "changeButton": "Zmeniť tlačidlo",
     "changeButtonLabel": "Zmeniť tlačidlo: {name} ({position} z {total})",
+    "imageTransparency": "Priehľadnosť obrázka",
+    "changeImageTransparencyLabel": "Zmeniť priehľadnosť obrázka: {value} % ({position} z {total})",
     "cart": "Košík",
     "cartLabel": "Košík, položiek: {count}",
     "cartEmpty": "Košík je prázdny",

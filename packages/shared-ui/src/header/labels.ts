@@ -28,6 +28,10 @@ export interface HeaderLabels {
   button: string;
   /** `{name}`, `{position}`, `{total}`. */
   changeButtonLabel: string;
+  /** The menu row of the picture's transparency, as `font` is the font's. */
+  imageTransparency: string;
+  /** `{value}` — the step on screen, 0 to 100 — `{position}`, `{total}`. */
+  changeImageTransparencyLabel: string;
   language: string;
   cart: string;
   /** `{count}`. */
@@ -54,6 +58,8 @@ export const DEFAULT_LABELS: HeaderLabels = {
   appearanceLight: "Light",
   button: "Button",
   changeButtonLabel: "Change button: {name} ({position} of {total})",
+  imageTransparency: "Image transparency",
+  changeImageTransparencyLabel: "Change image transparency: {value} % ({position} of {total})",
   language: "Language",
   cart: "Cart",
   cartLabel: "Cart, {count} items",

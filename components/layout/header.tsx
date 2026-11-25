@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { Header as SharedHeader, type HeaderLabels } from "@tokenwise/shared-ui";
+import { DEFAULT_IMAGE_TRANSPARENCY, Header as SharedHeader, type HeaderLabels } from "@tokenwise/shared-ui";
 import { useAuth } from "@/hooks/use-auth";
 import { config, initialButtonStyle } from "@/lib/prototype-config";
 import { localePath, routeFromPathname } from "@/lib/locale-routing";
@@ -60,6 +60,8 @@ const LABEL_KEYS = [
   "appearanceLight",
   "button",
   "changeButtonLabel",
+  "imageTransparency",
+  "changeImageTransparencyLabel",
   "language",
   "cart",
   "cartLabel",
@@ -100,6 +102,10 @@ export function Header() {
       // The look the landing's action opens in — the same value `app/shell.tsx` puts on
       // <html data-button>, for the same reason as the font above.
       button={initialButtonStyle(config)}
+      // The step the hero's picture opens on — the same value `app/shell.tsx` puts on
+      // <html data-image-transparency>. Passing it is what puts the control in the bar
+      // (founder, 2026-11-25).
+      imageTransparency={DEFAULT_IMAGE_TRANSPARENCY}
       languages={config.locales.map((id) => ({
         code: id,
         name: LOCALE_NAMES[id] ?? id,

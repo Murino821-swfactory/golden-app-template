@@ -20,6 +20,8 @@
     "button": "Bouton",
     "changeButton": "Changer de bouton",
     "changeButtonLabel": "Changer de bouton : {name} ({position} sur {total})",
+    "imageTransparency": "Transparence de l'image",
+    "changeImageTransparencyLabel": "Changer la transparence de l'image : {value} % ({position} sur {total})",
     "cart": "Panier",
     "cartLabel": "Panier, {count} articles",
     "cartEmpty": "Votre panier est vide",

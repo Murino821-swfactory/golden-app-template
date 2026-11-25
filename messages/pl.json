@@ -20,6 +20,8 @@
     "button": "Przycisk",
     "changeButton": "Zmień przycisk",
     "changeButtonLabel": "Zmień przycisk: {name} ({position} z {total})",
+    "imageTransparency": "Przezroczystość obrazu",
+    "changeImageTransparencyLabel": "Zmień przezroczystość obrazu: {value} % ({position} z {total})",
     "cart": "Koszyk",
     "cartLabel": "Koszyk, pozycje: {count}",
     "cartEmpty": "Twój koszyk jest pusty",
