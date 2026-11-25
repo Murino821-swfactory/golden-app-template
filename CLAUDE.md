@@ -822,8 +822,15 @@ copy contract, same `data-section` markers — the suites that read the page kee
   **Try-it** (`patterns.landing.tryIt: true`, the golden demo only — the content call never sets
   it): `components/editorial/try-it.tsx`. `TryBar` is two buttons for every visitor, under the
   hero's action and under the features heading: "Change image" (hero: the next film,
-  `nextHeroFilm`; features: the first card's next loop, `CARD_LOOPS` / `nextCardLoop` in
-  `lib/editorial.ts`) and "Change texts" (every text of the page — see below). **In the hero the controls are the product frame's
+  `nextHeroFilm`; features: every card's next loop, `CARD_LOOPS` / `changeCardLoop` in
+  `lib/editorial.ts`) and "Change texts" (every text of the page — see below). **Every feature
+  card also carries its own "Change image" key** (founder, 2026-11-25: every card's picture
+  changes like the first card's): a plain card gains a picture, a card that has one takes the
+  next. At rest only the first card wears one (`initialCardLoop`), so the page opens as every
+  prototype does and no visitor downloads a loop they did not ask for; a card with a picture is
+  `li[data-lit]` (`stage.css`), and on the demo its words wear a halo of the card's ground
+  (`.editorial-card-try`). The key is marked `data-try-key`, so it stays a key while the texts
+  are edited (`KEYS` in `lib/text-edit.ts`). **In the hero the controls are the product frame's
   control pad** (`TryPad`, founder 2026-11-18: "the page's control panel"): three touch keys under
   the frame's title bar — picture, words and colour (the colour key presses the shared header's
   palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside

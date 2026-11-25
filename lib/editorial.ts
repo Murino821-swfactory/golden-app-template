@@ -157,16 +157,34 @@ export type HeroLoopName = (typeof HERO_LOOPS)[number];
 export const DEFAULT_HERO_LOOP: HeroLoopName = "stage-field";
 
 /**
- * The loops the first feature card can wear (T-460): the stage's device first — what every page
- * shows — then the library's other motifs, which the golden demo's "Change image" walks through
- * (`components/editorial/features.tsx`). All are rendered already; nothing new ships.
+ * The loops a feature card can wear (T-460): the stage's device first — what every page shows in
+ * its first card — then the library's other motifs, which the golden demo's "Change image" walks
+ * through (`components/editorial/features.tsx`). All are rendered already; nothing new ships.
  */
 export const CARD_LOOPS = ["stage-slab", "orbit-tiles", "pulse-ring", "data-lines", "horizon-sweep"] as const satisfies readonly MotionLoopName[];
 export type CardLoopName = (typeof CARD_LOOPS)[number];
 
-/** The next loop for the first card, round and round. Pure. */
+/** The next loop for a card that wears one, round and round. Pure. */
 export function nextCardLoop(current: CardLoopName): CardLoopName {
   return CARD_LOOPS[(CARD_LOOPS.indexOf(current) + 1) % CARD_LOOPS.length]!;
+}
+
+/**
+ * What a feature card wears before anyone changed it: the stage's device in the first card — the
+ * page every prototype shows — and no picture in the others. Pure.
+ */
+export function initialCardLoop(index: number): CardLoopName | null {
+  return index === 0 ? CARD_LOOPS[0] : null;
+}
+
+/**
+ * "Change image" for one card (founder, 2026-11-25: every card's picture can be changed, not only
+ * the first's). A card that wears a loop takes the next of the library; a plain card enters the
+ * library one loop after its own place in the bento — so cards changed together, by the button
+ * under the heading, never wear their neighbour's loop. Pure.
+ */
+export function changeCardLoop(current: CardLoopName | null, index: number): CardLoopName {
+  return current === null ? CARD_LOOPS[(index + 1) % CARD_LOOPS.length]! : nextCardLoop(current);
 }
 
 /** The hero backlight a config names, or the stage board when it names none (or something stale). Pure. */

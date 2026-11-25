@@ -18,7 +18,7 @@
  * motion behind `@supports` and `prefers-reduced-motion`; `overflow: clip`, never hidden.
  */
 
-/* ── The device in the first card fills it; the card is isolated so the light stays inside ── */
+/* ── The device in a lit card fills it; the card is isolated so the light stays inside ── */
 .editorial-light-card {
   inset: 0;
 }
@@ -130,9 +130,10 @@
   }
 }
 
-/* The device in the first card: under the words on a phone (the card grows to hold it), on
-   the card's far side from 640px, where the words keep the near side. */
-[data-presentation="editorial"] [data-bento] > li:first-child {
+/* The device in a lit card (`data-lit`: the first card on every page, and on the golden demo any
+   card the visitor gave a picture with its own key): under the words on a phone (the card grows
+   to hold it), on the card's far side from 640px, where the words keep the near side. */
+[data-presentation="editorial"] [data-bento] > li[data-lit] {
   isolation: isolate;
   min-height: 26rem;
 }
@@ -144,7 +145,7 @@
   object-position: 50% 100%;
 }
 @media (min-width: 640px) {
-  [data-presentation="editorial"] [data-bento] > li:first-child {
+  [data-presentation="editorial"] [data-bento] > li[data-lit] {
     min-height: 22rem;
   }
   [data-presentation="editorial"] .editorial-light-card {
@@ -426,6 +427,13 @@
 /* Under a section's heading (features) the bar keeps a little air above it. */
 [data-presentation="editorial"] [data-section="features"] .editorial-try {
   margin-top: 0.5rem;
+}
+/* A card with its own key (the golden demo) can wear any loop of the library, also where the
+   card is narrow and the words cross the picture: they take the hero copy's answer to a picture
+   behind words — a halo of the ground they stand on, here the card's — not a tint over it. */
+[data-presentation="editorial"] .editorial-card-try[data-lit] :is(h3, p) {
+  --card-ground: color-mix(in oklab, var(--card) 85%, var(--background));
+  text-shadow: 0 1px 2px var(--card-ground), 0 0 10px var(--card-ground), 0 0 22px var(--card-ground);
 }
 
 /* ── "Change texts" on the whole page (2026-11-24, `lib/text-edit.ts`): while the visitor edits,
