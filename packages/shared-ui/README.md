@@ -2,8 +2,8 @@
 
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
 logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
-page's action, 0.9.0), **language**, **cart** and **user**. A change to the header is one PR
-here.
+page's action, 0.9.0), **image transparency** (the page's picture, 0 to 100 % in tens, 0.10.0),
+**language**, **cart** and **user**. A change to the header is one PR here.
 
 Colour, font, button, language, cart and sign-in are icons with no visible words — a colour
 wheel, `Aa`, a small action in the look on screen, a globe, a cart, a figure (founder decision
@@ -39,9 +39,10 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    @theme inline { --font-sans: var(--shared-font-sans); }
    ```
    Without `@source` the header renders unstyled and nothing fails.
-3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]>`,
-   and `<ThemeBootstrap palettes? buttons? />` as the **first child of `<body>`** — it applies a
-   returning visitor's palette, appearance, font and button look before the first paint. Put
+3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]
+   [data-image-transparency="0"]>`, and `<ThemeBootstrap palettes? buttons? imageTransparency? />`
+   as the **first child of `<body>`** — it applies a returning visitor's palette, appearance,
+   font, button look and picture transparency before the first paint. Put
    `suppressHydrationWarning` on `<html>`: the script changes those attributes (and the `.dark`
    class) before React hydrates, on purpose.
    **Dark and light (founder decision 2026-11-25: the dark-only rule is dropped).** With
@@ -64,6 +65,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   font="inter"                      // same id as <html data-font>
   appearance="dark"                 // the side <html> opens on; omit: no dark/light switch
   button="glow"                     // same id as <html data-button>; omit: no button switcher
+  imageTransparency="0"             // same step as <html data-image-transparency>; omit: no control
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"
@@ -120,6 +122,20 @@ Adding a look is one entry in `BUTTON_STYLES` and its rules in `buttons.css`.
 `test/button-styles.test.ts` fails on a look without them, on a colour of its own and on an
 animation outside the motion block; the template's `tests/button-style.spec.ts` holds every look
 to WCAG AA on every palette, at rest and pressed.
+
+## The picture's transparency (0.10.0)
+
+One button makes the page's picture ten per cent more transparent on every click — 0, 10, … 100,
+then 0 again (founder, 2026-11-25). Its icon is a picture in a frame that fades with the page's;
+below 1024px it is a row of the menu, "Image transparency: 30 %". The step is
+`html[data-image-transparency]` and `localStorage.imageTransparency`
+(`IMAGE_TRANSPARENCY_STEPS`, `imageTransparencyStore`).
+
+The package only steps and stores. **What fades is the host's**: it passes `imageTransparency`
+to `<Header>`, puts the same step on `<html>`, turns `<ThemeBootstrap imageTransparency />` on,
+and keys its own picture's rules by the attribute. The template lays that much of the page's
+ground over the hero's film or still scene (`components/editorial/stage.css`). A host that
+passes nothing has no control.
 
 ## Adding a font
 

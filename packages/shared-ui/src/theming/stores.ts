@@ -1,6 +1,7 @@
 import { BUTTON_STYLE_IDS, type ButtonStyleId } from "./button-styles";
 import { APPEARANCES, COLOR_SCHEME_IDS, type Appearance, type ColorSchemeId } from "./color-schemes";
 import { FONT_IDS, type FontId } from "./font-families";
+import { IMAGE_TRANSPARENCY_STEPS, type ImageTransparency } from "./image-transparency";
 import { createAttributeStore } from "./theme-store";
 
 /** Key and event unchanged from the template's pre-package switcher: a visitor's stored
@@ -39,4 +40,13 @@ export const buttonStore = createAttributeStore<ButtonStyleId>({
   storageKey: "button",
   event: "button-change",
   ids: BUTTON_STYLE_IDS,
+});
+
+/** How transparent the page's picture is (2026-11-25): `html[data-image-transparency]`, a
+ * step from 0 to 100 in tens, stored like the others. */
+export const imageTransparencyStore = createAttributeStore<ImageTransparency>({
+  attribute: "imageTransparency",
+  storageKey: "imageTransparency",
+  event: "image-transparency-change",
+  ids: IMAGE_TRANSPARENCY_STEPS,
 });

@@ -309,6 +309,39 @@
     );
   }
 }
+/* The picture's transparency (founder, 2026-11-25): a button in the header steps how much of
+   the hero's picture — a film or a still scene — shows. 0 % is the picture as the page draws
+   it; each step lays ten per cent more of the page's own ground over it; at 100 % none of it
+   is left. The picture lies on `--background`, so a layer of `--background` at that opacity IS
+   the picture at the remaining opacity — and, unlike an opacity on the picture itself, it
+   leaves the poster-and-video pair alone (two half-clear layers of one scene would show a
+   ghost) and the scroll's own fade. The step is `html[data-image-transparency]` (shared-ui's
+   store, `ThemeBootstrap` before the first paint); the veil that keeps the words readable
+   stays as it is, under this layer. Follows "Change colour" and dark/light: no colour of its
+   own. */
+html[data-image-transparency="10"] [data-presentation="editorial"] { --image-transparency: 0.1; }
+html[data-image-transparency="20"] [data-presentation="editorial"] { --image-transparency: 0.2; }
+html[data-image-transparency="30"] [data-presentation="editorial"] { --image-transparency: 0.3; }
+html[data-image-transparency="40"] [data-presentation="editorial"] { --image-transparency: 0.4; }
+html[data-image-transparency="50"] [data-presentation="editorial"] { --image-transparency: 0.5; }
+html[data-image-transparency="60"] [data-presentation="editorial"] { --image-transparency: 0.6; }
+html[data-image-transparency="70"] [data-presentation="editorial"] { --image-transparency: 0.7; }
+html[data-image-transparency="80"] [data-presentation="editorial"] { --image-transparency: 0.8; }
+html[data-image-transparency="90"] [data-presentation="editorial"] { --image-transparency: 0.9; }
+html[data-image-transparency="100"] [data-presentation="editorial"] { --image-transparency: 1; }
+[data-presentation="editorial"] .editorial-film::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--background);
+  opacity: var(--image-transparency, 0);
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-presentation="editorial"] .editorial-film::before {
+    transition: opacity 200ms var(--editorial-ease);
+  }
+}
 /* The stage ends high enough for the frame's title bar and control pad to stand in the first
    screen: what a visitor can change is in reach before any scroll. */
 [data-presentation="editorial"] [data-hero-layout="film"] .editorial-hero-stage {
