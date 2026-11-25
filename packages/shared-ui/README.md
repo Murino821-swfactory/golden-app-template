@@ -4,9 +4,13 @@ The one header of tokenwise.sk and of every prototype built from `golden-app-tem
 logo, nav, **Change colour** (30 palettes), **font** (10 faces), **language**, **cart**
 and **user**. A change to the header is one PR here.
 
-Colour, font, cart and sign-in are icons with no visible words — a colour wheel, `Aa`, a
-cart, a figure (founder decision 2026-09-28, 0.3.0). Each one's name is its `aria-label`,
-so a host's translations of `changeColourLabel`, `changeFontLabel` and `signIn` still matter.
+Colour, font, language, cart and sign-in are icons with no visible words — a colour wheel,
+`Aa`, a globe, a cart, a figure (founder decision 2026-09-28, 0.3.0; the globe 2026-11-25,
+0.7.0 — it read `EN ▾` before). Each one's name is its `aria-label`, so a host's translations
+of `changeColourLabel`, `changeFontLabel`, `language` and `signIn` still matter. Colour and
+font step to the next one on a click; the globe opens a popup that lists `languages` — each a
+link named in itself, the one on screen marked — and titles it with `labels.language`. With
+fewer than two languages there is no globe at all.
 
 Spec: sw-factory `docs/superpowers/specs/2026-09-25-shared-header-design.md`.
 Decision: sw-factory `docs/decisions/shared-header-package.md`.

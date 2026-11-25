@@ -132,8 +132,9 @@ test.describe("routing", () => {
     test.skip(!config.patterns.authGoogle, "no second route in this config to stay on");
 
     await page.goto("./login");
-    // The shared header (2026-09-25): `EN ▾` opens the list on a wide screen; below 640px
-    // the languages live in the menu. Either way the target is a real link with hreflang.
+    // The shared header (2026-09-25): the globe opens the popup on a wide screen (it read
+    // `EN ▾` until 2026-11-25); below 1024px the languages live in the menu. Either way the
+    // target is a real link with hreflang.
     const openMenu = page.getByRole("button", { name: uiCopy.common.openMenu! });
     if (await openMenu.isVisible()) {
       await openMenu.click();
