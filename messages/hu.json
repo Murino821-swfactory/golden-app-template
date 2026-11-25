@@ -51,6 +51,7 @@
     "tryTexts": "Szövegek cseréje",
     "tryTextsDone": "Kész",
     "tryImageHint": "Ezek a gyárunk felvételei. Az Ön oldalán az AI az Ön vállalkozásáról fest képet.",
+    "tryStillHint": "Ez egy jelenet a gyárunk képtárából. Az Ön oldalán az AI az Ön vállalkozásáról fest képet.",
     "tryTextsHint": "Kattintson az oldal bármelyik szövegére, és írja be a sajátját. Az Ön oldalán az AI egyetlen utasítás alapján minden szöveget átír.",
     "tryTextsDock": "Kattintson bármelyik szövegre, és írja át"
   },

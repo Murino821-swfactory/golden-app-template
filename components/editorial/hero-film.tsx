@@ -1,9 +1,34 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { FILM_SMALL_QUERY, heroFilmFiles, heroFilmHold, type HeroFilmName } from "@/lib/hero-film";
+import { FILM_SMALL_QUERY, heroFilmFiles, heroFilmHold, heroPictureFiles, type HeroFilmName, type HeroPictureFiles, type HeroStillName } from "@/lib/hero-film";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+/** An asset's picture in its two cuts — the phone's for a phone, chosen by the browser itself. */
+function Poster({ files }: { files: HeroPictureFiles }) {
+  return (
+    <picture>
+      <source media={FILM_SMALL_QUERY} srcSet={files.posterSmall} />
+      {/* next/image cannot optimise in a static export; this is a plain decorative img. */}
+      <img src={files.poster} alt="" decoding="async" fetchPriority="high" />
+    </picture>
+  );
+}
+
+/**
+ * A still scene of the asset database (founder, 2026-11-25; `HERO_ASSETS` in `lib/hero-film.ts`):
+ * the place, the veil and the two cuts of a film's first frame, and nothing else — no video, no
+ * script. Decoration only. "Change image" is the only way to one (a config opens on a film), so
+ * a still is never in the static HTML and costs a visitor nothing until they ask for it.
+ */
+export function HeroStill({ name }: { name: HeroStillName }) {
+  return (
+    <div aria-hidden="true" data-hero-film={name} data-hero-kind="still" className="editorial-film">
+      <Poster files={heroPictureFiles(BASE_PATH, name)} />
+    </div>
+  );
+}
 
 /**
  * The hero film (T-460, after the cinematic landings of wismeo and PropCheck): real footage
@@ -97,12 +122,8 @@ export function HeroFilm({ name }: { name: HeroFilmName }) {
   }, [small, name]);
 
   return (
-    <div aria-hidden="true" data-hero-film={name} data-film-part="1" data-film-on={on ? "" : undefined} className="editorial-film">
-      <picture>
-        <source media={FILM_SMALL_QUERY} srcSet={files.posterSmall} />
-        {/* next/image cannot optimise in a static export; this is a plain decorative img. */}
-        <img src={files.poster} alt="" decoding="async" fetchPriority="high" />
-      </picture>
+    <div aria-hidden="true" data-hero-film={name} data-hero-kind="film" data-film-part="1" data-film-on={on ? "" : undefined} className="editorial-film">
+      <Poster files={files} />
       <video ref={ref} muted playsInline preload="none" disablePictureInPicture tabIndex={-1}>
         {small !== null && <source src={small ? files.small : files.src} type="video/mp4" />}
       </video>

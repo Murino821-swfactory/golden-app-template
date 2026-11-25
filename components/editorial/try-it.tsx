@@ -72,7 +72,7 @@ function TextDock() {
   );
 }
 
-export type TryHint = "tryImageHint" | "tryTextsHint";
+export type TryHint = "tryImageHint" | "tryStillHint" | "tryTextsHint";
 
 /**
  * The two buttons and, under them, one line saying what the real function does on the visitor's

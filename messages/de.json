@@ -51,6 +51,7 @@
     "tryTexts": "Texte ändern",
     "tryTextsDone": "Fertig",
     "tryImageHint": "Das sind Aufnahmen unserer Fabrik. Auf Ihrer Seite malt die KI ein Bild Ihres Geschäfts.",
+    "tryStillHint": "Das ist eine Szene aus der Bibliothek unserer Fabrik. Auf Ihrer Seite malt die KI ein Bild Ihres Geschäfts.",
     "tryTextsHint": "Klicken Sie auf einen beliebigen Text der Seite und schreiben Sie Ihren eigenen. Auf Ihrer Seite schreibt die KI alle Texte nach einer Anweisung um.",
     "tryTextsDock": "Beliebigen Text anklicken und überschreiben"
   },
