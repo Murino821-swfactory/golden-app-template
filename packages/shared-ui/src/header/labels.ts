@@ -18,6 +18,12 @@ export interface HeaderLabels {
   font: string;
   /** `{name}`, `{position}`, `{total}`. */
   changeFontLabel: string;
+  /** The dark/light row's name in the menu below 1024px. */
+  appearance: string;
+  /** `{name}` — the side on screen, `appearanceDark` or `appearanceLight`. */
+  changeAppearanceLabel: string;
+  appearanceDark: string;
+  appearanceLight: string;
   language: string;
   cart: string;
   /** `{count}`. */
@@ -38,6 +44,10 @@ export const DEFAULT_LABELS: HeaderLabels = {
   changeColourLabel: "Change colour — {name}, {position} of {total}",
   font: "Font",
   changeFontLabel: "Change font: {name} ({position} of {total})",
+  appearance: "Appearance",
+  changeAppearanceLabel: "Change appearance: {name}",
+  appearanceDark: "Dark",
+  appearanceLight: "Light",
   language: "Language",
   cart: "Cart",
   cartLabel: "Cart, {count} items",

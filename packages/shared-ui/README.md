@@ -38,13 +38,20 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    ```
    Without `@source` the header renders unstyled and nothing fails.
 3. Layout: `<html data-font="<default>" [data-scheme="<default>"]>`, and
-   `<ThemeBootstrap palettes? appearance? />` as the **first child of `<body>`** — it applies a
-   returning visitor's palette and font before the first paint. Put `suppressHydrationWarning`
-   on `<html>`: the script changes those attributes before React hydrates, on purpose.
-   `appearance` (`"dark"` default | `"light"`, T-400) is the project's build-time variant, a
-   paid add-on: the same deterministic rule derives a LIGHT counterpart of every palette
-   (`cssBlocksForAll("light")`, `rolesFor(id, "light")`). It is NOT a visitor toggle — a build
-   ships one variant — so the host also drops shadcn's `.dark` class on `<html>` for light.
+   `<ThemeBootstrap palettes? />` as the **first child of `<body>`** — it applies a returning
+   visitor's palette, appearance and font before the first paint. Put `suppressHydrationWarning`
+   on `<html>`: the script changes those attributes (and the `.dark` class) before React
+   hydrates, on purpose.
+   **Dark and light (founder decision 2026-11-25: the dark-only rule is dropped).** With
+   `palettes`, the stylesheet carries BOTH variants of every palette
+   (`cssBlocksForBothAppearances()`): the dark rules as `html[data-scheme="x"]`, the light ones
+   — the same deterministic rule mirrored, `rolesFor(id, "light")` — as
+   `html[data-appearance="light"][data-scheme="x"]`. The host themes `<html>` for a first visit:
+   dark is shadcn's `.dark` class and no mark, light is `data-appearance="light"` and no
+   `.dark`. Pass the same side to `<Header appearance>` and the header shows the switch — in the
+   bar from 1024px, in the menu below — which moves the mark and the class together and stores
+   the choice (`localStorage` key `appearance`). Without `palettes` no stored appearance is
+   applied: a host with one fixed look is never turned over by another app on its origin.
 
 ```tsx
 <Header
@@ -53,6 +60,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   logo={{ href: "https://tokenwise.sk/", text: "tokenwise", accent: ".sk" }}
   palette="midnight-teal-ocean-mist" // omit: no palette switcher
   font="inter"                      // same id as <html data-font>
+  appearance="dark"                 // the side <html> opens on; omit: no dark/light switch
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"

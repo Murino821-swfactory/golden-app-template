@@ -20,7 +20,8 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | How the landing reads (editorial / story / document), its typeface | `prototype.config.json` → `patterns.landing.presentation` (omit = `editorial`), `patterns.landing.font` (omit = `inter`) — see "The editorial presentation" below |
 | Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
-| Header (logo, colour, font, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
+| Dark or light — the visitor's switch, and the side a first visit opens on | the header's switch in `packages/shared-ui` (`AppearanceSwitcher`, `appearanceStore`, `cssBlocksForBothAppearances`); `prototype.config.json` → `theme.appearance` (omit = `dark`); `lib/theme-appearance.ts` — see "Dark and light" under "Tailwind Colors" |
+| Header (logo, colour, font, dark/light, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
@@ -413,8 +414,8 @@ Consequences when editing:
 ## The shared header — `packages/shared-ui` (2026-09-25)
 
 This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`**, the
-header tokenwise.sk renders too: logo · Change colour · font (10 faces) · language · cart ·
-user. Spec and decision in the **sw-factory** repo
+header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light ·
+language · cart · user. Spec and decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
 
@@ -427,9 +428,13 @@ user. Spec and decision in the **sw-factory** repo
   is served from apps.tokenwise.sk. The adapter `header.tsx` passes no `siteOrigin`, so the
   bar and the phone menu carry no nav. Tests: `tests/header.spec.ts`.
 - **The controls are icons, no words (founder decision 2026-09-28, shared-ui 0.3.0):** a
-  colour wheel (Change colour), `Aa` in the face on screen (font), the cart, the figure
+  colour wheel (Change colour), `Aa` in the face on screen (font), a moon or a sun for the
+  side on screen (dark/light, 2026-11-25, shared-ui 0.8.0), the cart, the figure
   (Sign in). Their words live only in `aria-label` — so the `changeColourLabel`,
-  `changeFontLabel` and `signIn` strings in `messages/*.json` are still load-bearing.
+  `changeFontLabel`, `changeAppearanceLabel` (+ `appearanceDark` / `appearanceLight`) and
+  `signIn` strings in `messages/*.json` are still load-bearing. Below 1024px the font and the
+  dark/light switch are rows of the menu (the bar has no room: the logo needs 122px and four
+  44px controls leave it 128px at 360px).
 - **The language is an icon too, and a click opens a popup (founder decision 2026-11-25,
   shared-ui 0.7.0):** a globe between `Aa` and the cart (it read `EN ▾` before). Colour and
   font step on a click; the globe opens a popup titled with `common.language` that lists the
@@ -444,7 +449,8 @@ user. Spec and decision in the **sw-factory** repo
   makes Tailwind compile its classes — remove it and the header renders unstyled.
 - Fonts are self-hosted woff2 in `packages/shared-ui/fonts` (no `next/font`, no Google CDN).
   `<html data-font="inter">` is the first-visit face; `ThemeBootstrap` in `app/shell.tsx`
-  applies a returning visitor's palette and font before the first paint.
+  applies a returning visitor's palette, appearance (dark or light) and font before the first
+  paint.
 - Any change under `packages/shared-ui/{src,styles.css,fonts}` must bump its version (CI
   checks); merging to `main` publishes it to npm. Live prototypes never change: the factory's
   `prototypes:refresh` was removed on 2026-11-23, so only new prototypes get a template change.
@@ -584,8 +590,8 @@ latent only because `deploy:production` is hosting-only here.
 
 ## Tailwind Colors (DO NOT HARDCODE)
 
-Every palette ships in every build as `html[data-scheme="<id>"]` rules
-(`cssBlocksForAll()` in `@tokenwise/shared-ui`, rendered by `ThemeBootstrap`), and the header's **Change colour** button
+Every palette ships in every build as `html[data-scheme="<id>"]` rules — a dark one and a light
+one (`cssBlocksForBothAppearances()` in `@tokenwise/shared-ui`, rendered by `ThemeBootstrap`), and the header's **Change colour** button
 steps to the next one by writing that attribute — so a hardcoded colour is not merely
 off-brand, it is the one thing on the page that will not repaint when the visitor clicks.
 The choice persists in `localStorage`; `prototype.config.json` still decides what a
@@ -613,18 +619,27 @@ palettes ship (cycle positions 21–30), designed in-house, pinned in `tests/col
 Retired ids (`red`, `blue`, `yellow`, `green`) are translated by the config parser, and
 `fixtures/full.config.json` keeps `"blue"` on purpose as the CI proof that they still build.
 
-**Light variant — a paid add-on (T-400, founder 2026-11-09).** Dark is the DEFAULT and the
-baseline of every project; a customer whose brand is light opts in with `theme.appearance:
-"light"` (default `"dark"`) — one build-time project choice for the whole site, NOT a visitor
-dark/light toggle. The same deterministic rule derives a light counterpart of every palette by
-MIRRORING it (`derivePaletteRoles(colors, "light")`, `rolesFor(id, "light")`,
-`cssBlocksForAll("light")`): the lightest colour is the page, the darkest the words, grounds
-and inks swap ends, every pull reverses, still WCAG AA on every surface. No component hard-codes
-a colour — flipping the token layer flips the whole site. `app/shell.tsx` reads
-`config.theme.appearance` through `lib/theme-appearance.ts`: dark keeps `.dark` and ships
-byte-for-byte as before; light drops `.dark` and sets `data-appearance="light"`, under which the
-Blender light loops (made for a dark ground) stand down (`editorial.css`). Tests:
-`tests/color-schemes.spec.ts` (contrast over all palettes in light), `tests/appearance.spec.ts`.
+**Dark and light — the visitor's switch (founder 2026-11-25: the dark-only rule is dropped).**
+The header carries a dark/light switch beside colour and font (`AppearanceSwitcher` in
+`packages/shared-ui`: a moon or a sun in the bar from 1024px, a row of the menu below), the
+choice persists in `localStorage` (`appearance`) and `ThemeBootstrap` applies it before the first
+paint. `theme.appearance` (`"dark"` default | `"light"`) is only the side a FIRST visit opens on
+— like `theme.colorScheme` and `patterns.landing.font`. (Until 2026-11-25 it was a build-time
+paid add-on, T-400, and a build shipped one variant.) The same deterministic rule derives the
+light counterpart of every palette by MIRRORING it (`derivePaletteRoles(colors, "light")`,
+`rolesFor(id, "light")`): the lightest colour is the page, the darkest the words, grounds
+and inks swap ends, every pull reverses, still WCAG AA on every surface. Every build ships both:
+the dark rules as `html[data-scheme="x"]`, the light ones as
+`html[data-appearance="light"][data-scheme="x"]`. No component hard-codes a colour — flipping
+the token layer flips the whole site. One contract, three writers (`lib/theme-appearance.ts` for
+the first visit, the switch's `appearanceStore`, the bootstrap script): dark is shadcn's `.dark`
+class and no light mark; light is `data-appearance="light"` and no `.dark`. Under the light mark
+the Blender light loops (made for a dark ground) stand down (`editorial.css`), and a hero film's
+veil lies denser with the second line in full ink (`stage.css`). A new rule that only suits one
+side is keyed by `[data-appearance="light"]`, never by a colour. Tests:
+`tests/appearance.spec.ts` (the switch, both sides, persistence, no flash, the phone menu),
+`packages/shared-ui/test/appearance.test.ts` (both variants ship, the bootstrap),
+`tests/color-schemes.spec.ts` (contrast over all palettes in light).
 
 Feature icons are Lucide ids from `ICON_IDS` (`lib/prototype-config.ts`, drawn by `lib/icons.ts`),
 never emoji — an emoji does not repaint either. A config's emoji icon is dropped at parse time.
