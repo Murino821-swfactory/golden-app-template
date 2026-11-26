@@ -2,6 +2,7 @@ import { BUTTON_STYLE_IDS, type ButtonStyleId } from "./button-styles";
 import { APPEARANCES, COLOR_SCHEME_IDS, type Appearance, type ColorSchemeId } from "./color-schemes";
 import { FONT_IDS, type FontId } from "./font-families";
 import { IMAGE_TRANSPARENCY_STEPS, type ImageTransparency } from "./image-transparency";
+import { IMAGE_VEIL_STATES, type ImageVeil } from "./image-veil";
 import { createAttributeStore } from "./theme-store";
 
 /** Key and event unchanged from the template's pre-package switcher: a visitor's stored
@@ -49,4 +50,13 @@ export const imageTransparencyStore = createAttributeStore<ImageTransparency>({
   storageKey: "imageTransparency",
   event: "image-transparency-change",
   ids: IMAGE_TRANSPARENCY_STEPS,
+});
+
+/** Whether the veil lies over the page's picture (2026-11-26): `html[data-image-veil]`, on or
+ * off, stored apart from the transparency so neither moves the other. */
+export const imageVeilStore = createAttributeStore<ImageVeil>({
+  attribute: "imageVeil",
+  storageKey: "imageVeil",
+  event: "image-veil-change",
+  ids: IMAGE_VEIL_STATES,
 });

@@ -32,6 +32,12 @@ export interface HeaderLabels {
   imageTransparency: string;
   /** `{value}` — the step on screen, 0 to 100 — `{position}`, `{total}`. */
   changeImageTransparencyLabel: string;
+  /** The menu row of the picture's veil, as `imageTransparency` is the transparency's. */
+  imageVeil: string;
+  /** `{name}` — the state on screen, `imageVeilOn` or `imageVeilOff`. */
+  changeImageVeilLabel: string;
+  imageVeilOn: string;
+  imageVeilOff: string;
   language: string;
   cart: string;
   /** `{count}`. */
@@ -60,6 +66,10 @@ export const DEFAULT_LABELS: HeaderLabels = {
   changeButtonLabel: "Change button: {name} ({position} of {total})",
   imageTransparency: "Image transparency",
   changeImageTransparencyLabel: "Change image transparency: {value} % ({position} of {total})",
+  imageVeil: "Image veil",
+  changeImageVeilLabel: "Change image veil: {name}",
+  imageVeilOn: "On",
+  imageVeilOff: "Off",
   language: "Language",
   cart: "Cart",
   cartLabel: "Cart, {count} items",
