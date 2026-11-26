@@ -3,7 +3,8 @@
 The one header of tokenwise.sk and of every prototype built from `golden-app-template`:
 logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
 page's action, 0.9.0), **image transparency** (the page's picture, 0 to 100 % in tens, 0.10.0),
-**language**, **cart** and **user**. A change to the header is one PR here.
+**image veil** (the layer over the page's picture, on or off, 0.11.0), **language**, **cart** and
+**user**. A change to the header is one PR here.
 
 Colour, font, button, language, cart and sign-in are icons with no visible words — a colour
 wheel, `Aa`, a small action in the look on screen, a globe, a cart, a figure (founder decision
@@ -40,9 +41,10 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
    ```
    Without `@source` the header renders unstyled and nothing fails.
 3. Layout: `<html data-font="<default>" [data-scheme="<default>"] [data-button="<default>"]
-   [data-image-transparency="0"]>`, and `<ThemeBootstrap palettes? buttons? imageTransparency? />`
+   [data-image-transparency="0"] [data-image-veil="on"]>`, and
+   `<ThemeBootstrap palettes? buttons? imageTransparency? imageVeil? />`
    as the **first child of `<body>`** — it applies a returning visitor's palette, appearance,
-   font, button look and picture transparency before the first paint. Put
+   font, button look, picture transparency and picture veil before the first paint. Put
    `suppressHydrationWarning` on `<html>`: the script changes those attributes (and the `.dark`
    class) before React hydrates, on purpose.
    **Dark and light (founder decision 2026-11-25: the dark-only rule is dropped).** With
@@ -66,6 +68,7 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
   appearance="dark"                 // the side <html> opens on; omit: no dark/light switch
   button="glow"                     // same id as <html data-button>; omit: no button switcher
   imageTransparency="0"             // same step as <html data-image-transparency>; omit: no control
+  imageVeil="on"                    // same state as <html data-image-veil>; omit: no control
   languages={[{ code: "en", name: "English", href: "/", current: true }, …]}
   user={user /* HeaderUser | null | "loading"; omit for no accounts */}
   signInHref="/login"
@@ -136,6 +139,21 @@ to `<Header>`, puts the same step on `<html>`, turns `<ThemeBootstrap imageTrans
 and keys its own picture's rules by the attribute. The template lays that much of the page's
 ground over the hero's film or still scene (`components/editorial/stage.css`). A host that
 passes nothing has no control.
+
+## The picture's veil (0.11.0)
+
+One button takes the veil off the page's picture and lays it back — on, off, on (founder,
+2026-11-26: "a configuration that turns the layer used today on and off; it does not touch the
+transparency"). Its icon is a layer over a layer, struck through while the veil is off; below
+1024px it is a row of the menu, "Image veil: On", right after the transparency's. The state is
+`html[data-image-veil]` and `localStorage.imageVeil` (`IMAGE_VEIL_STATES`, `imageVeilStore`),
+apart from the transparency's: neither control moves the other.
+
+As with the transparency, the package only toggles and stores. **What the veil is, is the
+host's**: it passes `imageVeil` to `<Header>`, puts the same state on `<html>`, turns
+`<ThemeBootstrap imageVeil />` on, and keys its picture's rules by the attribute. The template's
+veil is the gradient of the page's ground over the hero's film or still scene; off, only the
+short fade where the picture runs into the page is left (`components/editorial/stage.css`).
 
 ## Adding a font
 

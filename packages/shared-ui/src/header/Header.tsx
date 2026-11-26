@@ -8,6 +8,7 @@ import { AppearanceSwitcher } from "../switchers/AppearanceSwitcher";
 import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { ImageTransparencySwitcher } from "../switchers/ImageTransparencySwitcher";
+import { ImageVeilSwitcher } from "../switchers/ImageVeilSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
 import { PaletteSwitcher } from "../switchers/PaletteSwitcher";
 import { installActionPress } from "../theming/action-press";
@@ -15,6 +16,7 @@ import type { ButtonStyleId } from "../theming/button-styles";
 import type { Appearance, ColorSchemeId } from "../theming/color-schemes";
 import type { FontId } from "../theming/font-families";
 import type { ImageTransparency } from "../theming/image-transparency";
+import type { ImageVeil } from "../theming/image-veil";
 import { UserMenu, type HeaderUser, type UserMenuItem } from "../user-menu/UserMenu";
 import { VERSION } from "../version";
 import { DEFAULT_LABELS, type HeaderLabels } from "./labels";
@@ -49,6 +51,11 @@ export interface HeaderProps {
    * `<html data-image-transparency>`, with `<ThemeBootstrap imageTransparency />` and its own
    * rules keyed by that attribute. Absent: no control — a host with no picture to fade. */
   imageTransparency?: ImageTransparency;
+  /** Whether the veil lies over the page's picture on a first visit — the same state the host
+   * puts on `<html data-image-veil>`, with `<ThemeBootstrap imageVeil />` and its own rules keyed
+   * by that attribute. A control of its own, beside the transparency's: neither moves the other.
+   * Absent: no control — a host with no veil over its picture. */
+  imageVeil?: ImageVeil;
   /** Fewer than two: no language switcher. */
   languages?: readonly LanguageLink[];
   /** Absent: the host has no accounts and the header shows no user control at all (a
@@ -68,16 +75,17 @@ const NAV_LINK =
 /**
  * The one header of tokenwise.sk and of every prototype.
  *
- *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [☾] [▭ button] [▨ image] [◍ language] [cart] [user]
- *   <1024px  [logo…]                                          [◎] [cart] [user] [☰]
+ *   ≥1024px  [logo]  nav…  [◎ colour] [Aa] [☾] [▭ button] [▨ image] [◇ veil] [◍ language] [cart] [user]
+ *   <1024px  [logo…]                                                   [◎] [cart] [user] [☰]
  *
  * Every control right of the nav is an icon and nothing else [founder decision 2026-09-28]:
  * a colour wheel, "Aa" in the face on screen, a moon or a sun for the side on screen, the
  * action in the look on screen, a picture as transparent as the page's and a globe for the
- * language [all four 2026-11-25], the cart, the figure. Their names live in `aria-label`, and
- * the font, the appearance, the look, the picture's transparency and the languages are
- * spelled out in the menu below 1024px. Colour, font, appearance, look and transparency step
- * on a click; the globe opens a popup with the languages to choose from.
+ * language [all four 2026-11-25], a layer over a layer, struck through while the picture's veil
+ * is off [2026-11-26], the cart, the figure. Their names live in `aria-label`, and the font, the
+ * appearance, the look, the picture's transparency, its veil and the languages are spelled out
+ * in the menu below 1024px. Colour, font, appearance, look, transparency and veil step on a
+ * click; the globe opens a popup with the languages to choose from.
  *
  * Translucent over the page (the host's background at 88% with a backdrop blur), no bottom
  * rule — as tokenwise.sk's header was before it moved here. Every colour and typeface is a
@@ -94,6 +102,7 @@ export function Header({
   appearance,
   button,
   imageTransparency,
+  imageVeil,
   languages = [],
   user,
   signInHref,
@@ -181,6 +190,11 @@ export function Header({
             <ImageTransparencySwitcher defaultStep={imageTransparency} labels={labels} />
           </div>
         )}
+        {imageVeil && (
+          <div className="hidden lg:flex">
+            <ImageVeilSwitcher defaultState={imageVeil} labels={labels} />
+          </div>
+        )}
         <div className="hidden lg:flex">
           <LanguageSwitcher languages={languages} labels={labels} />
         </div>
@@ -221,6 +235,7 @@ export function Header({
           defaultAppearance={appearance}
           defaultButton={button}
           defaultImageTransparency={imageTransparency}
+          defaultImageVeil={imageVeil}
           languages={languages}
           labels={labels}
           toggleRef={toggleRef}
