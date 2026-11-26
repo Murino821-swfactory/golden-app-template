@@ -36,6 +36,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); finished assets in `public/motion/` — their Blender scenes left the template on 2026-11-22 (git history) |
 | The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (one of the five films of the asset database, `HERO_ASSETS` in `lib/hero-film.ts` — "Change image" walks all of it: the films and ten still scenes), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`, `.editorial-dock`), `lib/text-edit.ts` ("Change texts" on the whole page), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
+| The golden demo's tour of looks — each new section scrolled into by hand wears another palette, font, dark/light, action look and picture transparency, never another language (founder 2026-11-26) | `components/editorial/look-tour.tsx` (when), `lib/look-tour.ts` (which look), shared-ui `showLook` (shown, not stored; 0.11.0); mounted by `app/[locale]/page.tsx` for a `tryIt` config only — see "The golden demo's tour of looks" |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `public/motion/stage-*`, `closing-light*` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -459,6 +460,38 @@ decision in the **sw-factory** repo
   checks); merging to `main` publishes it to npm. Live prototypes never change: the factory's
   `prototypes:refresh` was removed on 2026-11-23, so only new prototypes get a template change.
 - New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+- **`showLook(look)` (0.11.0)** puts a look — palette, face, dark/light, the action's look, the
+  picture's transparency — on the page and in the header's controls for this view only: the same
+  attributes, `.dark` class and events as a click, nothing in localStorage (each store's `show`;
+  `select` is `show` plus storing). Tests: `packages/shared-ui/test/show-look.test.ts`.
+
+## The golden demo's tour of looks (2026-11-27)
+
+Founder: "as the visitor scrolls down the golden demo, every new section changes to a random
+combination of colour, transparency, font, CTA and dark & light mode; the language stays".
+`LookTour` (`components/editorial/look-tour.tsx`) is mounted by `app/[locale]/page.tsx` for a
+`tryIt` config only — a customer's prototype never tours.
+
+- **When:** a `[data-section]` arrives from below — its top rises past the middle of the window
+  (an IntersectionObserver on the window's top half) — after the visitor has scrolled by hand
+  (a `wheel` or a `touchmove`). A jump is not a tour: an anchor link, a script, `scrollIntoView`,
+  the browser restoring a position — and so every scroll the Playwright suites make, which is
+  why no other suite sees a look change. The section that just changed the look does not change
+  it again straight after (a new face can move its edge back under the middle). Going up changes
+  nothing.
+- **Which look:** `nextLook` (`lib/look-tour.ts`, pure): every control changes — a palette, a
+  face, a look of the action and a transparency step drawn at random from the ones not on
+  screen, and the other side. Never the language.
+- **Shown, not kept:** `showLook` stores nothing, so a reload opens on the visitor's own look (or
+  the config's first-visit look), and tokenwise.sk — the same origin — never inherits a look
+  nobody chose.
+- **The visitor's pick ends it:** a click on a header restyling control (`palette`, `font`,
+  `appearance`, `button`, `image`; the pad's colour and button keys press those) stops the tour
+  for the page view, and that pick is stored as always.
+- **Reduced motion:** no tour. `html[data-look-tour]` says the tour is listening.
+- Tests: `tests/look-tour.spec.ts` (each section by hand, all five change, the language stays; the
+  header follows; nothing stored; reload; jumps and scrolling up; the visitor's pick; reduced
+  motion; no tour without `tryIt`), `tests/look-tour-logic.spec.ts`.
 
 ## The look of the landing's action (2026-11-25)
 
