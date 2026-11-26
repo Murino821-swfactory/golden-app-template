@@ -7,4 +7,5 @@ export type { CartProps } from "./cart/CartButton";
 export type { HeaderUser, UserMenuItem } from "./user-menu/UserMenu";
 export { ThemeBootstrap, themeBootstrapScript } from "./theming/ThemeBootstrap";
 export * from "./theming";
+export { showLook, type Look } from "./theming/show-look";
 export { VERSION } from "./version";
