@@ -82,6 +82,15 @@ Decision: sw-factory `docs/decisions/shared-header-package.md`.
 Node code that needs only data (palettes, font table) imports
 `@tokenwise/shared-ui/theming`, which carries no React.
 
+## Showing a look without keeping it (0.12.0)
+
+`showLook({ scheme?, font?, appearance?, button?, imageTransparency? })` puts a look on the
+page for this view only: the same `html[data-*]` attributes, shadcn's `.dark` class and the same
+events as the header's clicks — so every control's icon follows — but nothing in localStorage.
+A reload brings back the visitor's own choice; a control the look leaves out stays as it is. The
+language is not a look. Its first user is the golden demo's tour of looks
+(golden-app-template `components/editorial/look-tour.tsx`).
+
 ## The looks of an action (0.9.0)
 
 One button steps through five looks of the page's action — its CTA — the way **Change colour**
