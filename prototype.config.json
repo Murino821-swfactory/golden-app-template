@@ -1,14 +1,8 @@
 {
-  "appName": "Golden App Template",
+  "appName": "Matchday Club",
   "locales": [
     "en",
-    "sk",
-    "cs",
-    "de",
-    "pl",
-    "hu",
-    "fr",
-    "es"
+    "sk"
   ],
   "defaultLocale": "en",
   "theme": {
@@ -19,120 +13,107 @@
       "sections": [
         "hero",
         "features",
-        "useCases",
-        "comparison",
-        "howItWorks",
-        "faq",
         "listings",
-        "contact",
-        "cta"
+        "howItWorks",
+        "contact"
       ],
-      "font": "space-grotesk",
-      "motion": "pulse-ring",
-      "film": "tower-dusk",
-      "tryIt": true
+      "font": "archivo-black",
+      "tone": "bold",
+      "motion": "horizon-sweep"
     },
-    "dashboard": {},
+    "dashboard": {
+      "kpis": [
+        {
+          "id": "playedShare",
+          "field": "status",
+          "agg": "share",
+          "value": "Played"
+        },
+        {
+          "id": "matches",
+          "field": "*",
+          "agg": "count"
+        }
+      ]
+    },
     "authGoogle": {},
-    "cta": {
-      "href": "/login"
-    },
     "contactForm": {
       "phone": "optional"
     },
     "dataGrid": {
       "entity": {
-        "key": "location",
+        "key": "match",
         "fields": [
           {
-            "key": "name",
+            "key": "opponent",
             "type": "text",
             "required": true
           },
           {
-            "key": "category",
+            "key": "date",
+            "type": "date",
+            "required": true
+          },
+          {
+            "key": "venue",
+            "type": "text"
+          },
+          {
+            "key": "status",
             "type": "select",
             "options": [
-              "Office",
-              "Warehouse",
-              "Depot"
+              "Scheduled",
+              "Played",
+              "Postponed"
             ]
           },
           {
-            "key": "opened",
-            "type": "date"
-          },
-          {
-            "key": "active",
-            "type": "boolean"
+            "key": "score",
+            "type": "text"
           }
         ]
-      }
-    },
-    "mapBase": {
-      "center": {
-        "lat": 48.669,
-        "lng": 19.699
       },
-      "zoom": 7
+      "boardBy": "status"
     },
-    "useCases": {},
-    "comparison": {},
     "listings": {
       "categories": [
-        "apartment",
-        "house",
-        "office"
+        "training",
+        "membership",
+        "event"
       ],
       "attributes": [
         {
-          "key": "area",
-          "unit": "m²"
-        },
-        {
-          "key": "rooms"
+          "key": "spots"
         }
       ],
       "currency": "EUR",
       "items": [
         {
-          "id": "offer-1",
-          "category": "apartment",
-          "price": 189000,
+          "id": "open-training",
+          "category": "training",
+          "price": 5,
+          "pricePeriod": "once",
           "attributes": {
-            "area": 68,
-            "rooms": 3
-          },
-          "location": {
-            "lat": 48.1486,
-            "lng": 17.1077
+            "spots": 12
           }
         },
         {
-          "id": "offer-2",
-          "category": "house",
-          "price": 315000,
-          "status": "reserved",
-          "attributes": {
-            "area": 142,
-            "rooms": 5
-          },
-          "location": {
-            "lat": 48.7164,
-            "lng": 21.2611
-          }
-        },
-        {
-          "id": "offer-3",
-          "category": "office",
-          "price": 1450,
+          "id": "season-membership",
+          "category": "membership",
+          "price": 15,
           "pricePeriod": "month",
           "attributes": {
-            "area": 95
-          },
-          "location": {
-            "lat": 49.2231,
-            "lng": 18.7394
+            "spots": 30
+          }
+        },
+        {
+          "id": "matchday-supper",
+          "category": "event",
+          "price": 8,
+          "pricePeriod": "once",
+          "status": "reserved",
+          "attributes": {
+            "spots": 40
           }
         }
       ]
@@ -140,1435 +121,279 @@
   },
   "content": {
     "en": {
-      "description": "Composable starter: landing, Google sign-in, dashboard, records grid and map — configured, not generated.",
+      "description": "Fixtures, results, the squad and match-day news for our amateur football club, all in one place for players, families and fans.",
       "landing": {
-        "headline": "One configuration. A working prototype.",
-        "subheadline": "Explore the landing, sign in, and try a records workflow. Each chapter is an existing component, filled with the same content that powers search and AI discovery.",
+        "headline": "Every match, every result, one home",
+        "subheadline": "For players, parents and supporters: check the next fixture, see the latest score and meet the squad.",
+        "eyebrow": "Amateur football club",
         "features": [
           {
-            "icon": "star",
-            "title": "Thirty colour palettes",
-            "description": "Fifteen pairs, five palettes of seven colours and ten tonal palettes of twenty; WCAG AA contrast is enforced at build time."
+            "icon": "calendar",
+            "title": "Upcoming fixtures",
+            "description": "See the date, opponent and venue of every match before you leave home."
           },
           {
-            "icon": "list-checks",
-            "title": "Config-driven patterns",
-            "description": "Landing, auth, dashboard, CRUD grid, map — enabled by presence in prototype.config.json."
+            "icon": "trophy",
+            "title": "Results and scores",
+            "description": "Look back at past matches and the final score of each."
           },
           {
-            "icon": "globe",
-            "title": "Static export",
-            "description": "Next.js 16 builds to static HTML. Deploy anywhere — Firebase, Vercel, a CDN."
+            "icon": "users",
+            "title": "Meet the squad",
+            "description": "Browse the players who wear the shirt this season."
+          },
+          {
+            "icon": "message-square",
+            "title": "Match-day news",
+            "description": "Read the club's short reports and notices for the weekend."
           }
         ],
+        "featuresHeading": "All the club in one place",
         "howItWorks": {
-          "heading": "How do you try the prototype?",
+          "heading": "How it works",
           "steps": [
             {
-              "title": "Explore the landing",
-              "description": "Scroll through the chapters to see the enabled patterns."
+              "title": "Sign in",
+              "description": "Sign in with Google to open the club's match tracker."
             },
             {
-              "title": "Sign in with Google",
-              "description": "Open the dashboard with your own account."
+              "title": "Add a match",
+              "description": "Enter the opponent, date and venue of the next fixture."
             },
             {
-              "title": "Try your own records",
-              "description": "Add and edit records in your private sandbox."
+              "title": "Record the score",
+              "description": "Mark the match as played and type in the final score."
+            },
+            {
+              "title": "Check the dashboard",
+              "description": "See how many matches are played at a glance."
             }
           ]
-        },
-        "faq": {
-          "heading": "What should you know before trying it?",
-          "items": [
-            {
-              "question": "Is this generated code?",
-              "answer": "No. The prototype uses existing components enabled by a JSON configuration."
-            },
-            {
-              "question": "Where do the records live?",
-              "answer": "Signed-in visitors work with their own records in a private Firestore sandbox."
-            },
-            {
-              "question": "Does the page work on a phone?",
-              "answer": "Yes. Phones show the same chapters as a scrolling document. Desktop supports a sticky story stage."
-            }
-          ]
-        },
-        "featuresHeading": "What is already built?",
-        "eyebrow": "Prototypes from one config",
-        "manifesto": {
-          "lead": "A prototype is this template, unchanged, plus one file.",
-          "body": "Every section, grid and map is real code that already runs. The config switches them on and writes their words, so a customer sees their idea working instead of a mockup."
         }
       },
       "dashboard": {
-        "title": "Dashboard"
-      },
-      "cta": {
-        "label": "Get started",
-        "title": "Try the working patterns",
-        "subtitle": "Sign in to explore the dashboard and your own records."
+        "title": "Club dashboard",
+        "intro": "Your fixtures and results at a glance.",
+        "kpiLabels": {
+          "playedShare": "Matches played",
+          "matches": "Total matches"
+        }
       },
       "contactForm": {
         "heading": "Get in touch",
-        "submitLabel": "Send message"
+        "submitLabel": "Send message",
+        "intro": "Want to join a training or ask about membership? Leave your email and we will reply."
       },
       "dataGrid": {
-        "entityLabel": "Location",
+        "entityLabel": "Match",
         "fieldLabels": {
-          "name": "Name",
-          "category": "Category",
-          "opened": "Opened",
-          "active": "Active"
+          "opponent": "Opponent",
+          "date": "Date",
+          "venue": "Venue",
+          "status": "Status",
+          "score": "Score"
         },
         "sampleRecords": [
           {
-            "name": "Riverside office",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "opponent": "Riverside Rovers",
+            "date": "2026-11-22",
+            "venue": "Home",
+            "status": "Played",
+            "score": "3-1"
           },
           {
-            "name": "East depot",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "opponent": "Hillcrest United",
+            "date": "2026-11-15",
+            "venue": "Away",
+            "status": "Played",
+            "score": "1-1"
           },
           {
-            "name": "North warehouse",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "What can you try here?",
-        "items": [
-          {
-            "title": "Explore a product idea",
-            "situation": "You want to see how reusable blocks form a working prototype.",
-            "action": "Read the landing, then sign in to open your own dashboard."
-          },
-          {
-            "title": "Work with sample records",
-            "situation": "You need a place to try a records workflow before committing to an idea.",
-            "action": "Add, edit and filter records in your own signed-in sandbox."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "How is the prototype assembled?",
-        "beforeLabel": "Custom implementation",
-        "afterLabel": "This template",
-        "rows": [
-          {
-            "topic": "Page content",
-            "before": "Write each section as a separate code change.",
-            "after": "Fill localized content in a validated JSON configuration."
-          },
-          {
-            "topic": "Product building blocks",
-            "before": "Implement authentication and record controls for each project.",
-            "after": "Enable existing Google sign-in, dashboard and records patterns."
-          },
-          {
-            "topic": "Finding the page",
-            "before": "Maintain separate text for the page and discovery files.",
-            "after": "Generate metadata, structured data and llms.txt from the page content."
+            "opponent": "Oakfield Athletic",
+            "date": "2026-11-08",
+            "venue": "Home",
+            "status": "Postponed",
+            "score": "–"
           }
         ]
       },
       "listings": {
-        "heading": "What is on offer",
-        "intro": "Offers as cards: filter by kind, open them on the map and ask about one in a single click.",
-        "notice": "These offers are illustrative examples, not a live offer.",
+        "heading": "Join the club",
+        "intro": "Come to a training, become a member or stay for the match-day supper.",
+        "notice": "These offers are illustrative examples until the club publishes its real ones.",
         "categoryLabels": {
-          "apartment": "Apartment",
-          "house": "House",
-          "office": "Office"
+          "training": "Training",
+          "membership": "Membership",
+          "event": "Event"
         },
         "attributeLabels": {
-          "area": "Area",
-          "rooms": "Rooms"
+          "spots": "Places"
         },
+        "inquireLabel": "Ask about this",
         "items": {
-          "offer-1": {
-            "title": "Three-room flat near the centre",
-            "summary": "A bright flat on the fourth floor with a balcony and a cellar.",
+          "open-training": {
+            "title": "Open training session",
+            "summary": "Try a weekly session with the squad and see if the club suits you.",
             "highlights": [
-              "Balcony",
-              "Lift"
+              "All levels welcome",
+              "Bring boots and water"
             ]
           },
-          "offer-2": {
-            "title": "Family house with a garden",
-            "summary": "A detached house on a quiet street, ten minutes from the centre.",
+          "season-membership": {
+            "title": "Season membership",
+            "summary": "Play and train with the club through the whole season.",
             "highlights": [
-              "Garden",
-              "Garage"
+              "Weekly training",
+              "Match squad selection"
             ]
           },
-          "offer-3": {
-            "title": "Office floor for a small team",
-            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          "matchday-supper": {
+            "title": "Match-day supper",
+            "summary": "Share a meal with players and fans after the home match.",
+            "highlights": [
+              "After the final whistle",
+              "Families welcome"
+            ]
           }
-        },
-        "inquireLabel": "Ask about this offer"
+        }
       }
     },
     "sk": {
-      "description": "Skladateľný štartér: úvodná stránka, prihlásenie cez Google, prehľad, tabuľka záznamov a mapa — nakonfigurované, nie generované.",
+      "description": "Zápasy, výsledky, súpiska a správy zo zápasového dňa nášho amatérskeho futbalového klubu na jednom mieste pre hráčov, rodiny a fanúšikov.",
       "landing": {
-        "headline": "Jedna konfigurácia. Funkčný prototyp.",
-        "subheadline": "Prejdite si úvodnú stránku, prihláste sa a vyskúšajte prácu so záznamami. Každá kapitola je hotový komponent, naplnený tým istým obsahom, ktorý čítajú vyhľadávače aj AI.",
+        "headline": "Každý zápas a výsledok na jednom mieste",
+        "subheadline": "Pre hráčov, rodičov a fanúšikov: pozrite si najbližší zápas, posledné skóre a zoznámte sa so súpiskou.",
+        "eyebrow": "Amatérsky futbalový klub",
         "features": [
           {
-            "icon": "star",
-            "title": "Tridsať farebných paliet",
-            "description": "Pätnásť dvojíc, päť paliet po sedem farieb a desať tonálnych paliet po dvadsať; kontrast WCAG AA sa kontroluje už pri zostavení."
+            "icon": "calendar",
+            "title": "Nadchádzajúce zápasy",
+            "description": "Pozrite si dátum, súpera a miesto každého zápasu ešte pred odchodom z domu."
           },
           {
-            "icon": "list-checks",
-            "title": "Vzory riadené konfiguráciou",
-            "description": "Úvodná stránka, prihlásenie, prehľad, tabuľka záznamov, mapa — zapnuté tým, že sú v prototype.config.json."
+            "icon": "trophy",
+            "title": "Výsledky a skóre",
+            "description": "Pozrite sa späť na odohraté zápasy a ich konečné skóre."
           },
           {
-            "icon": "globe",
-            "title": "Statický export",
-            "description": "Next.js 16 zostaví statické HTML. Nasadíte ho kdekoľvek — Firebase, Vercel, CDN."
+            "icon": "users",
+            "title": "Spoznajte súpisku",
+            "description": "Prezrite si hráčov, ktorí v tejto sezóne obliekajú dres."
+          },
+          {
+            "icon": "message-square",
+            "title": "Správy zo zápasu",
+            "description": "Čítajte krátke reporty a oznamy klubu na víkend."
           }
         ],
+        "featuresHeading": "Celý klub na jednom mieste",
         "howItWorks": {
-          "heading": "Ako si prototyp vyskúšate?",
+          "heading": "Ako to funguje",
           "steps": [
             {
-              "title": "Prejdite si úvodnú stránku",
-              "description": "Prejdite kapitolami a pozrite si zapnuté vzory."
+              "title": "Prihláste sa",
+              "description": "Cez Google otvorte klubový prehľad zápasov."
             },
             {
-              "title": "Prihláste sa cez Google",
-              "description": "Otvorte prehľad s vlastným účtom."
+              "title": "Pridajte zápas",
+              "description": "Zadajte súpera, dátum a miesto najbližšieho zápasu."
             },
             {
-              "title": "Vyskúšajte vlastné záznamy",
-              "description": "Pridávajte a upravujte záznamy vo svojom súkromnom priestore."
+              "title": "Zapíšte skóre",
+              "description": "Označte zápas ako odohraný a vpíšte konečné skóre."
+            },
+            {
+              "title": "Pozrite si prehľad",
+              "description": "Na prvý pohľad uvidíte, koľko zápasov je odohraných."
             }
           ]
-        },
-        "faq": {
-          "heading": "Čo by ste mali vedieť, než to vyskúšate?",
-          "items": [
-            {
-              "question": "Je to generovaný kód?",
-              "answer": "Nie. Prototyp používa hotové komponenty, ktoré zapína JSON konfigurácia."
-            },
-            {
-              "question": "Kde sú uložené záznamy?",
-              "answer": "Prihlásení návštevníci pracujú s vlastnými záznamami v súkromnom priestore vo Firestore."
-            },
-            {
-              "question": "Funguje stránka na telefóne?",
-              "answer": "Áno. Telefón zobrazí tie isté kapitoly ako jeden rolovací dokument. Na počítači môže príbeh stáť na pevnej scéne."
-            }
-          ]
-        },
-        "featuresHeading": "Čo je už hotové?",
-        "eyebrow": "Prototypy z jednej konfigurácie",
-        "manifesto": {
-          "lead": "Prototyp je táto šablóna bez zmeny a jeden súbor navyše.",
-          "body": "Každá sekcia, tabuľka aj mapa je skutočný kód, ktorý už beží. Konfigurácia ich zapne a napíše ich texty, takže zákazník vidí svoj nápad fungovať, nie maketu."
         }
       },
       "dashboard": {
-        "title": "Prehľad"
-      },
-      "cta": {
-        "label": "Začať",
-        "title": "Vyskúšajte funkčné vzory",
-        "subtitle": "Prihláste sa a pozrite si prehľad a vlastné záznamy."
+        "title": "Prehľad klubu",
+        "intro": "Vaše zápasy a výsledky na prvý pohľad.",
+        "kpiLabels": {
+          "playedShare": "Odohrané zápasy",
+          "matches": "Zápasy spolu"
+        }
       },
       "contactForm": {
         "heading": "Ozvite sa nám",
-        "submitLabel": "Odoslať správu"
+        "submitLabel": "Odoslať správu",
+        "intro": "Chcete prísť na tréning alebo sa opýtať na členstvo? Zanechajte e-mail a odpíšeme vám."
       },
       "dataGrid": {
-        "entityLabel": "Lokalita",
+        "entityLabel": "Zápas",
         "fieldLabels": {
-          "name": "Názov",
-          "category": "Kategória",
-          "opened": "Otvorené",
-          "active": "Aktívne"
+          "opponent": "Súper",
+          "date": "Dátum",
+          "venue": "Miesto",
+          "status": "Stav",
+          "score": "Skóre"
         },
         "sampleRecords": [
           {
-            "name": "Kancelária pri rieke",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
+            "opponent": "Riverside Rovers",
+            "date": "2026-11-22",
+            "venue": "Doma",
+            "status": "Played",
+            "score": "3-1"
           },
           {
-            "name": "Východné depo",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
+            "opponent": "Hillcrest United",
+            "date": "2026-11-15",
+            "venue": "Vonku",
+            "status": "Played",
+            "score": "1-1"
           },
           {
-            "name": "Severný sklad",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Čo si tu môžete vyskúšať?",
-        "items": [
-          {
-            "title": "Preskúmajte nápad na produkt",
-            "situation": "Chcete vidieť, ako z hotových blokov vznikne funkčný prototyp.",
-            "action": "Prečítajte si úvodnú stránku a potom sa prihláste do vlastného prehľadu."
-          },
-          {
-            "title": "Pracujte s ukážkovými záznamami",
-            "situation": "Potrebujete miesto, kde si vyskúšate prácu so záznamami, skôr než sa pre nápad rozhodnete.",
-            "action": "Pridávajte, upravujte a filtrujte záznamy vo vlastnom priestore po prihlásení."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Ako sa prototyp skladá?",
-        "beforeLabel": "Vlastná implementácia",
-        "afterLabel": "Táto šablóna",
-        "rows": [
-          {
-            "topic": "Obsah stránky",
-            "before": "Každú sekciu napíšete ako samostatnú zmenu kódu.",
-            "after": "Lokalizovaný obsah vyplníte do validovanej JSON konfigurácie."
-          },
-          {
-            "topic": "Stavebné bloky produktu",
-            "before": "Prihlásenie a ovládanie záznamov implementujete pre každý projekt.",
-            "after": "Zapnete hotové vzory: prihlásenie cez Google, prehľad a záznamy."
-          },
-          {
-            "topic": "Nájdenie stránky",
-            "before": "Udržiavate osobitné texty pre stránku a pre súbory na vyhľadávanie.",
-            "after": "Metadáta, štruktúrované dáta a llms.txt vzniknú z obsahu stránky."
+            "opponent": "Oakfield Athletic",
+            "date": "2026-11-08",
+            "venue": "Doma",
+            "status": "Postponed",
+            "score": "–"
           }
         ]
       },
       "listings": {
-        "heading": "Čo je v ponuke",
-        "intro": "Ponuky ako karty: filtrujte podľa druhu, otvorte ich na mape a na ktorúkoľvek sa opýtajte jedným klikom.",
-        "notice": "Tieto ponuky sú ilustračné príklady, nie skutočná ponuka.",
+        "heading": "Pridajte sa ku klubu",
+        "intro": "Príďte na tréning, staňte sa členom alebo zostaňte na večeru po zápase.",
+        "notice": "Tieto ponuky sú ilustračné príklady, kým klub nezverejní skutočné.",
         "categoryLabels": {
-          "apartment": "Byt",
-          "house": "Dom",
-          "office": "Kancelária"
+          "training": "Tréning",
+          "membership": "Členstvo",
+          "event": "Podujatie"
         },
         "attributeLabels": {
-          "area": "Plocha",
-          "rooms": "Izby"
+          "spots": "Miesta"
         },
+        "inquireLabel": "Opýtať sa",
         "items": {
-          "offer-1": {
-            "title": "Trojizbový byt blízko centra",
-            "summary": "Svetlý byt na štvrtom poschodí s balkónom a pivnicou.",
+          "open-training": {
+            "title": "Otvorený tréning",
+            "summary": "Vyskúšajte týždenný tréning so súpiskou a zistite, či vám klub sedí.",
             "highlights": [
-              "Balkón",
-              "Výťah"
+              "Vítané všetky úrovne",
+              "Prineste kopačky a fľašu"
             ]
           },
-          "offer-2": {
-            "title": "Rodinný dom so záhradou",
-            "summary": "Samostatne stojaci dom na tichej ulici, desať minút od centra.",
+          "season-membership": {
+            "title": "Sezónne členstvo",
+            "summary": "Hrajte a trénujte s klubom celú sezónu.",
             "highlights": [
-              "Záhrada",
-              "Garáž"
+              "Tréning každý týždeň",
+              "Výber do zápasovej súpisky"
             ]
           },
-          "offer-3": {
-            "title": "Kancelárske podlažie pre malý tím",
-            "summary": "Otvorená kancelária s dvoma zasadačkami, pripravená na nasťahovanie."
+          "matchday-supper": {
+            "title": "Večera po zápase",
+            "summary": "Pri jedle posedíte s hráčmi a fanúšikmi po domácom zápase.",
+            "highlights": [
+              "Po záverečnom hvizde",
+              "Rodiny vítané"
+            ]
           }
-        },
-        "inquireLabel": "Opýtať sa na túto ponuku"
-      }
-    },
-    "cs": {
-      "description": "Skládací startér: úvodní stránka, přihlášení přes Google, přehled, tabulka záznamů a mapa — nakonfigurováno, ne generováno.",
-      "landing": {
-        "headline": "Jedna konfigurace. Funkční prototyp.",
-        "subheadline": "Projděte si úvodní stránku, přihlaste se a vyzkoušejte práci se záznamy. Každá kapitola je hotová komponenta, naplněná stejným obsahem, který čtou vyhledávače i AI.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Třicet barevných palet",
-            "description": "Patnáct dvojic, pět palet po sedmi barvách a deset tonálních palet po dvaceti; kontrast WCAG AA se kontroluje už při sestavení."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Vzory řízené konfigurací",
-            "description": "Úvodní stránka, přihlášení, přehled, tabulka záznamů, mapa — zapnuté tím, že jsou v prototype.config.json."
-          },
-          {
-            "icon": "globe",
-            "title": "Statický export",
-            "description": "Next.js 16 sestaví statické HTML. Nasadíte ho kdekoli — Firebase, Vercel, CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "Jak si prototyp vyzkoušíte?",
-          "steps": [
-            {
-              "title": "Projděte si úvodní stránku",
-              "description": "Projděte kapitoly a podívejte se na zapnuté vzory."
-            },
-            {
-              "title": "Přihlaste se přes Google",
-              "description": "Otevřete přehled s vlastním účtem."
-            },
-            {
-              "title": "Vyzkoušejte vlastní záznamy",
-              "description": "Přidávejte a upravujte záznamy ve svém soukromém prostoru."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "Co byste měli vědět, než to vyzkoušíte?",
-          "items": [
-            {
-              "question": "Je to generovaný kód?",
-              "answer": "Ne. Prototyp používá hotové komponenty, které zapíná JSON konfigurace."
-            },
-            {
-              "question": "Kde jsou záznamy uložené?",
-              "answer": "Přihlášení návštěvníci pracují s vlastními záznamy v soukromém prostoru ve Firestore."
-            },
-            {
-              "question": "Funguje stránka na telefonu?",
-              "answer": "Ano. Telefon zobrazí stejné kapitoly jako jeden rolovací dokument. Na počítači může příběh stát na pevné scéně."
-            }
-          ]
-        },
-        "featuresHeading": "Co je už hotové?",
-        "eyebrow": "Prototypy z jedné konfigurace",
-        "manifesto": {
-          "lead": "Prototyp je tato šablona beze změny a jeden soubor navíc.",
-          "body": "Každá sekce, tabulka i mapa je skutečný kód, který už běží. Konfigurace je zapne a napíše jejich texty, takže zákazník vidí svůj nápad fungovat, ne maketu."
         }
-      },
-      "dashboard": {
-        "title": "Přehled"
-      },
-      "cta": {
-        "label": "Začít",
-        "title": "Vyzkoušejte funkční vzory",
-        "subtitle": "Přihlaste se a prohlédněte si přehled a vlastní záznamy."
-      },
-      "contactForm": {
-        "heading": "Ozvěte se nám",
-        "submitLabel": "Odeslat zprávu"
-      },
-      "dataGrid": {
-        "entityLabel": "Lokalita",
-        "fieldLabels": {
-          "name": "Název",
-          "category": "Kategorie",
-          "opened": "Otevřeno",
-          "active": "Aktivní"
-        },
-        "sampleRecords": [
-          {
-            "name": "Kancelář u řeky",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Východní depo",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Severní sklad",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Co si tu můžete vyzkoušet?",
-        "items": [
-          {
-            "title": "Prozkoumejte nápad na produkt",
-            "situation": "Chcete vidět, jak z hotových bloků vznikne funkční prototyp.",
-            "action": "Přečtěte si úvodní stránku a pak se přihlaste do vlastního přehledu."
-          },
-          {
-            "title": "Pracujte s ukázkovými záznamy",
-            "situation": "Potřebujete místo, kde si vyzkoušíte práci se záznamy, než se pro nápad rozhodnete.",
-            "action": "Přidávejte, upravujte a filtrujte záznamy ve vlastním prostoru po přihlášení."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Jak se prototyp skládá?",
-        "beforeLabel": "Vlastní implementace",
-        "afterLabel": "Tato šablona",
-        "rows": [
-          {
-            "topic": "Obsah stránky",
-            "before": "Každou sekci napíšete jako samostatnou změnu kódu.",
-            "after": "Lokalizovaný obsah vyplníte do validované JSON konfigurace."
-          },
-          {
-            "topic": "Stavební bloky produktu",
-            "before": "Přihlášení a ovládání záznamů implementujete pro každý projekt.",
-            "after": "Zapnete hotové vzory: přihlášení přes Google, přehled a záznamy."
-          },
-          {
-            "topic": "Nalezení stránky",
-            "before": "Udržujete zvláštní texty pro stránku a pro soubory k vyhledávání.",
-            "after": "Metadata, strukturovaná data a llms.txt vzniknou z obsahu stránky."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Co je v nabídce",
-        "intro": "Nabídky jako karty: filtrujte podle druhu, otevřete je na mapě a na kteroukoli se zeptejte jedním kliknutím.",
-        "notice": "Tyto nabídky jsou ilustrační příklady, ne skutečná nabídka.",
-        "categoryLabels": {
-          "apartment": "Byt",
-          "house": "Dům",
-          "office": "Kancelář"
-        },
-        "attributeLabels": {
-          "area": "Plocha",
-          "rooms": "Pokoje"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Třípokojový byt blízko centra",
-            "summary": "Světlý byt ve čtvrtém patře s balkonem a sklepem.",
-            "highlights": [
-              "Balkon",
-              "Výtah"
-            ]
-          },
-          "offer-2": {
-            "title": "Rodinný dům se zahradou",
-            "summary": "Samostatně stojící dům v klidné ulici, deset minut od centra.",
-            "highlights": [
-              "Zahrada",
-              "Garáž"
-            ]
-          },
-          "offer-3": {
-            "title": "Kancelářské patro pro malý tým",
-            "summary": "Otevřená kancelář se dvěma zasedacími místnostmi, připravená k nastěhování."
-          }
-        },
-        "inquireLabel": "Zeptat se na tuto nabídku"
-      }
-    },
-    "de": {
-      "description": "Baukasten-Starter: Landingpage, Google-Anmeldung, Übersicht, Datentabelle und Karte — konfiguriert, nicht generiert.",
-      "landing": {
-        "headline": "Eine Konfiguration. Ein funktionierender Prototyp.",
-        "subheadline": "Sehen Sie sich die Landingpage an, melden Sie sich an und probieren Sie die Arbeit mit Einträgen aus. Jedes Kapitel ist eine fertige Komponente, gefüllt mit demselben Inhalt, den Suchmaschinen und KI lesen.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Dreißig Farbpaletten",
-            "description": "Fünfzehn Paare, fünf Paletten mit sieben Farben und zehn tonale Paletten mit zwanzig; der WCAG-AA-Kontrast wird beim Build geprüft."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Muster aus der Konfiguration",
-            "description": "Landingpage, Anmeldung, Übersicht, Datentabelle, Karte — aktiv, sobald sie in prototype.config.json stehen."
-          },
-          {
-            "icon": "globe",
-            "title": "Statischer Export",
-            "description": "Next.js 16 erzeugt statisches HTML. Überall bereitstellbar — Firebase, Vercel, ein CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "Wie probieren Sie den Prototyp aus?",
-          "steps": [
-            {
-              "title": "Sehen Sie sich die Landingpage an",
-              "description": "Scrollen Sie durch die Kapitel und sehen Sie die aktiven Muster."
-            },
-            {
-              "title": "Melden Sie sich mit Google an",
-              "description": "Öffnen Sie die Übersicht mit Ihrem eigenen Konto."
-            },
-            {
-              "title": "Probieren Sie eigene Einträge aus",
-              "description": "Fügen Sie in Ihrem privaten Bereich Einträge hinzu und bearbeiten Sie sie."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "Was sollten Sie vor dem Ausprobieren wissen?",
-          "items": [
-            {
-              "question": "Ist das generierter Code?",
-              "answer": "Nein. Der Prototyp nutzt fertige Komponenten, die eine JSON-Konfiguration aktiviert."
-            },
-            {
-              "question": "Wo liegen die Einträge?",
-              "answer": "Angemeldete Besucher arbeiten mit ihren eigenen Einträgen in einem privaten Firestore-Bereich."
-            },
-            {
-              "question": "Funktioniert die Seite auf dem Handy?",
-              "answer": "Ja. Auf dem Handy erscheinen dieselben Kapitel als ein scrollbares Dokument. Am Desktop kann die Geschichte auf einer festen Bühne ablaufen."
-            }
-          ]
-        },
-        "featuresHeading": "Was ist schon gebaut?",
-        "eyebrow": "Prototypen aus einer Konfiguration",
-        "manifesto": {
-          "lead": "Ein Prototyp ist diese Vorlage, unverändert, plus eine Datei.",
-          "body": "Jeder Abschnitt, jede Tabelle und jede Karte ist echter Code, der bereits läuft. Die Konfiguration schaltet sie ein und schreibt ihre Texte, sodass ein Kunde seine Idee in Funktion sieht statt eines Mockups."
-        }
-      },
-      "dashboard": {
-        "title": "Übersicht"
-      },
-      "cta": {
-        "label": "Loslegen",
-        "title": "Probieren Sie die fertigen Muster aus",
-        "subtitle": "Melden Sie sich an und sehen Sie sich die Übersicht und Ihre eigenen Einträge an."
-      },
-      "contactForm": {
-        "heading": "Schreiben Sie uns",
-        "submitLabel": "Nachricht senden"
-      },
-      "dataGrid": {
-        "entityLabel": "Standort",
-        "fieldLabels": {
-          "name": "Name",
-          "category": "Kategorie",
-          "opened": "Eröffnet",
-          "active": "Aktiv"
-        },
-        "sampleRecords": [
-          {
-            "name": "Büro am Fluss",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Depot Ost",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Lager Nord",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Was können Sie hier ausprobieren?",
-        "items": [
-          {
-            "title": "Eine Produktidee erkunden",
-            "situation": "Sie möchten sehen, wie aus wiederverwendbaren Bausteinen ein funktionierender Prototyp wird.",
-            "action": "Lesen Sie die Landingpage und melden Sie sich dann an, um Ihre eigene Übersicht zu öffnen."
-          },
-          {
-            "title": "Mit Beispieleinträgen arbeiten",
-            "situation": "Sie brauchen einen Ort, um die Arbeit mit Einträgen auszuprobieren, bevor Sie sich auf eine Idee festlegen.",
-            "action": "Fügen Sie in Ihrem eigenen Bereich nach der Anmeldung Einträge hinzu, bearbeiten und filtern Sie sie."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Wie wird der Prototyp zusammengesetzt?",
-        "beforeLabel": "Eigene Implementierung",
-        "afterLabel": "Diese Vorlage",
-        "rows": [
-          {
-            "topic": "Seiteninhalt",
-            "before": "Jeden Abschnitt als eigene Codeänderung schreiben.",
-            "after": "Lokalisierte Inhalte in eine validierte JSON-Konfiguration eintragen."
-          },
-          {
-            "topic": "Produktbausteine",
-            "before": "Anmeldung und Bedienung der Einträge für jedes Projekt neu implementieren.",
-            "after": "Fertige Muster aktivieren: Google-Anmeldung, Übersicht und Einträge."
-          },
-          {
-            "topic": "Auffindbarkeit der Seite",
-            "before": "Getrennte Texte für die Seite und für die Dateien der Suche pflegen.",
-            "after": "Metadaten, strukturierte Daten und llms.txt aus dem Seiteninhalt erzeugen."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Was im Angebot ist",
-        "intro": "Angebote als Karten: nach Art filtern, auf der Karte öffnen und mit einem Klick nach einem fragen.",
-        "notice": "Diese Angebote sind illustrative Beispiele, kein echtes Angebot.",
-        "categoryLabels": {
-          "apartment": "Wohnung",
-          "house": "Haus",
-          "office": "Büro"
-        },
-        "attributeLabels": {
-          "area": "Fläche",
-          "rooms": "Zimmer"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Dreizimmerwohnung nahe dem Zentrum",
-            "summary": "Eine helle Wohnung im vierten Stock mit Balkon und Keller.",
-            "highlights": [
-              "Balkon",
-              "Aufzug"
-            ]
-          },
-          "offer-2": {
-            "title": "Einfamilienhaus mit Garten",
-            "summary": "Ein freistehendes Haus in einer ruhigen Straße, zehn Minuten vom Zentrum.",
-            "highlights": [
-              "Garten",
-              "Garage"
-            ]
-          },
-          "offer-3": {
-            "title": "Büroetage für ein kleines Team",
-            "summary": "Ein Großraumbüro mit zwei Besprechungsräumen, bezugsfertig."
-          }
-        },
-        "inquireLabel": "Zu diesem Angebot anfragen"
-      }
-    },
-    "pl": {
-      "description": "Składany starter: strona startowa, logowanie przez Google, panel, tabela rekordów i mapa — skonfigurowane, nie wygenerowane.",
-      "landing": {
-        "headline": "Jedna konfiguracja. Działający prototyp.",
-        "subheadline": "Przejrzyj stronę startową, zaloguj się i wypróbuj pracę z rekordami. Każdy rozdział to gotowy komponent, wypełniony tą samą treścią, którą czytają wyszukiwarki i AI.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Trzydzieści palet kolorów",
-            "description": "Piętnaście par, pięć palet po siedem kolorów i dziesięć palet tonalnych po dwadzieścia; kontrast WCAG AA jest sprawdzany już podczas budowania."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Wzorce sterowane konfiguracją",
-            "description": "Strona startowa, logowanie, panel, tabela rekordów, mapa — włączone przez samą obecność w prototype.config.json."
-          },
-          {
-            "icon": "globe",
-            "title": "Eksport statyczny",
-            "description": "Next.js 16 buduje statyczny HTML. Wdrożysz go wszędzie — Firebase, Vercel, CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "Jak wypróbować prototyp?",
-          "steps": [
-            {
-              "title": "Przejrzyj stronę startową",
-              "description": "Przewiń rozdziały, aby zobaczyć włączone wzorce."
-            },
-            {
-              "title": "Zaloguj się przez Google",
-              "description": "Otwórz panel na własnym koncie."
-            },
-            {
-              "title": "Wypróbuj własne rekordy",
-              "description": "Dodawaj i edytuj rekordy w swojej prywatnej przestrzeni."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "Co warto wiedzieć, zanim spróbujesz?",
-          "items": [
-            {
-              "question": "Czy to wygenerowany kod?",
-              "answer": "Nie. Prototyp korzysta z gotowych komponentów, które włącza konfiguracja JSON."
-            },
-            {
-              "question": "Gdzie są przechowywane rekordy?",
-              "answer": "Zalogowani odwiedzający pracują na własnych rekordach w prywatnej przestrzeni w Firestore."
-            },
-            {
-              "question": "Czy strona działa na telefonie?",
-              "answer": "Tak. Telefon pokazuje te same rozdziały jako jeden przewijany dokument. Na komputerze opowieść może stać na stałej scenie."
-            }
-          ]
-        },
-        "featuresHeading": "Co jest już gotowe?",
-        "eyebrow": "Prototypy z jednej konfiguracji",
-        "manifesto": {
-          "lead": "Prototyp to ten szablon, bez zmian, plus jeden plik.",
-          "body": "Każda sekcja, tabela i mapa to prawdziwy kod, który już działa. Konfiguracja je włącza i pisze ich teksty, więc klient widzi swój pomysł w działaniu, a nie makietę."
-        }
-      },
-      "dashboard": {
-        "title": "Panel"
-      },
-      "cta": {
-        "label": "Zacznij",
-        "title": "Wypróbuj działające wzorce",
-        "subtitle": "Zaloguj się, aby zobaczyć panel i własne rekordy."
-      },
-      "contactForm": {
-        "heading": "Napisz do nas",
-        "submitLabel": "Wyślij wiadomość"
-      },
-      "dataGrid": {
-        "entityLabel": "Lokalizacja",
-        "fieldLabels": {
-          "name": "Nazwa",
-          "category": "Kategoria",
-          "opened": "Otwarto",
-          "active": "Aktywne"
-        },
-        "sampleRecords": [
-          {
-            "name": "Biuro nad rzeką",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Baza wschodnia",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Magazyn północny",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Co możesz tu wypróbować?",
-        "items": [
-          {
-            "title": "Sprawdź pomysł na produkt",
-            "situation": "Chcesz zobaczyć, jak z gotowych bloków powstaje działający prototyp.",
-            "action": "Przeczytaj stronę startową, a potem zaloguj się, aby otworzyć własny panel."
-          },
-          {
-            "title": "Pracuj na przykładowych rekordach",
-            "situation": "Potrzebujesz miejsca, by wypróbować pracę z rekordami, zanim zdecydujesz się na pomysł.",
-            "action": "Dodawaj, edytuj i filtruj rekordy we własnej przestrzeni po zalogowaniu."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Jak składa się prototyp?",
-        "beforeLabel": "Własna implementacja",
-        "afterLabel": "Ten szablon",
-        "rows": [
-          {
-            "topic": "Treść strony",
-            "before": "Każdą sekcję piszesz jako osobną zmianę w kodzie.",
-            "after": "Zlokalizowaną treść wpisujesz do walidowanej konfiguracji JSON."
-          },
-          {
-            "topic": "Elementy produktu",
-            "before": "Logowanie i obsługę rekordów implementujesz w każdym projekcie.",
-            "after": "Włączasz gotowe wzorce: logowanie przez Google, panel i rekordy."
-          },
-          {
-            "topic": "Odnajdywanie strony",
-            "before": "Utrzymujesz osobne teksty dla strony i dla plików wyszukiwania.",
-            "after": "Metadane, dane strukturalne i llms.txt powstają z treści strony."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Co jest w ofercie",
-        "intro": "Oferty jako karty: filtruj według rodzaju, otwieraj je na mapie i zapytaj o dowolną jednym kliknięciem.",
-        "notice": "Te oferty to przykłady poglądowe, a nie rzeczywista oferta.",
-        "categoryLabels": {
-          "apartment": "Mieszkanie",
-          "house": "Dom",
-          "office": "Biuro"
-        },
-        "attributeLabels": {
-          "area": "Powierzchnia",
-          "rooms": "Pokoje"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Trzypokojowe mieszkanie blisko centrum",
-            "summary": "Jasne mieszkanie na czwartym piętrze z balkonem i piwnicą.",
-            "highlights": [
-              "Balkon",
-              "Winda"
-            ]
-          },
-          "offer-2": {
-            "title": "Dom rodzinny z ogrodem",
-            "summary": "Dom wolnostojący przy cichej ulicy, dziesięć minut od centrum.",
-            "highlights": [
-              "Ogród",
-              "Garaż"
-            ]
-          },
-          "offer-3": {
-            "title": "Piętro biurowe dla małego zespołu",
-            "summary": "Biuro typu open space z dwiema salami spotkań, gotowe do wprowadzenia."
-          }
-        },
-        "inquireLabel": "Zapytaj o tę ofertę"
-      }
-    },
-    "hu": {
-      "description": "Összerakható kiindulás: nyitóoldal, Google-bejelentkezés, áttekintés, rekordtáblázat és térkép — beállítva, nem generálva.",
-      "landing": {
-        "headline": "Egy konfiguráció. Egy működő prototípus.",
-        "subheadline": "Nézze meg a nyitóoldalt, jelentkezzen be, és próbálja ki a rekordok kezelését. Minden fejezet kész komponens, ugyanazzal a tartalommal kitöltve, amelyet a keresők és az MI is olvasnak.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Harminc színpaletta",
-            "description": "Tizenöt pár, öt hétszínű paletta és tíz húszszínű tónuspaletta; a WCAG AA kontrasztot már a build ellenőrzi."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Konfigurációval vezérelt minták",
-            "description": "Nyitóoldal, bejelentkezés, áttekintés, rekordtáblázat, térkép — attól kapcsolnak be, hogy szerepelnek a prototype.config.json fájlban."
-          },
-          {
-            "icon": "globe",
-            "title": "Statikus export",
-            "description": "A Next.js 16 statikus HTML-t készít. Bárhová telepíthető — Firebase, Vercel, CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "Hogyan próbálhatja ki a prototípust?",
-          "steps": [
-            {
-              "title": "Nézze meg a nyitóoldalt",
-              "description": "Görgesse végig a fejezeteket, és nézze meg a bekapcsolt mintákat."
-            },
-            {
-              "title": "Jelentkezzen be Google-fiókkal",
-              "description": "Nyissa meg az áttekintést a saját fiókjával."
-            },
-            {
-              "title": "Próbálja ki saját rekordjait",
-              "description": "Vegyen fel és szerkesszen rekordokat a saját privát területén."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "Mit érdemes tudni, mielőtt kipróbálja?",
-          "items": [
-            {
-              "question": "Ez generált kód?",
-              "answer": "Nem. A prototípus kész komponenseket használ, amelyeket egy JSON-konfiguráció kapcsol be."
-            },
-            {
-              "question": "Hol vannak a rekordok?",
-              "answer": "A bejelentkezett látogatók a saját rekordjaikkal dolgoznak egy privát Firestore-területen."
-            },
-            {
-              "question": "Működik az oldal telefonon?",
-              "answer": "Igen. Telefonon ugyanazok a fejezetek egy görgethető dokumentumként jelennek meg. Asztali gépen a történet rögzített színpadon is futhat."
-            }
-          ]
-        },
-        "featuresHeading": "Mi készült már el?",
-        "eyebrow": "Prototípusok egyetlen konfigurációból",
-        "manifesto": {
-          "lead": "A prototípus ez a sablon, változatlanul, és még egy fájl.",
-          "body": "Minden szakasz, táblázat és térkép valódi kód, amely már fut. A konfiguráció bekapcsolja őket és megírja a szövegüket, így az ügyfél a saját ötletét látja működni, nem egy makettet."
-        }
-      },
-      "dashboard": {
-        "title": "Áttekintés"
-      },
-      "cta": {
-        "label": "Kezdés",
-        "title": "Próbálja ki a működő mintákat",
-        "subtitle": "Jelentkezzen be, és nézze meg az áttekintést és a saját rekordjait."
-      },
-      "contactForm": {
-        "heading": "Írjon nekünk",
-        "submitLabel": "Üzenet küldése"
-      },
-      "dataGrid": {
-        "entityLabel": "Helyszín",
-        "fieldLabels": {
-          "name": "Név",
-          "category": "Kategória",
-          "opened": "Megnyitva",
-          "active": "Aktív"
-        },
-        "sampleRecords": [
-          {
-            "name": "Folyóparti iroda",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Keleti depó",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Északi raktár",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Mit próbálhat ki itt?",
-        "items": [
-          {
-            "title": "Fedezzen fel egy termékötletet",
-            "situation": "Látni szeretné, hogyan áll össze működő prototípus az újrahasználható elemekből.",
-            "action": "Olvassa el a nyitóoldalt, majd jelentkezzen be a saját áttekintéséhez."
-          },
-          {
-            "title": "Dolgozzon mintarekordokkal",
-            "situation": "Olyan helyre van szüksége, ahol kipróbálhatja a rekordok kezelését, mielőtt elköteleződik egy ötlet mellett.",
-            "action": "Vegyen fel, szerkesszen és szűrjön rekordokat a saját területén bejelentkezés után."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Hogyan áll össze a prototípus?",
-        "beforeLabel": "Egyedi megvalósítás",
-        "afterLabel": "Ez a sablon",
-        "rows": [
-          {
-            "topic": "Az oldal tartalma",
-            "before": "Minden szakaszt külön kódmódosításként kell megírni.",
-            "after": "A lokalizált tartalmat egy ellenőrzött JSON-konfigurációba írja."
-          },
-          {
-            "topic": "A termék építőelemei",
-            "before": "A bejelentkezést és a rekordok kezelését minden projekthez meg kell valósítani.",
-            "after": "Bekapcsolja a kész mintákat: Google-bejelentkezés, áttekintés és rekordok."
-          },
-          {
-            "topic": "Az oldal megtalálása",
-            "before": "Külön szöveget kell fenntartani az oldalhoz és a keresést segítő fájlokhoz.",
-            "after": "A metaadatok, a strukturált adatok és az llms.txt az oldal tartalmából készülnek."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Mi van a kínálatban",
-        "intro": "Ajánlatok kártyákon: szűrjön típus szerint, nyissa meg őket a térképen, és egy kattintással érdeklődjön bármelyikről.",
-        "notice": "Ezek az ajánlatok szemléltető példák, nem valódi kínálat.",
-        "categoryLabels": {
-          "apartment": "Lakás",
-          "house": "Ház",
-          "office": "Iroda"
-        },
-        "attributeLabels": {
-          "area": "Alapterület",
-          "rooms": "Szobák"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Háromszobás lakás a központ közelében",
-            "summary": "Világos lakás a negyedik emeleten, erkéllyel és pincével.",
-            "highlights": [
-              "Erkély",
-              "Lift"
-            ]
-          },
-          "offer-2": {
-            "title": "Családi ház kerttel",
-            "summary": "Különálló ház egy csendes utcában, tíz percre a központtól.",
-            "highlights": [
-              "Kert",
-              "Garázs"
-            ]
-          },
-          "offer-3": {
-            "title": "Irodaszint kis csapatnak",
-            "summary": "Egyterű iroda két tárgyalóval, azonnal beköltözhető."
-          }
-        },
-        "inquireLabel": "Érdeklődöm az ajánlatról"
-      }
-    },
-    "fr": {
-      "description": "Base modulaire : page d'accueil, connexion Google, tableau de bord, grille d'enregistrements et carte — configurée, pas générée.",
-      "landing": {
-        "headline": "Une configuration. Un prototype qui fonctionne.",
-        "subheadline": "Parcourez la page d'accueil, connectez-vous et essayez la gestion des enregistrements. Chaque chapitre est un composant existant, rempli du même contenu que lisent les moteurs de recherche et les IA.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Trente palettes de couleurs",
-            "description": "Quinze paires, cinq palettes de sept couleurs et dix palettes tonales de vingt ; le contraste WCAG AA est vérifié à la compilation."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Des modèles pilotés par la configuration",
-            "description": "Page d'accueil, connexion, tableau de bord, grille d'enregistrements, carte — activés par leur présence dans prototype.config.json."
-          },
-          {
-            "icon": "globe",
-            "title": "Export statique",
-            "description": "Next.js 16 produit du HTML statique. Déployez-le partout — Firebase, Vercel, un CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "Comment essayer le prototype ?",
-          "steps": [
-            {
-              "title": "Parcourez la page d'accueil",
-              "description": "Faites défiler les chapitres pour voir les modèles activés."
-            },
-            {
-              "title": "Connectez-vous avec Google",
-              "description": "Ouvrez le tableau de bord avec votre propre compte."
-            },
-            {
-              "title": "Essayez vos propres enregistrements",
-              "description": "Ajoutez et modifiez des enregistrements dans votre espace privé."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "Que faut-il savoir avant de l'essayer ?",
-          "items": [
-            {
-              "question": "Est-ce du code généré ?",
-              "answer": "Non. Le prototype utilise des composants existants, activés par une configuration JSON."
-            },
-            {
-              "question": "Où sont stockés les enregistrements ?",
-              "answer": "Les visiteurs connectés travaillent sur leurs propres enregistrements, dans un espace Firestore privé."
-            },
-            {
-              "question": "La page fonctionne-t-elle sur téléphone ?",
-              "answer": "Oui. Sur téléphone, les mêmes chapitres s'affichent comme un document à faire défiler. Sur ordinateur, le récit peut se dérouler sur une scène fixe."
-            }
-          ]
-        },
-        "featuresHeading": "Qu'est-ce qui est déjà construit ?",
-        "eyebrow": "Des prototypes, une seule configuration",
-        "manifesto": {
-          "lead": "Un prototype, c'est ce modèle, inchangé, plus un fichier.",
-          "body": "Chaque section, grille et carte est du vrai code qui tourne déjà. La configuration les active et écrit leurs textes : le client voit son idée fonctionner plutôt qu'une maquette."
-        }
-      },
-      "dashboard": {
-        "title": "Tableau de bord"
-      },
-      "cta": {
-        "label": "Commencer",
-        "title": "Essayez les modèles qui fonctionnent",
-        "subtitle": "Connectez-vous pour découvrir le tableau de bord et vos propres enregistrements."
-      },
-      "contactForm": {
-        "heading": "Contactez-nous",
-        "submitLabel": "Envoyer le message"
-      },
-      "dataGrid": {
-        "entityLabel": "Site",
-        "fieldLabels": {
-          "name": "Nom",
-          "category": "Catégorie",
-          "opened": "Ouverture",
-          "active": "Actif"
-        },
-        "sampleRecords": [
-          {
-            "name": "Bureau des quais",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Dépôt Est",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Entrepôt Nord",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "Que pouvez-vous essayer ici ?",
-        "items": [
-          {
-            "title": "Explorer une idée de produit",
-            "situation": "Vous voulez voir comment des blocs réutilisables forment un prototype qui fonctionne.",
-            "action": "Lisez la page d'accueil, puis connectez-vous pour ouvrir votre propre tableau de bord."
-          },
-          {
-            "title": "Travailler avec des enregistrements d'exemple",
-            "situation": "Vous cherchez un endroit pour essayer la gestion d'enregistrements avant de vous engager sur une idée.",
-            "action": "Ajoutez, modifiez et filtrez des enregistrements dans votre propre espace, une fois connecté."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "Comment le prototype est-il assemblé ?",
-        "beforeLabel": "Développement sur mesure",
-        "afterLabel": "Ce modèle",
-        "rows": [
-          {
-            "topic": "Contenu de la page",
-            "before": "Écrire chaque section comme une modification de code distincte.",
-            "after": "Renseigner le contenu localisé dans une configuration JSON validée."
-          },
-          {
-            "topic": "Briques du produit",
-            "before": "Implémenter l'authentification et la gestion des enregistrements pour chaque projet.",
-            "after": "Activer les modèles existants : connexion Google, tableau de bord et enregistrements."
-          },
-          {
-            "topic": "Trouver la page",
-            "before": "Maintenir des textes distincts pour la page et pour les fichiers de découverte.",
-            "after": "Générer les métadonnées, les données structurées et llms.txt à partir du contenu de la page."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Ce qui est proposé",
-        "intro": "Des offres en cartes : filtrez par type, ouvrez-les sur la carte et renseignez-vous sur l'une d'elles en un clic.",
-        "notice": "Ces offres sont des exemples illustratifs, pas une offre réelle.",
-        "categoryLabels": {
-          "apartment": "Appartement",
-          "house": "Maison",
-          "office": "Bureau"
-        },
-        "attributeLabels": {
-          "area": "Surface",
-          "rooms": "Pièces"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Trois-pièces près du centre",
-            "summary": "Un appartement lumineux au quatrième étage, avec balcon et cave.",
-            "highlights": [
-              "Balcon",
-              "Ascenseur"
-            ]
-          },
-          "offer-2": {
-            "title": "Maison familiale avec jardin",
-            "summary": "Une maison individuelle dans une rue calme, à dix minutes du centre.",
-            "highlights": [
-              "Jardin",
-              "Garage"
-            ]
-          },
-          "offer-3": {
-            "title": "Plateau de bureaux pour une petite équipe",
-            "summary": "Un bureau en open space avec deux salles de réunion, prêt à emménager."
-          }
-        },
-        "inquireLabel": "Se renseigner sur cette offre"
-      }
-    },
-    "es": {
-      "description": "Base componible: página de inicio, acceso con Google, panel, tabla de registros y mapa — configurada, no generada.",
-      "landing": {
-        "headline": "Una configuración. Un prototipo que funciona.",
-        "subheadline": "Recorre la página de inicio, inicia sesión y prueba el trabajo con registros. Cada capítulo es un componente existente, con el mismo contenido que leen los buscadores y la IA.",
-        "features": [
-          {
-            "icon": "star",
-            "title": "Treinta paletas de color",
-            "description": "Quince pares, cinco paletas de siete colores y diez paletas tonales de veinte; el contraste WCAG AA se comprueba al compilar."
-          },
-          {
-            "icon": "list-checks",
-            "title": "Patrones guiados por la configuración",
-            "description": "Página de inicio, acceso, panel, tabla de registros, mapa — activos por estar presentes en prototype.config.json."
-          },
-          {
-            "icon": "globe",
-            "title": "Exportación estática",
-            "description": "Next.js 16 genera HTML estático. Despliégalo donde quieras — Firebase, Vercel, una CDN."
-          }
-        ],
-        "howItWorks": {
-          "heading": "¿Cómo se prueba el prototipo?",
-          "steps": [
-            {
-              "title": "Recorre la página de inicio",
-              "description": "Desplázate por los capítulos para ver los patrones activos."
-            },
-            {
-              "title": "Inicia sesión con Google",
-              "description": "Abre el panel con tu propia cuenta."
-            },
-            {
-              "title": "Prueba tus propios registros",
-              "description": "Añade y edita registros en tu espacio privado."
-            }
-          ]
-        },
-        "faq": {
-          "heading": "¿Qué conviene saber antes de probarlo?",
-          "items": [
-            {
-              "question": "¿Es código generado?",
-              "answer": "No. El prototipo usa componentes existentes que activa una configuración JSON."
-            },
-            {
-              "question": "¿Dónde se guardan los registros?",
-              "answer": "Los visitantes con sesión iniciada trabajan con sus propios registros en un espacio privado de Firestore."
-            },
-            {
-              "question": "¿Funciona la página en el móvil?",
-              "answer": "Sí. En el móvil los mismos capítulos se muestran como un documento que se desplaza. En escritorio, el relato puede avanzar sobre un escenario fijo."
-            }
-          ]
-        },
-        "featuresHeading": "¿Qué está ya construido?",
-        "eyebrow": "Prototipos con una sola configuración",
-        "manifesto": {
-          "lead": "Un prototipo es esta plantilla, sin cambios, más un archivo.",
-          "body": "Cada sección, tabla y mapa es código real que ya funciona. La configuración los activa y escribe sus textos, así el cliente ve su idea funcionando en lugar de una maqueta."
-        }
-      },
-      "dashboard": {
-        "title": "Panel"
-      },
-      "cta": {
-        "label": "Empezar",
-        "title": "Prueba los patrones que ya funcionan",
-        "subtitle": "Inicia sesión para explorar el panel y tus propios registros."
-      },
-      "contactForm": {
-        "heading": "Ponte en contacto",
-        "submitLabel": "Enviar mensaje"
-      },
-      "dataGrid": {
-        "entityLabel": "Ubicación",
-        "fieldLabels": {
-          "name": "Nombre",
-          "category": "Categoría",
-          "opened": "Apertura",
-          "active": "Activo"
-        },
-        "sampleRecords": [
-          {
-            "name": "Oficina de la ribera",
-            "category": "Office",
-            "opened": "2026-08-12",
-            "active": true
-          },
-          {
-            "name": "Depósito este",
-            "category": "Depot",
-            "opened": "2026-07-30",
-            "active": true
-          },
-          {
-            "name": "Almacén norte",
-            "category": "Warehouse",
-            "opened": "2026-09-02",
-            "active": false
-          }
-        ]
-      },
-      "useCases": {
-        "heading": "¿Qué puedes probar aquí?",
-        "items": [
-          {
-            "title": "Explora una idea de producto",
-            "situation": "Quieres ver cómo los bloques reutilizables forman un prototipo que funciona.",
-            "action": "Lee la página de inicio y luego inicia sesión para abrir tu propio panel."
-          },
-          {
-            "title": "Trabaja con registros de ejemplo",
-            "situation": "Necesitas un lugar donde probar el trabajo con registros antes de apostar por una idea.",
-            "action": "Añade, edita y filtra registros en tu propio espacio, con la sesión iniciada."
-          }
-        ]
-      },
-      "comparison": {
-        "heading": "¿Cómo se monta el prototipo?",
-        "beforeLabel": "Implementación a medida",
-        "afterLabel": "Esta plantilla",
-        "rows": [
-          {
-            "topic": "Contenido de la página",
-            "before": "Escribir cada sección como un cambio de código aparte.",
-            "after": "Rellenar el contenido localizado en una configuración JSON validada."
-          },
-          {
-            "topic": "Piezas del producto",
-            "before": "Implementar la autenticación y el manejo de registros en cada proyecto.",
-            "after": "Activar los patrones existentes: acceso con Google, panel y registros."
-          },
-          {
-            "topic": "Encontrar la página",
-            "before": "Mantener textos separados para la página y para los archivos de descubrimiento.",
-            "after": "Generar metadatos, datos estructurados y llms.txt a partir del contenido de la página."
-          }
-        ]
-      },
-      "listings": {
-        "heading": "Qué hay en oferta",
-        "intro": "Ofertas en tarjetas: filtra por tipo, ábrelas en el mapa y pregunta por una con un solo clic.",
-        "notice": "Estas ofertas son ejemplos ilustrativos, no una oferta real.",
-        "categoryLabels": {
-          "apartment": "Piso",
-          "house": "Casa",
-          "office": "Oficina"
-        },
-        "attributeLabels": {
-          "area": "Superficie",
-          "rooms": "Habitaciones"
-        },
-        "items": {
-          "offer-1": {
-            "title": "Piso de tres habitaciones cerca del centro",
-            "summary": "Un piso luminoso en la cuarta planta, con balcón y trastero.",
-            "highlights": [
-              "Balcón",
-              "Ascensor"
-            ]
-          },
-          "offer-2": {
-            "title": "Casa familiar con jardín",
-            "summary": "Una casa independiente en una calle tranquila, a diez minutos del centro.",
-            "highlights": [
-              "Jardín",
-              "Garaje"
-            ]
-          },
-          "offer-3": {
-            "title": "Planta de oficinas para un equipo pequeño",
-            "summary": "Una oficina diáfana con dos salas de reuniones, lista para entrar."
-          }
-        },
-        "inquireLabel": "Preguntar por esta oferta"
       }
     }
   }
