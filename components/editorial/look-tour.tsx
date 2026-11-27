@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { showLook } from "@tokenwise/shared-ui";
+import { BRAND_SCHEME_ID } from "@tokenwise/shared-ui/theming";
 import { lookOf, nextLook } from "@/lib/look-tour";
 
 /**
@@ -17,17 +18,22 @@ import { lookOf, nextLook } from "@/lib/look-tour";
  *   - once per arrival: the same section arriving again straight after (the new face moved its
  *     edge back under the middle, or the visitor wiggled) does not change the look twice;
  *   - until the visitor picks a look with a header control (the pad's colour and button keys
- *     press those): from then on the page is theirs;
+ *     press those; the picture's veil counts too) or with the pad's "My brand" key: from then on
+ *     the page is theirs;
+ *   - while the page does not wear a brand: a brand put on any other way ends the tour too, so a
+ *     visitor's own palette is never painted over;
  *   - without reduced motion: a page repainting itself while it scrolls is motion.
  * Going up changes nothing. The look is shown, not kept (`showLook` stores nothing): a reload
  * opens on the page's own look, and tokenwise.sk, which shares the origin, never inherits it.
  * `html[data-look-tour]` says the tour is listening.
  */
 
-/** The header's restyling controls; the language is not a look. */
-const LOOK_CONTROLS = ["palette", "font", "appearance", "button", "image"]
-  .map((name) => `[data-shared-control="${name}"]`)
-  .join(", ");
+/** The visitor's own picks of a look: the header's restyling controls (the language is not a
+ * look) and the pad's "My brand" key. */
+const LOOK_CONTROLS = [
+  ...["palette", "font", "appearance", "button", "image", "veil"].map((name) => `[data-shared-control="${name}"]`),
+  "[data-try='brand']",
+].join(", ");
 
 export function LookTour() {
   useEffect(() => {
@@ -45,6 +51,7 @@ export function LookTour() {
           // Into the window's top half from below: the section's own top is still on screen.
           const arrived = was === false && isIntersecting && boundingClientRect.top >= 0;
           if (!arrived || !byHand || target === last) continue;
+          if (html.dataset.scheme === BRAND_SCHEME_ID) return stop();
           last = target;
           showLook(nextLook(lookOf(html)));
         }

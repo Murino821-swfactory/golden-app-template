@@ -490,12 +490,16 @@ combination of colour, transparency, font, CTA and dark & light mode; the langua
   the config's first-visit look), and tokenwise.sk — the same origin — never inherits a look
   nobody chose.
 - **The visitor's pick ends it:** a click on a header restyling control (`palette`, `font`,
-  `appearance`, `button`, `image`; the pad's colour and button keys press those) stops the tour
-  for the page view, and that pick is stored as always.
+  `appearance`, `button`, `image`, `veil`; the pad's colour and button keys press those) or on
+  the pad's "My brand" key (`[data-try='brand']`) stops the tour for the page view, and a header
+  pick is stored as always.
+- **A brand is never painted over:** a section arriving while the page wears a brand
+  (`html[data-scheme="brand"]`, however it was put on) ends the tour instead of changing the look.
 - **Reduced motion:** no tour. `html[data-look-tour]` says the tour is listening.
 - Tests: `tests/look-tour.spec.ts` (each section by hand, all five change, the language stays; the
-  header follows; nothing stored; reload; jumps and scrolling up; the visitor's pick; reduced
-  motion; no tour without `tryIt`), `tests/look-tour-logic.spec.ts`.
+  header follows; nothing stored; reload; jumps and scrolling up; the visitor's pick, the veil and
+  "My brand"; a brand put on another way; reduced motion; no tour without `tryIt`),
+  `tests/look-tour-logic.spec.ts`.
 
 ## The look of the landing's action (2026-11-25)
 

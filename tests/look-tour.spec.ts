@@ -145,7 +145,78 @@ test.describe("the tour of looks — the golden demo", () => {
     await settle(page);
     expect(await lookOnScreen(page)).toEqual(picked);
   });
+
+  test("the veil switch is the visitor's pick too: it ends the tour", async ({ page }) => {
+    test.skip(page.viewportSize()!.width < 1024, "the bar carries the veil from 1024px; below it the menu's row is the same control");
+    const html = page.locator("html");
+    const own = await lookOnScreen(page);
+    await wheelTo(page, SECTIONS[1]!);
+    const shown = await changedFrom(page, own);
+    await page.getByRole("banner").locator('[data-shared-control="veil"]').click();
+    await expect(html).not.toHaveAttribute("data-look-tour", "");
+    await wheelTo(page, SECTIONS[2]!);
+    await settle(page);
+    expect(await lookOnScreen(page)).toEqual(shown);
+  });
+
+  test("\"My brand\" is the visitor's pick too: the key ends the tour and the brand stays while scrolling", async ({ page }) => {
+    test.skip(!(await page.locator(BRAND_KEY).count()), "no \"My brand\" key in this config");
+    const html = page.locator("html");
+    const own = await lookOnScreen(page);
+    await wheelTo(page, SECTIONS[1]!);
+    await changedFrom(page, own);
+    const picture = await brandBoard(page);
+    const [chooser] = await Promise.all([page.waitForEvent("filechooser"), page.locator(BRAND_KEY).click()]);
+    await chooser.setFiles(picture);
+    await expect(html).toHaveAttribute("data-scheme", "brand", { timeout: 30_000 });
+    await expect(html).not.toHaveAttribute("data-look-tour", "");
+    await wheelTo(page, SECTIONS[2]!);
+    await settle(page);
+    await expect(html).toHaveAttribute("data-scheme", "brand");
+  });
+
+  test("a brand put on the page any other way ends the tour too", async ({ page }) => {
+    test.skip(!(await page.locator(BRAND_KEY).count()), "no \"My brand\" key in this config");
+    const html = page.locator("html");
+    const own = await lookOnScreen(page);
+    await wheelTo(page, SECTIONS[1]!);
+    await changedFrom(page, own);
+    // The picture lands on the input without a press on the key (a drop, a script).
+    await page.setInputFiles(BRAND_INPUT, await brandBoard(page));
+    await expect(html).toHaveAttribute("data-scheme", "brand", { timeout: 30_000 });
+    const branded = await lookOnScreen(page);
+    await wheelTo(page, SECTIONS[2]!);
+    await settle(page);
+    expect(await lookOnScreen(page)).toEqual(branded);
+    await expect(html).not.toHaveAttribute("data-look-tour", "");
+  });
 });
+
+const BRAND_KEY = "[data-try-pad] button[data-try='brand']";
+const BRAND_INPUT = "[data-try-pad] input[data-try-brand-input]";
+
+/** A dark brand board drawn in the page (the dark case of `tests/brand-try.spec.ts`), as a file. */
+async function brandBoard(page: Page) {
+  const base64 = await page.evaluate(async () => {
+    await document.fonts.load('600 92px "Inter"');
+    const canvas = document.createElement("canvas");
+    canvas.width = 900;
+    canvas.height = 1400;
+    const c = canvas.getContext("2d")!;
+    c.fillStyle = "#0B0705";
+    c.fillRect(0, 0, 900, 1400);
+    c.font = '600 92px "Inter"';
+    c.fillStyle = "#F6F5F3";
+    c.fillText("Fresh bread made", 70, 300);
+    c.fillStyle = "#F85807";
+    c.fillText("every morning.", 70, 400);
+    c.beginPath();
+    c.arc(450, 980, 230, 0, Math.PI * 2);
+    c.fill();
+    return canvas.toDataURL("image/png").split(",")[1]!;
+  });
+  return { name: "brand.png", mimeType: "image/png", buffer: Buffer.from(base64, "base64") };
+}
 
 test("under reduced motion the golden demo keeps its look while scrolling", async ({ page }) => {
   test.skip(!TRY, "only the golden demo (tryIt) tours its looks");
