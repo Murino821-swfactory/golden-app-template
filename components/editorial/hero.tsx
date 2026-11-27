@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { HeroImageControls } from "@/components/sections/hero-image-controls";
 import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
 import { ProductPreview } from "@/components/sections/product-preview";
-import { useContent } from "@/hooks/use-content";
+import { useAppName, useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { insertBrand, useBrandTry } from "@/lib/brand-try";
 import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
@@ -157,6 +157,7 @@ export function HeroSection() {
   const t = useTranslations("landing");
   const locale = useLocale();
   const content = useContent();
+  const appName = useAppName();
   const landing = content.landing;
   const action = landingActionHref(config.patterns);
   // A route is served per language; an anchor is the same on every document.
@@ -248,13 +249,13 @@ export function HeroSection() {
         >
           {tried?.logo ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={tried.logo.url} alt={config.appName} data-brand-logo="any" className="editorial-enter h-9 w-auto max-w-[70%] object-contain sm:h-11" />
+            <img src={tried.logo.url} alt={appName} data-brand-logo="any" className="editorial-enter h-9 w-auto max-w-[70%] object-contain sm:h-11" />
           ) : config.theme.brand?.logo ? (
             // "Insert my brand": the customer's logo opens the hero; the header keeps tokenwise.sk's.
             // Two files when the brand has a light-side variant: CSS shows the one for the side on screen.
             <span className="editorial-enter inline-flex" data-brand-logo-slot>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${config.theme.brand.logo}`} alt={config.appName} data-brand-logo={config.theme.brand.logoOnLight ? "dark" : "any"} className="h-9 w-auto sm:h-11" />
+              <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${config.theme.brand.logo}`} alt={appName} data-brand-logo={config.theme.brand.logoOnLight ? "dark" : "any"} className="h-9 w-auto sm:h-11" />
               {config.theme.brand.logoOnLight ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${config.theme.brand.logoOnLight}`} alt="" aria-hidden data-brand-logo="light" className="h-9 w-auto sm:h-11" />
@@ -262,7 +263,7 @@ export function HeroSection() {
             </span>
           ) : (
             <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
-              {eyebrow ?? config.appName}
+              {eyebrow ?? appName}
             </Eyebrow>
           )}
           <EditableText
@@ -303,7 +304,7 @@ export function HeroSection() {
           )}
           {name === "hidden" && (
             <span data-app-name className="sr-only">
-              {config.appName}
+              {appName}
             </span>
           )}
           {/* A film or a still is the hero's picture already: no tiles floating over it. */}
@@ -335,7 +336,7 @@ export function HeroSection() {
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span aria-hidden className="size-2.5 rounded-full bg-muted-foreground/40" />
                 <span data-app-name className="ml-2 truncate text-xs font-medium text-muted-foreground">
-                  {config.appName}
+                  {appName}
                 </span>
                 <span data-frame-meta suppressHydrationWarning className="ml-auto hidden shrink-0 text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:inline">
                   {built}

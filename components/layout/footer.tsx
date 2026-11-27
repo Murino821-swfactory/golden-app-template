@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { navFor } from "@tokenwise/shared-ui";
 import { BRAND_SITE } from "@/lib/editorial";
-import { config } from "@/lib/prototype-config";
+import { AppName } from "@/components/app-name";
 
 /** tokenwise.sk's public nav, every link absolute to the site — the list the header used to
  * carry (founder decision 2026-10-26), read from the package so the site's nav still exists
@@ -32,7 +32,7 @@ export function Footer() {
         ))}
       </nav>
       <p>
-        &copy; {new Date().getFullYear()} {config.appName}
+        &copy; {new Date().getFullYear()} <AppName />
       </p>
       {/* EU AI Act Art. 50 — synthetic-content disclosure (OTH-198). Subtle, uses the
           footer's muted token so it follows the customer's palette. */}

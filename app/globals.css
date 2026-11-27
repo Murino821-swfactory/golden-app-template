@@ -247,3 +247,21 @@
 html[data-button] [data-cta]:not(.editorial-pill) {
   padding-inline: 1.25rem;
 }
+
+/* ── A customer's texts on the golden demo (founder, 2026-11-27) ───────────────────────────────
+   A page opened from a preview link waits for the customer's words unseen, so the demo's own
+   words never flash first (`lib/customer-texts.ts`, `components/editorial/customer-texts.tsx`).
+   The header stays: it is tokenwise.sk's, not the customer's. The wait ends at the latest after
+   8 s even if no script ever runs — the animation uncovers the page by itself; the loader gives
+   up after the same `CUSTOMER_TEXTS_TIMEOUT_MS`. */
+html[data-customer-texts="loading"] main,
+html[data-customer-texts="loading"] footer {
+  visibility: hidden;
+  animation: customer-texts-uncover 0s linear 8s forwards;
+}
+
+@keyframes customer-texts-uncover {
+  to {
+    visibility: visible;
+  }
+}

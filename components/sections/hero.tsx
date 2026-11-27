@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { useContent } from "@/hooks/use-content";
+import { useAppName, useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
 import { cn } from "@/lib/utils";
@@ -56,6 +56,7 @@ function HeroBackground({ src }: { src: string }) {
 export function HeroSection() {
   const t = useTranslations("landing");
   const content = useContent();
+  const appName = useAppName();
   const landing = content.landing;
   const href = landingActionHref(config.patterns);
   const headline = landing?.headline ?? t("title");
@@ -80,7 +81,7 @@ export function HeroSection() {
           style={hero.src ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
           <p data-app-name className="text-sm font-medium uppercase tracking-widest text-muted-foreground">
-            {config.appName}
+            {appName}
           </p>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{headline}</h1>
           <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">{subheadline}</p>
