@@ -15,6 +15,7 @@ import { landingJsonLd } from "@/lib/seo";
 import { config, landingPresentation } from "@/lib/prototype-config";
 import { EDITORIAL_SECTIONS } from "@/components/editorial/registry";
 import { TextEditing } from "@/components/editorial/try-it";
+import { LookTour } from "@/components/editorial/look-tour";
 
 // ONE source of truth for sections: prototype.config.json (P5). This used to also be
 // readable from a `?sections=` URL param, wired for a wizard iframe preview that stopped
@@ -58,6 +59,9 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       })} />
       {/* "Change texts" on the golden demo: one editing for every text of the document. */}
       {config.patterns.landing?.tryIt === true && <TextEditing />}
+      {/* The tour of looks on the golden demo: each new section scrolled into by hand wears
+          another colour, face, dark/light, action and picture transparency. */}
+      {config.patterns.landing?.tryIt === true && <LookTour />}
     </>
   );
 }

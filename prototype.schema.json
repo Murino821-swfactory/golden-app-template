@@ -1144,6 +1144,78 @@
               "clay-kiln"
             ]
           },
+          "brand": {
+            "type": "object",
+            "properties": {
+              "colors": {
+                "minItems": 2,
+                "maxItems": 19,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^#?[0-9A-Fa-f]{6}$"
+                }
+              },
+              "image": {
+                "type": "object",
+                "properties": {
+                  "src": {
+                    "type": "string",
+                    "pattern": "^\\/(?!\\/)[^\\\\]*$"
+                  },
+                  "placement": {
+                    "default": "object",
+                    "type": "string",
+                    "enum": [
+                      "object",
+                      "background"
+                    ]
+                  },
+                  "frame": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "src"
+                ]
+              },
+              "logo": {
+                "type": "string",
+                "pattern": "^\\/(?!\\/)[^\\\\]*$"
+              },
+              "logoOnLight": {
+                "type": "string",
+                "pattern": "^\\/(?!\\/)[^\\\\]*$"
+              },
+              "display": {
+                "type": "object",
+                "properties": {
+                  "weight": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 900
+                  },
+                  "tracking": {
+                    "type": "number",
+                    "minimum": -0.1,
+                    "maximum": 0.1
+                  },
+                  "emphasis": {
+                    "type": "string",
+                    "enum": [
+                      "accent",
+                      "ink"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": [
+              "colors"
+            ],
+            "description": "Leave out unless the customer inserted their brand. The palette read from their image (2-19 hex colours, the page's own AA rule derives the roles), the image the landing wears, their logo, the headline's weight, tracking and emphasis colour. The action's look stays `theme.button`."
+          },
           "appearance": {
             "default": "dark",
             "type": "string",

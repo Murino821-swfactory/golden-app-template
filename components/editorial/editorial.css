@@ -982,3 +982,26 @@ details[open] .editorial-plus::before {
 /* No `scroll-behavior: smooth`: a hash set while a smooth scroll is still running is
    dropped by Chromium, and the anchors test (OTH-144) walks the sections by hash in quick
    succession. Anchors jump, as everywhere else in the template. */
+
+/* ── Insert my brand: the headline keeps the brand's weight, tracking and emphasis colour ── */
+html[data-brand-display] .editorial-display {
+  font-weight: var(--brand-display-weight, 300);
+  letter-spacing: var(--brand-display-tracking, -0.03em);
+}
+html[data-brand-display] .editorial-display [data-display-emphasis] {
+  font-weight: var(--brand-display-weight, 500);
+}
+html[data-brand-emphasis="accent"] .editorial-display [data-display-emphasis] {
+  color: var(--primary);
+}
+html [data-brand-logo="light"] { display: none; }
+html[data-appearance="light"] [data-brand-logo="light"] { display: block; }
+html[data-appearance="light"] [data-brand-logo="dark"] { display: none; }
+/* A cut-out brand picture floats on the page like the brand's own visual, with no card round it. */
+[data-hero-object][data-frameless] .editorial-object-image {
+  aspect-ratio: auto;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}

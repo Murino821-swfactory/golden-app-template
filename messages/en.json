@@ -59,6 +59,10 @@
     "tryImageHint": "The factory's own footage. On your page the AI paints a picture of your business.",
     "tryStillHint": "A scene from the factory's picture library. On your page the AI paints a picture of your business.",
     "tryTextsHint": "Click any text on the page and type your own. On your page the AI rewrites every text from one instruction.",
+    "tryBrand": "My brand",
+    "tryBrandWorking": "Reading your picture…",
+    "tryBrandHint": "Your colours, typeface and picture are on the page — in this browser only, nothing is sent. Add your logo as a transparent PNG to put it on top.",
+    "tryBrandFailed": "That picture could not be read. Try a PNG, JPG or WebP under 15 MB.",
     "tryTextsDock": "Click any text and type your own"
   },
   "features": {

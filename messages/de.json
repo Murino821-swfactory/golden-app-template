@@ -59,6 +59,10 @@
     "tryImageHint": "Das sind Aufnahmen unserer Fabrik. Auf Ihrer Seite malt die KI ein Bild Ihres Geschäfts.",
     "tryStillHint": "Das ist eine Szene aus der Bibliothek unserer Fabrik. Auf Ihrer Seite malt die KI ein Bild Ihres Geschäfts.",
     "tryTextsHint": "Klicken Sie auf einen beliebigen Text der Seite und schreiben Sie Ihren eigenen. Auf Ihrer Seite schreibt die KI alle Texte nach einer Anweisung um.",
+    "tryBrand": "Meine Marke",
+    "tryBrandWorking": "Ihr Bild wird gelesen…",
+    "tryBrandHint": "Ihre Farben, Ihre Schrift und Ihr Bild sind auf der Seite – nur in diesem Browser, nichts wird gesendet. Fügen Sie Ihr Logo als transparentes PNG hinzu, dann steht es oben auf der Seite.",
+    "tryBrandFailed": "Dieses Bild ließ sich nicht lesen. Versuchen Sie PNG, JPG oder WebP unter 15 MB.",
     "tryTextsDock": "Beliebigen Text anklicken und überschreiben"
   },
   "features": {

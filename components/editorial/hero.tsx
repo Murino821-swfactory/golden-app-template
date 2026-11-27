@@ -9,6 +9,7 @@ import { CopyRewriteControls } from "@/components/sections/copy-rewrite-panel";
 import { ProductPreview } from "@/components/sections/product-preview";
 import { useContent } from "@/hooks/use-content";
 import { useHeroImage } from "@/hooks/use-hero-image";
+import { insertBrand, useBrandTry } from "@/lib/brand-try";
 import { heroArchetype, heroLoop, heroNamePlacement, heroObjectKind } from "@/lib/editorial";
 import { heroFilm, isHeroFilm, nextHeroAsset, type HeroAssetName } from "@/lib/hero-film";
 import { HERO_TEXT_SHADOW, heroOverlayBackground } from "@/lib/hero-overlay";
@@ -89,10 +90,10 @@ function HeroBackground({ src }: { src: string }) {
 }
 
 /** The AI object: a figure beside the words, in a pool of the accent — never under the text. */
-function HeroObject({ src }: { src: string }) {
+function HeroObject({ src, frameless = false }: { src: string; frameless?: boolean }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <figure data-hero-object aria-hidden className="editorial-object editorial-enter relative mx-auto mt-10 w-full max-w-md lg:mt-0 lg:max-w-none">
+    <figure data-hero-object data-frameless={frameless ? "" : undefined} aria-hidden className="editorial-object editorial-enter relative mx-auto mt-10 w-full max-w-md lg:mt-0 lg:max-w-none">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
@@ -100,6 +101,11 @@ function HeroObject({ src }: { src: string }) {
         decoding="async"
         fetchPriority="high"
         onLoad={() => setLoaded(true)}
+        // A picture rendered on the server (the brand's own, "Insert my brand") can finish loading
+        // before React attaches onLoad — then it would stay transparent for good.
+        ref={(el) => {
+          if (el?.complete && el.naturalWidth > 0) setLoaded(true);
+        }}
         className={cn("editorial-object-image w-full transition-opacity duration-700 motion-reduce:transition-none", loaded ? "opacity-100" : "opacity-0")}
       />
     </figure>
@@ -182,8 +188,10 @@ export function HeroSection() {
   // renders exist, so the pick changes nothing it draws yet — but the stage carries it, so the
   // choice is honoured and a brand/product scene can key off it the day it lands.
   const archetype = heroArchetype(config.hero);
-  const background = hero.src && hero.placement === "background" ? hero.src : null;
-  const object = hero.src && hero.placement === "object" ? hero.src : null;
+  // "My brand": a visitor's own picture takes the place of every other one while it is on.
+  const tried = useBrandTry();
+  const background = !tried?.image && hero.src && hero.placement === "background" ? hero.src : null;
+  const object = tried?.image?.url ?? (hero.src && hero.placement === "object" ? hero.src : null);
   const icons = Array.from(new Set((landing?.features ?? []).flatMap((f) => (f.icon ? [f.icon] : []))));
   // The title bar's date, like a dated concept: the month this document was built in.
   const built = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date());
@@ -199,6 +207,13 @@ export function HeroSection() {
   const changeTexts = () => {
     toggle();
     setHint("tryTextsHint");
+  };
+  const changeBrand = (files: File[]) => {
+    setHint("tryBrandWorking");
+    insertBrand(files).then(
+      () => setHint("tryBrandHint"),
+      () => setHint("tryBrandFailed")
+    );
   };
 
   return (
@@ -231,9 +246,25 @@ export function HeroSection() {
           className={cn("editorial-hero-copy relative flex flex-col items-center gap-6 text-center", object && "lg:items-start lg:text-left")}
           style={background || showPicture ? { textShadow: HERO_TEXT_SHADOW } : undefined}
         >
-          <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
-            {eyebrow ?? config.appName}
-          </Eyebrow>
+          {tried?.logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={tried.logo.url} alt={config.appName} data-brand-logo="any" className="editorial-enter h-9 w-auto max-w-[70%] object-contain sm:h-11" />
+          ) : config.theme.brand?.logo ? (
+            // "Insert my brand": the customer's logo opens the hero; the header keeps tokenwise.sk's.
+            // Two files when the brand has a light-side variant: CSS shows the one for the side on screen.
+            <span className="editorial-enter inline-flex" data-brand-logo-slot>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${config.theme.brand.logo}`} alt={config.appName} data-brand-logo={config.theme.brand.logoOnLight ? "dark" : "any"} className="h-9 w-auto sm:h-11" />
+              {config.theme.brand.logoOnLight ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${config.theme.brand.logoOnLight}`} alt="" aria-hidden data-brand-logo="light" className="h-9 w-auto sm:h-11" />
+              ) : null}
+            </span>
+          ) : (
+            <Eyebrow lines={!object} className="editorial-enter" data-app-name={name === "eyebrow" ? "" : undefined}>
+              {eyebrow ?? config.appName}
+            </Eyebrow>
+          )}
           <EditableText
             as="h1"
             editing={editing}
@@ -279,7 +310,16 @@ export function HeroSection() {
           {!object && !showPicture && <FloatingTiles icons={icons} />}
         </div>
 
-        {object && <HeroObject src={object} />}
+        {object && (
+          <HeroObject
+            src={object}
+            frameless={
+              tried?.image
+                ? tried.image.frameless
+                : Boolean(config.theme.brand?.image && config.theme.brand.image.frame === false && object.endsWith(config.theme.brand.image.src))
+            }
+          />
+        )}
       </div>
 
       {hasFrame && (
@@ -321,7 +361,7 @@ export function HeroSection() {
                   carries no link. */}
               {tryIt && (
                 <div data-hero-try>
-                  <TryPad onImage={changeImage} editing={editing} onTexts={changeTexts} hint={hint} />
+                  <TryPad onImage={changeImage} editing={editing} onTexts={changeTexts} onBrand={changeBrand} hint={hint} />
                 </div>
               )}
               <div className="editorial-frame-screen px-3 pb-3 sm:px-4 sm:pb-4">{kind === "preview" ? <ProductPreview /> : <HeroOffers cards={offers} />}</div>

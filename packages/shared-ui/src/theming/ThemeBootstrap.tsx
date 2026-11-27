@@ -1,5 +1,5 @@
 import { BUTTON_STYLE_IDS } from "./button-styles";
-import { APPEARANCES, COLOR_SCHEME_IDS, cssBlocksForBothAppearances } from "./color-schemes";
+import { APPEARANCES, BRAND_SCHEME_ID, COLOR_SCHEME_IDS, cssBlocksForBothAppearances, cssBlocksForBrand } from "./color-schemes";
 import { FONT_IDS } from "./font-families";
 import { IMAGE_TRANSPARENCY_STEPS } from "./image-transparency";
 import { IMAGE_VEIL_STATES } from "./image-veil";
@@ -30,10 +30,12 @@ export function themeBootstrapScript(
   palettes: boolean,
   buttons = false,
   imageTransparency = false,
-  imageVeil = false
+  imageVeil = false,
+  brand = false
 ): string {
+  const schemes = brand ? [BRAND_SCHEME_ID, ...COLOR_SCHEME_IDS] : COLOR_SCHEME_IDS;
   const scheme = palettes
-    ? `var s=localStorage.getItem('scheme');if(${JSON.stringify(COLOR_SCHEME_IDS)}.indexOf(s)>-1){d.dataset.scheme=s}`
+    ? `var s=localStorage.getItem('scheme');if(${JSON.stringify(schemes)}.indexOf(s)>-1){d.dataset.scheme=s}`
     : "";
   const appearance = palettes
     ? `var a=localStorage.getItem('appearance');if(${JSON.stringify(APPEARANCES)}.indexOf(a)>-1){d.dataset.appearance=a;d.classList.toggle('dark',a==='dark')}`
@@ -55,8 +57,11 @@ export function ThemeBootstrap({
   buttons = false,
   imageTransparency = false,
   imageVeil = false,
+  brand,
 }: {
   palettes?: boolean;
+  /** The project's own palette ("Insert my brand"): its colours, shipped as the `brand` scheme. */
+  brand?: readonly string[];
   /** The looks of the page's action (2026-11-25): bring a returning visitor's look back. Off
    * by default: a host turns it on together with the header's `button` prop, its own
    * `html[data-button]` default and the import of `@tokenwise/shared-ui/buttons.css`. */
@@ -72,11 +77,12 @@ export function ThemeBootstrap({
 }) {
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript(palettes, buttons, imageTransparency, imageVeil) }} />
+      <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript(palettes, buttons, imageTransparency, imageVeil, Boolean(brand)) }} />
       {/* Every palette as a `data-scheme` rule, dark and light, so switching the palette or
           the appearance is an attribute write (founder decision 2026-11-25: the visitor
           chooses dark or light, so both ship). Only when the host turned palettes on. */}
       {palettes && <style dangerouslySetInnerHTML={{ __html: cssBlocksForBothAppearances() }} />}
+      {brand && <style dangerouslySetInnerHTML={{ __html: cssBlocksForBrand(brand) }} />}
     </>
   );
 }
