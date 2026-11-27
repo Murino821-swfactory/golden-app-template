@@ -2,7 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { DEFAULT_IMAGE_TRANSPARENCY, Header as SharedHeader, type HeaderLabels } from "@tokenwise/shared-ui";
+import {
+  DEFAULT_IMAGE_TRANSPARENCY,
+  DEFAULT_IMAGE_VEIL,
+  Header as SharedHeader,
+  type HeaderLabels,
+} from "@tokenwise/shared-ui";
 import { useAuth } from "@/hooks/use-auth";
 import { config, initialButtonStyle } from "@/lib/prototype-config";
 import { localePath, routeFromPathname } from "@/lib/locale-routing";
@@ -62,6 +67,10 @@ const LABEL_KEYS = [
   "changeButtonLabel",
   "imageTransparency",
   "changeImageTransparencyLabel",
+  "imageVeil",
+  "changeImageVeilLabel",
+  "imageVeilOn",
+  "imageVeilOff",
   "language",
   "cart",
   "cartLabel",
@@ -106,6 +115,10 @@ export function Header() {
       // <html data-image-transparency>. Passing it is what puts the control in the bar
       // (founder, 2026-11-25).
       imageTransparency={DEFAULT_IMAGE_TRANSPARENCY}
+      // Whether the veil lies over the hero's picture on a first visit — on, the page as it has
+      // always been drawn — the same value `app/shell.tsx` puts on <html data-image-veil>. A
+      // second control beside the transparency, which it never moves (founder, 2026-11-26).
+      imageVeil={DEFAULT_IMAGE_VEIL}
       languages={config.locales.map((id) => ({
         code: id,
         name: LOCALE_NAMES[id] ?? id,

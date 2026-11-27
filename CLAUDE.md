@@ -21,9 +21,10 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Eyebrow pill and manifesto | `prototype.config.json` → `content.<locale>.landing.eyebrow`, `.manifesto` (optional copy the content call writes) |
 | Colour palette | `prototype.config.json` → `theme.colorScheme` (and `packages/shared-ui/src/theming/color-schemes.ts` for the thirty palettes and the rule) |
 | Dark or light — the visitor's switch, and the side a first visit opens on | the header's switch in `packages/shared-ui` (`AppearanceSwitcher`, `appearanceStore`, `cssBlocksForBothAppearances`); `prototype.config.json` → `theme.appearance` (omit = `dark`); `lib/theme-appearance.ts` — see "Dark and light" under "Tailwind Colors" |
-| Header (logo, colour, font, dark/light, button look, image transparency, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
+| Header (logo, colour, font, dark/light, button look, image transparency, image veil, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | The look of the landing's action — the CTA button (glow, block, glass, orbit, marker) and its answer to the click | `prototype.config.json` → `theme.button` (omit = glow); the looks in `packages/shared-ui/buttons.css` and `src/theming/button-styles.ts`, the click in `src/theming/action-press.ts`; the action itself is whatever carries `data-cta` — see "The look of the landing's action" below |
 | How transparent the hero's picture is (a header button, 0 to 100 % in tens; founder 2026-11-25) | `packages/shared-ui/src/theming/image-transparency.ts` (steps), `ImageTransparencySwitcher.tsx`, `imageTransparencyStore`; the fade itself is `components/editorial/stage.css` (`.editorial-film::before`, keyed by `html[data-image-transparency]`); texts `imageTransparency`, `changeImageTransparencyLabel` in all 8 bundles; tests `tests/image-transparency.spec.ts` |
+| Whether the veil lies over the hero's picture (a header button right after the transparency's, on/off, first visit on; founder 2026-11-26: "turns the layer used today on and off; it does not touch the transparency") | `packages/shared-ui/src/theming/image-veil.ts`, `ImageVeilSwitcher.tsx`, `imageVeilStore`; the rule is `components/editorial/stage.css` (`html[data-image-veil="off"] … .editorial-film::after`: only the bottom strip's fade from 80 % is left, as the AI hero image's); texts `imageVeil`, `changeImageVeilLabel`, `imageVeilOn`, `imageVeilOff` in all 8 bundles; tests `tests/image-veil.spec.ts`, `packages/shared-ui/test/image-veil.test.ts` |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
 | AI hero background (buttons, overlay) | `components/sections/hero-image-controls.tsx`, `lib/hero-image.ts`, `lib/hero-overlay.ts` — see "The AI hero image" below; `placement: "object"` draws it beside the words in the editorial hero |
@@ -418,7 +419,8 @@ Consequences when editing:
 This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`**, the
 header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light · button
 (5 looks, 0.9.0 — a host opts in, the prototype does) · image transparency (0 to 100 % in tens,
-0.10.0 — a host opts in, the prototype does) · language · cart · user. Spec and
+0.10.0 — a host opts in, the prototype does) · image veil (on/off, 0.11.0 — a host opts in, the
+prototype does) · language · cart · user. Spec and
 decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
@@ -895,7 +897,7 @@ copy contract, same `data-section` markers — the suites that read the page kee
   `lib/hero-film.ts`) opens on real footage instead of the backlight: `HeroFilm`
   (`components/editorial/hero-film.tsx`) lays it across the first screen under the words — in its
   own colours, like the AI hero image, under a veil of `var(--background)` that follows "Change
-  colour" — and `[data-hero-layout="film"]` gives the stage the first screen's height (whenever the
+  colour" (the header's veil button takes it off, 2026-11-26) — and `[data-hero-layout="film"]` gives the stage the first screen's height (whenever the
   config names a film, also while an AI image owns the hero, so nothing moves). The first frame is
   a `<picture>` in the static HTML (a phone gets its 9:16 cut before any script runs); the video
   lies over it and shows once it is playing (`data-film-on`). **It is told in two parts**

@@ -7,4 +7,5 @@ export * from "./color-schemes";
 export * from "./font-families";
 export * from "./button-styles";
 export * from "./image-transparency";
+export * from "./image-veil";
 export * from "./action-press";

@@ -8,10 +8,12 @@ import { AppearanceSwitcher } from "../switchers/AppearanceSwitcher";
 import { ButtonSwitcher } from "../switchers/ButtonSwitcher";
 import { FontSwitcher } from "../switchers/FontSwitcher";
 import { ImageTransparencySwitcher } from "../switchers/ImageTransparencySwitcher";
+import { ImageVeilSwitcher } from "../switchers/ImageVeilSwitcher";
 import { LanguageSwitcher, type LanguageLink } from "../switchers/LanguageSwitcher";
 import type { ButtonStyleId } from "../theming/button-styles";
 import type { Appearance } from "../theming/color-schemes";
 import type { ImageTransparency } from "../theming/image-transparency";
+import type { ImageVeil } from "../theming/image-veil";
 import type { FontId } from "../theming/font-families";
 import type { HeaderLabels } from "./labels";
 import type { NavItem } from "./nav";
@@ -22,7 +24,7 @@ const ROW =
 /**
  * The full-screen menu below 1024px. It exists for every variant, a prototype's included:
  * with no nav it still carries the font, the appearance, the action's look, the picture's
- * transparency and the languages, which do not fit the bar.
+ * transparency and veil, and the languages, which do not fit the bar.
  *
  * Portalled to `<body>` on purpose: the header carries a backdrop-filter, and an ancestor
  * with one becomes the containing block for `position: fixed` descendants. Rendered in
@@ -37,6 +39,7 @@ export function MenuPanel({
   defaultAppearance,
   defaultButton,
   defaultImageTransparency,
+  defaultImageVeil,
   languages,
   labels,
   toggleRef,
@@ -53,6 +56,8 @@ export function MenuPanel({
   defaultButton?: ButtonStyleId;
   /** Absent: the host has no picture to fade, so the menu has no row for it. */
   defaultImageTransparency?: ImageTransparency;
+  /** Absent: the host has no veil over its picture, so the menu has no row for it. */
+  defaultImageVeil?: ImageVeil;
   languages: readonly LanguageLink[];
   labels: HeaderLabels;
   toggleRef: RefObject<HTMLButtonElement | null>;
@@ -156,6 +161,7 @@ export function MenuPanel({
         {defaultImageTransparency && (
           <ImageTransparencySwitcher defaultStep={defaultImageTransparency} labels={labels} layout="row" />
         )}
+        {defaultImageVeil && <ImageVeilSwitcher defaultState={defaultImageVeil} labels={labels} layout="row" />}
         <LanguageSwitcher languages={languages} labels={labels} layout="list" onNavigate={onClose} />
       </div>
     </div>,

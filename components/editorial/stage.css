@@ -324,6 +324,18 @@
     );
   }
 }
+/* The veil switched off (founder, 2026-11-26: "a configuration that turns the layer used today on
+   and off; it does not touch the transparency"). A button in the header takes the veil above off
+   every picture — film or still scene, dark or light side, phone or desktop — and lays it back;
+   the step is `html[data-image-veil]` (shared-ui's store, `ThemeBootstrap` before the first
+   paint), `on` for every first visit. Off, the picture shows in its own colours, and only the
+   strip where it runs into the page keeps its fade, from 80 % down, as the AI hero image's does
+   (`HERO_FADE_START`, founder decision 2026-10-09: no tint over the picture), so the hero does not
+   end on a hard edge. The words keep their halo of the page's ground (`HERO_TEXT_SHADOW`). The
+   transparency's own layer (`::before`, next) is untouched: neither control moves the other. */
+html[data-image-veil="off"] [data-presentation="editorial"] .editorial-film::after {
+  background: linear-gradient(to bottom, transparent 80%, var(--background) 100%);
+}
 /* The picture's transparency (founder, 2026-11-25): a button in the header steps how much of
    the hero's picture — a film or a still scene — shows. 0 % is the picture as the page draws
    it; each step lays ten per cent more of the page's own ground over it; at 100 % none of it
@@ -332,8 +344,8 @@
    leaves the poster-and-video pair alone (two half-clear layers of one scene would show a
    ghost) and the scroll's own fade. The step is `html[data-image-transparency]` (shared-ui's
    store, `ThemeBootstrap` before the first paint); the veil that keeps the words readable
-   stays as it is, under this layer. Follows "Change colour" and dark/light: no colour of its
-   own. */
+   stays as it is, under this layer — on or off as the veil's own button left it. Follows
+   "Change colour" and dark/light: no colour of its own. */
 html[data-image-transparency="10"] [data-presentation="editorial"] { --image-transparency: 0.1; }
 html[data-image-transparency="20"] [data-presentation="editorial"] { --image-transparency: 0.2; }
 html[data-image-transparency="30"] [data-presentation="editorial"] { --image-transparency: 0.3; }
