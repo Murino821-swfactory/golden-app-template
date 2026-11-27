@@ -611,6 +611,27 @@ export function cssBlocksForBothAppearances(): string {
   return cssBlocksForAll("dark") + cssBlocksForAll("light", '[data-appearance="light"]');
 }
 
+/** The `data-scheme` a project's own palette is keyed by ("Insert my brand"). */
+export const BRAND_SCHEME_ID = "brand";
+
+/**
+ * A project's own palette — the colours read from the customer's brand image — as the same two
+ * rules every built-in palette ships as, dark and light. Same deterministic rule, same gate:
+ * `assertReadable` throws on anything a visitor could not read, so a brand never ships under AA.
+ */
+export function cssBlocksForBrand(colors: readonly string[]): string {
+  const hexes = colors.map((c) => c.replace("#", "").toUpperCase());
+  const block = (appearance: Appearance, scope: string) => {
+    const roles = derivePaletteRoles(hexes, appearance);
+    assertReadable(BRAND_SCHEME_ID, roles);
+    const body = Object.entries(variablesFrom(roles))
+      .map(([name, value]) => `${name}:${value}`)
+      .join(";");
+    return `html${scope}[data-scheme="${BRAND_SCHEME_ID}"]{${body}}`;
+  };
+  return block("dark", "") + block("light", '[data-appearance="light"]');
+}
+
 function variablesFrom(r: SchemeRoles): Record<string, string> {
   // A pair or an accented palette has one surface and one ink for every plane; a tonal
   // palette has its raised plane and its three further inks, and its series of lights.

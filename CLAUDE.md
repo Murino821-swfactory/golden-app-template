@@ -24,6 +24,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Header (logo, colour, font, dark/light, button look, image transparency, image veil, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | The look of the landing's action — the CTA button (glow, block, glass, orbit, marker) and its answer to the click | `prototype.config.json` → `theme.button` (omit = glow); the looks in `packages/shared-ui/buttons.css` and `src/theming/button-styles.ts`, the click in `src/theming/action-press.ts`; the action itself is whatever carries `data-cta` — see "The look of the landing's action" below |
 | How transparent the hero's picture is (a header button, 0 to 100 % in tens; founder 2026-11-25) | `packages/shared-ui/src/theming/image-transparency.ts` (steps), `ImageTransparencySwitcher.tsx`, `imageTransparencyStore`; the fade itself is `components/editorial/stage.css` (`.editorial-film::before`, keyed by `html[data-image-transparency]`); texts `imageTransparency`, `changeImageTransparencyLabel` in all 8 bundles; tests `tests/image-transparency.spec.ts` |
+| "Insert my brand" — the customer's palette, typeface, button look, picture and logo from one image (founder, 2026-11-27) | Config: `prototype.config.json` → `theme.brand` (`colors` 2–19 hex, `image {src, placement, frame}`, `logo`, `logoOnLight`, `display {weight, tracking, emphasis}`; the content call leaves it out) → `cssBlocksForBrand` in `packages/shared-ui` (`html[data-scheme="brand"]`, same rule and AA gate as the thirty), `app/shell.tsx`, `hero.tsx` (logo above the headline — the header keeps tokenwise.sk's), `editorial.css`. The demo's fifth pad key "My brand": `lib/brand-extract.ts` (pure: palette, headline glyphs matched against the ten faces, key visual, cut-out), `lib/brand-try.ts` (in the browser, nothing sent or stored), `try-it.tsx`; texts `landing.tryBrand*` in all 8 bundles; tests `tests/brand-extract.spec.ts`, `tests/brand-try.spec.ts` |
 | Whether the veil lies over the hero's picture (a header button right after the transparency's, on/off, first visit on; founder 2026-11-26: "turns the layer used today on and off; it does not touch the transparency") | `packages/shared-ui/src/theming/image-veil.ts`, `ImageVeilSwitcher.tsx`, `imageVeilStore`; the rule is `components/editorial/stage.css` (`html[data-image-veil="off"] … .editorial-film::after`: only the bottom strip's fade from 80 % is left, as the AI hero image's); texts `imageVeil`, `changeImageVeilLabel`, `imageVeilOn`, `imageVeilOff` in all 8 bundles; tests `tests/image-veil.spec.ts`, `packages/shared-ui/test/image-veil.test.ts` |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
@@ -37,6 +38,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Light loops (Blender renders behind the hero and the closing band), running frame edge | `public/motion/`, `components/editorial/light-loop.tsx`, `editorial.css` `.editorial-light` / `.editorial-run` — see "The editorial presentation" |
 | Which hero backlight loop a prototype wears (T-350 library of 6–8 seamless Blender loops, grey light on black, €0 per project) | `prototype.config.json` → `patterns.landing.motion` — one of `stage-field` (default), `pulse-ring`, `orbit-tiles`, `horizon-sweep`, `data-lines` (`HERO_LOOPS` in `lib/editorial.ts`); finished assets in `public/motion/` — their Blender scenes left the template on 2026-11-22 (git history) |
 | The hero film (T-460): real footage across the first screen instead of the backlight; the visitor's "Change image" / "Change texts" buttons | `prototype.config.json` → `patterns.landing.film` (one of the five films of the asset database, `HERO_ASSETS` in `lib/hero-film.ts` — "Change image" walks all of it: the films and ten still scenes), `patterns.landing.tryIt`; `components/editorial/hero-film.tsx`, `try-it.tsx`, `hero.tsx`, `features.tsx`, `stage.css` (`.editorial-film`, `.editorial-try`, `.editorial-dock`), `lib/text-edit.ts` ("Change texts" on the whole page), `scripts/prune-film.mjs`, `public/film/` — see "The editorial presentation", fifth round. The content call never sets either key |
+| The golden demo's tour of looks — each new section scrolled into by hand wears another palette, font, dark/light, action look and picture transparency, never another language (founder 2026-11-26) | `components/editorial/look-tour.tsx` (when), `lib/look-tour.ts` (which look), shared-ui `showLook` (shown, not stored; 0.12.0); mounted by `app/[locale]/page.tsx` for a `tryIt` config only — see "The golden demo's tour of looks" |
 | The stage — the editorial page's motion scene (T-368 → T-369): backlight, device card, bright panel, phone files; the close keeps the T-340 ribbons | `components/editorial/stage.css`, `light-loop.tsx`, `lib/editorial.ts`, `public/motion/stage-*`, `closing-light*` — see "The editorial presentation", third and fourth rounds |
 | Showcase strip (tokenwise's products, fixed on every prototype) | `lib/showcase.ts`, `components/editorial/strip.tsx`, `public/showcase/` — see "The editorial presentation" |
 | Idea chat (floating launcher → a task for the owner) | `components/idea-chat.tsx`, `lib/idea-chat.ts`; texts `ideaChat` in all 8 bundles — see "Idea chat" |
@@ -420,7 +422,8 @@ This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`*
 header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light · button
 (5 looks, 0.9.0 — a host opts in, the prototype does) · image transparency (0 to 100 % in tens,
 0.10.0 — a host opts in, the prototype does) · image veil (on/off, 0.11.0 — a host opts in, the
-prototype does) · language · cart · user. Spec and
+prototype does) · language · cart · user; since 0.12.0 also a project's own palette
+(`cssBlocksForBrand`, `ThemeBootstrap brand`, "Insert my brand"). Spec and
 decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
@@ -461,6 +464,42 @@ decision in the **sw-factory** repo
   checks); merging to `main` publishes it to npm. Live prototypes never change: the factory's
   `prototypes:refresh` was removed on 2026-11-23, so only new prototypes get a template change.
 - New header copy goes into **all 8** `messages/*.json` bundles (`tests/locale.spec.ts`).
+- **`showLook(look)` (0.12.0)** puts a look — palette, face, dark/light, the action's look, the
+  picture's transparency — on the page and in the header's controls for this view only: the same
+  attributes, `.dark` class and events as a click, nothing in localStorage (each store's `show`;
+  `select` is `show` plus storing). Tests: `packages/shared-ui/test/show-look.test.ts`.
+
+## The golden demo's tour of looks (2026-11-27)
+
+Founder: "as the visitor scrolls down the golden demo, every new section changes to a random
+combination of colour, transparency, font, CTA and dark & light mode; the language stays".
+`LookTour` (`components/editorial/look-tour.tsx`) is mounted by `app/[locale]/page.tsx` for a
+`tryIt` config only — a customer's prototype never tours.
+
+- **When:** a `[data-section]` arrives from below — its top rises past the middle of the window
+  (an IntersectionObserver on the window's top half) — after the visitor has scrolled by hand
+  (a `wheel` or a `touchmove`). A jump is not a tour: an anchor link, a script, `scrollIntoView`,
+  the browser restoring a position — and so every scroll the Playwright suites make, which is
+  why no other suite sees a look change. The section that just changed the look does not change
+  it again straight after (a new face can move its edge back under the middle). Going up changes
+  nothing.
+- **Which look:** `nextLook` (`lib/look-tour.ts`, pure): every control changes — a palette, a
+  face, a look of the action and a transparency step drawn at random from the ones not on
+  screen, and the other side. Never the language.
+- **Shown, not kept:** `showLook` stores nothing, so a reload opens on the visitor's own look (or
+  the config's first-visit look), and tokenwise.sk — the same origin — never inherits a look
+  nobody chose.
+- **The visitor's pick ends it:** a click on a header restyling control (`palette`, `font`,
+  `appearance`, `button`, `image`, `veil`; the pad's colour and button keys press those) or on
+  the pad's "My brand" key (`[data-try='brand']`) stops the tour for the page view, and a header
+  pick is stored as always.
+- **A brand is never painted over:** a section arriving while the page wears a brand
+  (`html[data-scheme="brand"]`, however it was put on) ends the tour instead of changing the look.
+- **Reduced motion:** no tour. `html[data-look-tour]` says the tour is listening.
+- Tests: `tests/look-tour.spec.ts` (each section by hand, all five change, the language stays; the
+  header follows; nothing stored; reload; jumps and scrolling up; the visitor's pick, the veil and
+  "My brand"; a brand put on another way; reduced motion; no tour without `tryIt`),
+  `tests/look-tour-logic.spec.ts`.
 
 ## The look of the landing's action (2026-11-25)
 
@@ -948,7 +987,12 @@ copy contract, same `data-section` markers — the suites that read the page kee
   the frame's title bar — picture, words, colour and, since 2026-11-25, the look of the page's
   action (see "The look of the landing's action") (the colour key presses the shared header's
   palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
-  the frame's own device switch, everything a visitor can change in one place; a frame that carries
+  the frame's own device switch, everything a visitor can change in one place; since 2026-11-27 a
+  fifth key, "My brand", takes the visitor's own picture (and a logo on a transparent background)
+  and reads, in the browser, its palette, the headline's face and weight among the ten, the
+  action's look (orbit on a dark brand, glow on a light one) and its key visual, cut out — a photo
+  is shown whole and leaves the page a clean side; no request, nothing stored, a reload brings the
+  demo back; a frame that carries
   the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to
   stand in the first screen. A hero without a frame keeps the two buttons under its action.
   **"Change texts" opens the whole page (founder, 2026-11-24: "any text that is shown on the whole

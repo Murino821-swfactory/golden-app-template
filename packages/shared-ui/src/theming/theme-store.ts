@@ -16,7 +16,11 @@ export interface AttributeStore<T extends string> {
   /** localStorage key, also read by the bootstrap script. */
   storageKey: string;
   use(serverDefault: T): T;
+  /** The visitor's choice: on the page, in the header, and kept on this device. */
   select(value: T): void;
+  /** On the page and in the header for this view only: nothing is stored, so a reload brings
+   * back the visitor's own choice (`showLook`, 0.11.0). */
+  show(value: T): void;
 }
 
 export function createAttributeStore<T extends string>(opts: {
@@ -36,6 +40,12 @@ export function createAttributeStore<T extends string>(opts: {
     return () => window.removeEventListener(event, onChange);
   };
 
+  const show = (value: T): void => {
+    document.documentElement.dataset[attribute] = value;
+    apply?.(value);
+    window.dispatchEvent(new Event(event));
+  };
+
   return {
     storageKey,
     use(serverDefault: T): T {
@@ -51,14 +61,13 @@ export function createAttributeStore<T extends string>(opts: {
       );
     },
     select(value: T): void {
-      document.documentElement.dataset[attribute] = value;
-      apply?.(value);
       try {
         localStorage.setItem(storageKey, value);
       } catch {
         // Private mode: the choice still applies to this page view, it just will not persist.
       }
-      window.dispatchEvent(new Event(event));
+      show(value);
     },
+    show,
   };
 }

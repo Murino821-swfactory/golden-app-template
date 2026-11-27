@@ -59,6 +59,10 @@
     "tryImageHint": "Ezek a gyárunk felvételei. Az Ön oldalán az AI az Ön vállalkozásáról fest képet.",
     "tryStillHint": "Ez egy jelenet a gyárunk képtárából. Az Ön oldalán az AI az Ön vállalkozásáról fest képet.",
     "tryTextsHint": "Kattintson az oldal bármelyik szövegére, és írja be a sajátját. Az Ön oldalán az AI egyetlen utasítás alapján minden szöveget átír.",
+    "tryBrand": "Saját márka",
+    "tryBrandWorking": "Olvasom a képét…",
+    "tryBrandHint": "Az Ön színei, betűtípusa és képe az oldalon vannak – csak ebben a böngészőben, semmi sem kerül elküldésre. Adja hozzá logóját átlátszó PNG-ként, és az oldal tetejére kerül.",
+    "tryBrandFailed": "Ezt a képet nem sikerült beolvasni. Próbáljon PNG, JPG vagy WebP fájlt 15 MB alatt.",
     "tryTextsDock": "Kattintson bármelyik szövegre, és írja át"
   },
   "features": {

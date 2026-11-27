@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import "./globals.css";
@@ -65,6 +65,15 @@ export async function PrototypeShell({
   // the palette's light tokens and the light-only CSS refinements apply. The visitor's switch
   // in the header moves the same class and the same mark (founder decision 2026-11-25).
   const { darkClass, dataAppearance } = htmlAppearance(config.theme.appearance);
+  // "Insert my brand": the brand's palette opens the page, and its headline keeps its own weight.
+  const brand = config.theme.brand;
+  const display = brand?.display;
+  const brandStyle = display
+    ? ({
+        ...(display.weight ? { "--brand-display-weight": String(display.weight) } : {}),
+        ...(display.tracking !== undefined ? { "--brand-display-tracking": `${display.tracking}em` } : {}),
+      } as CSSProperties)
+    : undefined;
 
   return (
     // EVERY palette ships as CSS rules keyed by `data-scheme` — a dark one and a light one —
@@ -81,7 +90,10 @@ export async function PrototypeShell({
     <html
       lang={locale}
       className={cn("font-sans", darkClass && "dark")}
-      data-scheme={config.theme.colorScheme}
+      data-scheme={brand ? "brand" : config.theme.colorScheme}
+      data-brand-display={display ? "" : undefined}
+      data-brand-emphasis={display?.emphasis}
+      style={brandStyle}
       data-appearance={dataAppearance}
       data-font={config.patterns.landing?.font ?? "inter"}
       data-button={initialButtonStyle(config)}
@@ -98,7 +110,7 @@ export async function PrototypeShell({
       suppressHydrationWarning
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeBootstrap palettes buttons imageTransparency imageVeil />
+        <ThemeBootstrap palettes buttons imageTransparency imageVeil brand={brand?.colors} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page
