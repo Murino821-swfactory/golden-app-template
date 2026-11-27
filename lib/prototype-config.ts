@@ -658,8 +658,38 @@ export const DEFAULT_PATTERNS: readonly PatternId[] = [
   "contactForm",
 ] as const;
 
+const HEX = z.string().regex(/^#?[0-9A-Fa-f]{6}$/);
+const SAME_ORIGIN_PATH = z.string().regex(/^\/(?!\/)[^\\]*$/);
+
+/** "Insert my brand": what was read from the customer's own image. Every key is optional
+ * except the colours — a brand without its colours is not a brand. */
+const brandSchema = z
+  .object({
+    colors: z.array(HEX).min(2).max(19),
+    image: z
+      .object({
+        src: SAME_ORIGIN_PATH,
+        placement: z.enum(["object", "background"]).default("object"),
+        // A cut-out (transparent PNG) floats on the page; a photo keeps the object's frame.
+        frame: z.boolean().default(true),
+      })
+      .optional(),
+    logo: SAME_ORIGIN_PATH.optional(),
+    // The same logo recoloured for the light side, where a light wordmark would vanish.
+    logoOnLight: SAME_ORIGIN_PATH.optional(),
+    display: z
+      .object({
+        weight: z.number().int().min(100).max(900).optional(),
+        tracking: z.number().min(-0.1).max(0.1).optional(),
+        emphasis: z.enum(["accent", "ink"]).optional(),
+      })
+      .optional(),
+  })
+  .describe("Leave out unless the customer inserted their brand. The palette read from their image (2-19 hex colours, the page's own AA rule derives the roles), the image the landing wears, their logo, the headline's weight, tracking and emphasis colour. The action's look stays `theme.button`.");
+
 const themeSchema = z.object({
   colorScheme: z.enum(COLOR_SCHEMES),
+  brand: brandSchema.optional(),
   // The side a FIRST visit opens on. Dark or light is the visitor's choice (founder decision
   // 2026-11-25: the dark-only rule is dropped) — the header carries the switch and every build
   // ships both variants of every palette — so this names only the starting side, as

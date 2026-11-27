@@ -4,7 +4,8 @@ The one header of tokenwise.sk and of every prototype built from `golden-app-tem
 logo, nav, **Change colour** (30 palettes), **font** (10 faces), **button** (5 looks of the
 page's action, 0.9.0), **image transparency** (the page's picture, 0 to 100 % in tens, 0.10.0),
 **image veil** (the layer over the page's picture, on or off, 0.11.0), **language**, **cart** and
-**user**. A change to the header is one PR here.
+**user**. A change to the header is one PR here. Since 0.12.0 it also ships a project's **own
+palette** (the customer's brand) beside the thirty.
 
 Colour, font, button, language, cart and sign-in are icons with no visible words — a colour
 wheel, `Aa`, a small action in the look on screen, a globe, a cart, a figure (founder decision
@@ -154,6 +155,15 @@ host's**: it passes `imageVeil` to `<Header>`, puts the same state on `<html>`, 
 `<ThemeBootstrap imageVeil />` on, and keys its picture's rules by the attribute. The template's
 veil is the gradient of the page's ground over the hero's film or still scene; off, only the
 short fade where the picture runs into the page is left (`components/editorial/stage.css`).
+
+## A project's own palette (0.12.0)
+
+"Insert my brand" (founder, 2026-11-27): a palette read from the customer's own picture ships as
+`html[data-scheme="brand"]` — dark and light — through the same rule and the same AA gate as the
+thirty (`derivePaletteRoles`, `assertReadable`). `cssBlocksForBrand(colors)` returns the two CSS
+rules (it throws, as the build does, on colours that cannot be made readable) and
+`BRAND_SCHEME_ID` names the scheme. `<ThemeBootstrap brand={colors} />` ships them. A host that
+passes nothing is unchanged; "Change colour" still cycles the thirty.
 
 ## Adding a font
 

@@ -59,6 +59,10 @@
     "tryImageHint": "Toto sú zábery našej továrne. Na vašej stránke AI namaľuje obraz vášho podnikania.",
     "tryStillHint": "Toto je scéna z knižnice našej továrne. Na vašej stránke AI namaľuje obraz vášho podnikania.",
     "tryTextsHint": "Kliknite na ktorýkoľvek text na stránke a napíšte vlastný. Na vašej stránke AI prepíše všetky texty podľa jedného pokynu.",
+    "tryBrand": "Môj brand",
+    "tryBrandWorking": "Čítam váš obrázok…",
+    "tryBrandHint": "Vaše farby, písmo a obrázok sú na stránke – len v tomto prehliadači, nič sa neodosiela. Pridajte logo ako priehľadný PNG a bude hore na stránke.",
+    "tryBrandFailed": "Tento obrázok sa nedá prečítať. Skúste PNG, JPG alebo WebP do 15 MB.",
     "tryTextsDock": "Kliknite na ktorýkoľvek text a prepíšte ho"
   },
   "features": {

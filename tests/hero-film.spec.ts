@@ -444,7 +444,7 @@ test.describe("hero film — the visitor changes the page with their own hands",
     expect(api).toEqual([]);
   });
 
-  test("the control pad: picture, words, colour and the action's look as touch keys in the product frame, beside the device switch", async ({ page }, info) => {
+  test("the control pad: picture, words, colour, the action's look and the visitor's brand as touch keys in the product frame, beside the device switch", async ({ page }, info) => {
     test.skip(!TRY, "no try-it buttons in this config");
     await page.goto("./");
     const hero = page.locator('[data-section="hero"]');
@@ -457,8 +457,9 @@ test.describe("hero film — the visitor changes the page with their own hands",
     if (info.project.name !== "mobile") await expect(frame.locator("[data-device-tabs]")).toBeVisible();
     const keys = pad.locator("button");
     expect(await keys.evaluateAll((els) => els.map((el) => el.getAttribute("data-try")))).toEqual(
-      // The fourth key — the look of the page's action — came on 2026-11-25 (tests/button-style.spec.ts).
-      FILM === null ? ["texts", "colour", "button"] : ["image", "texts", "colour", "button"]
+      // The fourth key — the look of the page's action — came on 2026-11-25 (tests/button-style.spec.ts);
+      // the fifth — "My brand", the visitor's own picture — on 2026-11-27 (tests/brand-try.spec.ts).
+      FILM === null ? ["texts", "colour", "button", "brand"] : ["image", "texts", "colour", "button", "brand"]
     );
     for (const box of await keys.evaluateAll((els) => els.map((el) => el.getBoundingClientRect().height))) expect(box).toBeGreaterThanOrEqual(44);
     // In reach before any scroll: the pad starts above the fold.

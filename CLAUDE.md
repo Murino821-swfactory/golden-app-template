@@ -24,6 +24,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | Header (logo, colour, font, dark/light, button look, image transparency, image veil, language, cart, user) | `packages/shared-ui` — **one PR changes tokenwise.sk and every prototype**; bump its version. `components/layout/header.tsx` is only the adapter |
 | The look of the landing's action — the CTA button (glow, block, glass, orbit, marker) and its answer to the click | `prototype.config.json` → `theme.button` (omit = glow); the looks in `packages/shared-ui/buttons.css` and `src/theming/button-styles.ts`, the click in `src/theming/action-press.ts`; the action itself is whatever carries `data-cta` — see "The look of the landing's action" below |
 | How transparent the hero's picture is (a header button, 0 to 100 % in tens; founder 2026-11-25) | `packages/shared-ui/src/theming/image-transparency.ts` (steps), `ImageTransparencySwitcher.tsx`, `imageTransparencyStore`; the fade itself is `components/editorial/stage.css` (`.editorial-film::before`, keyed by `html[data-image-transparency]`); texts `imageTransparency`, `changeImageTransparencyLabel` in all 8 bundles; tests `tests/image-transparency.spec.ts` |
+| "Insert my brand" — the customer's palette, typeface, button look, picture and logo from one image (founder, 2026-11-27) | Config: `prototype.config.json` → `theme.brand` (`colors` 2–19 hex, `image {src, placement, frame}`, `logo`, `logoOnLight`, `display {weight, tracking, emphasis}`; the content call leaves it out) → `cssBlocksForBrand` in `packages/shared-ui` (`html[data-scheme="brand"]`, same rule and AA gate as the thirty), `app/shell.tsx`, `hero.tsx` (logo above the headline — the header keeps tokenwise.sk's), `editorial.css`. The demo's fifth pad key "My brand": `lib/brand-extract.ts` (pure: palette, headline glyphs matched against the ten faces, key visual, cut-out), `lib/brand-try.ts` (in the browser, nothing sent or stored), `try-it.tsx`; texts `landing.tryBrand*` in all 8 bundles; tests `tests/brand-extract.spec.ts`, `tests/brand-try.spec.ts` |
 | Whether the veil lies over the hero's picture (a header button right after the transparency's, on/off, first visit on; founder 2026-11-26: "turns the layer used today on and off; it does not touch the transparency") | `packages/shared-ui/src/theming/image-veil.ts`, `ImageVeilSwitcher.tsx`, `imageVeilStore`; the rule is `components/editorial/stage.css` (`html[data-image-veil="off"] … .editorial-film::after`: only the bottom strip's fade from 80 % is left, as the AI hero image's); texts `imageVeil`, `changeImageVeilLabel`, `imageVeilOn`, `imageVeilOff` in all 8 bundles; tests `tests/image-veil.spec.ts`, `packages/shared-ui/test/image-veil.test.ts` |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
@@ -420,7 +421,8 @@ This repo is an npm workspace. `packages/shared-ui` is **`@tokenwise/shared-ui`*
 header tokenwise.sk renders too: logo · Change colour · font (10 faces) · dark/light · button
 (5 looks, 0.9.0 — a host opts in, the prototype does) · image transparency (0 to 100 % in tens,
 0.10.0 — a host opts in, the prototype does) · image veil (on/off, 0.11.0 — a host opts in, the
-prototype does) · language · cart · user. Spec and
+prototype does) · language · cart · user; since 0.12.0 also a project's own palette
+(`cssBlocksForBrand`, `ThemeBootstrap brand`, "Insert my brand"). Spec and
 decision in the **sw-factory** repo
 (`docs/superpowers/specs/2026-09-25-shared-header-design.md`,
 `docs/decisions/shared-header-package.md`); usage in `packages/shared-ui/README.md`.
@@ -948,7 +950,12 @@ copy contract, same `data-section` markers — the suites that read the page kee
   the frame's title bar — picture, words, colour and, since 2026-11-25, the look of the page's
   action (see "The look of the landing's action") (the colour key presses the shared header's
   palette button, `[data-shared-control="palette"]`, so the palette keeps its one store) — beside
-  the frame's own device switch, everything a visitor can change in one place; a frame that carries
+  the frame's own device switch, everything a visitor can change in one place; since 2026-11-27 a
+  fifth key, "My brand", takes the visitor's own picture (and a logo on a transparent background)
+  and reads, in the browser, its palette, the headline's face and weight among the ten, the
+  action's look (orbit on a dark brand, glow on a light one) and its key visual, cut out — a photo
+  is shown whole and leaves the page a clean side; no request, nothing stored, a reload brings the
+  demo back; a frame that carries
   the pad stands flat (no tilt) and the film layout ends the stage high enough for the pad to
   stand in the first screen. A hero without a frame keeps the two buttons under its action.
   **"Change texts" opens the whole page (founder, 2026-11-24: "any text that is shown on the whole
