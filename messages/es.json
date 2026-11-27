@@ -59,6 +59,10 @@
     "tryImageHint": "Son imágenes de nuestra fábrica. En su página, la IA pinta una imagen de su negocio.",
     "tryStillHint": "Es una escena de la biblioteca de nuestra fábrica. En su página, la IA pinta una imagen de su negocio.",
     "tryTextsHint": "Haga clic en cualquier texto de la página y escriba el suyo. En su página, la IA reescribe todos los textos a partir de una sola instrucción.",
+    "tryBrand": "Mi marca",
+    "tryBrandWorking": "Leyendo su imagen…",
+    "tryBrandHint": "Sus colores, su tipografía y su imagen están en la página, solo en este navegador; no se envía nada. Añada su logotipo como PNG transparente para colocarlo arriba de la página.",
+    "tryBrandFailed": "No se pudo leer esta imagen. Pruebe un PNG, JPG o WebP de menos de 15 MB.",
     "tryTextsDock": "Haga clic en cualquier texto y escriba el suyo"
   },
   "features": {

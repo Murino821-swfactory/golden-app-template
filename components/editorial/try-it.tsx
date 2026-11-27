@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
-import { Image as ImageIcon, MousePointerClick, Palette, PenLine } from "lucide-react";
+import { Image as ImageIcon, MousePointerClick, Palette, PenLine, Stamp } from "lucide-react";
+import { BRAND_ACCEPT } from "@/lib/brand-try";
 import { editTexts, textEdit } from "@/lib/text-edit";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +73,13 @@ function TextDock() {
   );
 }
 
-export type TryHint = "tryImageHint" | "tryStillHint" | "tryTextsHint";
+export type TryHint =
+  | "tryImageHint"
+  | "tryStillHint"
+  | "tryTextsHint"
+  | "tryBrandWorking"
+  | "tryBrandHint"
+  | "tryBrandFailed";
 
 /**
  * The two buttons and, under them, one line saying what the real function does on the visitor's
@@ -130,15 +137,19 @@ export function TryPad({
   onImage,
   editing,
   onTexts,
+  onBrand,
   hint,
 }: {
   onImage?: () => void;
   editing: boolean;
   onTexts: () => void;
+  /** "My brand" (2026-11-27): the visitor's own picture and logo, read in this browser. */
+  onBrand?: (files: File[]) => void;
   hint: TryHint | null;
 }) {
   const t = useTranslations("landing");
   const tc = useTranslations("common");
+  const brandInput = useRef<HTMLInputElement>(null);
   return (
     <div data-try-bar data-try-pad className="editorial-pad">
       <div role="group" aria-label={t("tryLabel")} className="editorial-pad-keys">
@@ -170,6 +181,34 @@ export function TryPad({
           <MousePointerClick aria-hidden className="size-5" />
           <span>{tc("changeButton")}</span>
         </button>
+        {onBrand && (
+          <>
+            <button
+              type="button"
+              data-try="brand"
+              aria-pressed={hint === "tryBrandWorking"}
+              className="editorial-pad-key"
+              onClick={() => brandInput.current?.click()}
+            >
+              <Stamp aria-hidden className="size-5" />
+              <span>{t("tryBrand")}</span>
+            </button>
+            <input
+              ref={brandInput}
+              type="file"
+              accept={BRAND_ACCEPT}
+              multiple
+              hidden
+              data-try-brand-input
+              aria-label={t("tryBrand")}
+              onChange={(event) => {
+                const files = Array.from(event.currentTarget.files ?? []);
+                event.currentTarget.value = "";
+                if (files.length > 0) onBrand(files);
+              }}
+            />
+          </>
+        )}
       </div>
       <p data-try-hint aria-live="polite" className="editorial-try-hint">
         {hint ? t(hint) : ""}

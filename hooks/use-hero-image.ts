@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { getDemoSlug } from "@/lib/demo-slug";
+import { config } from "@/lib/prototype-config";
 import {
   POLL_INTERVAL_MS,
   POLL_LIMIT_MS,
@@ -161,6 +162,12 @@ export function useHeroImage(): UseHeroImage {
       : null;
 
   const placement: HeroPlacement = (current ? current.placement : publicState.placement) ?? "background";
+
+  // "Insert my brand": with no AI image on show, the landing wears the customer's own picture.
+  const brandImage = config.theme.brand?.image;
+  if (!src && brandImage) {
+    return { src: `${BASE_PATH}${brandImage.src}`, placement: brandImage.placement, status: current, timedOut, working, generate, setVisible };
+  }
 
   return { src, placement, status: current, timedOut, working, generate, setVisible };
 }
