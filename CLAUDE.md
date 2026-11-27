@@ -25,6 +25,7 @@ Context file for AI agents implementing prototypes. **READ THIS FIRST, DO NOT EX
 | The look of the landing's action — the CTA button (glow, block, glass, orbit, marker) and its answer to the click | `prototype.config.json` → `theme.button` (omit = glow); the looks in `packages/shared-ui/buttons.css` and `src/theming/button-styles.ts`, the click in `src/theming/action-press.ts`; the action itself is whatever carries `data-cta` — see "The look of the landing's action" below |
 | How transparent the hero's picture is (a header button, 0 to 100 % in tens; founder 2026-11-25) | `packages/shared-ui/src/theming/image-transparency.ts` (steps), `ImageTransparencySwitcher.tsx`, `imageTransparencyStore`; the fade itself is `components/editorial/stage.css` (`.editorial-film::before`, keyed by `html[data-image-transparency]`); texts `imageTransparency`, `changeImageTransparencyLabel` in all 8 bundles; tests `tests/image-transparency.spec.ts` |
 | "Insert my brand" — the customer's palette, typeface, button look, picture and logo from one image (founder, 2026-11-27) | Config: `prototype.config.json` → `theme.brand` (`colors` 2–19 hex, `image {src, placement, frame}`, `logo`, `logoOnLight`, `display {weight, tracking, emphasis}`; the content call leaves it out) → `cssBlocksForBrand` in `packages/shared-ui` (`html[data-scheme="brand"]`, same rule and AA gate as the thirty), `app/shell.tsx`, `hero.tsx` (logo above the headline — the header keeps tokenwise.sk's), `editorial.css`. The demo's fifth pad key "My brand": `lib/brand-extract.ts` (pure: palette, headline glyphs matched against the ten faces, key visual, cut-out), `lib/brand-try.ts` (in the browser, nothing sent or stored), `try-it.tsx`; texts `landing.tryBrand*` in all 8 bundles; tests `tests/brand-extract.spec.ts`, `tests/brand-try.spec.ts` |
+| A customer's texts on the golden demo — a preview link `?preview=<token>` shows the words the model wrote in the demo's own structure, no build (founder, 2026-11-27) | `lib/customer-texts.ts` (pure rules + store, like `brand-try.ts`), `hooks/use-content.ts` (`useShownConfig`, `useContent`, `useEntityFields`, `useAppName`), `components/editorial/customer-texts.tsx` (loader), `components/app-name.tsx`, `app/shell.tsx` (bootstrap + loader, `tryIt` only), `app/globals.css` (unseen while loading, 8 s at most); the words come from `NEXT_PUBLIC_PREVIEW_API` (default `/api/prototype-preview/<token>`, factory-web) — see "A customer's texts on the golden demo"; tests `tests/customer-texts-logic.spec.ts`, `tests/customer-texts.spec.ts` |
 | Whether the veil lies over the hero's picture (a header button right after the transparency's, on/off, first visit on; founder 2026-11-26: "turns the layer used today on and off; it does not touch the transparency") | `packages/shared-ui/src/theming/image-veil.ts`, `ImageVeilSwitcher.tsx`, `imageVeilStore`; the rule is `components/editorial/stage.css` (`html[data-image-veil="off"] … .editorial-film::after`: only the bottom strip's fade from 80 % is left, as the AI hero image's); texts `imageVeil`, `changeImageVeilLabel`, `imageVeilOn`, `imageVeilOff` in all 8 bundles; tests `tests/image-veil.spec.ts`, `packages/shared-ui/test/image-veil.test.ts` |
 | Custom section | Create in `components/sections/`, register in `app/[locale]/page.tsx`; an editorial form of a section goes in `components/editorial/` and `EDITORIAL_SECTIONS` |
 | Landing CTA destination | `lib/landing-action.ts`: hero and closing CTA use `patterns.cta.href`; otherwise a rendered contact section, enabled auth or dashboard. With no next step they render no action link. The action's `<Link>` prefetches only `/login` (`landingActionPrefetch`): Next.js would otherwise download the dashboard's Firebase (~0.7 MB) on the landing for every visitor. `lib/prototype-config.ts` validates hrefs: only the exported `/`, `/login`, `/dashboard`, `/messages` routes, rendered section/chapter anchors, or absolute HTTP(S) URLs. Every section owns its stable section id with a scroll offset; `LandingStory` also owns `chapter-<section>` aliases. |
@@ -500,6 +501,49 @@ combination of colour, transparency, font, CTA and dark & light mode; the langua
   header follows; nothing stored; reload; jumps and scrolling up; the visitor's pick, the veil and
   "My brand"; a brand put on another way; reduced motion; no tour without `tryIt`),
   `tests/look-tour-logic.spec.ts`.
+
+## A customer's texts on the golden demo (2026-11-27)
+
+Founder: "Build it now" in tokenwise.sk's chat must not send the visitor away for a build of half
+an hour. The model writes only the words — the golden demo's own text slots — and the golden demo
+shows them in the visitor's browser, the way "My brand" shows a brand. The structure (sections,
+patterns, fields, the offers' numbers, the theme) stays the build's: every customer gets the tested
+golden demo with their words in it.
+
+- **What may be shown** — `withCustomerTexts` (`lib/customer-texts.ts`, pure): the golden demo only
+  (`tryIt`; a customer's own page never takes words from a link — the `?sections=` lesson in
+  `app/[locale]/page.tsx`); only `appName` (1–100 characters) and `content` are taken; the build's
+  default language is required and only languages it serves are taken (default first); every value
+  of the demo's default-language words is there again, of the same kind, lists keep their lengths
+  and no text is blank; then the template's own parser (lengths, enums, cross-references). The
+  answer is `{ ok: true, config }` or `{ ok: false, error }` naming the fields.
+- **Where the words come from:** a preview link `?preview=<token>` (20–64 URL-safe characters,
+  `previewTokenFrom`); `CustomerTexts` (mounted by the shell for a `tryIt` build) asks
+  `previewApiUrl(token)` — `NEXT_PUBLIC_PREVIEW_API`, else the site's `/api/prototype-preview` —
+  and hands the answer to `customerTexts.show`. Shown, not kept: nothing is stored, a reload asks
+  again.
+- **Check it on a PC:** `npm run build`, then `PREVIEW_SAMPLE_TEXTS=1 npm run preview` — the local
+  server answers `/api/prototype-preview/<token>` from `fixtures/customer-texts/<token>.json` and
+  prints each sample's link, e.g. `http://localhost:3000/?preview=sample-real-estate-portfolio`
+  (Doorway Estates: the founder's real-estate idea from the funnel walk, as the text call would
+  answer it). A sample is the contract example for factory-web's text call too:
+  `tests/customer-texts-logic.spec.ts` checks that it passes the rules.
+- **No flash:** the shell's `CUSTOMER_TEXTS_BOOTSTRAP` marks `html[data-customer-texts="loading"]`
+  before the first paint, and `app/globals.css` keeps `main` and the footer unseen meanwhile (the
+  header is tokenwise.sk's). The loader ends in `ready` or `failed` — a failed request, 8 s without
+  an answer or words that may not be shown leave the demo as it is — and the same 8 s uncover the
+  page by CSS alone if no script ever runs.
+- **Read texts through the hooks:** `useContent()`, `useEntityFields()` and `useAppName()` (or
+  `<AppName />` in a server component) read `useShownConfig()`. A component that reads
+  `config.content` or `config.appName` directly shows the demo's words on a preview. On purpose
+  left on the build's: SEO metadata (`lib/seo.ts`) and the owner's inbox.
+- **Not yet (separate changes):** the language switcher still offers all eight languages (one
+  without the customer's words falls back to the default); a preview's sample records seed the
+  golden demo's sandbox on the dashboard; "Change texts" and the other try-it keys are not saved;
+  "Want this page".
+- Tests: `tests/customer-texts-logic.spec.ts` (the rules, the token, the API address),
+  `tests/customer-texts.spec.ts` (the words and the name on the page, the unseen wait, no request
+  without a valid token, a failed or refused answer leaves the demo visible).
 
 ## The look of the landing's action (2026-11-25)
 

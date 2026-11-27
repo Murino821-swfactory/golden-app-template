@@ -1,0 +1,178 @@
+{
+  "appName": "Doorway Estates",
+  "content": {
+    "en": {
+      "description": "A real-estate agent's portfolio: current listings on a map, property details and a quick enquiry form.",
+      "landing": {
+        "headline": "Find your next home. Talk to the agent who knows the street.",
+        "subheadline": "Browse my current listings: see each property on the map and send an enquiry in a minute. I answer the same day.",
+        "features": [
+          {
+            "icon": "map-pin",
+            "title": "Every listing on the map",
+            "description": "See where each flat, house or office is before you ask, and compare streets at a glance."
+          },
+          {
+            "icon": "house",
+            "title": "Details that answer questions",
+            "description": "Size, rooms, price and the highlights that matter, written by the agent who walked through every room."
+          },
+          {
+            "icon": "message-square",
+            "title": "One click to enquire",
+            "description": "Ask about a property straight from its card; your message reaches me with the listing attached."
+          }
+        ],
+        "howItWorks": {
+          "heading": "How do you find your property?",
+          "steps": [
+            {
+              "title": "Browse the listings",
+              "description": "Filter flats, houses and offices and open the ones you like."
+            },
+            {
+              "title": "Check it on the map",
+              "description": "See the neighbourhood, the distance to the centre and what is nearby."
+            },
+            {
+              "title": "Ask about it",
+              "description": "Send an enquiry from the card and I will get back to you the same day."
+            }
+          ]
+        },
+        "faq": {
+          "heading": "What do buyers ask first?",
+          "items": [
+            {
+              "question": "Are the prices final?",
+              "answer": "They are the asking prices agreed with the owners. Every offer is open to a conversation about terms."
+            },
+            {
+              "question": "Can I visit a property this week?",
+              "answer": "Yes. Send an enquiry from the listing and suggest a time; I confirm viewings by phone or e-mail."
+            },
+            {
+              "question": "Do you also help sellers?",
+              "answer": "Yes. I prepare the listing, the photos and the viewings, and keep the owner informed after every visit."
+            }
+          ]
+        },
+        "featuresHeading": "What you get here",
+        "eyebrow": "Homes and offices in your city",
+        "manifesto": {
+          "lead": "Buying a home starts with the right street, not the right ad.",
+          "body": "I show every property I sell on the map, with the details I would want to know myself, so you can decide what to visit before you spend a Saturday on viewings."
+        }
+      },
+      "dashboard": {
+        "title": "My properties"
+      },
+      "cta": {
+        "label": "Browse listings",
+        "title": "Ready to see the properties?",
+        "subtitle": "Sign in to save the listings you like and keep notes on each one."
+      },
+      "contactForm": {
+        "heading": "Ask about a property",
+        "submitLabel": "Send enquiry"
+      },
+      "dataGrid": {
+        "entityLabel": "Property",
+        "fieldLabels": {
+          "name": "Property",
+          "category": "Type",
+          "opened": "Listed on",
+          "active": "Available"
+        },
+        "sampleRecords": [
+          {
+            "name": "Riverside office suite",
+            "category": "Office",
+            "opened": "2026-11-03",
+            "active": true
+          },
+          {
+            "name": "Logistics hall by the ring road",
+            "category": "Warehouse",
+            "opened": "2026-10-21",
+            "active": true
+          },
+          {
+            "name": "Storage depot with a yard",
+            "category": "Depot",
+            "opened": "2026-11-14",
+            "active": false
+          }
+        ]
+      },
+      "useCases": {
+        "heading": "Who is this page for?",
+        "items": [
+          {
+            "title": "Families looking for a home",
+            "situation": "You need more space and want to compare neighbourhoods before you visit anything.",
+            "action": "Filter houses and flats, check them on the map and ask about the ones that fit."
+          },
+          {
+            "title": "Teams looking for an office",
+            "situation": "Your team is growing and you need an office you can move into soon.",
+            "action": "Open the offices, compare area and price and book a viewing in one message."
+          }
+        ]
+      },
+      "comparison": {
+        "heading": "Why ask an agent instead of scrolling portals?",
+        "beforeLabel": "Property portals",
+        "afterLabel": "My portfolio",
+        "rows": [
+          {
+            "topic": "Listings",
+            "before": "Hundreds of ads, many already sold or repeated.",
+            "after": "Only the properties I represent, kept up to date."
+          },
+          {
+            "topic": "Details",
+            "before": "Short ads written to fit a template.",
+            "after": "The details I checked on the spot, with what matters for each property."
+          },
+          {
+            "topic": "Next step",
+            "before": "A form that goes to a call centre.",
+            "after": "An enquiry that reaches me, with the property attached."
+          }
+        ]
+      },
+      "listings": {
+        "heading": "Current listings",
+        "intro": "Flats, houses and offices I represent: filter by type, open them on the map and ask about one in a single click.",
+        "notice": "These listings are examples that show how the page works.",
+        "categoryLabels": {
+          "apartment": "Flat",
+          "house": "House",
+          "office": "Office"
+        },
+        "attributeLabels": {
+          "area": "Area",
+          "rooms": "Rooms"
+        },
+        "items": {
+          "offer-1": {
+            "title": "Three-room flat near the centre",
+            "summary": "A bright fourth-floor flat with a balcony and a cellar, five minutes from the old town.",
+            "highlights": ["Balcony", "Lift"]
+          },
+          "offer-2": {
+            "title": "Family house with a garden",
+            "summary": "A detached house on a quiet street with a garage, ten minutes from the centre.",
+            "highlights": ["Garden", "Garage"]
+          },
+          "offer-3": {
+            "title": "Office floor for a small team",
+            "summary": "An open-plan office with two meeting rooms, ready to move in."
+          }
+        },
+        "inquireLabel": "Ask about this property"
+      }
+    }
+  }
+}

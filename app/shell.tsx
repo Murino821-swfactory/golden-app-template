@@ -8,6 +8,8 @@ import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { IdeaChat } from "@/components/idea-chat";
+import { CustomerTexts } from "@/components/editorial/customer-texts";
+import { CUSTOMER_TEXTS_BOOTSTRAP } from "@/lib/customer-texts";
 import { config, initialButtonStyle } from "@/lib/prototype-config";
 import { landingMetadata } from "@/lib/seo";
 import { htmlAppearance } from "@/lib/theme-appearance";
@@ -68,6 +70,7 @@ export async function PrototypeShell({
   // "Insert my brand": the brand's palette opens the page, and its headline keeps its own weight.
   const brand = config.theme.brand;
   const display = brand?.display;
+  const tryIt = config.patterns.landing?.tryIt === true;
   const brandStyle = display
     ? ({
         ...(display.weight ? { "--brand-display-weight": String(display.weight) } : {}),
@@ -111,6 +114,11 @@ export async function PrototypeShell({
     >
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeBootstrap palettes buttons imageTransparency imageVeil brand={brand?.colors} />
+        {/* A customer's texts on the golden demo (2026-11-27): a page opened from a preview link
+            is marked as waiting before the first paint, then the loader shows the words. A
+            customer's own page never takes words from a link (`lib/customer-texts.ts`). */}
+        {tryIt && <script dangerouslySetInnerHTML={{ __html: CUSTOMER_TEXTS_BOOTSTRAP }} />}
+        {tryIt && <CustomerTexts />}
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/* Header and Footer sit here, not in a route group, because the header carries
               the palette switcher, the language switcher and the sign-in control: a page

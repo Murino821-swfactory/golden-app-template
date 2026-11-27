@@ -5,7 +5,7 @@ import { AuthGuard } from "@/components/auth/auth-guard";
 import { OwnerLinks } from "@/components/owner/owner-links";
 import { DataGrid } from "@/components/patterns/data-grid";
 import { MapBase } from "@/components/patterns/map-base";
-import { useContent } from "@/hooks/use-content";
+import { useAppName, useContent } from "@/hooks/use-content";
 import { DashboardStats } from "@/components/dashboard/stats";
 import { config } from "@/lib/prototype-config";
 import { listingCards, listingPoints } from "@/lib/listings";
@@ -20,6 +20,7 @@ const hasMap = config.patterns.mapBase !== undefined;
 
 function DashboardContent() {
   const content = useContent();
+  const appName = useAppName();
   const dashboard = content.dashboard;
   const listings = config.patterns.listings;
   const points = useMemo(
@@ -31,7 +32,7 @@ function DashboardContent() {
     <div className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
       <header>
         <h1 className="text-2xl font-semibold sm:text-3xl">
-          {dashboard?.title ?? config.appName}
+          {dashboard?.title ?? appName}
         </h1>
         {dashboard?.intro && <p className="mt-2 text-muted-foreground">{dashboard.intro}</p>}
       </header>
